@@ -13,6 +13,7 @@
 	
 
 
+	include (SITE_ROOT."/common/config.php");
 	include (SITE_ROOT."/common/php/db.php");
 	include (SITE_ROOT."/common/php/content.php");
 	include (SITE_ROOT."/common/php/getNote.php");
@@ -414,12 +415,12 @@ disconnect();
 				$("div.desk").addClass("paper");
 				$("div.desk").removeClass("desk");
 				$("button.changeView").val("desk");
-				$("button.changeView").html("<img src='../css/images/table.png'>");
+				$("button.changeView").html("<img src='<?php echo SITE_URL;?>/common/images/viewDesk.png'>");
 			} else {
 				$("div.paper").addClass("desk");
 				$("div.paper").removeClass("paper");
 				$("button.changeView").val("paper");
-				$("button.changeView").html("<img src='../css/images/paper.png'>");
+				$("button.changeView").html("<img src='<?php echo SITE_URL;?>/common/images/viewPaper.png'>");
 			}
 		});
 
@@ -514,6 +515,12 @@ disconnect();
 			},"fast");
 		*/
 		});
+
+		$("img.staticMedia").click(function(){
+			$("div.desk").addClass("lens");
+			$("div.desk").removeClass("desk");
+		});
+
 
 	</script>
 		<footer>

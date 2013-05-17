@@ -80,61 +80,63 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 		case "jpeg";
 		case "tif";
 		{
-			$mediaInfo = SITE_ROOT."/media/pictures/".$noteMedia;
+			$mediaInfo = MEDIA_FOLDER."/pictures/".$noteMedia;
 			if (file_exists($mediaInfo)){
-				$size = ceil(filesize(SITE_URL."/media/pictures/".$noteMedia)/1024);
+				$size = ceil(filesize(MEDIA_FOLDER."/pictures/".$noteMedia)/1024);
 				$fileName = $mediaInfo['filename'];
-				$infoSize = getimagesize(SITE_URL."/media/pictures/".$noteMedia);
+				$infoSize = getimagesize(MEDIA_FOLDER."/pictures/".$noteMedia);
 				// ergibt mit $infoSize[0] für breite und $infoSize[1] für höhe
-				echo "<img src='".SITE_URL."/media/pictures/".$noteMedia."' alt='".$noteTitle."' />";
+				echo "<img class='staticMedia' src='".MEDIA_FOLDER."/pictures/".$noteMedia."' alt='".$noteTitle."' />";
 			} else {
 				echo "<p class='warning'>[The picture file is missing!]</p>";
 			}
-		} break;
+			break;
+		}
 		
 		case "pdf";
 		{
-			$mediaInfo = SITE_ROOT."/media/documents/".$noteMedia;
+			$mediaInfo = MEDIA_FOLDER."/documents/".$noteMedia;
 			if (file_exists($mediaInfo)){
-				echo "<a href='".SITE_URL."/media/documents/".$noteMedia."' title='Download ".$noteMedia." (".$size."kb)' >Open / Download ".$noteMedia." (".$size."kb)' /></a><br>";
+				echo "<a href='".SITE_URL."/media/documents/".$noteMedia."' title='Download ".$noteMedia." (".$size."kb)' class='warning'>Open / Download ".$noteMedia." (".$size."kb)</a><br>";
 			} else {
 				echo "<p class='warning'>[The pdf document is missing!]</p>";
 			}
-		} break;
+			break;
+		}
 		
 		case "mp4";
 		case "webm";
 		{
-			$mediaInfo = SITE_ROOT."/media/movies/".$noteMedia;
+			$mediaInfo = MEDIA_FOLDER."/movies/".$noteMedia;
 			if (file_exists($mediaInfo)){
-				echo "<video class='media_zoom' controls preload='auto' poster='".SITE_URL."/media/movies/".$fileName.".png'>";
-					echo "<source src='".SITE_URL."/media/movies/".$fileName.".mp4' type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'>";
-					echo "<source src='".SITE_URL."/media/movies/".$fileName.".webm' type='video/webm; codecs=\"vp8, vorbis\"'>";
+				echo "<video class='dynamicMedia' controls preload='auto' poster='".SITE_URL."/media/movies/".$fileName.".png'>";
+					echo "<source src='".MEDIA_FOLDER."/movies/".$fileName.".mp4' type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'>";
+					echo "<source src='".MEDIA_FOLDER."/movies/".$fileName.".webm' type='video/webm; codecs=\"vp8, vorbis\"'>";
 				echo "</video>";
 			} else {
 				echo "<p class='warning'>[The movie file is missing!]</p>";
 			}
-		} break;
+			break;
+		}
 
-		case "ogg";
 		case "mp3";
 		case "wav";
 		{
-			$mediaInfo = SITE_ROOT."/media/sound/".$noteMedia;
+			$mediaInfo = MEDIA_FOLDER."/sound/".$noteMedia;
 			if (file_exists($mediaInfo)){
-				echo "<audio class='media_zoom' controls preload='auto'>";
-					echo "<source src='".SITE_URL."/media/sound/".$fileName.".mp3' type='audio/mpeg; codecs=mp3'>";
-					echo "<source src='".SITE_URL."/media/sound/".$fileName.".ogg' type='audio/ogg; codecs=vorbis'>";
-					echo "<source src='".SITE_URL."/media/sound/".$fileName.".wav' type='audio/wav; codecs=1'>";
+				echo "<audio class='dynamicMedia' controls preload='auto'>";
+					echo "<source src='".MEDIA_FOLDER."/sound/".$fileName.".mp3' type='audio/mpeg; codecs=mp3'>";
+					echo "<source src='".MEDIA_FOLDER."/sound/".$fileName.".wav' type='audio/wav; codecs=1'>";
 				echo "</audio>";
 			} else {
 				echo "<p class='warning'>[The audio file is missing!]</p>";
 			}
-		} break;
+			break;
+		}
 		
-		//default {
-			//echo "unknown media";
-		//}
+		default; {
+			echo "<p class='warning'>[".$extension."] is not supported in notizblogg!?</p>";
+		}
 		
 	}
 }
