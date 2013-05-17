@@ -1,3 +1,2 @@
-# This is the README for notizblogg
 # Notizblogg was created by André Kilchenmann (milchkannen) 
-# 2006 - 2013
+# "Zitate | Gedanken | Ideen miteinander verknüpfen'', das ist die Idee des Notizbloggs. Dieser ist nichts anderes als die digitale Verwirklichung eines Zettelkastens, wie er beispielsweise von Niklas_Luhmann genutzt wurde.
