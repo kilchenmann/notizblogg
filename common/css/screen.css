@@ -424,7 +424,7 @@ a.nonpublic{
 
 .lens {
 	width: 600px;
-	min-height: 842px;
+	height: 842px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -443,7 +443,7 @@ a.nonpublic{
 	}
 	.lens .note img, .lens .note video {
 		max-width:580px;
-		max-height:680px;
+		max-height:580px;
 		display:block;
 		margin-left: auto;
 		margin-right: auto;

@@ -517,8 +517,15 @@ disconnect();
 		});
 
 		$("img.staticMedia").click(function(){
-			$("div.desk").addClass("lens");
-			$("div.desk").removeClass("desk");
+			var zoomMedia = $(this).attr("src");
+			var zoomNote = $(this).attr("title");
+			$(".viewer").fadeTo("slow", 0.1);
+			$(".navigationIndex").append("<div class='lens'></div>");
+			$(".lens").html("<img src="+zoomMedia+">");
+			
+			$(this).css({"max-height":"580px"});
+			//$("div.desk").addClass("lens");
+			//$("div.desk").removeClass("desk");
 		});
 
 

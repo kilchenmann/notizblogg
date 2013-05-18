@@ -86,7 +86,7 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 				$fileName = $mediaInfo['filename'];
 				$infoSize = getimagesize(MEDIA_FOLDER."/pictures/".$noteMedia);
 				// ergibt mit $infoSize[0] für breite und $infoSize[1] für höhe
-				echo "<img class='staticMedia' src='".MEDIA_FOLDER."/pictures/".$noteMedia."' alt='".$noteTitle."' />";
+				echo "<img class='staticMedia' src='".MEDIA_FOLDER."/pictures/".$noteMedia."' alt='".$noteTitle."' title='".$noteID."' />";
 			} else {
 				echo "<p class='warning'>[The picture file is missing!]</p>";
 			}
