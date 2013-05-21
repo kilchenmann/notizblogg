@@ -21,8 +21,6 @@ function showNote($note){
 				
 				echo "</div>";
 			*/
-				//echo "<h3>".$noteTitle."</h3><a class='zoom' href='index.php?type=note&amp;part=zoom&amp;id=".$noteID."' >&nbsp;+&nbsp;</a>";
-				echo "<a class='zoom' title='".$noteID."' >+</a>";
 				if ($noteMedia!="") {
 					showMedia($noteID, $noteMedia, $noteTitle);
 				}

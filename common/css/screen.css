@@ -1,7 +1,11 @@
 /* **************************************************************** */
 /* head */
 body {
-	background: #1A1A1A url("../images/body-bg.jpg") repeat;
+	background-attachment: fixed;
+	background-color: #1A1A1A;
+    background-image: url("../images/body-bg.jpg");
+    background-repeat: no-repeat;
+    background-position: left top;
 }
 
 * {
@@ -178,8 +182,6 @@ header {
 	.contentIndex, .contentIndexPlus, .contentSettings {
 		display: none;
 		background-color: #434343;
-		height: auto;
-		height: 580px;
 	}
 	
 	.contentIndexPlus li img {
@@ -192,10 +194,10 @@ header {
 	}
 
 	.partNote, .partSource, .settings {
-		height: 340px;
+		height: 40%;
 	}
 	.newNote, .newSource, .cloudTags, .cloudAuthors, .editNote, .editSource {
-		height: 580px;
+		height: 80%;
 	}
 
 /* **************************************************************** */
@@ -297,6 +299,8 @@ header {
 	margin-left: auto;
 	margin-right: auto;
 	background-color: rgba(26, 26, 26, 0.8);
+	position: fixed;
+	z-index: 30;
 }
 
 	.lens .note {
@@ -316,7 +320,6 @@ header {
 		border-radius: 5px;
 		margin-left: auto;
 		margin-right: auto;
-		padding: 22px;
 		overflow: auto;
 	}
 
@@ -335,17 +338,6 @@ header {
 }
 .note h3 {
 	float: left;
-}
-
-a.zoom {
-	display:none;
-	background: rgba(0, 0, 0, 0.5);
-	border-radius:50%;
-	border:1px groove #564F4F;
-	font-size:x-small;
-	font-weight: bold;
-	padding: 0 4px 1px 4px;
-	margin-right: 22px;
 }
 
 p.linkText, p.linkText a {
@@ -456,10 +448,29 @@ a.nonpublic{
 		margin-bottom:8px;
 	}
 
+/* **************************************************************** */
 
+/* **************************************************************** */
+/* cloud */
+a.tiny{
+	font-size:0.7em;
+}
+a.small{
+	font-size:1.0em;
+}
+a.medium{
+	font-size:1.3em;
+}
+a.large{
+	font-size:1.7em;
+}
+a.extralarge{
+	font-size:1.9em;
+}
 
 
 /* **************************************************************** */
+
 
 
 
@@ -470,7 +481,7 @@ footer {
 	box-shadow: 0 -3px 2px -2px #E5E5E5;
 	text-align: center;
 	font-size: x-small;
-	height: 2em;
+	height: 22px;
 	width: 100%;
 	bottom: 0;
 	position: fixed;

@@ -4,16 +4,12 @@
 <?php
 	global $count;
 	$count = 50;
-	
 	$root = pathinfo($_SERVER['SCRIPT_FILENAME']);
 	define ('BASE_FOLDER',	basename($root['dirname']));	// = notizblogg
 	define ('SITE_ROOT',	$root['dirname']);				// = /var/www/notizblogg
 	define ('SITE_URL',		'http://'.$_SERVER['HTTP_HOST'].'/'.BASE_FOLDER); // = http://chip.iml.unibas.ch/notizblogg
-	
-	
 
-
-	include (SITE_ROOT."/common/config.php");
+	include (SITE_ROOT."/conf/settings.php");
 	include (SITE_ROOT."/common/php/db.php");
 	include (SITE_ROOT."/common/php/content.php");
 
@@ -28,9 +24,9 @@
 	//include ("fn_edit.php");
 	//$sitePath = $_SERVER["REQUEST_URI"];
 	//connect();
-		$siteTitle = "Notizblogg";
+
 	//disconnect();
-	$folder = "";
+
 
 	date_default_timezone_set("UTC");
 ?>
@@ -287,11 +283,11 @@
 			}
 		echo "</div>";
 	}
-
 disconnect();
 ?>
 	</div>
 <script type="text/javascript">
+
 
 	$(document).ready(function() {
 		if($("h1.left").text()!=""){
@@ -317,6 +313,13 @@ disconnect();
 		$(".path").val(newLocation);
 		
 		
+		winWidth = $(window).width() - 100; 
+		winHeight = $(window).height() - 100;
+		
+		$(".contentIndex").css({"height":winHeight+"px"});
+		$(".contentIndexPlus").css({"height":winHeight+"px"});		
+		$(".contentSettings").css({"height":winHeight+"px"});
+		$(".viewer").css({"min-height":winHeight+"px"});
 		/*
 		$("header").click(function(){
 			$(".slidePart").slideToggle("slow");
@@ -419,6 +422,18 @@ disconnect();
 			}
 		});
 
+	$(window).resize(function(){
+		winWidth = $(window).width() - 100; 
+		winHeight = $(window).height() - 100;
+		
+		$(".contentIndex").css({"height":winHeight+"px"});
+		$(".contentIndexPlus").css({"height":winHeight+"px"});		
+		$(".contentSettings").css({"height":winHeight+"px"});
+		$(".viewer").css({"min-height":winHeight+"px"});
+	});
+		
+		
+		
 		$("button.changeView").click(function(){
 			if ($("button.changeView").val()=="paper") {
 				$("div.desk").addClass("paper");
@@ -543,25 +558,35 @@ $("img.staticMedia").mousedown(function(event) {
 */
 
 		$("img.staticMedia").mousedown(function(event) {
-			imgWidth = $(window).width() - 44; 
-			imgHeight = $(window).height() - 44;
-			
+
+			var img = new Image();
+			img.src = $(this).attr("src");
+			imgRatio = img.width / img.height;
 			switch (event.which) {
 				case 1:				//left
 				case 2:				//middle
 				case 3:				//right
 				{
+					
+					
 					var zoomMedia = $(this).attr("src");			// 
 					var zoomNote = $(this).attr("title");			// = noteID
+					$("body").css("overflow", "hidden");
 					$("header").fadeTo("fast", 0);
 					$(".partIndex").fadeTo("fast", 0);
 					$(".titleIndex").fadeTo("fast", 0);
 					$(".viewer").fadeTo("slow", 0);
 					$(".lens").fadeTo("slow", 1);
 					
-					$(".lens").css({"width":$(window).width(), "height":$(window).height(), "padding-top":""}); //padding-top definieren!!!!!!!!!!
+					$(".lens").css({"width":$(window).width()+"px", "height":$(window).height()+"px", "padding":"22px"});
+					
 					$(".lens").html("<img class='zoomMedia' src="+zoomMedia+">");
-					$(".lens img").css({"max-width":imgWidth, "max-height":imgHeight});
+					if(img.width >= (winWidth/2) || img.height >= (winHeight/2)){
+						$(".lens img").css({"max-width":winWidth+"px", "max-height":winHeight+"px"});
+					} else {
+						maxWidth = img.width * 2; maxHeight = img.height * 2;
+						$(".lens img").css({"width":maxWidth+"px", "height":maxHeight+"px"});
+					}
 					//$(this).css({"max-height":"580px"});
 					$(".viewer").bind("contextmenu",function(event){
 						return false;
@@ -583,6 +608,8 @@ $("img.staticMedia").mousedown(function(event) {
 					$(".lens").fadeTo("slow", 0);
 					$(".lens").css({"display":"none"});
 					$(".lens").html();
+					$("body").css("overflow", "auto");
+					
 					$("header").fadeTo("slow", 1);
 					$(".partIndex").fadeTo("slow", 1);
 					$(".titleIndex").fadeTo("slow", 1);

@@ -3,7 +3,6 @@
  * Connect to MySQL-Database and disconnect it
  * ************************************************************** 
  */
-global $con;
  
  
 function connect(){
@@ -17,6 +16,8 @@ function connect(){
 }
 
 function disconnect(){
+	include (SITE_ROOT."/common/.privat/conf-pw.php");
+	$con = mysql_connect($mysqlhost, $mysqluser, $mysqlpasswd);
 	mysql_close($con);
 }
 
