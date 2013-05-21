@@ -97,7 +97,7 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 		{
 			$mediaInfo = MEDIA_FOLDER."/documents/".$noteMedia;
 			if (file_exists($mediaInfo)){
-				echo "<a href='".SITE_URL."/media/documents/".$noteMedia."' title='Download ".$noteMedia." (".$size."kb)' class='warning'>Open / Download ".$noteMedia." (".$size."kb)</a><br>";
+				echo "<a href='".MEDIA_FOLDER."/documents/".$noteMedia."' title='Download ".$noteMedia." (".$size."kb)' class='warning'>Open / Download ".$noteMedia." (".$size."kb)</a><br>";
 			} else {
 				echo "<p class='warning'>[The pdf document is missing!]</p>";
 			}

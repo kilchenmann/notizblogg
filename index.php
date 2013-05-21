@@ -3,7 +3,7 @@
 <head>
 <?php
 	global $count;
-	$count = 200;
+	$count = 50;
 	
 	$root = pathinfo($_SERVER['SCRIPT_FILENAME']);
 	define ('BASE_FOLDER',	basename($root['dirname']));	// = notizblogg
@@ -16,7 +16,9 @@
 	include (SITE_ROOT."/common/config.php");
 	include (SITE_ROOT."/common/php/db.php");
 	include (SITE_ROOT."/common/php/content.php");
+
 	include (SITE_ROOT."/common/php/getNote.php");
+	include (SITE_ROOT."/common/php/edit.php");
 	
 //	include ("fn/content.php");
 //	include ("fn/getNote.php");
@@ -200,28 +202,28 @@
 		<div class="contentIndex">
 			<div class="newNote">
 				<p>Hier JS-Function für new note!</p>
-				<?php include "newNote.php"; ?>
+				<?php include "admin/newNote.php"; ?>
 			</div>
 			<div class="editNote">
-				<?php include "editNote.php"; ?>
+				<?php include "admin/editNote.php"; ?>
 			</div>
 			<div class="newSource">
-				<?php include "newSource.php"; ?>
+				<?php include "admin/newSource.php"; ?>
 			</div>
 			<div class="editSource">
-				<?php //include "editSource.php"; ?>
+				<?php //include "admin/editSource.php"; ?>
 			</div>
 			<div class="partNote">
-				<?php include "partNote.php"; ?>
+				<?php include "common/partNote.php"; ?>
 			</div>
 			<div class="partSource">
-				<?php include "partSource.php"; ?>
+				<?php include "common/partSource.php"; ?>
 			</div>
 			<div class="cloudTags">
-				<?php include "cloudTags.php"; ?>
+				<?php include "common/cloudTags.php"; ?>
 			</div>
 			<div class="cloudAuthors">
-				<?php include "cloudAuthors.php"; ?>
+				<?php include "common/cloudAuthors.php"; ?>
 			</div>
 			<div class="settings">
 
@@ -229,10 +231,11 @@
 		</div>
 		<div class="contentIndexPlus">
 <?php
-		$allFiles = scandir('media'); //Ordner "media" auslesen
+//<?php echo MEDIA_FOLDER;
+		$allFiles = scandir(MEDIA_FOLDER."/pictures/"); //Ordner "media" auslesen
 		foreach ($allFiles as $file) { // Ausgabeschleife
 			if($file != "." && $file != ".." && !is_dir($file)){
-				echo "<li name='".$file."'><img src='media/".$file."' > ".$file."</li>"; //Ausgabe Einzeldatei
+				echo "<li name='".$file."'><img src='".MEDIA_FOLDER."/pictures/".$file."' > ".$file."</li>"; //Ausgabe Einzeldatei
 			}
 		}
 ?>
@@ -245,8 +248,10 @@
 	</div>
 <!-- ------------------------------------------------------------- -->
 	
-	<div class="viewer">
 	
+	
+	<div class="lens"></div>
+	<div class="viewer">
 	
 	
 <?php
@@ -300,6 +305,10 @@ disconnect();
 			// Hide the address bar!
 				window.scrollTo(0, 1);
 			}, 0);
+			$(".lens").bind("contextmenu",function(e){
+				return false;
+			});
+		
 		});
 		
 		var editLocation = window.location.toString();
@@ -428,7 +437,7 @@ disconnect();
 			var serverPicture = $(this).attr("name");
 			$("input.mediaName").val(serverPicture);
 			$(".choosenMedia").html("<img>");
-			$(".choosenMedia img").attr("src","media/"+serverPicture);
+			$(".choosenMedia img").attr("src","<?php echo MEDIA_FOLDER; ?>/pictures/"+serverPicture);
 		});
 		
 		/*
@@ -515,17 +524,75 @@ disconnect();
 			},"fast");
 		*/
 		});
+/*
+$("img.staticMedia").mousedown(function(event) {
+    switch (event.which) {
+        case 1:
+            alert('Left mouse button pressed');
+            break;
+        case 2:
+            alert('Middle mouse button pressed');
+            break;
+        case 3:
+            alert('Right mouse button pressed');
+            break;
+        default:
+            alert('You have a strange mouse');
+    }
+});
+*/
 
-		$("img.staticMedia").click(function(){
-			var zoomMedia = $(this).attr("src");
-			var zoomNote = $(this).attr("title");
-			$(".viewer").fadeTo("slow", 0.1);
-			$(".navigationIndex").append("<div class='lens'></div>");
-			$(".lens").html("<img src="+zoomMedia+">");
+		$("img.staticMedia").mousedown(function(event) {
+			imgWidth = $(window).width() - 44; 
+			imgHeight = $(window).height() - 44;
 			
-			$(this).css({"max-height":"580px"});
-			//$("div.desk").addClass("lens");
-			//$("div.desk").removeClass("desk");
+			switch (event.which) {
+				case 1:				//left
+				case 2:				//middle
+				case 3:				//right
+				{
+					var zoomMedia = $(this).attr("src");			// 
+					var zoomNote = $(this).attr("title");			// = noteID
+					$("header").fadeTo("fast", 0);
+					$(".partIndex").fadeTo("fast", 0);
+					$(".titleIndex").fadeTo("fast", 0);
+					$(".viewer").fadeTo("slow", 0);
+					$(".lens").fadeTo("slow", 1);
+					
+					$(".lens").css({"width":$(window).width(), "height":$(window).height(), "padding-top":""}); //padding-top definieren!!!!!!!!!!
+					$(".lens").html("<img class='zoomMedia' src="+zoomMedia+">");
+					$(".lens img").css({"max-width":imgWidth, "max-height":imgHeight});
+					//$(this).css({"max-height":"580px"});
+					$(".viewer").bind("contextmenu",function(event){
+						return false;
+					});
+					break;
+				}
+			default:
+			{
+				alert('You have a strange mouse');
+			}}
+		});
+		
+		$(".lens").mousedown(function(event) {
+			switch (event.which) {
+				case 1:				//left
+				case 2:				//middle
+				case 3:				//right
+				{
+					$(".lens").fadeTo("slow", 0);
+					$(".lens").css({"display":"none"});
+					$(".lens").html();
+					$("header").fadeTo("slow", 1);
+					$(".partIndex").fadeTo("slow", 1);
+					$(".titleIndex").fadeTo("slow", 1);
+					$(".viewer").fadeTo("slow", 1);
+					break;
+				}
+			default:
+			{
+				alert('You have a strange mouse');
+			}}
 		});
 
 

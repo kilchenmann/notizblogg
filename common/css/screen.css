@@ -179,7 +179,7 @@ header {
 		display: none;
 		background-color: #434343;
 		height: auto;
-		max-height: 680px;
+		height: 580px;
 	}
 	
 	.contentIndexPlus li img {
@@ -195,7 +195,7 @@ header {
 		height: 340px;
 	}
 	.newNote, .newSource, .cloudTags, .cloudAuthors, .editNote, .editSource {
-		max-height: 680px;
+		height: 580px;
 	}
 
 /* **************************************************************** */
@@ -291,10 +291,45 @@ header {
 
 /* **************************************************************** */
 /* mainview */
+.lens {
+	display: none;
+	clear: both;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: rgba(26, 26, 26, 0.8);
+}
+
+	.lens .note {
+		background: rgba(215, 215, 215, 0.3);
+		box-shadow:0px 0px 4px 0px rgba(215, 215, 215, 1.5);
+		border-radius:5px;
+		border:1px groove #564F4F;
+		width: 600px;
+		height: 80%;
+		z-index: -20;
+		padding: 4px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.lens img, .lens video {
+		display:block;
+		border-radius: 5px;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 22px;
+		overflow: auto;
+	}
+
+
+
 .viewer {
 	padding: 111px 33px 66px 33px;
 	clear: both;
 }
+
+
+
+
 .note .cache {
 	display: none;
 }
@@ -422,33 +457,8 @@ a.nonpublic{
 	}
 
 
-.lens {
-	width: 600px;
-	height: 842px;
-	margin-left: auto;
-	margin-right: auto;
-}
 
-	.lens .note {
-		background: rgba(215, 215, 215, 0.3);
-		box-shadow:0px 0px 4px 0px rgba(215, 215, 215, 1.5);
-		border-radius:5px;
-		border:1px groove #564F4F;
-		width: 600px;
-		height: 80%;
-		z-index: -20;
-		padding: 4px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-	.lens .note img, .lens .note video {
-		max-width:580px;
-		max-height:580px;
-		display:block;
-		margin-left: auto;
-		margin-right: auto;
-		overflow: auto;
-	}
+
 /* **************************************************************** */
 
 
