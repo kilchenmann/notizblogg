@@ -53,6 +53,7 @@
 	echo "<link type='text/css' rel='stylesheet' media='print, embossed' href='".SITE_URL."/common/css/print.css' />";
 	
 	echo "<script type='text/javascript' src='".SITE_URL."/common/jquery/jquery-1.7.2.min.js'></script>";
+	echo "<script type='text/javascript' src='".SITE_URL."/common/jquery/jquery.jcookie.js'></script>";
 ?>
 
 
@@ -121,6 +122,7 @@
 	</div>
 
 	<header>
+		<div class="panel">
 		<div class="typeIndex">
 			<h2></h2>
 		</div>
@@ -170,8 +172,10 @@
 				</tr>
 			</tbody>
 		</table>
+		</div>
 	</header>
 <!-- ------------------------------------------------------------- -->
+	<div class="panel">
 	<div class="navigationIndex">
 		<div class="partIndex">
 			<h2></h2>
@@ -242,6 +246,7 @@
 			<li><a href="logout.php" >Logout</a></li>
 		</div>
 	</div>
+	</div>
 <!-- ------------------------------------------------------------- -->
 	
 	
@@ -288,8 +293,32 @@ disconnect();
 	</div>
 <script type="text/javascript">
 
-
 	$(document).ready(function() {
+
+// get cookie  
+//		alert(scroll);  
+
+
+		if(jQuery.jCookie('cookietop')){
+			// set cookie  
+			//jQuery.jCookie('cookietop','0');
+			var scrollPosition = jQuery.jCookie('cookietop');
+			//scrollTop(scrollPosition);
+			$("html, body").animate({scrollTop: scrollPosition}, "fast");
+			// delete cookie  
+			jQuery.jCookie('cookietop',null);
+		}
+		if(jQuery.jCookie('viewertype')){
+			var viewerType = jQuery.jCookie('viewertype');
+			if(viewerType != 'desk'){
+				$('.desk').toggleClass(viewerType);
+				$('.desk').toggleClass('desk');
+				$("button.changeView").val("desk");
+				$("button.changeView").html("<img src='<?php echo SITE_URL;?>/common/images/viewDesk.png'>");
+				jQuery.jCookie('viewertype',null);
+			}
+		}
+
 		if($("h1.left").text()!=""){
 			var siteTitle = $(".titleIndex .left").text()+" ("+$(".partIndex h2").text()+" in Notizblogg)";
 			document.title = siteTitle;
@@ -621,6 +650,61 @@ $("img.staticMedia").mousedown(function(event) {
 				alert('You have a strange mouse');
 			}}
 		});
+		
+		$(".note").mouseenter(function(){
+			var activeContent = $(this).children(".content");
+			var activeNote = $(this);
+			var noteHeight = activeNote.height();
+			$(this).children(".set").fadeTo("fast", 1);
+			$(".set button").click(function(){
+				$(this).text("cancel");
+				$(this).toggleClass("mark cancel");
+				var textHeight=activeContent.height();
+				var editContent = activeContent.text();
+				var editArea = $("<textarea class='quickEdit' readonly />");
+				activeContent.replaceWith(editArea);
+				activeNote.css({'height':noteHeight+'px'});
+				editArea.css({'height':textHeight+'px'});
+				editArea.text(editContent);
+				editArea.select();
+				$(".set button.cancel").click(function(){
+					$('this').text('mark');
+					$('this').toggleClass('cancel mark');
+					var editArea = $(this).children("textarea");
+					var editContent = editArea.text();
+					var editedText = $("<p class='content' />");
+					editArea.replaceWith(editedText);
+					editedText.text(editContent);
+					var cookietop = $(window).scrollTop();
+					var viewertype = $('.viewer').children().attr('class');
+					jQuery.jCookie('cookietop',cookietop);
+					jQuery.jCookie('viewertype',viewertype);
+					//alert($('.viewer').next()[0].attr('class'));
+					location.reload();
+				});
+			});
+		});
+
+
+
+		$(".note").mouseleave(function(){
+			$(this).children(".set").fadeTo("fast", 0);
+			if($(this).children("textarea").length){
+				var editArea = $(this).children("textarea");
+				var editContent = editArea.text();
+				var editedText = $("<p class='content' />");
+				editArea.replaceWith(editedText);
+				editedText.text(editContent);
+				var cookietop = $(window).scrollTop();
+				var viewertype = $('.viewer').children().attr('class');
+				jQuery.jCookie('cookietop',cookietop);
+				jQuery.jCookie('viewertype',viewertype);
+				location.reload();
+			}
+		});
+
+
+		
 
 
 	</script>

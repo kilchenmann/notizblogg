@@ -4,7 +4,7 @@ body {
 	background-attachment: fixed;
 	background-color: #1A1A1A;
     background-image: url("../images/body-bg.jpg");
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     background-position: left top;
 }
 
@@ -49,6 +49,11 @@ header {
 	top: 0;
 	position: fixed;
 	z-index: 20;
+}
+.panel{
+	width:1024px;
+	margin-left:auto;
+	margin-right:auto;
 }
 
 	.typeIndex {
@@ -133,9 +138,11 @@ header {
 	position: fixed;
 }
 	.partIndex {
-		width: 70px;
+		width: 68px;
 		text-align: center;
 		border-bottom: 2px solid #4D4D4D;
+		border-left: 2px solid #4D4D4D;
+		border-bottom-left-radius: 11px;
 		background-color: #000000;
 	}
 
@@ -330,20 +337,30 @@ header {
 	clear: both;
 }
 
-
-
-
 .note .cache {
 	display: none;
 }
 .note h3 {
 	float: left;
 }
+.note textarea{
+	overflow: hidden;
+	background: none;
+	border: none;
+	width: 100%;
+}
 
+.note .set{
+	display: none;
+}
+.note .set button{
+	float:right;
+	cursor: pointer;
+	color: #1A1A1A;
+}
 p.linkText, p.linkText a {
 	font-size: x-small;
 }
-
 a.public{
 	float:right;
 	background: rgba(0, 255, 0, 0.2);
@@ -371,17 +388,20 @@ a.nonpublic{
 
 .desk {
 	-moz-column-width:330px;
-	-moz-column-count: auto;
+	-moz-column-count: 3;
 	-moz-column-gap: 2px;
-	-moz-column-fill: auto;
+	-moz-column-fill: 3;
 	-webkit-column-width:330px;
-	-webkit-column-count: auto;
+	-webkit-column-count: 3;
 	-webkit-column-gap: 2px;
-	-webkit-column-fill: auto;
+	-webkit-column-fill: 3;
 	column-width:330px;
-	column-count: auto;
+	column-count: 3;
 	column-gap: 2px;
-	column-fill: auto;
+	column-fill: 3;
+	width: 1024px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 	.desk .note {

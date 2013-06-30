@@ -42,7 +42,11 @@ function showNote($note){
 				if($noteSourceExtern!=""){
 					echo "<p class='linkText'>--&gt; <a href='".$noteSourceExtern."' title='extern'>".$noteSourceExtern."</a></p>";
 				}
-				echo "<br><br>";
+//				echo "<br>";
+					echo "<div class='set'>";
+						echo "<button class='mark'>mark</button>";
+					echo "</div>";
+				echo "<br>";
 				echo "<p class='linkText'>";
 					echo linkIndex('note', 'category', $noteCategory);
 					echo " &gt; ";
@@ -86,6 +90,7 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 				// ergibt mit $infoSize[0] für breite und $infoSize[1] für höhe
 				echo "<img class='staticMedia' src='".MEDIA_FOLDER."/pictures/".$noteMedia."' alt='".$noteTitle."' title='".$noteID."' />";
 			} else {
+				echo "<img class='staticMedia' src='".MEDIA_FOLDER."/pictures/".$noteMedia."' alt='".$noteTitle."' title='".$noteID."' />";
 				echo "<p class='warning'>[The picture file is missing!]</p>";
 			}
 			break;
