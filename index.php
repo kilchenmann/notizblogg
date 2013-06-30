@@ -306,7 +306,9 @@ disconnect();
 			//scrollTop(scrollPosition);
 			$("html, body").animate({scrollTop: scrollPosition}, "fast");
 			// delete cookie  
-			jQuery.jCookie('cookietop',null);
+			if($(".menuNew").text() != "EDIT"){
+				jQuery.jCookie('cookietop',null);
+			}
 		}
 		if(jQuery.jCookie('viewertype')){
 			var viewerType = jQuery.jCookie('viewertype');
@@ -315,7 +317,6 @@ disconnect();
 				$('.desk').toggleClass('desk');
 				$("button.changeView").val("desk");
 				$("button.changeView").html("<img src='<?php echo SITE_URL;?>/common/images/viewDesk.png'>");
-				jQuery.jCookie('viewertype',null);
 			}
 		}
 
@@ -469,11 +470,13 @@ disconnect();
 				$("div.desk").removeClass("desk");
 				$("button.changeView").val("desk");
 				$("button.changeView").html("<img src='<?php echo SITE_URL;?>/common/images/viewDesk.png'>");
+				jQuery.jCookie('viewertype','paper');
 			} else {
 				$("div.paper").addClass("desk");
 				$("div.paper").removeClass("paper");
 				$("button.changeView").val("paper");
 				$("button.changeView").html("<img src='<?php echo SITE_URL;?>/common/images/viewPaper.png'>");
+				jQuery.jCookie('viewertype','desk');
 			}
 		});
 
@@ -585,7 +588,11 @@ $("img.staticMedia").mousedown(function(event) {
     }
 });
 */
-
+		$(".edit").click(function(){
+			var cookietop = $(window).scrollTop();
+			jQuery.jCookie('cookietop',cookietop);
+		});
+		
 		$("img.staticMedia").mousedown(function(event) {
 
 			var img = new Image();
@@ -652,14 +659,14 @@ $("img.staticMedia").mousedown(function(event) {
 		});
 		
 		$(".note").mouseenter(function(){
-			var activeContent = $(this).children(".content");
-			var activeNote = $(this);
-			var noteHeight = activeNote.height();
+			activeContent = $(this).children(".content");
+			textHeight=activeContent.height();
+			activeNote = $(this);
+			noteHeight = activeNote.height();
 			$(this).children(".set").fadeTo("fast", 1);
-			$(".set button").click(function(){
+			$(".set button.mark").click(function(){
 				$(this).text("cancel");
 				$(this).toggleClass("mark cancel");
-				var textHeight=activeContent.height();
 				var editContent = activeContent.text();
 				var editArea = $("<textarea class='quickEdit' readonly />");
 				activeContent.replaceWith(editArea);
@@ -688,7 +695,7 @@ $("img.staticMedia").mousedown(function(event) {
 
 
 		$(".note").mouseleave(function(){
-			$(this).children(".set").fadeTo("fast", 0);
+			$(this).children(".set").css({'display':'none'});
 			if($(this).children("textarea").length){
 				var editArea = $(this).children("textarea");
 				var editContent = editArea.text();

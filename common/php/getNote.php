@@ -61,10 +61,10 @@ function showNote($note){
 					
 					if($notePublic == 1){
 						//echo "<a href='index.php?type=note&part=edit&id=".$note."' class='public' title='edit'>e</a>";
-						echo "<a href='".$editLink."' class='public' title='edit' name=".$note.">e</a>";
+						echo "<a href='".$editLink."' class='edit public' title='edit' name=".$note.">e</a>";
 					} else {
 						//echo "<a href='index.php?type=note&part=edit&id=".$note."' class='nonpublic' title='edit'>e</a>";
-						echo "<a href='".$editLink."' class='nonpublic' title='edit' name=".$note.">e</a>";
+						echo "<a href='".$editLink."' class='edit nonpublic' title='edit' name=".$note.">e</a>";
 					}
 				echo "</p>";
 				echo "</div>";
@@ -83,15 +83,17 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 		case "tif";
 		{
 			$mediaInfo = MEDIA_FOLDER."/pictures/".$noteMedia;
-			if (file_exists($mediaInfo)){
+			
+			if (@fopen($mediaInfo,"r")==true){
+			
+//			if (file_exists($mediaInfo)){
 				$size = ceil(filesize(MEDIA_FOLDER."/pictures/".$noteMedia)/1024);
 				$fileName = $mediaInfo['filename'];
 				$infoSize = getimagesize(MEDIA_FOLDER."/pictures/".$noteMedia);
 				// ergibt mit $infoSize[0] für breite und $infoSize[1] für höhe
 				echo "<img class='staticMedia' src='".MEDIA_FOLDER."/pictures/".$noteMedia."' alt='".$noteTitle."' title='".$noteID."' />";
 			} else {
-				echo "<img class='staticMedia' src='".MEDIA_FOLDER."/pictures/".$noteMedia."' alt='".$noteTitle."' title='".$noteID."' />";
-				echo "<p class='warning'>[The picture file is missing!]</p>";
+				echo "<p class='warning' title='".MEDIA_FOLDER."/pictures/".$noteMedia."'>[The picture file is missing!]</p>";
 			}
 			break;
 		}
