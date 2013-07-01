@@ -3,16 +3,6 @@
  * ************************************************************** 
  */
 
-
-
-
-
-
-
-
-
-
-
 function linkIndexMNlist($id,$table){
 	$tableID = $table."ID";
 	$tableName = $table."Name";

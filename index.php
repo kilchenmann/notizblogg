@@ -14,8 +14,9 @@
 	include (SITE_ROOT."/common/php/content.php");
 
 	include (SITE_ROOT."/common/php/getNote.php");
+	include (SITE_ROOT."/common/php/getSource.php");
 	include (SITE_ROOT."/common/php/edit.php");
-	
+
 //	include ("fn/content.php");
 //	include ("fn/getNote.php");
 //	include ("fn/getSource.php");
@@ -45,13 +46,13 @@
 	} else {
 		echo "<meta charset='UTF-8' />";
 	}
-	
+
 	echo "<link rel='shortcut icon' href='".SITE_URL."/common/images/favicon.ico'>";
-	
+
 	echo "<link type='text/css' rel='stylesheet' media='screen' href='".SITE_URL."/common/css/screen.css' />";
 	echo "<link type='text/css' rel='stylesheet' media='screen' href='".SITE_URL."/common/css/screenMobile.css' />";
 	echo "<link type='text/css' rel='stylesheet' media='print, embossed' href='".SITE_URL."/common/css/print.css' />";
-	
+
 	echo "<script type='text/javascript' src='".SITE_URL."/common/jquery/jquery-1.7.2.min.js'></script>";
 	echo "<script type='text/javascript' src='".SITE_URL."/common/jquery/jquery.jcookie.js'></script>";
 ?>
@@ -59,7 +60,7 @@
 
 
 	<script type="text/javascript">
-	
+
 	function changeMenu(type){
 		if(type=="NOTES"){
 			$(".typeIndex h2").html("SOURCES");
@@ -107,14 +108,15 @@
 				var active = $(".menu button.active").val();
 				$("."+active).fadeIn("slow");
 			}
-		}	
-		
+		}
+
 	}
-	
-	
+
+
 	</script>
 </head>
 <body>
+
 <?php connect(); ?>
 
 	<div class="preload">
@@ -189,15 +191,15 @@
 				}
 			});
 		</script>
-		
+
 		<!-- ------------------------------------------- -->
 		<div class="titleIndex">
 			<h1 class="left"></h1>
 			<p class="right"></p>
 		</div>
-		
-		
-		
+
+
+
 		<!-- ------------------------------------------- -->
 		<div class="contentIndex">
 			<div class="newNote">
@@ -248,13 +250,13 @@
 	</div>
 	</div>
 <!-- ------------------------------------------------------------- -->
-	
-	
-	
+
+
+
 	<div class="lens"></div>
 	<div class="viewer">
-	
-	
+
+
 <?php
 
 	if($_SERVER["QUERY_STRING"]){
@@ -293,19 +295,16 @@ disconnect();
 	</div>
 <script type="text/javascript">
 
+	$('body').css({'cursor':'wait'});
 	$(document).ready(function() {
 
-// get cookie  
-//		alert(scroll);  
-
-
 		if(jQuery.jCookie('cookietop')){
-			// set cookie  
+			// set cookie
 			//jQuery.jCookie('cookietop','0');
 			var scrollPosition = jQuery.jCookie('cookietop');
 			//scrollTop(scrollPosition);
 			$("html, body").animate({scrollTop: scrollPosition}, "fast");
-			// delete cookie  
+			// delete cookie
 			if($(".menuNew").text() != "EDIT"){
 				jQuery.jCookie('cookietop',null);
 			}
@@ -334,20 +333,22 @@ disconnect();
 			$(".lens").bind("contextmenu",function(e){
 				return false;
 			});
-		
+
 		});
-		
+
+		$('body').css({'cursor':'auto'});
+
 		var editLocation = window.location.toString();
 		var getLocation = editLocation.split("edit=")[0];
 		var newLocation = getLocation.substr(0,getLocation.length-1)
 		$(".path").val(newLocation);
-		
-		
-		winWidth = $(window).width() - 100; 
+
+
+		winWidth = $(window).width() - 100;
 		winHeight = $(window).height() - 100;
-		
+
 		$(".contentIndex").css({"height":winHeight+"px"});
-		$(".contentIndexPlus").css({"height":winHeight+"px"});		
+		$(".contentIndexPlus").css({"height":winHeight+"px"});
 		$(".contentSettings").css({"height":winHeight+"px"});
 		$(".viewer").css({"min-height":winHeight+"px"});
 		/*
@@ -397,7 +398,7 @@ disconnect();
 					$("div.contentIndex").animate({
 						width: "720px"
 					},"fast");
-				} 
+				}
 
 			} else if((!$(this).hasClass("active"))&&($(".titleIndex").css("display")=="none")){
 				/* es ist bereits ein fenster geöffnet */
@@ -406,7 +407,7 @@ disconnect();
 				}
 				$("button.active").toggleClass("active");
 				$(this).toggleClass("active");
-				
+
 				if(!$(this).hasClass("menuNew")){
 					$(".contentIndex").animate({
 						width: "460px"
@@ -416,7 +417,7 @@ disconnect();
 						width: "720px"
 					},"slow");
 				}
-				
+
 				$(".contentIndex").children("div").fadeOut("fast");
 				$("div."+openIndex).fadeIn("fast");
 
@@ -430,7 +431,7 @@ disconnect();
 					$(".contentIndex").animate({
 						width: "460px"
 					},"fast");
-				} 
+				}
 				$("div."+openIndex).slideToggle("fast");
 				$("div.contentIndex").slideToggle("fast", function(){
 
@@ -438,7 +439,7 @@ disconnect();
 					$(".viewer").fadeTo("slow", 1);
 					$(".partIndex").fadeTo("fast", 1);
 				});
-				
+
 				if($("button.menuNew").text()=="EDIT"){
 					$("button.menuNew").html("NEW");
 					$("button.menuNew").val("newNote");
@@ -453,17 +454,17 @@ disconnect();
 		});
 
 	$(window).resize(function(){
-		winWidth = $(window).width() - 100; 
+		winWidth = $(window).width() - 100;
 		winHeight = $(window).height() - 100;
-		
+
 		$(".contentIndex").css({"height":winHeight+"px"});
-		$(".contentIndexPlus").css({"height":winHeight+"px"});		
+		$(".contentIndexPlus").css({"height":winHeight+"px"});
 		$(".contentSettings").css({"height":winHeight+"px"});
 		$(".viewer").css({"min-height":winHeight+"px"});
 	});
-		
-		
-		
+
+
+
 		$("button.changeView").click(function(){
 			if ($("button.changeView").val()=="paper") {
 				$("div.desk").addClass("paper");
@@ -486,7 +487,7 @@ disconnect();
 			$(".choosenMedia").html("<img>");
 			$(".choosenMedia img").attr("src","<?php echo MEDIA_FOLDER; ?>/pictures/"+serverPicture);
 		});
-		
+
 		/*
 		$("a.nonpublic").click(function(){
 			var note = $(this).closest(".note").children("div.cache").text();
@@ -504,10 +505,10 @@ disconnect();
 			$(".newNote input[name='noteID']").val(noteID);
 			$(".newNote input[name='nTitle']").val(noteTitle);
 			$(".newNote textarea[name='nContent']").html(noteContent);
-			
+
 			$(".newNote input[name='mediaName']").val(noteMedia);
-			
-			
+
+
 			$("button.menuNew").html("EDIT");
 			$("button.menuNew").toggleClass("active");
 			$(".partIndex").fadeTo("fast", 0.1);
@@ -538,7 +539,7 @@ disconnect();
 				$(".contentSettings").slideToggle("slow");
 			}
 		});
-		
+
 		$("button.server").click(function(){
 			if ($(".contentIndexPlus").css("display")=="none") {
 				$(".contentIndexPlus").slideToggle("slow");
@@ -550,16 +551,16 @@ disconnect();
 
 		$(".note a.zoom").click(function() {
 		alert ($(this).attr("title"));
-		
-		
+
+
 		//alert($(this).text());
-		
+
 		$(".viewer").fadeOut("fast");
 		//$(this).parent("div").fadeIn("fast");
-		
+
 		$(this).parent("div").animate({
 				width: "800px",
-				
+
 			},"fast");
 		$(this).text("-")
 //		$(".contentIndex").children("div").fadeOut("fast");
@@ -573,26 +574,26 @@ disconnect();
 		});
 /*
 $("img.staticMedia").mousedown(function(event) {
-    switch (event.which) {
-        case 1:
-            alert('Left mouse button pressed');
-            break;
-        case 2:
-            alert('Middle mouse button pressed');
-            break;
-        case 3:
-            alert('Right mouse button pressed');
-            break;
-        default:
-            alert('You have a strange mouse');
-    }
+	switch (event.which) {
+		case 1:
+			alert('Left mouse button pressed');
+			break;
+		case 2:
+			alert('Middle mouse button pressed');
+			break;
+		case 3:
+			alert('Right mouse button pressed');
+			break;
+		default:
+			alert('You have a strange mouse');
+	}
 });
 */
 		$(".edit").click(function(){
 			var cookietop = $(window).scrollTop();
 			jQuery.jCookie('cookietop',cookietop);
 		});
-		
+
 		$("img.staticMedia").mousedown(function(event) {
 
 			var img = new Image();
@@ -603,9 +604,7 @@ $("img.staticMedia").mousedown(function(event) {
 				case 2:				//middle
 				case 3:				//right
 				{
-					
-					
-					var zoomMedia = $(this).attr("src");			// 
+					var zoomMedia = $(this).attr("src");			//
 					var zoomNote = $(this).attr("title");			// = noteID
 					$("body").css("overflow", "hidden");
 					$("header").fadeTo("fast", 0);
@@ -613,16 +612,19 @@ $("img.staticMedia").mousedown(function(event) {
 					$(".titleIndex").fadeTo("fast", 0);
 					$(".viewer").fadeTo("slow", 0);
 					$(".lens").fadeTo("slow", 1);
-					
-					$(".lens").css({"width":$(window).width()+"px", "height":$(window).height()+"px", "padding":"22px"});
-					
-					$(".lens").html("<img class='zoomMedia' src="+zoomMedia+">");
+
+					$(".lens").css({"width":$(window).width()+"px", "height":$(window).height()+"px", "padding":"22px", "cursor":"move"});
+					$(".lens").html("<div class='set'><button value='close' class='menuSet'><img src='common/images/close.png' alt='close'></button></div>");
+					$(".lens").append("<img class='zoomMedia' src="+zoomMedia+">");
 					if(img.width >= (winWidth/2) || img.height >= (winHeight/2)){
 						$(".lens img").css({"max-width":winWidth+"px", "max-height":winHeight+"px"});
 					} else {
 						maxWidth = img.width * 2; maxHeight = img.height * 2;
 						$(".lens img").css({"width":maxWidth+"px", "height":maxHeight+"px"});
 					}
+					imgWidth = $(".zoomMedia").width();
+					$(".lens .set").css({"width":imgWidth});
+
 					//$(this).css({"max-height":"580px"});
 					$(".viewer").bind("contextmenu",function(event){
 						return false;
@@ -634,7 +636,7 @@ $("img.staticMedia").mousedown(function(event) {
 				alert('You have a strange mouse');
 			}}
 		});
-		
+
 		$(".lens").mousedown(function(event) {
 			switch (event.which) {
 				case 1:				//left
@@ -645,7 +647,7 @@ $("img.staticMedia").mousedown(function(event) {
 					$(".lens").css({"display":"none"});
 					$(".lens").html();
 					$("body").css("overflow", "auto");
-					
+
 					$("header").fadeTo("slow", 1);
 					$(".partIndex").fadeTo("slow", 1);
 					$(".titleIndex").fadeTo("slow", 1);
@@ -657,7 +659,7 @@ $("img.staticMedia").mousedown(function(event) {
 				alert('You have a strange mouse');
 			}}
 		});
-		
+
 		$(".note").mouseenter(function(){
 			activeContent = $(this).children(".content");
 			textHeight=activeContent.height();
@@ -711,7 +713,7 @@ $("img.staticMedia").mousedown(function(event) {
 		});
 
 
-		
+
 
 
 	</script>

@@ -29,6 +29,10 @@ img, video {
 	border-radius: 5px;
 }
 
+button, input img {
+	cursor: pointer;
+}
+
 .warning {
 	color: #ff0000;
 	text-align: center;
@@ -93,7 +97,7 @@ header {
 		padding-left: 6px;
 	}
 
-	header button, header input {
+	header button, header input, .lens .set button{
 		box-shadow: 0 1px 2px rgba(0,0,0,0.3);
 		text-shadow: 0 -1px 2px rgba(0,0,0,0.3);
 		background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#000000));
@@ -105,9 +109,10 @@ header {
 		border-top-left-radius: 11px;
 		border-top-right-radius: 11px;
 		height: 32px;
+	}
+	header button, header input {
 		width: 99%;
 	}
-
 	header button {
 		background-color: rgba(215, 215, 215, 0.5);
 	}
@@ -118,7 +123,6 @@ header {
 
 	header button.enter {
 		border-top-left-radius: 0;
-		cursor: pointer;
 		width: 50px;
 	}
 
@@ -330,6 +334,11 @@ header {
 		overflow: auto;
 	}
 
+	.lens .set {
+		display:block;
+		margin-left:auto;
+		margin-right:auto;
+	}
 
 
 .viewer {
@@ -355,7 +364,6 @@ header {
 }
 .note .set button{
 	float:right;
-	cursor: pointer;
 	color: #1A1A1A;
 }
 p.linkText, p.linkText a {
@@ -384,7 +392,6 @@ a.nonpublic{
 .note h3, .note p.content, p.linkText {
 	padding: 6px;
 }
-
 
 .desk {
 	-moz-column-width:330px;
@@ -427,6 +434,7 @@ a.nonpublic{
 		border-bottom-left-radius: 0;
 		border-bottom-right-radius: 0;
 		border-bottom: 2px solid #1A1A1A;
+		cursor: pointer;
 	}
 
 

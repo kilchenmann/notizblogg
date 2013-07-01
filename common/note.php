@@ -243,6 +243,11 @@ switch($part){
 <?php
 
 	break;
+
+	case "source";
+		showSource($partID);
+		show('note', 'source', $partID);
+	break;
 }
 ?>
 

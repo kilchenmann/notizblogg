@@ -157,14 +157,14 @@ function showSourceCite($noteSource,$notePageStart,$notePageEnd){
 		if($notePageStart!=0){
 			$pages=$notePageEnd-$notePageStart;
 			if($pages<=0){
-				$copy2tex = "\\footcite[][".$notePageStart."]{<a href='index.php?type=source&amp;part=excerpt&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
+				$copy2tex = "\\footcite[][".$notePageStart."]{<a href='index.php?type=note&amp;part=source&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
 			/*} elseif($pages==1){
 				$copy2tex = "\footcite[][".$notePageStart."f.]{".$noteSource."}";*/
 			} else {
-				$copy2tex = "\\footcite[][".$notePageStart."--".$notePageEnd."]{<a href='index.php?type=source&amp;part=excerpt&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
+				$copy2tex = "\\footcite[][".$notePageStart."--".$notePageEnd."]{<a href='index.php?type=note&amp;part=source&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
 			}
 		} else {
-			$copy2tex = "\\footcite{<a href='index.php?type=source&amp;part=excerpt&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
+			$copy2tex = "\\footcite{<a href='index.php?type=note&amp;part=source&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
 		}
 		//echo "<p class='linkText'>--&gt; <a href='index.php?sourceID=".$noteSource."' title='extern'>".$noteSource."</a></p>";
 		echo $copy2tex;

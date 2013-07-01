@@ -99,7 +99,6 @@ function linkIndexMN($type, $part, $id){
 	$mnSql = mysql_query("SELECT ".$part."Name FROM ".$part.", ".$relTable." WHERE ".$part.".".$part."ID = ".$relTable.".".$part."ID AND ".$relTable.".".$type."ID = '".$id."' ORDER BY ".$part."Name");
 
 	$countMN = mysql_num_rows($mnSql);
-
 	if($countMN>0) {
 		while($row = mysql_fetch_array($mnSql)) {
 			$relIDs[] = $row[$part."Name"];
@@ -154,16 +153,21 @@ function indexMN($type, $part, $id){
 
 
 function show($type, $part, $partID){
- 
 	$count = 200;
 	if(!isset($_GET['page'])){
 		$_GET['page'] = 1;
 	}
 	$offset = ($_GET['page'] - 1) * $count;
+	if($type == 'note'){
+		$orderBy = "pageStart, ".$type."Title, date DESC LIMIT ".$offset;
+	} else {
+		$orderBy = $type."Title, date DESC LIMIT ".$offset;
+	}
 	
-	$sql = mysql_query("SELECT ".$type."ID FROM ".$type." WHERE ".$type.$part." = ".$partID." ORDER BY ".$type."Title, date DESC LIMIT ".$offset.", ".$count."");
+	$sql = mysql_query("SELECT ".$type."ID FROM ".$type." WHERE ".$type.$part." = ".$partID." ORDER BY ".$orderBy.", ".$count."");
 	//$sql = mysql_query("SELECT noteID FROM note WHERE noteProject = 5 ORDER BY noteTitle");
 	$countResult = mysql_num_rows($sql);
+
 ?>
 	<script type="text/javascript">
 		$('.partIndex h2').html("<?php echo $part; ?>");
