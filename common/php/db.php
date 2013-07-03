@@ -4,9 +4,8 @@
  * ************************************************************** 
  */
  
- 
 function connect(){
-	include (SITE_ROOT."/common/.privat/conf-pw.php");
+	include (SITE_PATH."/conf/.privat/conf-pw.php");
 	$con = mysql_connect($mysqlhost, $mysqluser, $mysqlpasswd);
 		if (!$con){
 			die('MySQL-Access denied:' . mysql_error());
@@ -16,7 +15,7 @@ function connect(){
 }
 
 function disconnect(){
-	include (SITE_ROOT."/common/.privat/conf-pw.php");
+	include (SITE_PATH."/conf/.privat/conf-pw.php");
 	$con = mysql_connect($mysqlhost, $mysqluser, $mysqlpasswd);
 	mysql_close($con);
 }

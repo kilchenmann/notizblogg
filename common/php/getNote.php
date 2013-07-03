@@ -1,7 +1,14 @@
 <?php
 
-function showNote($note){
-	$noteSql = mysql_query("SELECT * FROM note WHERE noteID='".$note."'");
+function showNote($note, $access){
+	if($access == 'public'){
+		$gpa = "AND notePublic = 1";
+		$editNote = "";
+	} else {
+		$gpa = "";
+	}
+	$noteSql = mysql_query("SELECT * FROM note WHERE noteID='".$note."' ".$gpa.";");
+
 		while($row = mysql_fetch_object($noteSql)){
 			$noteID = $row->noteID;
 			$noteTitle = $row->noteTitle;
@@ -54,18 +61,15 @@ function showNote($note){
 					linkIndexMN('note','tag', $noteID);
 					//linkEdit('note', $noteID, $notePublic);
 					if($_SERVER["QUERY_STRING"]){
-						$editLink = "index.php?".$_SERVER['QUERY_STRING']."&amp;edit=".$note;
+						$editLink = MainFile."?".$_SERVER['QUERY_STRING']."&amp;edit=".$note;
 					} else {
-						$editLink = "index.php?edit=".$note;
+						$editLink = MainFile."?edit=".$note;
 					}
 					
-					if($notePublic == 1){
-						//echo "<a href='index.php?type=note&part=edit&id=".$note."' class='public' title='edit'>e</a>";
-						echo "<a href='".$editLink."' class='edit public' title='edit' name=".$note.">e</a>";
-					} else {
-						//echo "<a href='index.php?type=note&part=edit&id=".$note."' class='nonpublic' title='edit'>e</a>";
-						echo "<a href='".$editLink."' class='edit nonpublic' title='edit' name=".$note.">e</a>";
+					if($access != 'public'){
+						showEditNoteLink($note, $notePublic, $editLink);
 					}
+
 				echo "</p>";
 				echo "</div>";
 		}
@@ -87,9 +91,9 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 			if (@fopen($mediaInfo,"r")==true){
 			
 //			if (file_exists($mediaInfo)){
-				$size = ceil(filesize(MEDIA_FOLDER."/pictures/".$noteMedia)/1024);
+				//$size = ceil(filesize($mediaInfo)/1024);
 				$fileName = $mediaInfo['filename'];
-				$infoSize = getimagesize(MEDIA_FOLDER."/pictures/".$noteMedia);
+				$infoSize = getimagesize($mediaInfo);
 				// ergibt mit $infoSize[0] für breite und $infoSize[1] für höhe
 				echo "<img class='staticMedia' src='".MEDIA_FOLDER."/pictures/".$noteMedia."' alt='".$noteTitle."' title='".$noteID."' />";
 			} else {
@@ -114,7 +118,7 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 		{
 			$mediaInfo = MEDIA_FOLDER."/movies/".$noteMedia;
 			if (file_exists($mediaInfo)){
-				echo "<video class='dynamicMedia' controls preload='auto' poster='".SITE_URL."/media/movies/".$fileName.".png'>";
+				echo "<video class='dynamicMedia' controls preload='auto' poster='".SITE_FOLDER."/media/movies/".$fileName.".png'>";
 					echo "<source src='".MEDIA_FOLDER."/movies/".$fileName.".mp4' type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'>";
 					echo "<source src='".MEDIA_FOLDER."/movies/".$fileName.".webm' type='video/webm; codecs=\"vp8, vorbis\"'>";
 				echo "</video>";
@@ -157,16 +161,16 @@ function showSourceCite($noteSource,$notePageStart,$notePageEnd){
 		if($notePageStart!=0){
 			$pages=$notePageEnd-$notePageStart;
 			if($pages<=0){
-				$copy2tex = "\\footcite[][".$notePageStart."]{<a href='index.php?type=note&amp;part=source&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
+				$copy2tex = "\\footcite[][".$notePageStart."]{<a href='?type=note&amp;part=source&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
 			/*} elseif($pages==1){
 				$copy2tex = "\footcite[][".$notePageStart."f.]{".$noteSource."}";*/
 			} else {
-				$copy2tex = "\\footcite[][".$notePageStart."--".$notePageEnd."]{<a href='index.php?type=note&amp;part=source&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
+				$copy2tex = "\\footcite[][".$notePageStart."--".$notePageEnd."]{<a href='?type=note&amp;part=source&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
 			}
 		} else {
-			$copy2tex = "\\footcite{<a href='index.php?type=note&amp;part=source&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
+			$copy2tex = "\\footcite{<a href='?type=note&amp;part=source&amp;id=".$noteSource."' title='source'>".$noteSourceName."</a>}";
 		}
-		//echo "<p class='linkText'>--&gt; <a href='index.php?sourceID=".$noteSource."' title='extern'>".$noteSource."</a></p>";
+		//echo "<p class='linkText'>--&gt; <a href='?sourceID=".$noteSource."' title='extern'>".$noteSource."</a></p>";
 		echo $copy2tex;
 	}
 	

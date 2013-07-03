@@ -57,7 +57,7 @@ function makeurl($text)
 	$text = preg_replace
 		("!&amp;lt;(wiki:)([^ >\n\t]+)&amp;gt;!i", "<a href=\"http://de.wikipedia.org/wiki/\\2\" target=\"_blank\" title=\"Look for <\\2> in wikipedia\">\\2</a>", $text);
 	$text = preg_replace
-		("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "<a href=\"index.php?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
+		("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "<a href=\"".MainFile."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
 		
 	$text = preg_replace
 		("!&lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&gt;!i", "<a href=\"http://\\2\" target=\"_blank\">\\4</a>", $text);
@@ -67,7 +67,7 @@ function makeurl($text)
 	$text = preg_replace
 		("!&lt;(wiki:)([^ >\n\t]+)&gt;!i", "<a href=\"http://de.wikipedia.org/wiki/\\2\" target=\"_blank\" title=\"Look for <\\2> in wikipedia\">\\2</a>", $text);
 	$text = preg_replace
-		("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "<a href=\"index.php?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
+		("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "<a href=\"".MainFile."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
 		
 	$text = preg_replace
 		("!<(link:)([^ >\n\t]+)(:)([^ >\n\t]+)>!i", "<a href=\"http://\\2\" target=\"_blank\">\\4</a>", $text);
@@ -77,18 +77,18 @@ function makeurl($text)
 	$text = preg_replace
 		("!<(wiki:)([^ >\n\t]+)>!i", "<a href=\"http://de.wikipedia.org/wiki/\\2\" target=\"_blank\" title=\"Look for <\\2> in wikipedia\">\\2</a>", $text);
 	$text = preg_replace
-		("!<(nb:)([^ >\n\t]+)>!i", "<a href=\"index.php??type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
+		("!<(nb:)([^ >\n\t]+)>!i", "<a href=\"".MainFile."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
 	return $text;
 }
 
 function linkIndex($type, $part, $id) {
 	$tableName = $part."Name";
 	if ($id == 0) {
-		return "<a href='index.php?type=".$type."&amp;part=".$part."&amp;id=0' title='no ".$part."' >--</a>";
+		return "<a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=0' title='no ".$part."' >--</a>";
 	} else {
 		$sql = mysql_query("SELECT ".$part."Name FROM ".$part." WHERE ".$part."ID=".$id);
 			while($row = mysql_fetch_object($sql)){
-				return "<a href='index.php?type=".$type."&amp;part=".$part."&amp;id=".$id."' title='".$part."'>".$row->$tableName."</a>";
+				return "<a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=".$id."' title='".$part."'>".$row->$tableName."</a>";
 			}
 	}
 }
@@ -114,9 +114,9 @@ function linkIndexMN($type, $part, $id){
 				}
 				
 				if($relData==""){
-					$relData=" || <a href='index.php?type=".$type."&amp;part=".$part."&amp;id=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+					$relData=" || <a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
 				} else {
-					$relData.= " | <a href='index.php?type=".$type."&amp;part=".$part."&amp;id=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+					$relData.= " | <a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
 				}
 			}
 	} else {
@@ -152,7 +152,7 @@ function indexMN($type, $part, $id){
 }
 
 
-function show($type, $part, $partID){
+function show($type, $part, $partID, $access){
 	$count = 200;
 	if(!isset($_GET['page'])){
 		$_GET['page'] = 1;
@@ -163,8 +163,13 @@ function show($type, $part, $partID){
 	} else {
 		$orderBy = $type."Title, date DESC LIMIT ".$offset;
 	}
-	
-	$sql = mysql_query("SELECT ".$type."ID FROM ".$type." WHERE ".$type.$part." = ".$partID." ORDER BY ".$orderBy.", ".$count."");
+	if($access == 'public' && $type == 'note'){
+		$gpa = "AND notePublic = 1";
+	} else {
+		$gpa = "";
+	}
+	$sql = mysql_query("SELECT ".$type."ID FROM ".$type." WHERE ".$type.$part." = ".$partID." ".$gpa." ORDER BY ".$orderBy.", ".$count."");
+
 	//$sql = mysql_query("SELECT noteID FROM note WHERE noteProject = 5 ORDER BY noteTitle");
 	$countResult = mysql_num_rows($sql);
 
@@ -181,7 +186,7 @@ function show($type, $part, $partID){
 	while($row = mysql_fetch_object($sql)){
 		$typeID = $row->$tableID;
 		if($type=="note"){
-			showNote($typeID);
+			showNote($typeID, $access);
 		} else {
 			showSource($typeID);
 		}

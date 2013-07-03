@@ -41,7 +41,7 @@ if(isset($_GET["edit"])){
 	<?php
 
 
-echo "<form accept-charset='utf-8' name='noteEdit' class='noteForm' action='index.php?type=note&part=save&id=".$noteID."' method='post' enctype='multipart/form-data' >";
+echo "<form accept-charset='utf-8' name='noteEdit' class='noteForm' action='".SITE_URL."/".BASE_FOLDER.MainFile."?type=note&part=save&id=".$noteID."' method='post' enctype='multipart/form-data' >";
 ?>
 	<table class='form'>
 		<tr>
@@ -128,7 +128,7 @@ echo "<form accept-charset='utf-8' name='noteEdit' class='noteForm' action='inde
 				</select>
 				<?php
 				if($noteID){
-					echo "<a href='createSource.php?noteID=".$noteID."' target='_blank'> Create new source</a></p>";
+					echo "<a href='newSource.php?noteID=".$noteID."' target='_blank'> Create new source</a></p>";
 				} else {
 					echo "not listed? <a title='1st save this note. 2nd editing the note, so you can creating a new source and add it to the note'>info</a>";
 				}

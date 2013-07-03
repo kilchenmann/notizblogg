@@ -55,9 +55,17 @@ header {
 	z-index: 20;
 }
 .panel{
-	width:1024px;
+
 	margin-left:auto;
 	margin-right:auto;
+}
+.panelLeft{
+	float:left;
+	width:75%;
+}
+.panelRight{
+	float:right;
+	width:25%;
 }
 
 	.typeIndex {
@@ -225,7 +233,7 @@ header {
 	}
 
 
-	.form input, .form textarea, .form select, .form button:hover{
+	.form input, .form textarea, .form select, .form button:hover, .login input, .login button:hover{
 		border-radius: 11px;
 		border: none;
 		border-top: 2px solid #1A1A1A;
@@ -236,7 +244,7 @@ header {
 		margin: 3px;
 	}
 	
-	.form button {
+	.form button, .login button {
 		border-radius: 11px;
 		border: none;
 		border-top: 2px solid #E5E5E5;
@@ -300,6 +308,7 @@ header {
 		z-index: 10;
 		float: right;
 	}
+
 /* **************************************************************** */
 
 /* **************************************************************** */
@@ -338,6 +347,24 @@ header {
 		display:block;
 		margin-left:auto;
 		margin-right:auto;
+	}
+	
+	.lens .login {
+		display: block;
+		width: 300px;
+		margin-left: auto;
+		margin-right: auto;
+		background: rgba(215, 215, 215, 0.3);
+		box-shadow:0px 0px 4px 0px rgba(215, 215, 215, 1.5);
+		border-radius:5px;
+	}
+	.lens .login form {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 100%;
+		text-align:center;
+		padding: 12px;
 	}
 
 
@@ -481,19 +508,19 @@ a.nonpublic{
 /* **************************************************************** */
 /* cloud */
 a.tiny{
-	font-size:0.7em;
+	font-size:0.9em;
 }
 a.small{
-	font-size:1.0em;
+	font-size:1.2em;
 }
 a.medium{
-	font-size:1.3em;
+	font-size:1.5em;
 }
 a.large{
-	font-size:1.7em;
+	font-size:1.8em;
 }
 a.extralarge{
-	font-size:1.9em;
+	font-size:2.1em;
 }
 
 

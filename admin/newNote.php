@@ -1,5 +1,5 @@
 <?php
-	$noteID = "";
+	$noteID = uniqid();
 	$noteTitle = "";
 	$noteContent = "";
 	$noteCategory = 0;
@@ -11,17 +11,19 @@
 	$noteMedia = "";
 	$notePublic = 0;
 	
-	
+	$query = mysql_query("SELECT noteID FROM `note` ORDER BY `noteID` DESC LIMIT 1") or die(mysql_error());
+	while($row = mysql_fetch_object($query)){
+		$newNoteID = $row->noteID + 1;
+	}
 
-
-
-echo "<form accept-charset='utf-8' name='noteNew' class='noteForm' action='index.php?type=note&part=save&id=".$noteID."' method='post' enctype='multipart/form-data' >";
+echo "<form accept-charset='utf-8' name='noteNew' class='noteForm' action='".SITE_URL."/".BASE_FOLDER.MainFile."?type=note&part=save&id=".$noteID."' method='post' enctype='multipart/form-data' >";
 ?>
+
 	<table class='form'>
 		<tr>
 			<td class="left">
 				<h3>Create new NOTE</h3>
-				<input type='hidden' name='noteID' placeholder='ID' readonly value='<?php echo $noteID; ?>' />
+				<input type='text' name='noteID' placeholder='ID' readonly value='<?php echo $newNoteID; ?>' />
 				<!--<p>Title</p>-->
 				<input type='text' name='nTitle' placeholder='Title' autofocus='autofocus' value='<?php echo $noteTitle; ?>' />
 				<!--<p>Note</p>-->
@@ -120,12 +122,14 @@ echo "<form accept-charset='utf-8' name='noteNew' class='noteForm' action='index
 			} else {
 				echo "<input type='checkbox' name='notePublic' value='1' /> public? ";
 			}
+			/*
 			if($noteID != 0){
 				echo "<input type='radio' name='delete' value='NO' checked /> edit or <i class='warning'>delete</i> ";
 				echo "<input type='radio' name='delete' value='YES' /> ";
 			} else {
 				echo "<input type='hidden' name='delete' />";
 			}
+			* */
 				?>
 			<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />				
 			<button class="button" type="submit" value="SAVE">SAVE</button>

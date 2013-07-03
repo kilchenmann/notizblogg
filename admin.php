@@ -1,10 +1,11 @@
 <?php
 /* -------------------------------------------------------------------------- */
-/* ------- This is the index and public start file for the notizblogg ------- */
+/* ----- This is the admin and non-public start file for the notizblogg ----- */
 /* Author & Copyright notizblogg: André Kilchenmann, 2006 - 2013 ------------ */
 /* Website: http://notizblogg.ch  ------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 require_once ("conf/settings.php");
+include (SITE_PATH."/admin/checkuser.php");
 ?>
 
 <!DOCTYPE html>
@@ -12,11 +13,11 @@ require_once ("conf/settings.php");
 <head>
 <?php
 
-	$count = 25;
-	$access = "public";
-	$robots = "INDEX,FOLLOW";
+	$count = 50;
+	$access = "denied";			//or admin?
+	$robots = "noindex,nofollow";
 
-	echo "<title>".$siteTitel." ".$nbVersion."</title>\n";
+	echo "<title>ADMIN: ".$siteTitel." ".$nbVersion."</title>\n";
 	echo "<meta name='Author' content='André Kilchenmann'>\n";
 	echo "<meta name='Page-topic' content='".$pagetopic."'>\n";
 	echo "<meta name='Keywords' content='".$keywords."'>\n";
@@ -37,6 +38,7 @@ require_once ("conf/settings.php");
 	include (SITE_PATH."/common/php/getNote.php");
 	include (SITE_PATH."/common/php/getSource.php");
 	include (SITE_PATH."/common/php/relations.php");
+	include (SITE_PATH."/admin/edit.php");
 
 	echo "<link rel='shortcut icon' href='".SITE_URL."/".BASE_FOLDER."common/images/favicon.ico'>\n";
 
@@ -47,7 +49,11 @@ require_once ("conf/settings.php");
 	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/".$jquery_version."'></script>\n";
 	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/jquery.jcookie.js'></script>\n";
 ?>
-<script type="text/javascript">
+
+
+
+	<script type="text/javascript">
+
 	function changeMenu(type){
 		if(type=="NOTES"){
 			$(".typeIndex h2").html("SOURCES");
@@ -56,12 +62,14 @@ require_once ("conf/settings.php");
 				var active = $(".menu button.active").val();
 				$("."+active).slideToggle("slow");
 			}
+
 			$("input.searchTerm").attr({"placeholder":"search in Sources"});
 			$("input.searchType").val("source");
 			$(".menuNew").val("newSource");
 			$(".menuPart").val("partSource");
 			$(".menuCloud").val("cloudAuthors");
 			$(".menuCloud").html("Authors");
+
 			if($(".titleIndex").css("display")=="none"){
 				var active = $(".menu button.active").val();
 				$("."+active).slideToggle("slow");
@@ -69,6 +77,8 @@ require_once ("conf/settings.php");
 					$(".contentIndexPlus").slideToggle("slow");
 				}
 			}
+
+
 		} else if(type=="SOURCES"){
 			$(".typeIndex h2").html("NOTES");
 			$(".typeIndex h2").css({"cursor":"s-resize"});
@@ -86,15 +96,18 @@ require_once ("conf/settings.php");
 			$(".menuPart").val("partNote");
 			$(".menuCloud").val("cloudTags");
 			$(".menuCloud").html("Tags");
+
 			if($(".titleIndex").css("display")=="none"){
 				var active = $(".menu button.active").val();
 				$("."+active).fadeIn("slow");
 			}
 		}
-	}
-</script>
-</head>
 
+	}
+
+
+	</script>
+</head>
 <body>
 <?php connect(); ?>
 	<div class="preload">
@@ -181,20 +194,17 @@ require_once ("conf/settings.php");
 		<!-- ------------------------------------------- -->
 		<div class="contentIndex">
 			<div class="newNote">
-				<?php //include "admin/newNote.php"; ?>
-				<p>This is the public access to the notizblogg. So, you are not allowed the create new notes!</p>
+				<p>Hier JS-Function für new note!</p>
+				<?php include SITE_PATH."/admin/newNote.php"; ?>
 			</div>
 			<div class="editNote">
-				<?php //include "admin/editNote.php"; ?>
-				<p>This is the public access to the notizblogg. So, you are not allowed the edit notes!</p>
+				<?php include SITE_PATH."/admin/editNote.php"; ?>
 			</div>
 			<div class="newSource">
-				<?php //include "admin/newSource.php"; ?>
-				<p>This is the public access to the notizblogg. So, you are not allowed the create new sources!</p>
+				<?php include SITE_PATH."/admin/newSource.php"; ?>
 			</div>
 			<div class="editSource">
 				<?php //include "admin/editSource.php"; ?>
-				<p>This is the public access to the notizblogg. So, you are not allowed the edit sources!</p>
 			</div>
 			<div class="partNote">
 				<?php include SITE_PATH."/common/php/partNote.php"; ?>
@@ -213,14 +223,20 @@ require_once ("conf/settings.php");
 			</div>
 		</div>
 		<div class="contentIndexPlus">
-
+<?php
+//<?php echo MEDIA_FOLDER;
+		$allFiles = scandir(MEDIA_FOLDER."/pictures/"); //Ordner "media" auslesen
+		foreach ($allFiles as $file) { // Ausgabeschleife
+			if($file != "." && $file != ".." && !is_dir($file)){
+				echo "<li name='".$file."'><img src='".MEDIA_FOLDER."/pictures/".$file."' > ".$file."</li>"; //Ausgabe Einzeldatei
+			}
+		}
+?>
 		</div>
 		<div class="contentSettings">
-			<form class="login" action="<?php echo SITE_URL."/".BASE_FOLDER."checklogin.php"; ?>" method="post">
-				<input type="text" name="name" size="20" placeholder="name" autofocus /><br />
-				<input type="password" name="pwd" placeholder='losung' size="20" /><br />
-				<button class="button" type="submit" value="LOGIN">LOGIN</button>
-			</form>
+			<li><a href="user.php" >Profile</a></li>
+			<li><a href="showMysqlDumb.php" >Backup</a></li>
+			<li><a href="admin/logout.php" >Logout</a></li>
 		</div>
 	</div>
 	</div>
@@ -258,7 +274,7 @@ require_once ("conf/settings.php");
 		</script>
 <?php
 		echo "<div class='desk'>";
-			$sql = mysql_query("SELECT noteID FROM note WHERE notePublic = 1 ORDER BY date DESC LIMIT ".$count);
+			$sql = mysql_query("SELECT noteID FROM note ORDER BY date DESC LIMIT ".$count);
 			while($row = mysql_fetch_object($sql)){
 				$typeID = $row->noteID;
 				showNote($typeID, $access);
@@ -311,10 +327,6 @@ disconnect();
 
 		});
 
-		var activeCategory = $("h1.left a").text();
-		$("h3.part").append("\"" + activeCategory + "\"");
-		
-		
 		$('body').css({'cursor':'auto'});
 
 		var editLocation = window.location.toString();
@@ -695,11 +707,10 @@ $("img.staticMedia").mousedown(function(event) {
 
 
 
-
-
 	</script>
 		<footer>
 			NOTIZBLOGG (2.2) &copy; Andr&eacute; Kilchenmann | 2006-<?php echo date("Y"); ?>
 		</footer>
 	</body>
 </html>
+

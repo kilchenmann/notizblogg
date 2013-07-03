@@ -3,7 +3,7 @@
 		$categoryID = $_GET['id'];
 		$projectSql = mysql_query("SELECT DISTINCT `projectID` FROM `project`, `source` WHERE project.projectID = source.sourceProject AND source.sourceCategory=".$categoryID." ORDER BY project.projectName");
 		//echo "SELECT DISTINCT `projectID` FROM `project`, `source` WHERE project.projectID = source.sourceProject AND source.sourceCategory=".$categoryID." ORDER BY project.projectName";
-		echo "<h3>Projects in this Category (Source)</h3>";
+	echo "<h3 class='part'>Only projects in this Category: </h3>";
 		while($row = mysql_fetch_object($projectSql)){
 			$projectID = $row->projectID;
 				echo linkIndex('source', 'project', $projectID);

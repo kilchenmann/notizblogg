@@ -1,7 +1,10 @@
-<?php/* ************************************************************** 
+<?php
+/* ************************************************************** 
  * Search different relations between the tables
  * ************************************************************** 
  */
+
+
 
 function linkIndexMNlist($id,$table){
 	$tableID = $table."ID";
@@ -18,9 +21,9 @@ function linkIndexMNlist($id,$table){
 			$relData="";
 			foreach($relIDs as $relName) {
 				if($relData==""){
-					$relData="<li>- <a href='index.php?".$tableID."=".$relName."&amp;page=1'>".$relName."</a></li>";
+					$relData="<li>- <a href='".MainFile."?".$tableID."=".$relName."&amp;page=1'>".$relName."</a></li>";
 				} else {
-					$relData.= "<li>- <a href='index.php?".$tableID."=".$relName."&amp;page=1'>".$relName."</a></li>";
+					$relData.= "<li>- <a href='".MainFile."?".$tableID."=".$relName."&amp;page=1'>".$relName."</a></li>";
 				}
 			}
 	} else {
@@ -28,4 +31,5 @@ function linkIndexMNlist($id,$table){
 	}
 	echo $relData;
 }
+
 ?>

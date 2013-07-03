@@ -11,7 +11,7 @@
 switch($part){
 	case "category";
 	case "project";
-		show($type, $part, $partID);
+		show($type, $part, $partID, $access);
 	break;
 	
 	case 'author';

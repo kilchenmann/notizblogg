@@ -11,7 +11,7 @@ function showSource($source){
 			asort($authorNames);
 				$authors="";
 				foreach($authorIDs as $authorID => $authorName) {
-					$authorName = "<a href='index.php?type=source&amp;part=author&amp;id=".$authorName['authorID']."'>".$authorName['authorName']."</a>";
+					$authorName = "<a href='?type=source&amp;part=author&amp;id=".$authorName['authorID']."'>".$authorName['authorName']."</a>";
 
 					if($authors==""){
 						$authors=$authorName;
@@ -106,7 +106,7 @@ function showSource($source){
 										$sourceInTitle = $inrow->sourceTitle;
 										$sourceInSubtitle = $inrow->sourceSubtitle;
 										
-										echo "<br><a href='index.php?type=source&amp;part=collection&amp;id=".$sourceInName."' class='text' >crossref</a> = {".$sourceInName."},";
+										echo "<br><a href='?type=source&amp;part=collection&amp;id=".$sourceInName."' class='text' >crossref</a> = {".$sourceInName."},";
 										
 										$authorSql = mysql_query("SELECT authorName FROM author, rel_source_author WHERE author.authorID = rel_source_author.authorID AND rel_source_author.sourceID = '".$sourceInID."' ORDER BY authorName");
 										$countAuthors = mysql_num_rows($authorSql);
@@ -149,7 +149,7 @@ function showSource($source){
 							}
 					}
 					
-					echo "<br><a href='index.php?type=note&amp;part=source&amp;id=".$sourceID."' class='text' >note</a> = ";
+					echo "<br><a href='?type=note&amp;part=source&amp;id=".$sourceID."' class='text' >note</a> = ";
 					if($sourceNote!=""){
 						echo "{".$sourceNote."}},";
 					} else {echo "{}},";}
@@ -164,5 +164,28 @@ function showSource($source){
 		echo linkIndex('source', 'project', $sourceProject);
 		echo "</p>";
 		echo "</div>";
+}
+
+
+function showSourceLink($sourceID,$notePageStart,$notePageEnd){
+	if($sourceID!=0){
+		$sourceSql = mysql_query("SELECT sourceName FROM source WHERE sourceID='".$sourceID."'");
+			while($row = mysql_fetch_object($sourceSql)){
+				$sourceName = $row->sourceName;
+			}
+		if($notePageStart!=0){
+			$pages=$notePageEnd-$notePageStart;
+			if($pages<=0){
+				$source = $sourceName." (".$notePageStart.")";
+			} elseif($pages==1){
+				$source = $sourceName." (".$notePageStart."f.)";
+			} else {
+				$source = $sourceName." (".$notePageStart."ff.)";
+			}
+		} else {
+			$source = $sourceName;
+		}
+		echo "<p class='linkText'>--&gt; <a href='?sourceID=".$sourceName."&amp;page=1' title='source'>".$source."</a></p>";
+	}
 }
 ?>
