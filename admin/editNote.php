@@ -17,7 +17,6 @@ if(isset($_GET["edit"])){
 	}
 	?>
 	<script type="text/javascript">
-			
 		$(document).ready(function() {
 			changeMenu("SOURCES");
 			$("button.menuNew").val("editNote");
@@ -33,10 +32,8 @@ if(isset($_GET["edit"])){
 			$(".contentIndex").animate({
 					width: "720px"
 			},"fast");
-
 		});
 	</script>
-	
 	
 	<?php
 

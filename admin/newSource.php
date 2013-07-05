@@ -10,20 +10,23 @@
 	$pageEnd = "";
 	$noteMedia = "";
 	$notePublic = 0;
-	
 
-echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='".SITE_URL."/".BASE_FOLDER.MainFile."?type=source&part=save&id=".$sourceID."' method='post' enctype='multipart/form-data' >";
+echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='".SITE_URL."/".BASE_FOLDER.MainFile."?type=source&part=complete&id=".$sourceID."' method='post' enctype='multipart/form-data' >";
 ?>
 	<table class='form'>
 		<tr>
 			<td class="left">
 				<h3>Create new SOURCE</h3>
 				<input type='hidden' name='sourceID' placeholder='ID' readonly value='<?php echo $sourceID; ?>' />
+				<p>@bibTyp
+				<select name='sTyp' required='required' >
+					<?php formSelect("bibTyp"); ?>
+				</select>
+				</p>
 				<!--<p>Title</p>-->
-				<input type='text' name='sTitle' placeholder='Title' autofocus='autofocus' value='<?php echo $sourceTitle; ?>' />
+				<input type='text' name='sTitle' placeholder='Title' value='<?php echo $sourceTitle; ?>' />
 				<input type='text' name='sSubTitle' placeholder='Subtitle'/>
 				<input type='text' name='sTagTitle' placeholder='Title_Tag' required='required' />
-				<textarea name='sNote' placeholder='Comment' rows='10' cols='50' ></textarea>
 			</td>
 			<td class="right">
 				<!--<p>Author / Editor</p>-->
@@ -63,10 +66,9 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 				<input type="text" name="sProNew" class='small' placeholder='new Project'/>
 			</td>
 			<td class="right">
-				<input type='text' name='sYear' placeholder='Year'/>
-					<select name='sourceTyp'>
-						<?php formSelect("bibTyp"); ?>
-					</select>
+				<input type='text' class='small' name='sYear' placeholder='Year'/>
+				<textarea name='sNote' placeholder='Comment' rows='50' cols='50' style='height: 85px;'></textarea>
+				<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />
 			</td>
 		</tr>
 		<tr>
@@ -79,7 +81,6 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 				echo "<input type='hidden' name='delete' />";
 			}
 		?>
-			<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />				
 			<button class="button" type="submit" value="NEXT">NEXT</button>
 			<!-- Hier wird das soeben konstruierte Formular mittels JavaScript / jQuery ausgeblendet und durch das zweite Formular ersetzt. -->
 			<button class="button" type="reset" value="Clear">Clear</button>

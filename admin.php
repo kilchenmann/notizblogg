@@ -60,7 +60,7 @@ include (SITE_PATH."/admin/checkuser.php");
 			$(".typeIndex h2").css({"cursor":"n-resize"});
 			if($(".titleIndex").css("display")=="none"){
 				var active = $(".menu button.active").val();
-				$("."+active).slideToggle("slow");
+				$("."+active).slideToggle("fast");
 			}
 
 			$("input.searchTerm").attr({"placeholder":"search in Sources"});
@@ -72,12 +72,11 @@ include (SITE_PATH."/admin/checkuser.php");
 
 			if($(".titleIndex").css("display")=="none"){
 				var active = $(".menu button.active").val();
-				$("."+active).slideToggle("slow");
+				$("."+active).slideToggle("fast");
 				if ($(".contentIndexPlus").css("display")!="none") {
-					$(".contentIndexPlus").slideToggle("slow");
+					$(".contentIndexPlus").slideToggle("fast");
 				}
 			}
-
 
 		} else if(type=="SOURCES"){
 			$(".typeIndex h2").html("NOTES");
@@ -85,9 +84,9 @@ include (SITE_PATH."/admin/checkuser.php");
 			//$(this).css({"background-position":"73px -66px"});
 			if($(".titleIndex").css("display")=="none"){
 				var active = $(".menu button.active").val();
-				$("."+active).fadeOut("slow");
+				$("."+active).fadeOut("fast");
 				if ($(".contentIndexPlus").css("display")!="none") {
-					$(".contentIndexPlus").slideToggle("slow");
+					$(".contentIndexPlus").slideToggle("fast");
 				}
 			}
 			$("input.searchTerm").attr({"placeholder":"search in Notes"});
@@ -99,10 +98,9 @@ include (SITE_PATH."/admin/checkuser.php");
 
 			if($(".titleIndex").css("display")=="none"){
 				var active = $(".menu button.active").val();
-				$("."+active).fadeIn("slow");
+				$("."+active).fadeIn("fast");
 			}
 		}
-
 	}
 
 
@@ -194,7 +192,7 @@ include (SITE_PATH."/admin/checkuser.php");
 		<!-- ------------------------------------------- -->
 		<div class="contentIndex">
 			<div class="newNote">
-				<p>Hier JS-Function für new note!</p>
+				<!--Hier JS-Function für new note!-->
 				<?php include SITE_PATH."/admin/newNote.php"; ?>
 			</div>
 			<div class="editNote">
@@ -219,6 +217,9 @@ include (SITE_PATH."/admin/checkuser.php");
 				<?php include SITE_PATH."/common/php/cloudAuthors.php"; ?>
 			</div>
 			<div class="settings">
+
+			</div>
+			<div class='completeSource'>
 
 			</div>
 		</div>
@@ -313,6 +314,8 @@ disconnect();
 		if($("h1.left").text()!=""){
 			var siteTitle = $(".titleIndex .left").text()+" ("+$(".partIndex h2").text()+" in Notizblogg)";
 			document.title = siteTitle;
+			var activeCategory = $("h1.left a").text();
+			$("h3.part").append("\"" + activeCategory + "\"");
 		} else {
 			document.title = "<?php echo $siteTitle; ?>";
 		}
@@ -375,6 +378,9 @@ disconnect();
 		*/
 
 		$(".menu button").click(function(){
+			$("input").removeAttr('autofocus');
+			$("select").removeAttr('autofocus');
+			$(this).focus();
 			var openIndex = $(this).val();
 			if($(".titleIndex").css("display")!="none"){
 				/* titleIndex ist offen und somit kein Fenster; dieses öffnen */
@@ -383,6 +389,8 @@ disconnect();
 				$(".titleIndex").slideToggle("fast", function(){
 					$("div.contentIndex").slideToggle("fast");
 					$("div."+openIndex).slideToggle("fast");
+					$(".focus_"+openIndex).attr('autofocus', 'autofocus');
+					$(".focus_"+openIndex).focus();
 					$(".viewer").fadeTo("slow", 0.1);
 				});
 				if($(this).hasClass("menuNew")){
@@ -709,7 +717,7 @@ $("img.staticMedia").mousedown(function(event) {
 
 	</script>
 		<footer>
-			NOTIZBLOGG (2.2) &copy; Andr&eacute; Kilchenmann | 2006-<?php echo date("Y"); ?>
+			<a href="http://notizblogg.ch/">NOTIZBLOGG</a> (<?php echo $nbVersion; ?>) &copy; Andr&eacute; Kilchenmann | 2006-<?php echo date("Y"); ?>
 		</footer>
 	</body>
 </html>

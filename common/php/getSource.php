@@ -8,10 +8,10 @@ function showSource($source){
 										'authorName' => $row['authorName']);   
 //				$authorIDs[] = $row['authorID'];   
 			}
-			asort($authorNames);
+			asort($authorIDs);
 				$authors="";
 				foreach($authorIDs as $authorID => $authorName) {
-					$authorName = "<a href='?type=source&amp;part=author&amp;id=".$authorName['authorID']."'>".$authorName['authorName']."</a>";
+					$authorName = "<a href='".MainFile."?type=source&amp;part=author&amp;id=".$authorName['authorID']."'>".$authorName['authorName']."</a>";
 
 					if($authors==""){
 						$authors=$authorName;
@@ -63,7 +63,11 @@ function showSource($source){
 					$typSql = mysql_query("SELECT bibTypName FROM bibTyp WHERE bibTypID = ".$sourceTyp."");
 						while($typ = mysql_fetch_object($typSql)){
 							$bibTypName = $typ->bibTypName;
-							echo "@".$bibTypName;
+							if($bibTypName == 'collection' || $bibTypName == 'proceedings'){
+								echo "@<a href='".MainFile."?type=source&amp;part=collection&amp;id=".$sourceID."' class='text' >".$bibTypName."</a>";
+							} else {
+								echo "@".$bibTypName;
+							}
 						}
 				}
 				//echo "<br>";
@@ -106,7 +110,7 @@ function showSource($source){
 										$sourceInTitle = $inrow->sourceTitle;
 										$sourceInSubtitle = $inrow->sourceSubtitle;
 										
-										echo "<br><a href='?type=source&amp;part=collection&amp;id=".$sourceInName."' class='text' >crossref</a> = {".$sourceInName."},";
+										echo "<br><a href='".MainFile."?type=source&amp;part=collection&amp;id=".$sourceInID."' class='text' >crossref</a> = {".$sourceInName."},";
 										
 										$authorSql = mysql_query("SELECT authorName FROM author, rel_source_author WHERE author.authorID = rel_source_author.authorID AND rel_source_author.sourceID = '".$sourceInID."' ORDER BY authorName");
 										$countAuthors = mysql_num_rows($authorSql);
@@ -149,7 +153,7 @@ function showSource($source){
 							}
 					}
 					
-					echo "<br><a href='?type=note&amp;part=source&amp;id=".$sourceID."' class='text' >note</a> = ";
+					echo "<br><a href='".MainFile."?type=note&amp;part=source&amp;id=".$sourceID."' class='text' >note</a> = ";
 					if($sourceNote!=""){
 						echo "{".$sourceNote."}},";
 					} else {echo "{}},";}

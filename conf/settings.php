@@ -7,7 +7,7 @@
 
 /* header, main topics ------------------------------------------------------ */
 global $siteTitle;
-	$siteTitel = "Notizblogg";
+	$siteTitel = "Notizblogg | Zettelkasten | Memex";
 global $nbVersion;
 	$nbVersion = 3.5;
 global $pagetopic;
@@ -45,6 +45,8 @@ global $access;
 	$access = "denied";			// default: denied
 global $robots;
 	$robots = "noindex,nofollow";	// default: noindex,nofollow
+global $zeroResults;
+	$zeroResults = "Either you are not allowed to see the note or there are no notes with this item.";
 /* design, css, theme ------------------------------------------------------- */
 global $main_theme;
 	$main_theme = "screen";		// default: screen

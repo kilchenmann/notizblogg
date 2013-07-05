@@ -57,7 +57,11 @@ function insertMN($table,$relTable,$data,$linkID,$linkTable){
 
 function formSelect($table) {
 	$tableName = $table."Name";
-	echo "<option selected>".$table."</option>";
+	if($table != 'bibTyp'){
+		echo "<option selected>".$table."</option>";
+	} else {
+		echo "<option></option>";
+	}
 	$select = mysql_query("SELECT ".$tableName." FROM ".$table." ORDER BY ".$table."Name");
 		while($row = mysql_fetch_object($select)){
 			$option = $row->$tableName;

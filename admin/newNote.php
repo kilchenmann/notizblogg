@@ -1,5 +1,6 @@
 <?php
-	$noteID = uniqid();
+	$checkID = md5(microtime());
+	$noteID = "";
 	$noteTitle = "";
 	$noteContent = "";
 	$noteCategory = 0;
@@ -11,10 +12,12 @@
 	$noteMedia = "";
 	$notePublic = 0;
 	
+	/*
 	$query = mysql_query("SELECT noteID FROM `note` ORDER BY `noteID` DESC LIMIT 1") or die(mysql_error());
 	while($row = mysql_fetch_object($query)){
 		$newNoteID = $row->noteID + 1;
 	}
+	*/
 
 echo "<form accept-charset='utf-8' name='noteNew' class='noteForm' action='".SITE_URL."/".BASE_FOLDER.MainFile."?type=note&part=save&id=".$noteID."' method='post' enctype='multipart/form-data' >";
 ?>
@@ -23,9 +26,10 @@ echo "<form accept-charset='utf-8' name='noteNew' class='noteForm' action='".SIT
 		<tr>
 			<td class="left">
 				<h3>Create new NOTE</h3>
-				<input type='text' name='noteID' placeholder='ID' readonly value='<?php echo $newNoteID; ?>' />
+				<input type='hidden' name='nCheckID' placeholder='checkID' readonly value='<?php echo $checkID; ?>' />
+				<input type='hidden' name='noteID' placeholder='ID' readonly value='<?php echo $noteID; ?>' />
 				<!--<p>Title</p>-->
-				<input type='text' name='nTitle' placeholder='Title' autofocus='autofocus' value='<?php echo $noteTitle; ?>' />
+				<input type='text' class='focus_newNote' name='nTitle' placeholder='Title' value='<?php echo $noteTitle; ?>' />
 				<!--<p>Note</p>-->
 				<textarea name='nContent' placeholder='Content' rows='10' cols='50' required='required' ><?php echo $noteContent; ?></textarea>
 			</td>

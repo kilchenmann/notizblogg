@@ -12,13 +12,13 @@ require_once ("conf/settings.php");
 <head>
 <?php
 
-	$count = 25;
+	$count = 33;
 	$access = "public";
 	$robots = "INDEX,FOLLOW";
 
 	echo "<title>".$siteTitel." ".$nbVersion."</title>\n";
 	echo "<meta name='Author' content='André Kilchenmann'>\n";
-	echo "<meta name='Page-topic' content='".$pagetopic."'>\n";
+	//echo "<meta name='Page-topic' content='".$pagetopic."'>\n";
 	echo "<meta name='Keywords' content='".$keywords."'>\n";
 	echo "<meta name='Description' content='".$description."'>\n";
 	echo "<meta name='Robots' content='".$robots."'>\n";
@@ -96,7 +96,13 @@ require_once ("conf/settings.php");
 </head>
 
 <body>
-<?php connect(); ?>
+<?php connect();
+	// redirect the old Notizblogg version 2.0 - Links
+	include (SITE_PATH."/diversion.php");
+?>
+
+
+
 	<div class="preload">
 	<!-- evt. Bilder hier vorladen -->
 	</div>
@@ -107,7 +113,7 @@ require_once ("conf/settings.php");
 		<div class="typeIndex">
 			<h2></h2>
 		</div>
-		<table class="menuBar" cellspacing="0" cellpadding="0">
+		<table class="menuBar">
 			<tbody>
 				<tr class="menu">
 					<td>
@@ -123,12 +129,12 @@ require_once ("conf/settings.php");
 			</tbody>
 		</table>
 		<form accept-charset="utf-8" name="searchForm" class="searchForm" action="<?php echo SITE_URL."/".BASE_FOLDER.MainFile; ?>" method="get">
-			<table class="searchBar" cellspacing="0" cellpadding="0">
+			<table class="searchBar">
 				<tbody>
 					<tr class="search">
-						<td class="searchTerm" colspan="3">
-							<input type="hidden" class="searchType" name="type" value="note" size="16" />
-							<input type="hidden" class="searchPart" name="part" value="search" size="16" />
+						<td class="searchTerm">
+							<input type="hidden" class="searchType" name="type" value="note" />
+							<input type="hidden" class="searchPart" name="part" value="search" />
 							<input type="text" class="searchTerm" name="id" placeholder="search in Notes" >
 						</td>
 						<td class="searchButton">
@@ -140,14 +146,14 @@ require_once ("conf/settings.php");
 		</form>
 		</div>
 		<div class="panelRight">
-		<table class="settingBar" cellspacing="0" cellpadding="0">
+		<table class="settingBar">
 			<tbody>
 				<tr class="setting">
 					<td>
 						<button value="paper" class="changeView"><img src="<?php echo SITE_URL."/".BASE_FOLDER; ?>common/images/viewPaper.png" alt="paper"></button>
 					</td>
 					<td>
-						<a href="<?php echo MainFile; ?>" title="Back to the index (home)"><button value="home" class="home"><img src="<?php echo SITE_URL."/".BASE_FOLDER; ?>common/images/home.png" alt="home"></button></a>
+						<button value="home" class="home" title="Back to the main file (home)"><img src="<?php echo SITE_URL."/".BASE_FOLDER; ?>common/images/home.png" alt="home"></button>
 					</td>
 					<td>
 						<button value="settings" class="menuSet"><img src="<?php echo SITE_URL."/".BASE_FOLDER; ?>common/images/settings.png" alt="settings"></button>
@@ -158,7 +164,7 @@ require_once ("conf/settings.php");
 		</div>
 		</div>
 	</header>
-<!-- ------------------------------------------------------------- -->
+<!-- *********************************************************************** -->
 	<div class="panel">
 	<div class="navigationIndex">
 		<div class="partIndex">
@@ -173,28 +179,28 @@ require_once ("conf/settings.php");
 				}
 			});
 		</script>
-		<!-- ------------------------------------------- -->
+<!-- *********************************************************************** -->
 		<div class="titleIndex">
 			<h1 class="left"></h1>
 			<p class="right"></p>
 		</div>
-		<!-- ------------------------------------------- -->
+<!-- *********************************************************************** -->
 		<div class="contentIndex">
 			<div class="newNote">
 				<?php //include "admin/newNote.php"; ?>
-				<p>This is the public access to the notizblogg. So, you are not allowed the create new notes!</p>
+				<p class="advice">This is the public access to the notizblogg. So, you are not allowed to create new notes!</p>
 			</div>
 			<div class="editNote">
 				<?php //include "admin/editNote.php"; ?>
-				<p>This is the public access to the notizblogg. So, you are not allowed the edit notes!</p>
+				<p class="advice">This is the public access to the notizblogg. So, you are not allowed to edit notes!</p>
 			</div>
 			<div class="newSource">
 				<?php //include "admin/newSource.php"; ?>
-				<p>This is the public access to the notizblogg. So, you are not allowed the create new sources!</p>
+				<p class="advice">This is the public access to the notizblogg. So, you are not allowed to create new sources!</p>
 			</div>
 			<div class="editSource">
 				<?php //include "admin/editSource.php"; ?>
-				<p>This is the public access to the notizblogg. So, you are not allowed the edit sources!</p>
+				<p class="advice">This is the public access to the notizblogg. So, you are not allowed to edit sources!</p>
 			</div>
 			<div class="partNote">
 				<?php include SITE_PATH."/common/php/partNote.php"; ?>
@@ -224,7 +230,7 @@ require_once ("conf/settings.php");
 		</div>
 	</div>
 	</div>
-<!-- ------------------------------------------------------------- -->
+<!-- *********************************************************************** -->
 
 
 
@@ -252,13 +258,20 @@ require_once ("conf/settings.php");
 ?>
 		<script type="text/javascript">
 			$(".typeIndex h2").html("NOTES");
-			$(".partIndex h2").html("Index");
-			$(".titleIndex .left").html("Notizblogg");
+			$(".partIndex h2").html("Start");
+			$(".titleIndex .left").html("Notizblogg | Zettelkasten | Memex");
 			$(".titleIndex .right").html("#notes: <?php echo $count; ?>");
 		</script>
 <?php
 		echo "<div class='desk'>";
-			$sql = mysql_query("SELECT noteID FROM note WHERE notePublic = 1 ORDER BY date DESC LIMIT ".$count);
+			$sql = mysql_query("SELECT noteID FROM note WHERE notePublic = 1 AND noteID <= 3 ORDER BY noteID ASC");
+			while($row = mysql_fetch_object($sql)){
+				$typeID = $row->noteID;
+				showNote($typeID, $access);
+			}
+		echo "</div>";
+		echo "<div class='desk'>";
+			$sql = mysql_query("SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 3 ORDER BY date DESC LIMIT ".$count);
 			while($row = mysql_fetch_object($sql)){
 				$typeID = $row->noteID;
 				showNote($typeID, $access);
@@ -295,11 +308,17 @@ disconnect();
 		}
 
 		if($("h1.left").text()!=""){
-			var siteTitle = $(".titleIndex .left").text()+" ("+$(".partIndex h2").text()+" in Notizblogg)";
+			var siteTitle = $(".titleIndex .left").text()+" ("+$(".partIndex h2").text()+")";
 			document.title = siteTitle;
+			var activeCategory = $("h1.left a").text();
+			$("h3.part").append("\"" + activeCategory + "\"");
 		} else {
 			document.title = "<?php echo $siteTitle; ?>";
 		}
+		
+
+		
+		
 		// mobile trick
 		setTimeout(function () {
 			// Hide the address bar!
@@ -311,10 +330,6 @@ disconnect();
 
 		});
 
-		var activeCategory = $("h1.left a").text();
-		$("h3.part").append("\"" + activeCategory + "\"");
-		
-		
 		$('body').css({'cursor':'auto'});
 
 		var editLocation = window.location.toString();
@@ -431,6 +446,7 @@ disconnect();
 				$(this).toggleClass("active");
 			}
 		});
+		
 
 	$(window).resize(function(){
 		winWidth = $(window).width() - 100;
@@ -458,6 +474,9 @@ disconnect();
 				$("button.changeView").html("<img src='<?php echo SITE_URL."/".BASE_FOLDER; ?>common/images/viewPaper.png'>");
 				jQuery.jCookie('viewertype','desk');
 			}
+		});
+		$("button.home").click(function(){
+			window.location = "<?php echo SITE_URL."/".BASE_FOLDER.MainFile; ?>";
 		});
 
 		$(".contentIndexPlus li").click(function(){
@@ -695,11 +714,9 @@ $("img.staticMedia").mousedown(function(event) {
 
 
 
-
-
 	</script>
 		<footer>
-			NOTIZBLOGG (2.2) &copy; Andr&eacute; Kilchenmann | 2006-<?php echo date("Y"); ?>
+			<a href="http://notizblogg.ch/">NOTIZBLOGG</a> (<?php echo $nbVersion; ?>) &copy; Andr&eacute; Kilchenmann | 2006-<?php echo date("Y"); ?>
 		</footer>
 	</body>
 </html>

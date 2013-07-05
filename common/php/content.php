@@ -168,30 +168,91 @@ function show($type, $part, $partID, $access){
 	} else {
 		$gpa = "";
 	}
-	$sql = mysql_query("SELECT ".$type."ID FROM ".$type." WHERE ".$type.$part." = ".$partID." ".$gpa." ORDER BY ".$orderBy.", ".$count."");
-
-	//$sql = mysql_query("SELECT noteID FROM note WHERE noteProject = 5 ORDER BY noteTitle");
-	$countResult = mysql_num_rows($sql);
-
-?>
-	<script type="text/javascript">
-		$('.partIndex h2').html("<?php echo $part; ?>");
-		$('.titleIndex .left').html("<?php echo linkIndex($type, $part, $partID); ?>");
-		$('.titleIndex .right').html("<?php echo "#".$type."s: ".$countResult; ?>");
-	</script>
-<?php
-		
-	$tableID = $type."ID";
 	
-	while($row = mysql_fetch_object($sql)){
-		$typeID = $row->$tableID;
-		if($type=="note"){
-			showNote($typeID, $access);
-		} else {
-			showSource($typeID);
+	switch($part){
+		// case 1:n
+		case "category";
+		case "project";
+		case "source";
+			$sql = mysql_query("SELECT ".$type."ID FROM ".$type." WHERE ".$type.$part." = ".$partID." ".$gpa." ORDER BY ".$orderBy.", ".$count."");
+			$partIndex = $part;
+			$titleIndexLeft = linkIndex($type, $part, $partID);
+		break;
+		
+		// case m:n
+		case "tag";
+		case "author";
+			$relTable = "rel_".$type."_".$part;
+			$sql = mysql_query("SELECT ".$part."Name, ".$type."ID FROM ".$part.", ".$relTable." WHERE ".$part.".".$part."ID = ".$relTable.".".$part."ID AND ".$relTable.".".$part."ID = '".$partID."' ORDER BY ".$part."Name");
+			$partIndex = $part;
+			$titleIndexLeft = linkIndex($type, $part, $partID);
+		break;
+		
+		case "excerpt";
+		case "collection";
+			$sql = mysql_query("SELECT ".$type."ID FROM ".$type." WHERE ".$type."ID = ".$partID." ".$gpa.";");
+			$partIndex = $part;
+			$titleIndexLeft = linkIndex('note', 'source', $partID);
+		break;
+		
+		case "search";
+			$partID = htmlentities($partID,ENT_QUOTES,'UTF-8');
+			if($type == 'note'){
+				$sql = mysql_query("SELECT noteID FROM note WHERE (`noteTitle` LIKE '%".$partID."%' OR `noteContent` LIKE '%".$partID."%' OR noteSourceExtern LIKE '%".$partID."%') ".$gpa." ORDER BY date DESC");
+
+			} else {
+				$sql = mysql_query("SELECT sourceID FROM source WHERE (`sourceTitle` LIKE '%".$partID."%' OR `sourceSubtitle` LIKE '%".$partID."%' OR sourceNote LIKE '%".$partID."%') ".$gpa." ORDER BY date DESC");
+			}
+			$partIndex = $part."ed";
+			$titleIndexLeft = "'".$partID."'";
+		break;
+		
+		//default:
+		
+	}
+	
+	// hier noch if $sql existiert
+	$countResult = mysql_num_rows($sql);
+	if($countResult != 0){
+		?>
+		<script type="text/javascript">
+			$('.partIndex h2').html("<?php echo $partIndex; ?>");
+			$('.titleIndex .left').html("<?php echo $titleIndexLeft; ?>");
+			$('.titleIndex .right').html("<?php echo "#".$type."s: ".$countResult; ?>");
+		</script>
+		<?php
+
+		$tableID = $type."ID";
+		while($row = mysql_fetch_object($sql)){
+			$typeID = $row->$tableID;
+			if($type=="note"){
+				showNote($typeID, $access);
+			} else {
+				showSource($typeID);
+			}
 		}
+	} else {
+		$partIndex = $part;
+		if($part == 'source'){
+			$titleIndexLeft = linkIndex($type, $part, $partID);
+		} elseif($part == 'search') {
+			$partIndex = $part."ed";
+			$titleIndexLeft = "'".$partID."'";
+		} else {
+			$titleIndexLeft = "found nothing";
+		}
+?>
+		<script type="text/javascript">
+			$('.partIndex h2').html("<?php echo $partIndex; ?>");
+			$('.titleIndex .left').html("<?php echo $titleIndexLeft; ?>");
+			$('.titleIndex .right').html("<?php echo "#".$type."s: ".$countResult; ?>");
+		</script>
+<?php
+	$zeroResults = "Either you are not allowed to see the note or there are no notes with this item.";
+		echo "<div class='note'><p class='advice'>".$zeroResults."</p></div>";
 	}
 }
+
 
 
 

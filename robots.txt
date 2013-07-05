@@ -1,0 +1,7 @@
+# robots.txt for notizblogg.ch by Andre Kilchenmann
+User-agent: *
+Disallow: media/
+Disallow: admin/
+Disallow: conf/
+Disallow: commons/
+Sitemap: http://notizblogg.ch/sitemap.xml

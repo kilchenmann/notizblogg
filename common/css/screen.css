@@ -3,9 +3,9 @@
 body {
 	background-attachment: fixed;
 	background-color: #1A1A1A;
-    background-image: url("../images/body-bg.jpg");
-    background-repeat: repeat;
-    background-position: left top;
+	background-image: url("../images/body-bg.jpg");
+	background-repeat: repeat;
+	background-position: left top;
 }
 
 * {
@@ -32,11 +32,19 @@ img, video {
 button, input img {
 	cursor: pointer;
 }
+.advice {
+	background-color: rgba(255, 255, 155, 0.8);
+	color: #1A1A1A;
+	border-radius:5px;
+	padding: 22px;
+	text-align: center;
+}
 
 .warning {
 	color: #ff0000;
 	text-align: center;
 }
+
 /* **************************************************************** */
 
 /* **************************************************************** */
@@ -67,7 +75,9 @@ header {
 	float:right;
 	width:25%;
 }
-
+.panel table {
+	border-collapse: collapse;
+}
 	.typeIndex {
 		width: 80px;
 		float: left;
@@ -208,7 +218,7 @@ header {
 		height: 22px;
 	}
 
-	.newNote, .newSource, .partNote, .partSource, .cloudTags, .cloudAuthors, .settings, .editNote, .editSource {
+	.newNote, .newSource, .completeSource, .partNote, .partSource, .cloudTags, .cloudAuthors, .settings, .editNote, .editSource {
 		display: none;
 	}
 
@@ -232,7 +242,6 @@ header {
 		text-align: right;
 	}
 
-
 	.form input, .form textarea, .form select, .form button:hover, .login input, .login button:hover{
 		border-radius: 11px;
 		border: none;
@@ -243,7 +252,7 @@ header {
 		padding: 4px;
 		margin: 3px;
 	}
-	
+
 	.form button, .login button {
 		border-radius: 11px;
 		border: none;
@@ -256,7 +265,7 @@ header {
 		width: 144px;
 		height: 40px;
 	}
-	
+
 	.form input, .form select {
 		height: 28px;
 		width: 300px;
@@ -292,7 +301,7 @@ header {
 		z-index: 10;
 		position:absolute;
 	}
-	
+
 	.form .dropFile input.uploadFile {
 		-moz-opacity:0;
 		filter:alpha(opacity: 0);
@@ -301,7 +310,7 @@ header {
 		margin-top: 8px;
 		position:absolute;
 	}
-	
+
 	.form button.server {
 		width: 72px;
 		padding: 3px;
@@ -348,7 +357,7 @@ header {
 		margin-left:auto;
 		margin-right:auto;
 	}
-	
+
 	.lens .login {
 		display: block;
 		width: 300px;
@@ -366,7 +375,6 @@ header {
 		text-align:center;
 		padding: 12px;
 	}
-
 
 .viewer {
 	padding: 111px 33px 66px 33px;
@@ -460,7 +468,7 @@ a.nonpublic{
 		margin-right: auto;
 		border-bottom-left-radius: 0;
 		border-bottom-right-radius: 0;
-		border-bottom: 2px solid #1A1A1A;
+		border-bottom: 1px solid #333333;
 		cursor: pointer;
 	}
 
@@ -522,12 +530,7 @@ a.large{
 a.extralarge{
 	font-size:2.1em;
 }
-
-
 /* **************************************************************** */
-
-
-
 
 /* **************************************************************** */
 /* footer */

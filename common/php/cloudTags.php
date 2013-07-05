@@ -15,19 +15,19 @@ while($row = mysql_fetch_object($sqlTags)){
 	$countTags = mysql_num_rows($sqlTagName);
 
 		if($countTags>0&&$countTags<=1){
-			echo "<a href='?type=note&part=tag&id=".$tagID."' class='tiny' title='".$tagName.": ".$countTags." note'>".$tagName."</a>";
+			echo "<a href='?type=note&amp;part=tag&amp;id=".$tagID."' class='tiny' title='".$tagName.": ".$countTags." note'>".$tagName."</a>";
 			echo " · ";
 		} elseif($countTags>=2&&$countTags<9){
-			echo "<a href='?type=note&part=tag&id=".$tagID."' class='small' title='".$tagName.": ".$countTags." note'>".$tagName."</a>";
+			echo "<a href='?type=note&amp;part=tag&amp;id=".$tagID."' class='small' title='".$tagName.": ".$countTags." note'>".$tagName."</a>";
 			echo " · ";
 		} elseif($countTags>=9&&$countTags<18){
-			echo "<a href='?type=note&part=tag&id=".$tagID."' class='medium' title='".$tagName.": ".$countTags." notes'>".$tagName."</a>";
+			echo "<a href='?type=note&amp;part=tag&amp;id=".$tagID."' class='medium' title='".$tagName.": ".$countTags." notes'>".$tagName."</a>";
 			echo " · ";
 		} elseif($countTags>=18&&$countTags<45){
-			echo "<a href='?type=note&part=tag&id=".$tagID."' class='large' title='".$tagName.": ".$countTags." notes'>".$tagName."</a>";
+			echo "<a href='?type=note&amp;part=tag&amp;id=".$tagID."' class='large' title='".$tagName.": ".$countTags." notes'>".$tagName."</a>";
 			echo " · ";
 		} elseif($countTags>=45){
-			echo "<a href='?type=note&part=tag&id=".$tagID."' class='extralarge' title='".$tagName.": ".$countTags." notes'>".$tagName."</a>";
+			echo "<a href='?type=note&amp;part=tag&amp;id=".$tagID."' class='extralarge' title='".$tagName.": ".$countTags." notes'>".$tagName."</a>";
 			echo " · ";
 		}
 	}
