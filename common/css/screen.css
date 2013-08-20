@@ -44,6 +44,21 @@ button, input img {
 	color: #ff0000;
 	text-align: center;
 }
+.download {
+		color: #E5E5E5;
+		padding: 4px;
+		margin: 3px;
+}
+.download a {
+		border-radius: 11px;
+		border: none;
+		border-top: 2px solid #E5E5E5;
+		border-bottom: 1px solid #1A1A1A;
+		background-color: rgba(255, 0, 0, 0.2);
+		padding: 8px;
+		margin: 3px;
+        float:right;
+}
 
 /* **************************************************************** */
 
@@ -395,7 +410,7 @@ header {
 }
 
 .note .set{
-	display: none;
+	opacity: 0.1;
 }
 .note .set button{
 	float:right;

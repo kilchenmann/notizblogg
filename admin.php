@@ -696,7 +696,7 @@ $("img.staticMedia").mousedown(function(event) {
 
 
 		$(".note").mouseleave(function(){
-			$(this).children(".set").css({'display':'none'});
+			$(this).children(".set").fadeTo("fast", 0.1);
 			if($(this).children("textarea").length){
 				var editArea = $(this).children("textarea");
 				var editContent = editArea.text();

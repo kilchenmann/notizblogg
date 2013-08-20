@@ -105,8 +105,8 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 		case "pdf";
 		{
 			$mediaInfo = MEDIA_FOLDER."/documents/".$noteMedia;
-			if (file_exists($mediaInfo)){
-				echo "<a href='".MEDIA_FOLDER."/documents/".$noteMedia."' title='Download ".$noteMedia." (".$size."kb)' class='warning'>Open / Download ".$noteMedia." (".$size."kb)</a><br>";
+			if (@fopen($mediaInfo,"r")==true){
+				echo "<p class='download'>".$noteMedia." (".$size."kb) <a href='".MEDIA_FOLDER."/documents/".$noteMedia."' title='Download ".$noteMedia." (".$size."kb)' >Open</a></p><br>";
 			} else {
 				echo "<p class='warning'>[The pdf document is missing!]</p>";
 			}
@@ -117,10 +117,12 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 		case "webm";
 		{
 			$mediaInfo = MEDIA_FOLDER."/movies/".$noteMedia;
-			if (file_exists($mediaInfo)){
-				echo "<video class='dynamicMedia' controls preload='auto' poster='".SITE_FOLDER."/media/movies/".$fileName.".png'>";
-					echo "<source src='".MEDIA_FOLDER."/movies/".$fileName.".mp4' type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'>";
-					echo "<source src='".MEDIA_FOLDER."/movies/".$fileName.".webm' type='video/webm; codecs=\"vp8, vorbis\"'>";
+			if (@fopen($mediaInfo,"r")==true){
+				echo "<video class='dynamicMedia' controls preload='auto' poster='".MEDIA_FOLDER."/movies/".$fileName.".png'>";
+					echo "<source src='".MEDIA_FOLDER."/movies/".$fileName.".mp4' >";
+                        //type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'
+					echo "<source src='".MEDIA_FOLDER."/movies/".$fileName.".webm' >";
+                        //type='video/webm; codecs=\"vp8, vorbis\"'
 				echo "</video>";
 			} else {
 				echo "<p class='warning'>[The movie file is missing!]</p>";

@@ -16,7 +16,7 @@ require_once ("conf/settings.php");
 	$access = "public";
 	$robots = "INDEX,FOLLOW";
 
-	echo "<title>".$siteTitel." ".$nbVersion."</title>\n";
+	echo "<title>".$siteTitel." (Version ".$nbVersion.")</title>\n";
 	echo "<meta name='Author' content='André Kilchenmann'>\n";
 	//echo "<meta name='Page-topic' content='".$pagetopic."'>\n";
 	echo "<meta name='Keywords' content='".$keywords."'>\n";
@@ -259,8 +259,8 @@ require_once ("conf/settings.php");
 		<script type="text/javascript">
 			$(".typeIndex h2").html("NOTES");
 			$(".partIndex h2").html("Start");
-			$(".titleIndex .left").html("Notizblogg | Zettelkasten | Memex");
-			$(".titleIndex .right").html("#notes: <?php echo $count; ?>");
+			$(".titleIndex .left").html("<?php echo $siteTitel; ?>");
+			//$(".titleIndex .right").html("#notes: <?php echo $count; ?>");
 		</script>
 <?php
 		echo "<div class='desk'>";
@@ -308,7 +308,7 @@ disconnect();
 		}
 
 		if($("h1.left").text()!=""){
-			var siteTitle = $(".titleIndex .left").text()+" ("+$(".partIndex h2").text()+")";
+			var siteTitle = $(".titleIndex .left").text()+" (" + $(".partIndex h2").text()+ " in Notizblogg)";
 			document.title = siteTitle;
 			var activeCategory = $("h1.left a").text();
 			$("h3.part").append("\"" + activeCategory + "\"");
@@ -695,7 +695,7 @@ $("img.staticMedia").mousedown(function(event) {
 
 
 		$(".note").mouseleave(function(){
-			$(this).children(".set").css({'display':'none'});
+			$(this).children(".set").fadeTo("fast", 0.1);
 			if($(this).children("textarea").length){
 				var editArea = $(this).children("textarea");
 				var editContent = editArea.text();
