@@ -98,7 +98,7 @@ include (SITE_PATH."/admin/checkuser.php");
 
 			if($(".titleIndex").css("display")=="none"){
 				var active = $(".menu button.active").val();
-				$("."+active).fadeIn("fast");
+				$("." + active).fadeIn("fast");
 			}
 		}
 	}
@@ -220,7 +220,7 @@ include (SITE_PATH."/admin/checkuser.php");
 
 			</div>
 			<div class='completeSource'>
-
+				<?php include SITE_PATH."/admin/completeSource.php"; ?>
 			</div>
 		</div>
 		<div class="contentIndexPlus">
@@ -312,7 +312,7 @@ disconnect();
 		}
 
 		if($("h1.left").text()!=""){
-			var siteTitle = $(".titleIndex .left").text()+" ("+$(".partIndex h2").text()+" in Notizblogg)";
+			var siteTitle = $(".titleIndex .left").text() + " (" + $(".partIndex h2").text() + " in Notizblogg)";
 			document.title = siteTitle;
 			var activeCategory = $("h1.left a").text();
 			$("h3.part").append("\"" + activeCategory + "\"");

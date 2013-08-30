@@ -1,5 +1,14 @@
 <script type="text/javascript">
 
+
+/*
++!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!
+
+Dieser erste Teil komplett überarbeiten! Keine document.ready function,
+da dieses Dokument mit dem Hauptdokument (hier admin.php) geladen wird.
+Andere Lösung finden
+
++!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!+!
 	$(document).ready(function() {
 		changeMenu("NOTES");
 		$("button.menuNew").val("completeSource");
@@ -16,13 +25,13 @@
 				width: "720px"
 		},"fast");
 	});
-
+*/
 </script>
 <?php
 if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 	?>
 	<script type="text/javascript">
-		alert("speichern!?");
+		alert("speichern!?" + <?php echo $_POST['sTyp']; ?>);
 	</script>
 	<?php
 	//0. collect Post-Data
@@ -115,14 +124,14 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 		while($row = mysql_fetch_object($checkSource)){
 			$sourceID = $row->sourceID;
 		}
-		echo "<div id='cardNote'>";
-		echo "'<strong>".$sourceName."</strong>' already exists. If you want to edit it, click on the button<br /><br />";
-		echo "</div>";
+		//echo "<div class='note'>";
+		echo "<p class='advice'>The source <strong>'<a href='?type=note&part=source&id= " . $sourceID . "' >".$sourceName."</a>'</strong> already exists. If you want to edit it, click on the button</p><br /><br />";
+		//echo "</div>";
 		$selectTyp = mysql_query("SELECT sourceTyp FROM source WHERE sourceID = ".$sourceID."");
 			while($row = mysql_fetch_object($selectTyp)){
 				$sourceTyp = $row->sourceTyp;
 			}
-			echo "<div id='cardNote'>";
+			echo "<div class='note'>";
 			if($sourceTyp!=0){
 				echo "<form name='editSource' action='editSource.php' method='get'>";
 					echo "<input type='hidden' name='sourceID' value='".$sourceID."' />";
@@ -189,100 +198,97 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 				$authors = "";
 			}
 		}
-	$completeSourceWithType = $_POST['sTyp'];
-	
-			switch($completeSourceWithType){
-				case "article";
-					echo "<input type='text' name='journaltitle' placeholder='journalTitle' required='required' size='28' /><br />";
-				break;
-				case "book";
-				case "booklet";
-				case "collection";
-					echo "<select name='selectLocation1' id='selectLocation1'>";
+		$completeSourceWithType = $_POST['sTyp'];
+		switch($completeSourceWithType){
+			case "article";
+				echo "<input type='text' name='journaltitle' placeholder='journalTitle' required='required' size='28' /><br />";
+			break;
+			case "book";
+			case "booklet";
+			case "collection";
+				echo "<select name='selectLocation1' id='selectLocation1'>";
+					formSelect('location');
+				echo "</select> ";
+				echo "<input type='text' name='sLocation1' id='newLocation1' placeholder='1. Location' size='28' required='required' /><br />";
+				$i=2;
+				while ($i<5) {
+					echo "<div id='location".$i."' style='display:none'>";
+						echo "<select name='selectLocation".$i."' id='selectLocation".$i."'>";
 							formSelect('location');
-					echo "</select> ";
-					echo "<input type='text' name='sLocation1' id='newLocation1' placeholder='1. Location' size='28' required='required' /><br />";
+						echo "</select> ";
+						echo "<input type='text' name='sLocation".$i."' id='newLocation".$i."' placeholder='".$i.". Location' size='28'/><br />";
+					echo "</div>";
+					$i++;
+				}
+			break;
+			case "online";
+				echo "<input type='text' name='url' placeholder='url' size='35' required='required' /><br />";
+				$today = date("Y-m-d");
+				echo "<input type='date' name='urldate' placeholder='YYYY-MM-DD' size='35' required='required' value='".$today."'/><br />";
+			break;
+			case "proceedings";
+				echo "<input type='text' name='eventtitle' placeholder='eventtitle' required='required' size='28' /><br />";
+				echo "<input type='text' name='venue' placeholder='venue' size='28' /><br />";
+				echo "<select name='selectLocation1' id='selectLocation1'>";
+					formSelect('location');
+				echo "</select> ";
+				echo "<input type='text' name='sLocation1' id='newLocation1' placeholder='1. Location' size='28' required='required' /><br />";
 					
-						$i=2;
-						
-						while ($i<5) {
-							echo "<div id='location".$i."' style='display:none'>";
-								echo "<select name='selectLocation".$i."' id='selectLocation".$i."'>";
-									formSelect('location');
-								echo "</select> ";
-								echo "<input type='text' name='sLocation".$i."' id='newLocation".$i."' placeholder='".$i.". Location' size='28'/><br />";
-							echo "</div>";
-						$i++;
-						}
-				break;
-				case "online";
-					echo "<input type='text' name='url' placeholder='url' size='35' required='required' /><br />";
-					$today = date("Y-m-d");
-					echo "<input type='date' name='urldate' placeholder='YYYY-MM-DD' size='35' required='required' value='".$today."'/><br />";
-				break;
-				case "proceedings";
-					echo "<input type='text' name='eventtitle' placeholder='eventtitle' required='required' size='28' /><br />";
-					echo "<input type='text' name='venue' placeholder='venue' size='28' /><br />";
-					echo "<select name='selectLocation1' id='selectLocation1'>";
+				$i=2;
+				
+				while ($i<5) {
+					echo "<div id='location".$i."' style='display:none'>";
+						echo "<select name='selectLocation".$i."' id='selectLocation".$i."'>";
 							formSelect('location');
-					echo "</select> ";
-					echo "<input type='text' name='sLocation1' id='newLocation1' placeholder='1. Location' size='28' required='required' /><br />";
-					
-						$i=2;
-						
-						while ($i<5) {
-							echo "<div id='location".$i."' style='display:none'>";
-								echo "<select name='selectLocation".$i."' id='selectLocation".$i."'>";
-									formSelect('location');
-								echo "</select> ";
-								echo "<input type='text' name='sLocation".$i."' id='newLocation".$i."' placeholder='".$i.". Location' size='28'/><br />";
-							echo "</div>";
-						$i++;
-						}
-				break;
-				case "report";
-				case "thesis";
-					echo "<input type='text' name='type' placeholder='type' size='28' /><br />";
-					echo "<input type='text' name='institution' placeholder='institution' size='28' /> ";
-				break;
-				case "inbook";
-					echo "<select name='inbook' id='selectSource'>";
-						formSelectTyp('source', 'book');
-					echo "</select>";
-					echo "<br />";
-					echo "<input type='text' name='pageStart' placeholder='from page' size='16' />";
-					echo "<input type='text' name='pageEnd' placeholder='to page' size='16'  />";
-				break;
-				case "incollection";
-					echo "<select name='incollection' id='selectSource'>";
-						formSelectTyp('source', 'collection');
-					echo "</select>";
-					echo "<br />";
-					echo "<input type='text' name='pageStart' placeholder='from page' size='16' />";
-					echo "<input type='text' name='pageEnd' placeholder='to page' size='16'  />";
-				break;
-				case "inproceedings";
-					echo "<select name='inproceedings' id='selectSource'>";
-						formSelectTyp('source', 'proceedings');
-					echo "</select>";
-					echo "<br />";
-					echo "<input type='text' name='pageStart' placeholder='from page' size='16' />";
-					echo "<input type='text' name='pageEnd' placeholder='to page' size='16'  />";
-				break;
-				case "manual";
-				case "misc";				
-				case "periodical";				
-				case "unpublished";
-					echo "<select name='miscField1'>";
-						formSelect('bibField');
-					echo "</select>";
-					echo "<input type='text' name='miscFieldValue1' size='28' />";
-					echo "<select name='miscField2'>";
-						formSelect('bibField');
-					echo "</select>";
-					echo "<input type='text' name='miscFieldValue2' size='28' />";
-				break;
-			} // Ende switch
+						echo "</select> ";
+						echo "<input type='text' name='sLocation".$i."' id='newLocation".$i."' placeholder='".$i.". Location' size='28'/><br />";
+					echo "</div>";
+				$i++;
+				}
+			break;
+			case "report";
+			case "thesis";
+				echo "<input type='text' name='type' placeholder='type' size='28' /><br />";
+				echo "<input type='text' name='institution' placeholder='institution' size='28' /> ";
+			break;
+			case "inbook";
+				echo "<select name='inbook' id='selectSource'>";
+					formSelectTyp('source', 'book');
+				echo "</select>";
+				echo "<br />";
+				echo "<input type='text' name='pageStart' placeholder='from page' size='16' />";
+				echo "<input type='text' name='pageEnd' placeholder='to page' size='16'  />";
+			break;
+			case "incollection";
+				echo "<select name='incollection' id='selectSource'>";
+					formSelectTyp('source', 'collection');
+				echo "</select>";
+				echo "<br />";
+				echo "<input type='text' name='pageStart' placeholder='from page' size='16' />";
+				echo "<input type='text' name='pageEnd' placeholder='to page' size='16'  />";
+			break;
+			case "inproceedings";
+				echo "<select name='inproceedings' id='selectSource'>";
+					formSelectTyp('source', 'proceedings');
+				echo "</select>";
+				echo "<br />";
+				echo "<input type='text' name='pageStart' placeholder='from page' size='16' />";
+				echo "<input type='text' name='pageEnd' placeholder='to page' size='16'  />";
+			break;
+			case "manual";
+			case "misc";				
+			case "periodical";				
+			case "unpublished";
+				echo "<select name='miscField1'>";
+					formSelect('bibField');
+				echo "</select>";
+				echo "<input type='text' name='miscFieldValue1' size='28' />";
+				echo "<select name='miscField2'>";
+					formSelect('bibField');
+				echo "</select>";
+				echo "<input type='text' name='miscFieldValue2' size='28' />";
+			break;
+		} // Ende switch
 	
 	}
 
