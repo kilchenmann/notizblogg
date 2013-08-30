@@ -236,7 +236,7 @@ header {
 		height: 22px;
 	}
 
-	.newNote, .newSource, .completeSource, .partNote, .partSource, .cloudTags, .cloudAuthors, .settings, .editNote, .editSource {
+	.newNote, .newSource, .partNote, .partSource, .cloudTags, .cloudAuthors, .settings, .editNote, .editSource {
 		display: none;
 	}
 
@@ -252,14 +252,14 @@ header {
 	.form td {
 		vertical-align: top;
 		padding: 12px;
+		width: 50%;
 	}
-	.form td.left {
+	.form td.left, .form td.left_bottom {
 		border-right: 1px solid #BFBFBF;
 	}
 	.form td.bottom {
 		text-align: right;
 	}
-
 	.form input, .form textarea, .form select, .form button:hover, .login input, .login button:hover{
 		border-radius: 11px;
 		border: none;
@@ -294,6 +294,9 @@ header {
 	}
 	.form input.small, .form select {
 		width: 140px;
+	}
+	.form input.xsmall {
+		width: 70px;
 	}
 
 	.form .choosenMedia {
