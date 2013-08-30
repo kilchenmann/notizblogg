@@ -39,6 +39,9 @@ button, input img {
 	padding: 22px;
 	text-align: center;
 }
+.advice a {
+	color: #040405;
+}
 
 .warning {
 	color: #ff0000;

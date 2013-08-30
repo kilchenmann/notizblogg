@@ -220,7 +220,7 @@ include (SITE_PATH."/admin/checkuser.php");
 
 			</div>
 			<div class='completeSource'>
-				<?php include SITE_PATH."/admin/completeSource.php"; ?>
+				<?php //include SITE_PATH."/admin/completeSource.php"; ?>
 			</div>
 		</div>
 		<div class="contentIndexPlus">
