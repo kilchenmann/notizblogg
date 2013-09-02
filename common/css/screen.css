@@ -295,8 +295,14 @@ header {
 	.form input.small, .form select {
 		width: 140px;
 	}
-	.form input.xsmall {
+	.form input.xsmall { 
 		width: 70px;
+	}
+	.form select.smalldown {
+		width: 20px;
+	}
+	.form input.newselect {
+		width: 270px;
 	}
 
 	.form .choosenMedia {

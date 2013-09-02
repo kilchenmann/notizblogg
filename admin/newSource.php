@@ -33,9 +33,10 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 				<p>
 					<input type='text' name='sTagTitle' placeholder='Title_Tag' required='required' />
 				</p>
-				<p>
+				<p class="author">
+
 			<?php
-				formSelectMN('author');
+//				formSelectMN('author');
 
 
 
@@ -250,6 +251,8 @@ $('select.bibTyp').change(function() {
 			$('p.plusDetail4').append("<input type='text' name='valueDetail4' class='small' size='28' />");
 	
 });
+
+	$('.author').livesearch('author');
 
 
 // Autor 1

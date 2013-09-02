@@ -1,16 +1,16 @@
 /**
  *
- * jNote - a jQuery-Plugin for a better handling with notes in notizblogg.
+ * Note - a jQuery-Plugin for a better handling with notes in notizblogg.
  *
  * @version 1.0
  *
  * @example:
  *  Create,update:
- *    jQuery.jNote('note','value');
+ *    jQuery.note('note','value');
  *  Delete:
- *    jQuery.jNote('note',null);
+ *    jQuery.note('note',null);
  *  Show:
- *    jQuery.jNote('note');
+ *    jQuery.note('note');
  *
  * Copyright (c) 2013 André Kilchenmann (milchkannen.ch)
  *
@@ -29,7 +29,7 @@
     $.fn.extend({
         
 		//This is where you write your plugin's name
-		jnote: function() {
+		note: function() {
 			//Iterate over the current set of matched elements
 			return this.each(function() {
 			

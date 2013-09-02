@@ -143,22 +143,11 @@ function formSelectMN($table) {
 
 // :+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+
 	echo "<p>";
-		echo "<select name='" . $selectName . "' class='" . $selectName . "' >";
+		echo "<select name='" . $selectName . "' class='" . $selectName . " smalldown' >";
 			formSelect($table);
 		echo "</select>";
-		echo "<input type='text' name='" . $inputName . "' class='" . $inputName . " small' placeholder='" . $i . ". " . $table . "' required='required' />";
+		echo "<input type='text' name='" . $inputName . "' class='" . $inputName . " newselect' placeholder='" . $i . ". " . $table . "' required='required' />";
 	echo "</p>";
-	$i++;
-	while ($i <= 4) {
-		echo "<p class='" . $table . $i . "' style='display:none'>";
-			echo "<select name='" . $selectName . "' class='" . $selectName . "' >";
-				formSelect($table);
-			echo "</select>";
-			echo "<input type='text' name='" . $inputName . "' class='" . $inputName . " small' placeholder='" . $i . ". " . $table . "' required='required' />";
-		echo "</p>";
-		$i++;
-	}
-
 ?>
 <script type="text/javascript">
 // Autor 1
@@ -182,7 +171,24 @@ $('input.inputauthor1').change(function() {
 		$(".author4").css({"display":"none"});			
 	}
 });
-    
+
+<?php
+	$i++;
+	while ($i <= 4) {
+	$selectName = "select" . $table . $i;
+	$inputName = "input" . $table . $i;
+		echo "<p class='" . $table . $i . "' style='display:none'>";
+			echo "<select name='" . $selectName . "' class='" . $selectName . "' >";
+				formSelect($table);
+			echo "</select>";
+			echo "<input type='text' name='" . $inputName . "' class='" . $inputName . " small' placeholder='" . $i . ". " . $table . "' required='required' />";
+		echo "</p>";
+		$i++;
+	}
+
+?>
+
+    <script type="text/javascript">
  // Autor 2
     $(function() {
         $('select.selectauthor2').change(function() {

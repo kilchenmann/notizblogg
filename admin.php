@@ -48,7 +48,8 @@ include (SITE_PATH."/admin/checkuser.php");
 
 	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/".$jquery_version."'></script>\n";
 	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/jquery.jcookie.js'></script>\n";
-	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/jquery.jnote.js'></script>\n";
+	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/jquery.note.js'></script>\n";
+	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/jquery.livesearch.js'></script>\n";
 ?>
 
 
