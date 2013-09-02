@@ -10,7 +10,7 @@ switch($part){
 	case "project";
 	case "tag";
 	case "search";
-			show($type, $part, $partID, $access);
+		show($type, $part, $partID, $access);
 	break;
 	
 	case "source";

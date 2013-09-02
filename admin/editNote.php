@@ -1,6 +1,5 @@
 <?php
-if(isset($_GET["edit"])){
-	$edit = $_GET["edit"];
+	$edit = $_GET["editNote"];
 	$sql = mysql_query("SELECT * FROM note WHERE noteID=".$edit);
 	while($row = mysql_fetch_object($sql)){
 		$noteID = $row->noteID;
@@ -162,6 +161,4 @@ echo "<form accept-charset='utf-8' name='noteEdit' class='noteForm' action='".SI
 	
 	</table>
 </form>
-<?php 
-}
-?>
+

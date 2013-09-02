@@ -96,16 +96,9 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 			$sourceID = $row->sourceID;
 		}
 		//echo "<div class='note'>";
-		?>
-		<script type="text/javascript">
-			var sourceID = "<?php echo $sourceID; ?>";
-			var sourceName = "<?php echo $sourceName; ?>";
-			$(".completeSource").html("<p class='advice'>The source <strong><a href='?type=note&part=source&id= " + sourceID + "' >'" + sourceName + "'</a></strong> already exists.</p>");
-			var showSource = "<?php showSource($sourceID); ?>";
-			$(".completeSource").append(showSource);
-		</script>
+		echo "<p class='advice'>The source <strong><a href='?type=note&part=source&id= " . $sourceID . "' >'" . $sourceName . "'</a></strong> already exists.</p>";
+		showSource($sourceID);
 
-		<?php
 	} else {
 	
 		$sql="INSERT INTO source (sourceName, sourceTitle, sourceSubtitle, sourceYear, sourceTyp, sourceEditor, sourceNote, sourceCategory, sourceProject) VALUES
@@ -138,7 +131,7 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 		switch($bibTypName){
 			case "article";
 				$journaltitle = htmlentities($_POST['journaltitle'],ENT_QUOTES,'UTF-8');
-
+				insertField('article', $journaltitle, $sourceID);
 				break;
 			case "book";
 			case "booklet";
@@ -175,11 +168,15 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 				break;
 			case "online";
 				$url = $_POST['url'];
+				insertField('url', $url, $sourceID);
 				$urldate = $_POST['urldate'];
+				insertField('urldate', $urldate, $sourceID);
 				break;
 			case "proceedings";
 				$eventtitle = htmlentities($_POST['eventtitle'],ENT_QUOTES,'UTF-8');
+				insertField('eventtitle', $eventtitle, $sourceID);
 				$venu = htmlentities($_POST['venue'],ENT_QUOTES,'UTF-8');
+				insertField('venu', $venu, $sourceID);
 				
 				$location1 = "";
 				$location2 = "";
@@ -200,52 +197,57 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 				break;
 			case "report";
 			case "thesis";
-//						echo "<input type='text' name='type' placeholder='type' size='28' /><br />";
-//						echo "<input type='text' name='institution' placeholder='institution' size='28' /> ";
+				$type = htmlentities($_POST['type'],ENT_QUOTES,'UTF-8');
+				insertField('type', $type, $sourceID);
+				$institution = htmlentities($_POST['institution'],ENT_QUOTES,'UTF-8');
+				insertField('institution', $institution, $sourceID);
 				break;
 			case "inbook";
-//						echo "<select name='inbook' id='selectSource'>";
-//							formSelectTyp('source', 'book');
-//						echo "</select>";
-//						echo "<input type='text' name='pageStart' placeholder='from page' size='16' />";
-//						echo "<input type='text' name='pageEnd' placeholder='to page' size='16'  />";
+				$insource = htmlentities($_POST['inbook'],ENT_QUOTES, 'UTF-8');
+				insertField('crossref', $insource, $sourceID);
+				$pageStart = htmlentities($_POST['pageStart'],ENT_QUOTES,'UTF-8');
+				$pageEnd = htmlentities($_POST['pageEnd'],ENT_QUOTES,'UTF-8');
+				if(($pageEnd - $pageStart) <= 0) {
+					$pages = $pageStart;
+				} else {
+					$pages = $pageStart . '--' . $pageEnd;
+				}
+				insertField('pages', $pages, $sourceID);
 				break;
 			case "incollection";
-//						echo "<select name='incollection' id='selectSource'>";
-//							formSelectTyp('source', 'collection');
-//						echo "</select>";
-//						echo "<input type='text' name='pageStart' placeholder='from page' size='16' />";
-//						echo "<input type='text' name='pageEnd' placeholder='to page' size='16'  />";
+				$insource = htmlentities($_POST['incollection'],ENT_QUOTES, 'UTF-8');
+				insertField('crossref', $insource, $sourceID);
+				$pageStart = htmlentities($_POST['pageStart'],ENT_QUOTES,'UTF-8');
+				$pageEnd = htmlentities($_POST['pageEnd'],ENT_QUOTES,'UTF-8');
+				if(($pageEnd - $pageStart) <= 0) {
+					$pages = $pageStart;
+				} else {
+					$pages = $pageStart . '--' . $pageEnd;
+				}
+				insertField('pages', $pages, $sourceID);
 				break;
 			case "inproceedings";
-//						echo "<select name='inproceedings' id='selectSource'>";
-//							formSelectTyp('source', 'proceedings');
-//						echo "</select>";
-//						echo "<input type='text' name='pageStart' placeholder='from page' size='16' />";
-//						echo "<input type='text' name='pageEnd' placeholder='to page' size='16'  />";
+				$insource = htmlentities($_POST['inproceedings'],ENT_QUOTES, 'UTF-8');
+				insertField('crossref', $insource, $sourceID);
+				$pageStart = htmlentities($_POST['pageStart'],ENT_QUOTES,'UTF-8');
+				$pageEnd = htmlentities($_POST['pageEnd'],ENT_QUOTES,'UTF-8');
+				if(($pageEnd - $pageStart) <= 0) {
+					$pages = $pageStart;
+				} else {
+					$pages = $pageStart . '--' . $pageEnd;
+				}
+				insertField('pages', $pages, $sourceID);
 				break;
 			case "manual";
 			case "misc";				
 			case "periodical";				
 			case "unpublished";
-//						echo "<select name='miscField1'>";
-//							formSelect('bibField');
-//						echo "</select>";
-//						echo "<input type='text' name='miscFieldValue1' size='28' />";
-//						echo "<select name='miscField2'>";
-//							formSelect('bibField');
-//						echo "</select>";
-//						echo "<input type='text' name='miscFieldValue2' size='28' />";
+				$bibField1 = htmlentities($_POST['miscField1'],ENT_QUOTES,'UTF-8');
+				$bibFieldVal1 = htmlentities($_POST['miscFieldValue1'],ENT_QUOTES,'UTF-8');
+				$bibField2 = htmlentities($_POST['miscField2'],ENT_QUOTES,'UTF-8');
+				$bibFieldVal2 = htmlentities($_POST['miscFieldValue2'],ENT_QUOTES,'UTF-8');
 				break;
 		} // Ende switch
-	
-	
-	
-
-		
-
-
-			
 
 
 /*

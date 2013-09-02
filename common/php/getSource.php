@@ -166,6 +166,15 @@ function showSource($source){
 		echo linkIndex('source', 'category', $sourceCategory);
 		echo " &gt; ";
 		echo linkIndex('source', 'project', $sourceProject);
+			if($_SERVER["QUERY_STRING"]){
+				$editLink = MainFile."?".$_SERVER['QUERY_STRING']."&amp;editSource=".$sourceID;
+			} else {
+				$editLink = MainFile."?editSource=".$sourceID;
+			}
+			
+			if($access != 'public'){
+				showEditNoteLink($sourceID, $notePublic, $editLink);
+			}		
 		echo "</p>";
 		echo "</div>";
 }

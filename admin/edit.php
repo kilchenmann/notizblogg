@@ -122,12 +122,136 @@ function insertField($field, $fieldValue, $sourceID){
 		while($row = mysql_fetch_object($selectField)){
 			$bibFieldID = $row->bibFieldID;
 		}
-			
-		$insertTyp = "INSERT INTO sourceDetail (sourceID, bibFieldID, sourceDetailName)	VALUES
-		(\"".$sourceID."\", \"".$bibFieldID."\", \"".$fieldValue."\");";
-		if (!mysql_query($insertTyp)){
-			die('Error: ' . mysql_error());
+	if($field == 'crossref') {
+		$selectSource = mysql_query("SELECT sourceID FROM source WHERE sourceName = '".$fieldValue."'");
+		while($row = mysql_fetch_object($selectSource)){
+			$fieldValue = $row->sourceID;
 		}
+	}
+			
+	$insertTyp = "INSERT INTO sourceDetail (sourceID, bibFieldID, sourceDetailName)	VALUES (\"".$sourceID."\", \"".$bibFieldID."\", \"".$fieldValue."\");";
+	if (!mysql_query($insertTyp)){
+		die('Error: ' . mysql_error());
+	}
 }
+
+function formSelectMN($table) {
+	$tableName = $table."Name";
+	$i = 1;
+	$selectName = "select" . $table . $i;
+	$inputName = "input" . $table . $i;
+
+// :+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+:+
+	echo "<p>";
+		echo "<select name='" . $selectName . "' class='" . $selectName . "' >";
+			formSelect($table);
+		echo "</select>";
+		echo "<input type='text' name='" . $inputName . "' class='" . $inputName . " small' placeholder='" . $i . ". " . $table . "' required='required' />";
+	echo "</p>";
+	$i++;
+	while ($i <= 4) {
+		echo "<p class='" . $table . $i . "' style='display:none'>";
+			echo "<select name='" . $selectName . "' class='" . $selectName . "' >";
+				formSelect($table);
+			echo "</select>";
+			echo "<input type='text' name='" . $inputName . "' class='" . $inputName . " small' placeholder='" . $i . ". " . $table . "' required='required' />";
+		echo "</p>";
+		$i++;
+	}
+
+?>
+<script type="text/javascript">
+// Autor 1
+$('<?php echo $selectName; ?>').change(function() {
+	if($(this).val() == 'author'){
+		$("input.inputauthor1").val("");
+		$(".author2").css({"display":"none"});
+		$(".author3").css({"display":"none"});
+		$(".author4").css({"display":"none"});
+	} else {
+		$('input.inputauthor1').val($(this).val());
+		$(".author2").css({"display":"block"});				
+	}
+});
+$('input.inputauthor1').change(function() {
+	if($(this).val() != ""){
+		$(".author2").css({"display":"block"});
+	} else {
+		$(".author2").css({"display":"none"});
+		$(".author3").css({"display":"none"});
+		$(".author4").css({"display":"none"});			
+	}
+});
+    
+ // Autor 2
+    $(function() {
+        $('select.selectauthor2').change(function() {
+            if($(this).val() =='author'){
+				$('input.inputauthor2').val("");
+				$(".author3").css({"display":"none"});
+				$(".author4").css({"display":"none"});
+			} else {
+				$('input.inputauthor2').val($(this).val() );
+				$(".author3").css({"display":"block"});
+			}
+        });
+    });
+   $(function() {
+        $('input.inputauthor2').change(function() {
+			if($(this).val() !=''){
+				$(".author3").css({"display":"block"});
+			} else {
+				$(".author3").css({"display":"none"});
+				$(".author4").css({"display":"none"});			
+			}
+		
+		});
+	});    
+    
+// Autor 3    
+    $(function() {
+        $('select.selectauthor3').change(function() {
+            if($(this).val() =='author'){
+				$('input.inputauthor3').val("");
+				$(".author4").css({"display":"none"});
+			} else {
+				$('input.inputauthor3').val($(this).val() );
+				$(".author4").css({"display":"block"});
+			}
+        });
+    });
+   $(function() {
+        $('input.inputauthor3').change(function() {
+			if($(this).val() !=''){
+				$(".author4").css({"display":"block"});
+			} else {
+				$(".author4").css({"display":"none"});			
+			}
+		
+		});
+	}); 
+	
+	    
+// Autor 4
+    $(function() {
+        $('select.selectauthor4').change(function() {
+            if($(this).val() =='author'){
+				$('input.inputauthor4').val("");
+			} else {
+				$('input.inputauthor4').val($(this).val() );
+			}
+        });
+    });
+
+
+
+</script>
+<?php
+
+
+
+
+}
+
 
 ?>

@@ -1,17 +1,66 @@
 <?php
-	$sourceID = "";
-	$sourceTitle = "";
-	$noteContent = "";
-	$noteCategory = 0;
-	$noteProject = 0;
-	$noteSourceExtern = "";
-	$noteSource = 0;
-	$pageStart = "";
-	$pageEnd = "";
-	$noteMedia = "";
-	$notePublic = 0;
+	$edit = $_GET["editSource"];
+	$sql = mysql_query("SELECT * FROM source WHERE sourceID=".$edit);
+	while($row = mysql_fetch_object($sql)){
+		$sourceID = $row->sourceID;
+		$sourceName = $row->sourceName;
+		$sourceTitle = $row->sourceTitle;
+		$sourceSubtitle = $row->sourceSubtitle;
+		$sourceYear = $row->sourceYear;
+		$sourceNote = $row->sourceNote;	
+		$sourceEditor = $row->sourceEditor;
+		$sourceCategory = $row->sourceCategory;
+		$sourceProject = $row->sourceProject;
+		$sourceTyp = $row->sourceTyp;
+	}
+	$explodeSourceName = explode(":", $sourceName);
+	$sourceTagTitle = $explodeSourceName[1];
 
-echo "<h3>Create new SOURCE</h3>";
+	if($sourceTyp!=0){
+		$typSql = mysql_query("SELECT bibTypName FROM bibTyp WHERE bibTypID = ".$sourceTyp."");
+		while($typ = mysql_fetch_object($typSql)){
+			$completeSourceWithType = $typ->bibTypName;
+		}
+	}
+
+	$authorSql = mysql_query("SELECT authorName, author.authorID FROM author, rel_source_author WHERE author.authorID = rel_source_author.authorID AND rel_source_author.sourceID = '".$sourceID."' ORDER BY authorName");
+	$countAuthors = mysql_num_rows($authorSql);
+	if($countAuthors > 0) {
+		while($row = mysql_fetch_array($authorSql)) {
+			$authorIDs[] = array('authorID' => $row['authorID'],
+								'authorName' => $row['authorName']);
+		}
+		asort($authorIDs);
+		$i = 1;
+		foreach($authorIDs as $authorID => $authorName) {
+			$author[$i] = $authorName['authorID'];
+		$i++;
+		}
+	}
+
+
+	?>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			changeMenu("NOTES");
+			$("button.menuNew").val("editSource");
+			$("button.menuNew").html("EDIT");
+			$("button.menuNew").toggleClass("active");
+			
+			$(".viewer").fadeTo("fast", 0.1);
+			$(".partIndex").fadeTo("fast", 0.1);
+			
+			$(".titleIndex").slideToggle("fast");
+			$(".contentIndex").slideToggle("fast");
+			$("div.editSource").slideToggle("fast");
+			$(".contentIndex").animate({
+					width: "720px"
+			},"fast");
+		});
+	</script>
+	
+	<?php
+echo "<h3>SOURCE N° " . $sourceID . "</h3>";
 echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='".SITE_URL."/".BASE_FOLDER.MainFile."?type=source&part=save&id=".$sourceID."' method='post' enctype='multipart/form-data' >";
 ?>
 	<table class='form'>
@@ -20,26 +69,54 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 				<input type='hidden' name='sourceID' placeholder='ID' readonly value='<?php echo $sourceID; ?>' />
 				<p>@bibTyp
 					<select name='sTyp' required='required' class='bibTyp' >
-						<?php formSelect("bibTyp"); ?>
+						<?php formSelected("bibTyp", $sourceTyp); ?>
 					</select>
-					<input type='text' class='xsmall' name='sYear' placeholder='Year'/>
+					<input type='text' class='xsmall' name='sYear' placeholder='Year' value='<?php echo $sourceYear; ?>'/>
 				</p>
 				<p>
 					<input type='text' name='sTitle' placeholder='Title' value='<?php echo $sourceTitle; ?>' />
 				</p>
 				<p>
-					<input type='text' name='sSubTitle' placeholder='Subtitle'/>
+					<input type='text' name='sSubTitle' placeholder='Subtitle' value='<?php echo $sourceSubtitle; ?>'/>
 				</p>
 				<p>
-					<input type='text' name='sTagTitle' placeholder='Title_Tag' required='required' />
+					<input type='text' name='sTagTitle' placeholder='Title_Tag' required='required' value='<?php echo $sourceTagTitle; ?>' />
 				</p>
+				<?php
+				if($countAuthors > 0) {
+					$i = 1;
+					while($i <= $countAuthors){
+						echo "<p class='author".$i."'>";
+							echo "<select name='selectAuthor".$i."' class='selectAuthor".$i."'>";
+								formSelected('author', $author[$i]);
+							echo "</select> ";
+							echo "<input type='text' name='sAuthor".$i."' class='newAuthor".$i."  small' placeholder='".$i.". Author' value='".$author[$i]."'/><br />";
+						echo "</p>";
+						$i++;
+					}
+
+					if($i < 4) {
+						echo "<p class='author".$i."'>";
+						echo "<select name='selectAuthor".$i."' class='selectAuthor".$i."'>";
+							formSelect('author');
+						echo "</select>";
+						echo "<input type='text' name='sAuthor".$i."' class='newAuthor".$i." small' placeholder='".$i.". Author' />";
+						echo "</p>";
+						$i++;
+						while ($i<5) {
+							echo "<p class='author".$i."' style='display:none'>";
+								echo "<select name='selectAuthor".$i."' class='selectAuthor".$i."'>";
+									formSelect('author');
+								echo "</select> ";
+								echo "<input type='text' name='sAuthor".$i."' class='newAuthor".$i."  small' placeholder='".$i.". Author'/><br />";
+							echo "</p>";
+						$i++;
+						}
+					}
+					
+				} else {
+				?>
 				<p>
-			<?php
-				formSelectMN('author');
-
-
-
-/*
 					<select name="selectAuthor1" class="selectAuthor1">
 						<?php formSelect('author'); ?>
 					</select> 
@@ -57,92 +134,95 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 							echo "</p>";
 						$i++;
 						}
-*/
-					?>
-				<p>
-					Editors? 
-					<input type="radio" name="sEditor" checked="checked" value="0">no
-					<input type="radio" name="sEditor" value="1">yes
-				</p>
+				}
+				echo "<p>";
+				echo "Editors?";
+				if($sourceEditor == 1){
+					echo "<input type='radio' name='sEditor' value='0'>no";
+					echo "<input type='radio' name='sEditor' checked=checked' value='1'>yes";
+				} else {
+					echo "<input type='radio' name='sEditor' checked=checked' value='0'>no";
+					echo "<input type='radio' name='sEditor' value='1'>yes";					
+				}
 				
-				<textarea name='sNote' placeholder='Comment' rows='50' cols='50' style='height: 85px;'></textarea>
+				echo "</p>";
+				?>
+				
+				<textarea name='sNote' placeholder='Comment' rows='50' cols='50' style='height: 85px;'><?php echo $sourceNote; ?></textarea>
 				<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />
 			</td>
+
 			<td class="right completeSource">
-<!--
-				<p class='location1' style='display:none'>
-				<select name='selectLocation1' class='selectLocation1'>
-					<?php // formSelect('location'); ?>
-				</select>
-				<input type='text' name='sLocation1' class='newLocation1 small' placeholder='1. Location' size='28' required='required' />
-				</p>
--->
+<?php
 
-				<?php
 /*
-				$i=2;
-				while ($i<5) {
-					echo "<p class='location".$i."' style='display:none'>";
-						echo "<select name='selectLocation".$i."' class='selectLocation".$i."'>";
-							formSelect('location');
-						echo "</select> ";
-						echo "<input type='text' name='sLocation".$i."' class='newLocation".$i." small' placeholder='".$i.". Location' size='28'/><br />";
-					echo "</p>";
-					$i++;
-				}
-*/
-				?>
+	$selectDetail = mysql_query("SELECT * FROM sourceDetail WHERE sourceID = '".$sourceID."'");
+	while($row = mysql_fetch_object($selectDetail)){
+		$bibFieldID = $row->bibFieldID;
+		$sourceDetailName = $row->sourceDetailName;
+		
+		$selectField = mysql_query("SELECT bibFieldName FROM bibField WHERE bibFieldID = '".$bibFieldID."'");
+			while($row = mysql_fetch_object($selectField)){
+				$bibFieldName = $row->bibFieldName;
+			}
+			
+			if($bibFieldName=="crossref"){
+				$selectSource = mysql_query("SELECT * FROM source WHERE sourceID = '".$sourceDetailName."'");
+					while($inrow = mysql_fetch_object($selectSource)) {
+						$sourceInID = $inrow->sourceID;
+						$sourceInName = $inrow->sourceName;
+						$sourceInTitle = $inrow->sourceTitle;
+						$sourceInSubtitle = $inrow->sourceSubtitle;
+						
+						echo "<br><a href='".MainFile."?type=source&amp;part=collection&amp;id=".$sourceInID."' class='text' >crossref</a> = {".$sourceInName."},";
+						
+						$authorSql = mysql_query("SELECT authorName FROM author, rel_source_author WHERE author.authorID = rel_source_author.authorID AND rel_source_author.sourceID = '".$sourceInID."' ORDER BY authorName");
+						$countAuthors = mysql_num_rows($authorSql);
+						if($countAuthors>0) {
+							while($row = mysql_fetch_array($authorSql)) {
+								$inAuthorIDs[] = $row['authorName'];   
+							}
 
-
-
-			</td>
-		</tr>
-
-		<tr>
-			<td class="left_bottom">
-				<p>
-					<select name="sCategory">
-						<?php formSelect("category"); ?>
-					</select>
-					<input type="text" name="sCatNew" class='small' placeholder='new Category'/>
-				</p>
-				<p>
-					<select name="sProject">
-						<?php formSelect("project"); ?>
-					</select>
-					<input type="text" name="sProNew" class='small' placeholder='new Project'/>
-				</p>
-			</td>
-			<td class="right_bottom">
-				<p>
-				<?php
-					if($noteID != 0){
-						echo "<input type='radio' name='delete' value='NO' checked /> edit or <i class='warning'>delete</i> ";
-						echo "<input type='radio' name='delete' value='YES' /> ";
-					} else {
-						echo "<input type='hidden' name='delete' />";
+							asort($inAuthorIDs);
+								$inAuthors="";
+								foreach($inAuthorIDs as $inAuthorName) {
+									if($inAuthors==""){
+										$inAuthors=$inAuthorName;
+									} else {
+										$inAuthors.= " and ".$inAuthorName;
+									}
+								}
+								
+						} else {
+							$inAuthors = "";
+						}
+						$editorSql = mysql_query("SELECT sourceEditor FROM source WHERE sourceID = ".$sourceInID."");
+							while($row = mysql_fetch_object($editorSql)){
+								if($row->sourceEditor==0){
+									echo "<br>bookauthor = {".$inAuthors."},";
+								} else {
+									echo "<br>editor = {".$inAuthors."},";
+								}
+							}
 					}
-				?>
-				</p>
-				<p>
-					<button class="button" type="submit" value="SAVE">SAVE</button>
-					<button class="button" type="reset" value="Clear">Clear</button>
-				</p>
-			</td>
-		</tr>
-	</table>
-</form>
+					echo "<br>booktitle = {".$sourceInTitle."},";
+					echo "<br>booksubtitle = {".$sourceInSubtitle."},";
+				
+				
+			} elseif($bibFieldName=="url") {
+				echo "<br><a href='".$sourceDetailName."' class='text' title='extern'>".$bibFieldName."</a> = {".$sourceDetailName."},";
+			
+			} else {
+				echo "<br>".$bibFieldName." = {".$sourceDetailName."},";
+			}
+	}
 
 
-<script type="text/javascript" charset="utf-8">
-	
-// adding a form on the right side for the chosen bibTyp
-$('select.bibTyp').change(function() {
-	var completeSourceWithType = this.value;
-	switch(completeSourceWithType) 
+
+	switch($completeSourceWithType) 
 	{
 	case 'article':
-		$('td.completeSource').html("<p><input type='text' name='journaltitle' placeholder='journalTitle' required='required' size='28' /></p>");
+		echo "<p><input type='text' name='journaltitle' placeholder='journalTitle' required='required' value='".."' size='28' /></p>");
 		break;
 	case "book":
 	case "booklet":
@@ -252,6 +332,47 @@ $('select.bibTyp').change(function() {
 });
 
 
+*/
+?>
+
+			</td>
+		</tr>
+		<tr>
+			<td class="left_bottom">
+					<select name="nCategory">
+						<?php formSelected("category", $noteCategory); ?>
+					</select>
+					<input type="text" name="nCatNew" class='small' placeholder='new Category' />
+					<select name="nProject">
+						<?php formSelected("project", $noteProject); ?>
+					</select>
+					<input type="text" class='small' name="nProNew" placeholder='new Project' />
+			</td>
+			<td class="right_bottom">
+				<p>
+				<?php
+					if($sourceID != 0){
+						echo "<input type='radio' name='delete' value='NO' checked /> edit or <i class='warning'>delete</i> ";
+						echo "<input type='radio' name='delete' value='YES' /> ";
+					} else {
+						echo "<input type='hidden' name='delete' />";
+					}
+				?>
+					<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />
+				</p><br>
+				<p>
+					<button class="button" type="submit" value="SAVE">SAVE</button>
+					<button class="button" type="reset" value="Clear">Clear</button>
+				</p>
+			</td>
+		</tr>
+	
+	
+	</table>
+</form>
+
+
+<script type="text/javascript">
 // Autor 1
 $('select.selectAuthor1').change(function() {
 	if($(this).val() == 'author'){
@@ -333,89 +454,5 @@ $('input.newAuthor1').change(function() {
 			}
         });
     });
-    
-// Location 1
-$('select.selectLocation1').change(function() {
-	if($(this).val() == 'location'){
-		$("input.newLocation1").val("");
-		$(".location2").css({"display":"none"});
-		$(".location3").css({"display":"none"});
-		$(".location4").css({"display":"none"});
-	} else {
-		$('input.newLocation1').val($(this).val());
-		$(".location2").css({"display":"block"});				
-	}
-});
-$('input.newLocation1').change(function() {
-	if($(this).val() != ""){
-		$(".location2").css({"display":"block"});
-	} else {
-		$(".location2").css({"display":"none"});
-		$(".location3").css({"display":"none"});
-		$(".location4").css({"display":"none"});			
-	}
-});
-    
- // Location 2
-    $(function() {
-        $('select.selectLocation2').change(function() {
-            if($(this).val() =='location'){
-				$('input.newLocation2').val("");
-				$(".location3").css({"display":"none"});
-				$(".location4").css({"display":"none"});
-			} else {
-				$('input.newLocation2').val($(this).val() );
-				$(".location3").css({"display":"block"});
-			}
-        });
-    });
-   $(function() {
-        $('input.newLocation2').change(function() {
-			if($(this).val() !=''){
-				$(".location3").css({"display":"block"});
-			} else {
-				$(".location3").css({"display":"none"});
-				$(".location4").css({"display":"none"});			
-			}
-		
-		});
-	});    
-    
-// Location 3    
-    $(function() {
-        $('select.selectLocation3').change(function() {
-            if($(this).val() =='location'){
-				$('input.newLocation3').val("");
-				$(".location4").css({"display":"none"});
-			} else {
-				$('input.newLocation3').val($(this).val() );
-				$(".location4").css({"display":"block"});
-			}
-        });
-    });
-   $(function() {
-        $('input.newLocation3').change(function() {
-			if($(this).val() !=''){
-				$(".location4").css({"display":"block"});
-			} else {
-				$(".location4").css({"display":"none"});			
-			}
-		
-		});
-	}); 
-	
-	    
-// Location 4
-    $(function() {
-        $('select.selectLocation4').change(function() {
-            if($(this).val() =='location'){
-				$('input.newLocation4').val("");
-			} else {
-				$('input.newLocation4').val($(this).val() );
-			}
-        });
-    });    
 
 </script>
-
-

@@ -48,6 +48,7 @@ include (SITE_PATH."/admin/checkuser.php");
 
 	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/".$jquery_version."'></script>\n";
 	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/jquery.jcookie.js'></script>\n";
+	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/jquery.jnote.js'></script>\n";
 ?>
 
 
@@ -196,13 +197,21 @@ include (SITE_PATH."/admin/checkuser.php");
 				<?php include SITE_PATH."/admin/newNote.php"; ?>
 			</div>
 			<div class="editNote">
-				<?php include SITE_PATH."/admin/editNote.php"; ?>
+				<?php 
+				if(isset($_GET["editNote"])){
+					include SITE_PATH."/admin/editNote.php"; 
+				}
+				?>
 			</div>
 			<div class="newSource">
 				<?php include SITE_PATH."/admin/newSource.php"; ?>
 			</div>
 			<div class="editSource">
-				<?php //include "admin/editSource.php"; ?>
+				<?php 
+				if(isset($_GET["editSource"])){
+					include SITE_PATH."/admin/editSource.php"; 
+				}
+				?>
 			</div>
 			<div class="partNote">
 				<?php include SITE_PATH."/common/php/partNote.php"; ?>
@@ -329,11 +338,15 @@ disconnect();
 
 		$('body').css({'cursor':'auto'});
 
-		var editLocation = window.location.toString();
-		var getLocation = editLocation.split("edit=")[0];
-		var newLocation = getLocation.substr(0,getLocation.length-1)
-		$(".path").val(newLocation);
+		var editNoteLocation = window.location.toString();
+		var getNoteLocation = editNoteLocation.split("editNote=")[0];
+		var newNoteLocation = getNoteLocation.substr(0,getNoteLocation.length-1)
+		$(".path").val(newNoteLocation);
 
+		var editSourceLocation = window.location.toString();
+		var getSourceLocation = editSourceLocation.split("editSource=")[0];
+		var newSourceLocation = getSourceLocation.substr(0,getSourceLocation.length-1)
+		$(".path").val(newSourceLocation);
 
 		winWidth = $(window).width() - 100;
 		winHeight = $(window).height() - 100;
@@ -436,13 +449,16 @@ disconnect();
 					$(".partIndex").fadeTo("fast", 1);
 				});
 
-				if($("button.menuNew").text()=="EDIT"){
+				if($("button.menuNew").val() == "editNote"){
 					$("button.menuNew").html("NEW");
 					$("button.menuNew").val("newNote");
+					window.location.replace(newNoteLocation);
 
-					//var newLocation = editLocation.text().split("edit=");
-					window.location.replace($(".path").val());
-//					location.reload();
+				} else if($("button.menuNew").val() == "editSource"){
+					$("button.menuNew").html("NEW");
+					$("button.menuNew").val("newSource");
+					window.location.replace(newSourceLocation);
+
 				}
 
 				$(this).toggleClass("active");

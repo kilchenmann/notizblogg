@@ -37,18 +37,8 @@ switch($part){
 	
 	break;
 	
-	
-	case 'edit';
-	
-	
-	break;
-	
-	case 'complete';
-		if($access != 'public'){
-			include (SITE_PATH."/admin/completeSource.php");
-		}
-	break;
 	case 'save';
+
 		if($access != 'public'){
 			include (SITE_PATH."/admin/saveSource.php");
 		}

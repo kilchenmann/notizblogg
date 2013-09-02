@@ -60,10 +60,10 @@ function showNote($note, $access){
 					echo linkIndex('note', 'project', $noteProject);
 					linkIndexMN('note','tag', $noteID);
 					//linkEdit('note', $noteID, $notePublic);
-					if($_SERVER["QUERY_STRING"]){
-						$editLink = MainFile."?".$_SERVER['QUERY_STRING']."&amp;edit=".$note;
+					if(($_SERVER["QUERY_STRING"]) && (!isset($_GET["editNote"]))){
+						$editLink = MainFile."?".$_SERVER['QUERY_STRING']."&amp;editNote=".$note;
 					} else {
-						$editLink = MainFile."?edit=".$note;
+						$editLink = MainFile."?editNote=".$note;
 					}
 					
 					if($access != 'public'){
