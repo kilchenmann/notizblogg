@@ -57,7 +57,7 @@ function insertMN($table,$relTable,$data,$linkID,$linkTable){
 
 function formSelect($table) {
 	$tableName = $table."Name";
-	if($table != 'bibTyp'){
+	if($table == 'category' || $table == 'project'){
 		echo "<option selected>".$table."</option>";
 	} else {
 		echo "<option></option>";
@@ -77,6 +77,20 @@ function formSelectTyp($table,$typ) {
 			$bibTypID = $row->bibTypID;
 		}
 	echo "<option selected>".$table."</option>";
+	$select = mysql_query("SELECT ".$tableName." FROM ".$table." WHERE sourceTyp = ".$bibTypID." ORDER BY ".$table."Name");
+		while($row = mysql_fetch_object($select)){
+			$option = $row->$tableName;
+			echo "<option>".$option."</option>";
+		}
+}
+function formSelectedTyp($table, $typ, $inName) {
+	$tableName = $table."Name";
+	$tableID = $table."ID";
+	$typSQL = mysql_query("SELECT bibTypID FROM bibTyp WHERE bibTypName = '".$typ."'");
+		while($row = mysql_fetch_object($typSQL)){
+			$bibTypID = $row->bibTypID;
+		}
+	echo "<option selected>".$inName."</option>";
 	$select = mysql_query("SELECT ".$tableName." FROM ".$table." WHERE sourceTyp = ".$bibTypID." ORDER BY ".$table."Name");
 		while($row = mysql_fetch_object($select)){
 			$option = $row->$tableName;
@@ -133,6 +147,19 @@ function insertField($field, $fieldValue, $sourceID){
 	if (!mysql_query($insertTyp)){
 		die('Error: ' . mysql_error());
 	}
+}
+
+function prep4js($table) {
+	$tableName = $table."Name";
+	$tableID = $table."ID";
+	$select = mysql_query("SELECT ".$tableName." FROM ".$table." ORDER BY ".$table."Name");
+		echo "<textarea class='prep4js'>";
+		while($row = mysql_fetch_object($select)){
+			$option = $row->$tableName;
+			
+			echo $option . "//";
+		}
+		echo "</textarea>";
 }
 
 function formSelectMN($table) {

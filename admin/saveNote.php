@@ -104,12 +104,13 @@ if($_POST['nContent'] != ""){
 	$back2path = $_POST['path'];
 	//echo $back2path;
 
-		//1. new note? yes if delete not exist
+		//1. new note? true when delete not exist
 		if (!$_POST['delete'] && $_POST['nCheckID'] != "") {
 			if(preg_match('/^[a-f0-9]{32}$/',$_POST['nCheckID'])){
 				$sqlCheck = mysql_query("SELECT noteID FROM note WHERE checkID = '".$_POST['nCheckID']."'");
 				if(@mysql_num_rows($sqlCheck) == 1){
-					echo "<p class='warning'>The new data was already saved</p>";
+					echo "<p class='advice'>The note <strong>" . $noteID . "</strong> already exists.</p>";
+					showNote($noteID, $access);
 				} else {
 					$sql="INSERT INTO note (noteTitle, noteContent, noteCategory, noteProject, noteSourceExtern, noteSource, pageStart, pageEnd, noteMedia, notePublic, checkID) VALUES (\"".$noteTitle."\", \"".$noteContent."\", \"".$categoryID."\", \"".$projectID."\", \"".$noteSourceExtern."\", \"".$noteSource."\", \"".$pageStart."\", \"".$pageEnd."\", \"".$mediaFile."\", \"".$notePublic."\", \"".$checkID."\");";
 					if (!mysql_query($sql)){

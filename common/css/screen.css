@@ -260,6 +260,9 @@ header {
 	.form td.bottom {
 		text-align: right;
 	}
+	.form .specificFields, .form .defaultFields {
+		clear:both;
+	}
 	.form input, .form textarea, .form select, .form button:hover, .login input, .login button:hover{
 		border-radius: 11px;
 		border: none;
@@ -284,7 +287,7 @@ header {
 		height: 40px;
 	}
 
-	.form input, .form select {
+	.form input {
 		height: 28px;
 		width: 300px;
 	}
@@ -292,14 +295,29 @@ header {
 		height: 170px;
 		width: 300px;
 	}
-	.form input.small, .form select {
+	.form input.small, .form select.small {
 		width: 140px;
 	}
-	.form input.xsmall { 
+	.form input.xsmall, .form select.xsmall { 
 		width: 70px;
 	}
-	.form select.smalldown {
-		width: 20px;
+	.form input.medium, .form select.medium {
+		width: 210px;
+	}
+	.form select.choice {
+		width: 140px;
+		height: auto;
+		float: left;
+	}
+	.form select.selectSource {
+		width: 300px;
+	}
+	.form p.choosenVal {
+		width: 180px;
+		float: left;
+	}
+	.form p.choosenVal input{
+		width: 140px;
 	}
 	.form input.newselect {
 		width: 270px;
