@@ -153,14 +153,15 @@ include (SITE_PATH."/admin/checkuser.php");
 		</form>
 		</div>
 		<div class="panelRight">
+			<div class="userBar">
 			<?php 
-			$sql = mysql_query("SELECT username FROM user WHERE uid = " . $_SESSION["user_id"]);
-			while($row = mysql_fetch_object($sql)){
-				$username = htmlentities($row->username,ENT_QUOTES,'UTF-8');
-			}
-			echo "<p>You are logged in as " . $username . "</p>";
+				$sql = mysql_query("SELECT username FROM user WHERE uid = " . $_SESSION["user_id"]);
+				while($row = mysql_fetch_object($sql)){
+					$username = $row->username;
+				}
+				echo "You are logged in as <br>" . $username . "";
 			?>
-			
+			</div>
 		<table class="settingBar" cellspacing="0" cellpadding="0">
 			<tbody>
 				<tr class="setting">
@@ -635,7 +636,7 @@ $("img.staticMedia").mousedown(function(event) {
 					$(".lens").fadeTo("slow", 1);
 
 					$(".lens").css({"width":$(window).width()+"px", "height":$(window).height()+"px", "padding":"22px", "cursor":"move"});
-					$(".lens").html("<div class='set'><button value='close' class='menuSet'><img src='<?php SITE_URL."/".BASE_FOLDER; ?>common/images/close.png' alt='close'></button></div>");
+					$(".lens").html("<div class='set'><button value='close' class='close'><img src='<?php SITE_URL."/".BASE_FOLDER; ?>common/images/close.png' alt='close'></button></div>");
 					$(".lens").append("<img class='zoomMedia' src="+zoomMedia+">");
 					if(img.width >= (winWidth/2) || img.height >= (winHeight/2)){
 						$(".lens img.zoomMedia").css({"max-width":winWidth+"px", "max-height":winHeight+"px"});

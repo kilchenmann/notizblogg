@@ -20,4 +20,12 @@ function disconnect(){
 	mysql_close($con);
 }
 
+function showError($query, $line){
+	if($access != 'denied') {
+		if (!mysql_query($query)){
+			echo "<p class='advice'>An error has occured on line: " .  $line . "</p>";
+			die ("Your Query: " . $query . "<br>Error: (" . mysql_errno() . ") " . mysql_error());
+		}
+	}
+}
 ?>

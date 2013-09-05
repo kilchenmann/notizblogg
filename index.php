@@ -612,7 +612,7 @@ $("img.staticMedia").mousedown(function(event) {
 					$(".lens").fadeTo("slow", 1);
 
 					$(".lens").css({"width":$(window).width()+"px", "height":$(window).height()+"px", "padding":"22px", "cursor":"move"});
-					$(".lens").html("<div class='set'><button value='close' class='menuSet'><img src='<?php SITE_URL."/".BASE_FOLDER; ?>common/images/close.png' alt='close'></button></div>");
+					$(".lens").html("<div class='set'><button value='close' class='close'><img src='<?php SITE_URL."/".BASE_FOLDER; ?>common/images/close.png' alt='close'></button></div>");
 					$(".lens").append("<img class='zoomMedia' src="+zoomMedia+">");
 					if(img.width >= (winWidth/2) || img.height >= (winHeight/2)){
 						$(".lens img.zoomMedia").css({"max-width":winWidth+"px", "max-height":winHeight+"px"});

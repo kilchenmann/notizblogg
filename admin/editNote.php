@@ -145,7 +145,7 @@ echo "<form accept-charset='utf-8' name='noteEdit' class='noteForm' action='".SI
 				echo "<input type='checkbox' name='notePublic' value='1' /> public? ";
 			}
 			if($noteID != 0){
-				echo "<input type='radio' name='delete' value='NO' checked /> edit or <i class='warning'>delete</i> ";
+				echo "<input type='radio' name='delete' value='NO' checked /> edit or <i class='delete'>delete</i> ";
 				echo "<input type='radio' name='delete' value='YES' /> ";
 			} else {
 				echo "<input type='hidden' name='delete' />";

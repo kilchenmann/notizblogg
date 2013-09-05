@@ -30,17 +30,12 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 	$sourceEditor = $_POST['sEditor'];
 	$sourceNote = htmlentities($_POST['sNote'],ENT_QUOTES,'UTF-8');
 	$sourceYear = $_POST['sYear'];
-	if($sourceYear == ""){
-		$sourceYear = "NULL";
-	}
-	
+
 	$categoryName = htmlentities($_POST['sCategory'],ENT_QUOTES,'UTF-8');
 		if ($_POST['sCatNew']) {
 			$newCategoryName = htmlentities($_POST['sCatNew'],ENT_QUOTES,'UTF-8');
 			$newCatSql = "INSERT INTO category (categoryName) VALUES ('".$newCategoryName."');";
-			if (!mysql_query($newCatSql)){
-				die('Error: ' . mysql_error());
-			}
+			showError($newCatSql, __LINE__);
 			$categoryName = $newCategoryName;
 		}
 		if ($categoryName != "category") {
@@ -57,9 +52,7 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 	if ($_POST['sProNew']) {
 		$newProjectName = htmlentities($_POST['sProNew'],ENT_QUOTES,'UTF-8');
 		$newCatSql = "INSERT INTO project (projectName) VALUES ('".$newProjectName."');";
-		if (!mysql_query($newCatSql)){
-			die('Error: ' . mysql_error());
-		}
+		showError($newCatSql, __LINE__);
 		$projectName = $newProjectName;
 	}
 	if ($projectName != "project") {
@@ -97,15 +90,16 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 		if(preg_match('/^[a-f0-9]{32}$/',$_POST['sCheckID'])){
 			$sqlCheck = mysql_query("SELECT sourceID FROM source WHERE checkID = '".$_POST['sCheckID']."'");
 			if(@mysql_num_rows($sqlCheck) == 1){
-				echo "<p class='advice'>The source <strong><a href='?type=note&part=source&id= " . $sourceID . "' >'" . $sourceName . "'</a></strong> already exists.</p>";
+				echo "<div class='note'><p class='advice'>This source <strong>" . $sourceID . "</strong> already exists.</p></div>";
 				showSource($sourceID);
+				echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
+
 			} else {
 				$sql="INSERT INTO source (sourceName, sourceTitle, sourceSubtitle, sourceYear, sourceTyp, sourceEditor, sourceNote, sourceCategory, sourceProject) VALUES
 				(\"".$sourceName."\", \"".$sourceTitle."\", \"".$sourceSubtitle."\", ".$sourceYear.", \"".$bibTypID."\", \"".$sourceEditor."\", \"".$sourceNote."\", \"".$categoryID."\", \"".$projectID."\");";
-				if (!mysql_query($sql)){
-					die('Error: ' . mysql_error());
-				}
-				$query = mysql_query("SELECT sourceID FROM `source` WHERE `sourceName` = '". $sourceName ."' ORDER BY `sourceID` DESC LIMIT 1") or die(mysql_error());
+				showError($sql, __LINE__);
+				$query = mysql_query("SELECT sourceID FROM `source` WHERE `sourceName` = '". $sourceName ."' ORDER BY `sourceID` DESC LIMIT 1");
+				showError($query, __LINE__);
 				$countResults = mysql_num_rows($query);
 				if($countResults==1){
 					while($row = mysql_fetch_object($query)){
@@ -127,56 +121,79 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 		// NO = edit
 		if($deleteIt == 'NO'){
 			$update="UPDATE source SET sourceName='".$sourceName."', sourceTitle='".$sourceTitle."', sourceSubtitle='".$sourceSubtitle."', sourceYear='".$sourceYear."', sourceTyp='".$bibTypID."', sourceEditor='".$sourceEditor."', sourceNote='".$sourceNote."', sourceCategory='".$categoryID."', sourceProject='".$projectID."' WHERE sourceID = '".$sourceID."'";
-			if (!mysql_query($update)){
-				die('Error: ' . mysql_error());
-			}
+			showError($update, __LINE__);
+
 			$saveDetails = true;
 			// YES = delete
 		} else if($deleteIt == 'YES'){
+			$deleteNow;
 			//1. check if there are any connections to notes!?
-			$sql = mysql_query("SELECT noteID FROM note WHERE noteSource = '".$sourceID."'");
+			$sql = mysql_query("SELECT noteID FROM note WHERE noteSource = " . $sourceID . ";");
+			//showError($sql, __LINE__);
 			$countNotes = mysql_num_rows($sql);
 			if($countNotes > 0) {
 				//alert with notes:
+				echo "<div class='note'><p class='advice'>You can't delete this source (" . $sourceID . ")! There are some notes connected.</p></div>";
+				echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
+				showSource($sourceID);
 				while($row = mysql_fetch_object($sql)){
 					$link2noteID = $row->noteID;
+					showNote($link2noteID, $access);
 				}
 				$deleteNow = false;
-					echo "<p class='advice'>You can't delete this source (" . $sourceID . ")! There are some notes connected.</p>";
+
 			}
 			// 2. check in case of 'book', 'collection' or 'proceedings': 
 			//     is there an inbook, incollection or inproceeding?
 			$crossrefSql = mysql_query("SELECT bibFieldID FROM bibField WHERE bibFieldName = 'crossref'");
+			//showError($crossrefSql, __LINE__);
 				while($row = mysql_fetch_object($crossrefSql)){
 					$crossrefID = $row->bibFieldID;
 				}
-				$sql = mysql_query("SELECT sourceID FROM sourceDetail WHERE bibFieldID = '" . $crossrefID . "' && sourceDetailName = '" . $sourceID . "'");
+				$sql = mysql_query("SELECT sourceID FROM sourceDetail WHERE bibFieldID = " . $crossrefID . " AND sourceDetailName = '" . $sourceID . "'");
+				//showError($sql, __LINE__);
+				$countNotes = mysql_num_rows($sql);
 				if($countNotes > 0) {
 					//alert with crossrefs:
+					echo "<div class='note'><p class='advice'>You can't delete this source (" . $sourceID . ")! It's a " . $bibTypName . " with other sources in it</p></div>";
+					echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
+					showSource($sourceID);
 					while($row = mysql_fetch_object($sql)){
 						$link2sourceID = $row->noteID;
+						showSource($link2sourceID);
 					}
 					$deleteNow = false;
-					echo "<p class='advice'>You can't delete this source (" . $sourceID . ")! It's a " . $bibTypName . " with other sources in it</p>";
+					
 				}
-				
-				if($deleteNow === true){
+				if(!isset($deleteNow)){
 					$querySource = "DELETE FROM source WHERE sourceID=".$sourceID.";";
-					$dropSource = mysql_query ($queryTag) or die (mysql_error());
-					echo $querySource;
-					echo "<p class='advice'>The source (" . $sourceID . ") has been deleted</p>";
+					$dropSource = mysql_query ($querySource);
+					showError($querySource, __LINE__);
+					echo "<div class='note'>";
+					echo "<p class='warning'>";
+						echo "The source (" . $sourceID . ") has been deleted<br><br>";
+						echo "bibRef: ". $sourceName ."<br>";
+						echo "title: ". $sourceTitle ."<br>";
+						echo "subtitle: ". $sourceSubtitle ."<br>";
+						echo "note: ". $sourceNote ."<br>";
+					echo "</p></div>";
+					echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
 				}
 		}
 		// then we have to delete all sourceDetails
 		// in the case of delete == yes, then it is o.k.
 		// in the case of delete == no, then we're inserting the new details
 		// Zettel-Register-Verbindungen erst löschen, danach neu speichern
-		$queryTag = "DELETE FROM rel_source_author WHERE sourceID=".$sourceID.";";
-		$dropTag = mysql_query ($queryTag) or die (mysql_error());
-		$queryTag = "DELETE FROM rel_source_location WHERE sourceID=".$sourceID.";";
-		$dropTag = mysql_query ($queryTag) or die (mysql_error());
-		$queryTag = "DELETE FROM sourceDetail WHERE sourceID=".$sourceID.";";
-		$dropTag = mysql_query ($queryTag) or die (mysql_error());
+		
+		$delRelAuthor = mysql_query("DELETE FROM `rel_source_author` WHERE `sourceID` = " . $sourceID . ";");
+		//showError($delRelAuthor, __LINE__);
+		
+		$delRelLocation = mysql_query("DELETE FROM `rel_source_location` WHERE `sourceID` = " . $sourceID . ";");
+		//showError($delRelLocation, __LINE__);
+
+		$delRelDetail = mysql_query("DELETE FROM `sourceDetail` WHERE `sourceID` = " . $sourceID . ";");
+		//showError($delRelDetail, __LINE__);
+		
 
 	}
 	if(isset($saveDetails)){
@@ -329,9 +346,10 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 				}
 			
 			//all datas should be saved in the database; have a look about
-			
-			echo "<p class='advice'>The source (" . $sourceID . ") has been saved</p>";
-				showSource($sourceID);
+			echo "<div class='note'><p class='advice'>The source (" . $sourceID . ") has been saved</p></div>";
+			showSource($sourceID);
+			echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
+
 	}
 }
 

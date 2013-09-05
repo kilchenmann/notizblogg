@@ -119,7 +119,7 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 				<p>
 				<?php
 					if($noteID != 0){
-						echo "<input type='radio' name='delete' value='NO' checked /> edit or <i class='warning'>delete</i> ";
+						echo "<input type='radio' name='delete' value='NO' checked /> edit or <i class='delete'>delete</i> ";
 						echo "<input type='radio' name='delete' value='YES' /> ";
 					} else {
 						echo "<input type='hidden' name='delete' />";

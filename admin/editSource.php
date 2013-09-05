@@ -13,6 +13,9 @@
 		$sourceProject = $row->sourceProject;
 		$sourceTyp = $row->sourceTyp;
 	}
+	if($sourceYear == 0){
+		$sourceYear = "";
+	}
 	$explodeSourceName = explode(":", $sourceName);
 	$sourceTagTitle = $explodeSourceName[1];
 
@@ -301,7 +304,7 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 				<p>
 				<?php
 					if($sourceID != 0){
-						echo "<input type='radio' name='delete' value='NO' checked /> edit or <i class='warning'>delete</i> ";
+						echo "<input type='radio' name='delete' value='NO' checked /> edit or <i class='delete'>delete</i> ";
 						echo "<input type='radio' name='delete' value='YES' /> ";
 					} else {
 						echo "<input type='hidden' name='delete' />";

@@ -109,8 +109,9 @@ if($_POST['nContent'] != ""){
 			if(preg_match('/^[a-f0-9]{32}$/',$_POST['nCheckID'])){
 				$sqlCheck = mysql_query("SELECT noteID FROM note WHERE checkID = '".$_POST['nCheckID']."'");
 				if(@mysql_num_rows($sqlCheck) == 1){
-					echo "<p class='advice'>The note <strong>" . $noteID . "</strong> already exists.</p>";
+					echo "<div class='note'><p class='advice'>This note <strong>" . $noteID . "</strong> already exists.</p></div>";
 					showNote($noteID, $access);
+					echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
 				} else {
 					$sql="INSERT INTO note (noteTitle, noteContent, noteCategory, noteProject, noteSourceExtern, noteSource, pageStart, pageEnd, noteMedia, notePublic, checkID) VALUES (\"".$noteTitle."\", \"".$noteContent."\", \"".$categoryID."\", \"".$projectID."\", \"".$noteSourceExtern."\", \"".$noteSource."\", \"".$pageStart."\", \"".$pageEnd."\", \"".$mediaFile."\", \"".$notePublic."\", \"".$checkID."\");";
 					if (!mysql_query($sql)){
@@ -131,8 +132,10 @@ if($_POST['nContent'] != ""){
 							}
 						}
 						// alles wurde in die DB geschoben und kann nun gezeigt werden //
-						echo "The new note has been created";
+						echo "<div class='note'><p class='advice'>The new note has been created</p></div>";
 						showNote($noteID, $access);
+						echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
+
 					}
 				}
 			} else {
@@ -166,7 +169,10 @@ if($_POST['nContent'] != ""){
 					}
 				}
 				// alles wurde in die DB geschoben und kann nun gezeigt werden //
+					echo "<div class='note'><p class='advice'>The old note has been updated</p></div>";
 					showNote($noteID, $access);
+					echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
+
 			// YES = delete
 			} else {
 				$noteID = $_POST['noteID'];
@@ -177,7 +183,7 @@ if($_POST['nContent'] != ""){
 				$dropTag = mysql_query ($queryTag) or die (mysql_error());
 				$dropMedia = mysql_query ($queryMedia) or die (mysql_error());
 
-				echo "<p class='warning'>The following note was deleted!</p>";
+				echo "<div class='note'><p class='warning'>The following note was deleted!</p></div>";
 				echo "<div class='note'>";
 					echo "<h3>".$noteTitle."</h3>"; //
 					echo "<p class='content'>";
@@ -199,6 +205,7 @@ if($_POST['nContent'] != ""){
 						linkIndexMN('note','tag', $noteID);
 					echo "</p>";
 				echo "</div>";
+				echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
 			}
 		}
 	}

@@ -44,8 +44,14 @@ button, input img {
 }
 
 .warning {
-	color: #ff0000;
+	background-color: rgba(255, 155, 155, 0.8);
+	color: #1A1A1A;
+	border-radius:5px;
+	padding: 22px;
 	text-align: center;
+}
+.delete {
+	color: #ff0000;
 }
 .download {
 		color: #E5E5E5;
@@ -113,6 +119,9 @@ header {
 		float: left;
 		margin-top: 10px;
 	}
+	.userBar {
+		float: left;
+	}
 	.settingBar {
 		width: 105px;
 		float: right;
@@ -133,7 +142,7 @@ header {
 		padding-left: 6px;
 	}
 
-	header button, header input, .lens .set button{
+	header button, header input, button.close{
 		box-shadow: 0 1px 2px rgba(0,0,0,0.3);
 		text-shadow: 0 -1px 2px rgba(0,0,0,0.3);
 		background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#000000));
@@ -145,6 +154,10 @@ header {
 		border-top-left-radius: 11px;
 		border-top-right-radius: 11px;
 		height: 32px;
+	}
+	button.close {
+		margin-right: 3px;
+		margin-top: 3px;
 	}
 	header button, header input {
 		width: 99%;
@@ -501,7 +514,7 @@ a.nonpublic{
 	margin-right: auto;
 }
 
-	.desk .note {
+	.desk .note, a.goback{
 		background: rgba(215, 215, 215, 0.3);
 		box-shadow:0px 0px 4px 0px rgba(215, 215, 215, 1.5);
 		border-radius:5px;
@@ -513,6 +526,9 @@ a.nonpublic{
 		-webkit-column-break-inside: avoid;
 		column-break-inside: avoid;
 		display: inline-block;
+	}
+	.goback{
+		text-align: center;
 	}
 
 	.desk .note img, .desk .note video {
