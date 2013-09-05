@@ -38,7 +38,6 @@ switch($part){
 	break;
 	
 	case 'save';
-
 		if($access != 'public'){
 			include (SITE_PATH."/admin/saveSource.php");
 		}

@@ -60,7 +60,7 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 			<td class="left">
 				<input type='hidden' name='sourceID' placeholder='ID' readonly value='<?php echo $sourceID; ?>' />
 				<p>@bibTyp
-					<select name='sTyp' required='required' readonly='readonly' class='bibTyp' disabled >
+					<select name='sTyp' required='required' class='bibTyp' >
 						<?php formSelected("bibTyp", $sourceTyp); ?>
 					</select>
 				</p>
@@ -109,14 +109,31 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 					?>
 					</p>
 				</div>
-
-
-				
-				<textarea name='sNote' placeholder='Comment' rows='50' cols='50' style='height: 85px;'><?php echo $sourceNote; ?></textarea>
-				<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />
 			</td>
 
 			<td class="right completeSource">
+				<div class="location" style="display:none;" >
+					<p>Choose a location</p>
+					<select name="selectLocation" class="choice selectLocation" size='11'>
+						<?php formSelect('location'); ?>
+					</select> 
+					<p class='choosenVal'>
+						<a class='delLocation1'>x</a>
+						<input type="text" name="sLocation1" class="editLocation1" placeholder='1. Location' />
+					</p>
+					<p class='choosenVal'>
+						<a class='delLocation2'>x</a>
+						<input type="text" name="sLocation2" class="editLocation2" placeholder='2. Location' />
+					</p>
+					<p class='choosenVal'>
+						<a class='delLocation3'>x</a>
+						<input type="text" name="sLocation3" class="editLocation3" placeholder='3. Location' />
+					</p>
+					<p class='choosenVal'>
+						<a class='delLocation4'>x</a>
+						<input type="text" name="sLocation4" class="editLocation4" placeholder='4. Location' />
+					</p>
+				</div>
 			<?php
 				if($sourceTyp!=0){
 					$typSql = mysql_query("SELECT bibTypName FROM bibTyp WHERE bibTypID = ".$sourceTyp."");
@@ -130,6 +147,11 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 					case "booklet":
 					case "collection":
 					case "proceedings":
+					?>
+					<script type="text/javascript">
+						$('div.location').css({'display':'block'});
+					</script>
+					<?php
 						$locationSql = mysql_query("SELECT locationName, location.locationID FROM location, rel_source_location WHERE location.locationID = rel_source_location.locationID AND rel_source_location.sourceID = '".$sourceID."' ORDER BY locationName");
 						$countLocations = mysql_num_rows($locationSql);
 						if($countLocations > 0) {
@@ -141,33 +163,17 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 							$i = 1;
 							foreach($locationIDs as $locationID => $locationName) {
 								$location[$i] = $locationName['locationName'];
+							?>
+							<script type="text/javascript">
+								var i = <?php echo $i; ?>;
+								var editLocation = '<?php echo $location[$i]; ?>';
+//								alert(i + " = " + editLocation);
+								$('.editLocation' + i).attr({'value':editLocation});
+							</script>
+							<?php
 							$i++;
 							}
 						}
-						?>
-						<div class="location">
-							<p>Choose a location</p>
-							<select name="selectLocation" class="choice selectLocation" size='11'>
-								<?php formSelect('location'); ?>
-							</select> 
-							<p class='choosenVal'>
-								<a class='delLocation1'>x</a>
-								<input type="text" name="sLocation1" class="editLocation1" placeholder='1. Location' required='required' value='<?php echo $location[1]; ?>'/>
-							</p>
-							<p class='choosenVal'>
-								<a class='delLocation2'>x</a>
-								<input type="text" name="sLocation2" class="editLocation2" placeholder='2. Location' value='<?php echo $location[2]; ?>'/>
-							</p>
-							<p class='choosenVal'>
-								<a class='delLocation3'>x</a>
-								<input type="text" name="sLocation3" class="editLocation3" placeholder='3. Location' value='<?php echo $location[3]; ?>'/>
-							</p>
-							<p class='choosenVal'>
-								<a class='delLocation4'>x</a>
-								<input type="text" name="sLocation4" class="editLocation4" placeholder='4. Location' value='<?php echo $location[4]; ?>'/>
-							</p>
-						</div>
-						<?php
 						break;
 					case "inbook":
 					case "incollection":
@@ -289,6 +295,9 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 				</p>
 			</td>
 			<td class="right_bottom">
+				<textarea name='sNote' placeholder='Comment' rows='50' cols='50' style='height: 85px;'><?php echo $sourceNote; ?></textarea>
+				<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />
+				<br>
 				<p>
 				<?php
 					if($sourceID != 0){
@@ -298,7 +307,6 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 						echo "<input type='hidden' name='delete' />";
 					}
 				?>
-					<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />
 				</p><br>
 				<p>
 					<button class="button" type="submit" value="SAVE">SAVE</button>
@@ -313,6 +321,94 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 
 
 <script type="text/javascript">
+
+// adding a form on the right side for the chosen bibTyp
+$('select.bibTyp').change(function() {
+	$('div.location').css({'display':'none'});
+	var completeSourceWithType = this.value;
+	switch(completeSourceWithType) 
+	{
+	case 'article':
+		$('div.specificFields').html("<p><input type='text' name='journaltitle' placeholder='journalTitle' required='required' size='28' /></p>");
+		break;
+	case "book":
+	case "booklet":
+	case "collection":
+		$('div.location').css({'display':'block'});
+		$('div.specificFields').html("");
+		break;
+	case 'online':
+		$('div.specificFields').html("<p><input type='text' name='url' placeholder='url' size='35' required='required' /></p>");
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth()+1; //January is 0!
+		var yyyy = today.getFullYear();
+		if(dd<10){dd='0'+dd}
+		if(mm<10){mm='0'+mm} 
+		today = yyyy + '-' + mm + '-' + dd;
+		$('div.specificFields').append("<p><input type='date' name='urldate' class='small' placeholder='YYYY-MM-DD' size='35' required='required' value='" + today + "'/> (Date of request)</p>");
+		break;
+	case 'proceedings':
+		$('div.location').css({'display':'block'});
+		$('div.specificFields').html("<p><input type='text' name='eventtitle' placeholder='eventtitle' required='required' size='28' /></p>");
+		$('div.specificFields').append("<p><input type='text' name='venue' placeholder='venue' size='28' /></p>");
+		break;
+	case 'report':
+	case 'thesis':
+		$('div.specificFields').html("<p><input type='text' name='type' placeholder='type' size='28' /></p>");
+		$('div.specificFields').append("<p><input type='text' name='institution' placeholder='institution' size='28' /></p>");
+		break;
+	case 'inbook':
+		var selectBook = "<?php formSelectTyp('source', 'book'); ?>";
+		$('div.specificFields').html("<p class='inbook'>");
+			$('p.inbook').append("<select name='inbook' class='selectSource'>" + selectBook + "</select>");
+		$('div.specificFields').append("<p class='pages'>");
+			$('p.pages').append("<input type='text' name='pageStart' class='small' placeholder='from page' size='16' />");
+			$('p.pages').append("<input type='text' name='pageEnd' class='small' placeholder='to page' size='16' />");
+		break;
+	case 'incollection':
+		var selectCollection = "<?php formSelectTyp('source', 'collection'); ?>";
+		$('div.specificFields').html("<p class='incollection'>");
+			$('p.incollection').append("<select name='incollection' class='selectSource'>" + selectCollection + "</select>");
+		$('div.specificFields').append("<p class='pages'>");
+			$('p.pages').append("<input type='text' name='pageStart' class='small' placeholder='from page' size='16' />");
+			$('p.pages').append("<input type='text' name='pageEnd' class='small' placeholder='to page' size='16' />");
+		break;
+	case 'inproceedings':
+		var selectProceedings = "<?php formSelectTyp('source', 'proceedings'); ?>";
+		$('div.specificFields').html("<p class='inproceedings'>");
+			$('p.inproceedings').append("<select name='inproceedings' class='selectSource'>" + selectProceedings + "</select>");
+		$('div.specificFields').append("<p class='pages'>");
+			$('p.pages').append("<input type='text' name='pageStart' class='small' placeholder='from page' size='16' />");
+			$('p.pages').append("<input type='text' name='pageEnd' class='small' placeholder='to page' size='16' />");
+		break;
+	case "manual":
+	case "misc":
+	case "periodical":
+	case "unpublished":
+		var selectbibField = "<?php formSelect('bibField'); ?>";
+		$('div.specificFields').html("<p class='miscField1'>");
+			$('p.miscField1').append("<select name='miscField1'>" + selectbibField + "</select>");
+			$('p.miscField1').append("<input type='text' name='miscFieldValue1' class='small' size='28' />");
+		$('div.specificFields').append("<p class='miscField2'>");
+			$('p.miscField2').append("<select name='miscField2'>" + selectbibField + "</select>");
+			$('p.miscField2').append("<input type='text' name='miscFieldValue2' class='small' size='28' />");
+		break;
+	}
+	
+	// ---------------------------------------------------------------------- //
+	// hier einige default zusatz-felder. funktion erstellen, die nur ein 
+	// weiteres feld hinzu fügt, wenn das vorherige ausgefüllt wurde! 
+	// ---------------------------------------------------------------------- //
+		var selectbibField = "<?php formSelect('bibField'); ?>";
+		$('div.defaultFields').html("");
+		$('div.defaultFields').append("<p class='plusDetail1'>");
+			$('p.plusDetail1').append("<select name='selectDetail1' class='small'>" + selectbibField + "</select>");
+			$('p.plusDetail1').append("<input type='text' name='valueDetail1' class='small' size='28' />");
+		$('div.defaultFields').append("<p class='plusDetail2'>");
+			$('p.plusDetail2').append("<select name='selectDetail2' class='small'>" + selectbibField + "</select>");
+			$('p.plusDetail2').append("<input type='text' name='valueDetail2' class='small' size='28' />");
+});
 $('select.selectAuthor option').click(function() {
 	if($('input.editAuthor1').val().length == 0){
 		$('input.editAuthor1').val($(this).val());

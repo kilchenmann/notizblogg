@@ -78,11 +78,11 @@ echo "<form accept-charset='utf-8' name='noteNew' class='noteForm' action='".SIT
 			<td class="left">
 					<!--<p>tag1 / tag2 / etc</p>-->
 					<input type="text" name="nTag" placeholder='tag1 / tag2 / etc' value="<?php echo indexMN('note','tag', $noteID); ?>" />
-					<select name="nCategory">
+					<select name="nCategory" class='small' >
 						<?php formSelected("category", $noteCategory); ?>
 					</select>
 					<input type="text" name="nCatNew" class='small' placeholder='new Category' />
-					<select name="nProject">
+					<select name="nProject" class='small' >
 						<?php formSelected("project", $noteProject); ?>
 					</select>
 					<input type="text" class='small' name="nProNew" placeholder='new Project' />
@@ -105,12 +105,13 @@ echo "<form accept-charset='utf-8' name='noteNew' class='noteForm' action='".SIT
 					?>
 				</select>
 				<?php
+/*
 				if($noteID){
 					echo "<a href='createSource.php?noteID=".$noteID."' target='_blank'> Create new source</a></p>";
 				} else {
 					echo "not listed? <a title='1st save this note. 2nd editing the note, so you can creating a new source and add it to the note'>info</a>";
 				}
-			
+*/
 			if($pageStart==0){$pageStart="";}
 			if($pageEnd==0){$pageEnd="";}
 			?>

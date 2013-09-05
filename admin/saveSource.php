@@ -1,4 +1,5 @@
 <?php
+
 if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 	//0. collect Post-Data
 	$bibTypName = htmlentities($_POST['sTyp'],ENT_QUOTES,'UTF-8');
@@ -83,10 +84,15 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 	$authorNameTex = changeUmlaut($author1Name);
 	$tagTitleTex = changeUmlaut($tagTitlePost);
 	$sourceName = $authorNameTex.":".$tagTitleTex;
+	
+	// End of point 0: data collection //
+	$back2path = $_POST['path'];
+
 
 
 	//1. new note? true when delete not exist
-	if (!$_POST['delete'] && $_POST['sCheckID'] != "") {
+//	if ($_POST['delete'] && $_POST['sCheckID'] != "") {
+	if ($_POST['sourceID'] == "") {
 	// Auf existierenden Datensatz überprüfen
 		if(preg_match('/^[a-f0-9]{32}$/',$_POST['sCheckID'])){
 			$sqlCheck = mysql_query("SELECT sourceID FROM source WHERE checkID = '".$_POST['sCheckID']."'");
@@ -106,7 +112,74 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 						$sourceID = $row->sourceID;
 					}
 				} 
+			$saveDetails = true; 
+			}
+		} else {
+			echo "<p class='warning'>Checksum is wrong or manipulated!</p>";
+		}
+
+	} else {
+		
+		// if delete exist, we should have a sourceID!?
+		$sourceID = $_POST['sourceID'];
+		$deleteIt = $_POST['delete'];
+		//2. if delete exist: is it yes or no? 
+		// NO = edit
+		if($deleteIt == 'NO'){
+			$update="UPDATE source SET sourceName='".$sourceName."', sourceTitle='".$sourceTitle."', sourceSubtitle='".$sourceSubtitle."', sourceYear='".$sourceYear."', sourceTyp='".$bibTypID."', sourceEditor='".$sourceEditor."', sourceNote='".$sourceNote."', sourceCategory='".$categoryID."', sourceProject='".$projectID."' WHERE sourceID = '".$sourceID."'";
+			if (!mysql_query($update)){
+				die('Error: ' . mysql_error());
+			}
+			$saveDetails = true;
+			// YES = delete
+		} else if($deleteIt == 'YES'){
+			//1. check if there are any connections to notes!?
+			$sql = mysql_query("SELECT noteID FROM note WHERE noteSource = '".$sourceID."'");
+			$countNotes = mysql_num_rows($sql);
+			if($countNotes > 0) {
+				//alert with notes:
+				while($row = mysql_fetch_object($sql)){
+					$link2noteID = $row->noteID;
+				}
+				$deleteNow = false;
+					echo "<p class='advice'>You can't delete this source (" . $sourceID . ")! There are some notes connected.</p>";
+			}
+			// 2. check in case of 'book', 'collection' or 'proceedings': 
+			//     is there an inbook, incollection or inproceeding?
+			$crossrefSql = mysql_query("SELECT bibFieldID FROM bibField WHERE bibFieldName = 'crossref'");
+				while($row = mysql_fetch_object($crossrefSql)){
+					$crossrefID = $row->bibFieldID;
+				}
+				$sql = mysql_query("SELECT sourceID FROM sourceDetail WHERE bibFieldID = '" . $crossrefID . "' && sourceDetailName = '" . $sourceID . "'");
+				if($countNotes > 0) {
+					//alert with crossrefs:
+					while($row = mysql_fetch_object($sql)){
+						$link2sourceID = $row->noteID;
+					}
+					$deleteNow = false;
+					echo "<p class='advice'>You can't delete this source (" . $sourceID . ")! It's a " . $bibTypName . " with other sources in it</p>";
+				}
 				
+				if($deleteNow === true){
+					$querySource = "DELETE FROM source WHERE sourceID=".$sourceID.";";
+					$dropSource = mysql_query ($queryTag) or die (mysql_error());
+					echo $querySource;
+					echo "<p class='advice'>The source (" . $sourceID . ") has been deleted</p>";
+				}
+		}
+		// then we have to delete all sourceDetails
+		// in the case of delete == yes, then it is o.k.
+		// in the case of delete == no, then we're inserting the new details
+		// Zettel-Register-Verbindungen erst löschen, danach neu speichern
+		$queryTag = "DELETE FROM rel_source_author WHERE sourceID=".$sourceID.";";
+		$dropTag = mysql_query ($queryTag) or die (mysql_error());
+		$queryTag = "DELETE FROM rel_source_location WHERE sourceID=".$sourceID.";";
+		$dropTag = mysql_query ($queryTag) or die (mysql_error());
+		$queryTag = "DELETE FROM sourceDetail WHERE sourceID=".$sourceID.";";
+		$dropTag = mysql_query ($queryTag) or die (mysql_error());
+
+	}
+	if(isset($saveDetails)){
 				// Source-Author-Verbindung neu speichern
 				if($author1!=""){
 					insertMN('author','rel_source_author',$author1,$sourceID,'source');
@@ -237,50 +310,29 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 					case "unpublished";
 						$bibField1 = htmlentities($_POST['miscField1'],ENT_QUOTES,'UTF-8');
 						$bibFieldVal1 = htmlentities($_POST['miscFieldValue1'],ENT_QUOTES,'UTF-8');
+						insertField($bibField1, $bibFieldVal1, $sourceID);
 						$bibField2 = htmlentities($_POST['miscField2'],ENT_QUOTES,'UTF-8');
 						$bibFieldVal2 = htmlentities($_POST['miscFieldValue2'],ENT_QUOTES,'UTF-8');
+						insertField($bibField2, $bibFieldVal2, $sourceID);
 						break;
 				} // Ende switch
-
-
-/*
-			$authorSql = mysql_query("SELECT authorName FROM author, rel_source_author WHERE author.authorID = rel_source_author.authorID AND rel_source_author.sourceID = '".$sourceID."' ORDER BY authorName");
-
-			$countTags = mysql_num_rows($authorSql);
-			if($countTags>0) {
-				while($row = mysql_fetch_array($authorSql)) {
-					$authorIDs[] = $row['authorName'];   
+				
+				$selectDetail1 = htmlentities($_POST['selectDetail1'],ENT_QUOTES,'UTF-8');
+				$valDetail1 = htmlentities($_POST['valDetail1'],ENT_QUOTES,'UTF-8');
+				if($selectDetail1 != "" && $valDetail1 != ""){
+					insertField($selectDetail1, $valDetail1, $sourceID);
 				}
-
-				asort($authorIDs);
-				$authors="";
-				foreach($authorIDs as $authorName) {
-					if($authors==""){
-						$authors=$authorName;
-					} else {
-						$authors.= " and ".$authorName;
-					}
+				$selectDetail2 = htmlentities($_POST['selectDetail2'],ENT_QUOTES,'UTF-8');
+				$valDetail2 = htmlentities($_POST['valDetail2'],ENT_QUOTES,'UTF-8');
+				if($selectDetail2 != "" && $valDetail2 != ""){
+					insertField($selectDetail2, $valDetail2, $sourceID);
 				}
-			} else {
-				$authors = "";
-			}
-*/
-			} 
-		} else {
-			echo "<p class='warning'>Checksum is wrong or manipulated!</p>";
-		}
-	} else {
-			//2. if delete exist: is it yes or no? 
-			// NO = edit
-		if($_POST['delete'] == 'NO'){
-				
-		} else {
-				
-				
-		}
 			
+			//all datas should be saved in the database; have a look about
+			
+			echo "<p class='advice'>The source (" . $sourceID . ") has been saved</p>";
+				showSource($sourceID);
 	}
-		
 }
 
 

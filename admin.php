@@ -153,6 +153,14 @@ include (SITE_PATH."/admin/checkuser.php");
 		</form>
 		</div>
 		<div class="panelRight">
+			<?php 
+			$sql = mysql_query("SELECT username FROM user WHERE uid = " . $_SESSION["user_id"]);
+			while($row = mysql_fetch_object($sql)){
+				$username = htmlentities($row->username,ENT_QUOTES,'UTF-8');
+			}
+			echo "<p>You are logged in as " . $username . "</p>";
+			?>
+			
 		<table class="settingBar" cellspacing="0" cellpadding="0">
 			<tbody>
 				<tr class="setting">

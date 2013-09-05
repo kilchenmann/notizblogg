@@ -61,9 +61,6 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 						<input type="radio" name="sEditor" value="1">yes
 					</p>
 				</div>
-				
-				<textarea name='sNote' placeholder='Comment' rows='50' cols='50' style='height: 85px;'></textarea>
-				<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />
 			</td>
 			<td class="right completeSource">
 				<div class="location" style="display:none;" >
@@ -73,7 +70,7 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 					</select> 
 					<p class='choosenVal'>
 						<a class='delLocation1'>x</a>
-						<input type="text" name="sLocation1" class="newLocation1" placeholder='1. Location' required='required' />
+						<input type="text" name="sLocation1" class="newLocation1" placeholder='1. Location' />
 					</p>
 					<p class='choosenVal'>
 						<a class='delLocation2'>x</a>
@@ -117,6 +114,8 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 				</p>
 			</td>
 			<td class="right_bottom">
+				<textarea name='sNote' placeholder='Comment' rows='50' cols='50' style='height: 85px;'></textarea>
+				<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />
 				<p>
 				<?php
 					if($noteID != 0){
