@@ -228,7 +228,7 @@ function show($type, $part, $partID, $access){
 			if($type=="note"){
 				showNote($typeID, $access);
 			} else {
-				showSource($typeID);
+				showSource($typeID, $access);
 			}
 		}
 	} else {

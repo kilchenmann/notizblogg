@@ -7,16 +7,16 @@
 
 /* header, main topics ------------------------------------------------------ */
 global $siteTitle;
-	$siteTitel = "Notizblogg | Zettelkasten | Memex";
+	$siteTitel = "Notizblogg = Zettelkasten + Memex in digitaler Form";
 global $nbVersion;
-	$nbVersion = 3.5;
+	$nbVersion = 3.8;
 global $pagetopic;
-	$pagetopic = "Sammelsurium von Ideen, Zitaten &amp; Präsentation von Projekten";
+	$pagetopic = "Sammelsurium von Ideen, Zitaten &amp; Präsentation von eigenen Projekten";
 global $keywords;
 	$keywords = "literatur,verwaltung,zettelkasten,luhmann,upcycling,"."redesign,kilchenmann,andré,milchkannen,eiskunstlauf,fotografie,notizblogg";
 global $description;
-	$description = "Notizblogg ".$nbVersion." ist der digitale Zettelkasten ".
-	"von André Kilchenmann. Nebst textuellem Inhalt kann das MEMEX-ähnliche Gebilde, ".
+	$description = "Notizblogg ist der digitale Zettelkasten ".
+	"von André Kilchenmann. Nebst textuellem Inhalt kann der digitale MeMex, ".
 	"auch Bilder, Video- oder Ton-Digitalisate aufnehmen.";
 /* path, file, url ---------------------------------------------------------- */
 global $pathInfo;

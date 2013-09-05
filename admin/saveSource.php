@@ -91,7 +91,7 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 			$sqlCheck = mysql_query("SELECT sourceID FROM source WHERE checkID = '".$_POST['sCheckID']."'");
 			if(@mysql_num_rows($sqlCheck) == 1){
 				echo "<div class='note'><p class='advice'>This source <strong>" . $sourceID . "</strong> already exists.</p></div>";
-				showSource($sourceID);
+				showSource($sourceID, $access);
 				echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
 
 			} else {
@@ -135,7 +135,7 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 				//alert with notes:
 				echo "<div class='note'><p class='advice'>You can't delete this source (" . $sourceID . ")! There are some notes connected.</p></div>";
 				echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
-				showSource($sourceID);
+				showSource($sourceID, $access);
 				while($row = mysql_fetch_object($sql)){
 					$link2noteID = $row->noteID;
 					showNote($link2noteID, $access);
@@ -157,10 +157,10 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 					//alert with crossrefs:
 					echo "<div class='note'><p class='advice'>You can't delete this source (" . $sourceID . ")! It's a " . $bibTypName . " with other sources in it</p></div>";
 					echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
-					showSource($sourceID);
+					showSource($sourceID, $access);
 					while($row = mysql_fetch_object($sql)){
 						$link2sourceID = $row->noteID;
-						showSource($link2sourceID);
+						showSource($link2sourceID, $access);
 					}
 					$deleteNow = false;
 					
@@ -347,7 +347,7 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 			
 			//all datas should be saved in the database; have a look about
 			echo "<div class='note'><p class='advice'>The source (" . $sourceID . ") has been saved</p></div>";
-			showSource($sourceID);
+			showSource($sourceID, $access);
 			echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
 
 	}

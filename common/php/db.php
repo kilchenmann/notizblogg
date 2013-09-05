@@ -21,7 +21,7 @@ function disconnect(){
 }
 
 function showError($query, $line){
-	if($access != 'denied') {
+	if($access != 'public') {
 		if (!mysql_query($query)){
 			echo "<p class='advice'>An error has occured on line: " .  $line . "</p>";
 			die ("Your Query: " . $query . "<br>Error: (" . mysql_errno() . ") " . mysql_error());

@@ -13,10 +13,11 @@ require_once ("conf/settings.php");
 <?php
 
 	$count = 33;
-	$access = "public";
+	$access = 'public';
+	$publicaccess = true;
 	$robots = "INDEX,FOLLOW";
 
-	echo "<title>".$siteTitel." (Version ".$nbVersion.")</title>\n";
+	echo "<title>".$siteTitel." by André Kilchenmann</title>\n";
 	echo "<meta name='Author' content='André Kilchenmann'>\n";
 	//echo "<meta name='Page-topic' content='".$pagetopic."'>\n";
 	echo "<meta name='Keywords' content='".$keywords."'>\n";
@@ -34,6 +35,7 @@ require_once ("conf/settings.php");
 
 	include (SITE_PATH."/common/php/db.php");
 	include (SITE_PATH."/common/php/content.php");
+	include (SITE_PATH."/admin/edit.php");
 	include (SITE_PATH."/common/php/getNote.php");
 	include (SITE_PATH."/common/php/getSource.php");
 	include (SITE_PATH."/common/php/relations.php");
@@ -241,6 +243,9 @@ require_once ("conf/settings.php");
 <?php
 
 	if($_SERVER["QUERY_STRING"]){
+		$type = 'note';
+		$part = '';
+		$partID = '';
 		if(isset($_GET["type"])){
 			$type = $_GET["type"];
 		}

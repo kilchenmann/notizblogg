@@ -15,6 +15,7 @@ include (SITE_PATH."/admin/checkuser.php");
 
 	$count = 50;
 	$access = "denied";			//or admin?
+	$publicaccess = $access;
 	$robots = "noindex,nofollow";
 
 	echo "<title>ADMIN: ".$siteTitel." ".$nbVersion."</title>\n";
@@ -35,10 +36,10 @@ include (SITE_PATH."/admin/checkuser.php");
 
 	include (SITE_PATH."/common/php/db.php");
 	include (SITE_PATH."/common/php/content.php");
+	include (SITE_PATH."/admin/edit.php");
 	include (SITE_PATH."/common/php/getNote.php");
 	include (SITE_PATH."/common/php/getSource.php");
 	include (SITE_PATH."/common/php/relations.php");
-	include (SITE_PATH."/admin/edit.php");
 
 	echo "<link rel='shortcut icon' href='".SITE_URL."/".BASE_FOLDER."common/images/favicon.ico'>\n";
 
@@ -48,8 +49,6 @@ include (SITE_PATH."/admin/checkuser.php");
 
 	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/".$jquery_version."'></script>\n";
 	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/jquery.jcookie.js'></script>\n";
-	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/jquery.note.js'></script>\n";
-	echo "<script type='text/javascript' src='".SITE_URL."/".BASE_FOLDER."common/jquery/jquery.livesearch.js'></script>\n";
 ?>
 
 

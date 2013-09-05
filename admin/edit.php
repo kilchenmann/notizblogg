@@ -31,13 +31,13 @@ function insertMN($table,$relTable,$data,$linkID,$linkTable){
 		
 		
 	function showEditNoteLink($note, $notePublic, $editLink){
-		if($notePublic == 1){
-			//echo "<a href='?type=note&part=edit&id=".$note."' class='public' title='edit'>e</a>";
-			echo "<a href='".$editLink."' class='edit public' title='edit' name=".$note.">e</a>";
-		} else {
-			//echo "<a href='?type=note&part=edit&id=".$note."' class='nonpublic' title='edit'>e</a>";
-			echo "<a href='".$editLink."' class='edit nonpublic' title='edit' name=".$note.">e</a>";
-		}
+			if($notePublic == 1){
+				//echo "<a href='?type=note&part=edit&id=".$note."' class='public' title='edit'>e</a>";
+				echo "<a href='".$editLink."' class='edit public' title='edit' name=".$note.">e</a>";
+			} else {
+				//echo "<a href='?type=note&part=edit&id=".$note."' class='nonpublic' title='edit'>e</a>";
+				echo "<a href='".$editLink."' class='edit nonpublic' title='edit' name=".$note.">e</a>";
+			}
 	}
 		
 	function editSource($source){

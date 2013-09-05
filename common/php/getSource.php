@@ -1,5 +1,5 @@
 <?php
-function showSource($source){
+function showSource($source, $access){
 		$authorSql = mysql_query("SELECT authorName, author.authorID FROM author, rel_source_author WHERE author.authorID = rel_source_author.authorID AND rel_source_author.sourceID = '".$source."' ORDER BY authorName");
 		$countAuthors = mysql_num_rows($authorSql);
 		if($countAuthors>0) {
@@ -166,15 +166,15 @@ function showSource($source){
 		echo linkIndex('source', 'category', $sourceCategory);
 		echo " &gt; ";
 		echo linkIndex('source', 'project', $sourceProject);
-			if($_SERVER["QUERY_STRING"]){
+			
+			if(($_SERVER["QUERY_STRING"]) && (!isset($_GET["editSource"]))){
 				$editLink = MainFile."?".$_SERVER['QUERY_STRING']."&amp;editSource=".$sourceID;
 			} else {
 				$editLink = MainFile."?editSource=".$sourceID;
 			}
-			
 			if($access != 'public'){
 				showEditNoteLink($sourceID, $notePublic, $editLink);
-			}		
+			}
 		echo "</p>";
 		echo "</div>";
 }

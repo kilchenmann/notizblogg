@@ -29,7 +29,7 @@ switch($part){
 		$sql = mysql_query("SELECT sourceID FROM sourceDetail WHERE bibFieldID = ".$crossrefID." AND sourceDetailName = ".$partID."");
 		while($row = mysql_fetch_object($sql)){
 			$inSourceID = $row->sourceID;
-			showSource($inSourceID);
+			showSource($inSourceID, $access);
 		}
 			// 2. show incollection
 		
