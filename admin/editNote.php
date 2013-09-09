@@ -151,7 +151,7 @@ echo "<form accept-charset='utf-8' name='noteEdit' class='noteForm' action='".SI
 				echo "<input type='hidden' name='delete' />";
 			}
 				?>
-			<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />
+			<input class='pathEditNote' type='hidden' name='path' placeholder='path' readonly value='' />
 			
 			<button class="button" type="submit" value="SAVE">SAVE</button>
 			<button class="button" type="reset" value="Clear">Clear</button>

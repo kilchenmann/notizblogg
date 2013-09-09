@@ -299,7 +299,7 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 			</td>
 			<td class="right_bottom">
 				<textarea name='sNote' placeholder='Comment' rows='50' cols='50' style='height: 85px;'><?php echo $sourceNote; ?></textarea>
-				<input class='path' type='hidden' name='path' placeholder='path' readonly value='' />
+				<input class='pathEditSource' type='hidden' name='path' placeholder='path' readonly value='' />
 				<br>
 				<p>
 				<?php

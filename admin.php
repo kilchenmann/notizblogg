@@ -250,8 +250,8 @@ include (SITE_PATH."/admin/checkuser.php");
 ?>
 		</div>
 		<div class="contentSettings">
-			<li><a href="user.php" >Profile</a></li>
-			<li><a href="showMysqlDumb.php" >Backup</a></li>
+			<li><a href="admin/user.php" >Profile</a></li>
+			<li><a href="admin/showMysqlDump.php" >Backup</a></li>
 			<li><a href="admin/logout.php" >Logout</a></li>
 		</div>
 	</div>
@@ -350,12 +350,12 @@ disconnect();
 		var editNoteLocation = window.location.toString();
 		var getNoteLocation = editNoteLocation.split("editNote=")[0];
 		var newNoteLocation = getNoteLocation.substr(0,getNoteLocation.length-1)
-		$(".path").val(newNoteLocation);
+		$(".pathEditNote").val(newNoteLocation);
 
 		var editSourceLocation = window.location.toString();
 		var getSourceLocation = editSourceLocation.split("editSource=")[0];
 		var newSourceLocation = getSourceLocation.substr(0,getSourceLocation.length-1)
-		$(".path").val(newSourceLocation);
+		$(".pathEditSource").val(newSourceLocation);
 
 		winWidth = $(window).width() - 100;
 		winHeight = $(window).height() - 100;

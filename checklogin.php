@@ -5,7 +5,7 @@ require_once ("conf/settings.php");
 include (SITE_PATH."/common/php/db.php");
 connect();
 $sql = "SELECT ".
-    "uid, name, email ".
+    "uid, name ".
   "FROM ".
     "user ".
   "WHERE ".
@@ -21,9 +21,10 @@ if (mysql_num_rows ($result) > 0)
   // Sessionvariablen erstellen und registrieren
   $_SESSION["user_id"] = $data["uid"];
   $_SESSION["user_name"] = $data["name"];
+  $pathLogin = $_POST['path'];
 
 
-  header ("Location: ".SITE_URL."/".BASE_FOLDER."admin.php");
+  header ("Location: ".SITE_URL."/".BASE_FOLDER."admin.php".$pathLogin);
 }
 else
 {

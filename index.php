@@ -227,6 +227,7 @@ require_once ("conf/settings.php");
 			<form class="login" action="<?php echo SITE_URL."/".BASE_FOLDER."checklogin.php"; ?>" method="post">
 				<input type="text" name="name" size="20" placeholder="name" autofocus /><br />
 				<input type="password" name="pwd" placeholder='losung' size="20" /><br />
+				<input class='pathLogin' type='hidden' name='path' placeholder='path' readonly value='' />
 				<button class="button" type="submit" value="LOGIN">LOGIN</button>
 			</form>
 		</div>
@@ -337,10 +338,10 @@ disconnect();
 
 		$('body').css({'cursor':'auto'});
 
-		var editLocation = window.location.toString();
-		var getLocation = editLocation.split("edit=")[0];
+		var loginLocation = window.location.toString();
+		var getLocation = loginLocation.split("index.php")[1];
 		var newLocation = getLocation.substr(0,getLocation.length-1)
-		$(".path").val(newLocation);
+		$(".pathLogin").val(newLocation);
 
 
 		winWidth = $(window).width() - 100;
