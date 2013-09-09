@@ -553,7 +553,8 @@ disconnect();
 			}
 		});
 
-		$("button.menuSet").click(function(){
+		//$("button.menuSet").click(function(){
+		$(".userBar").click(function(){
 			if ($(".contentSettings").css("display")=="none") {
 				$(".contentSettings").slideToggle("slow");
 			} else {
