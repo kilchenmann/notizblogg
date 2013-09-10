@@ -32,12 +32,13 @@ define ('SITE_URL', $protocol.$_SERVER['HTTP_HOST']);
 define ('BASE_FOLDER', basename($pathInfo['dirname'])."/");	// nicht immer nötig
 	// notizblogg/
 	//echo "BASE_FOLDER: ".BASE_FOLDER."<br>";	
-define ("MEDIA_FOLDER", SITE_URL."/MEDIA/NOTIZBLOGG");
+define ("MEDIA_FOLDER", "/MEDIA/NOTIZBLOGG");
+define ("MEDIA_URL", SITE_URL . MEDIA_FOLDER);
 	// http://iml-pluto.iml.unibas.ch/MEDIA/NOTIZBLOGG
-	//echo "MEDIA_FOLDER: ".MEDIA_FOLDER."<br>";	
+	//echo "MEDIA_URL: ".MEDIA_URL."<br>";	
 define ('SITE_PATH', $pathInfo['dirname']);
 	// /Library/WebServer/Documents/notizblogg
-	//echo "SITE_PATH: ".SITE_PATH."<br>";	
+	//echo "SITE_PATH: ".SITE_PATH."<br>";
 
 global $count;
 	$count = "25";				// default: 25

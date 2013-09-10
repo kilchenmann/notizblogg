@@ -240,19 +240,21 @@ include (SITE_PATH."/admin/checkuser.php");
 		</div>
 		<div class="contentIndexPlus">
 <?php
-//<?php echo MEDIA_FOLDER;
-		$allFiles = scandir(MEDIA_FOLDER."/pictures/"); //Ordner "media" auslesen
+//<?php echo MEDIA_URL;
+		$allFiles = scandir(MEDIA_URL."/pictures/"); //Ordner "media" auslesen
 		foreach ($allFiles as $file) { // Ausgabeschleife
 			if($file != "." && $file != ".." && !is_dir($file)){
-				echo "<li name='".$file."'><img src='".MEDIA_FOLDER."/pictures/".$file."' > ".$file."</li>"; //Ausgabe Einzeldatei
+				echo "<li name='".$file."'><img src='".MEDIA_URL."/pictures/".$file."' > ".$file."</li>"; //Ausgabe Einzeldatei
 			}
 		}
 ?>
 		</div>
-		<div class="contentSettings">
+		<div class="userSettings">
 			<li><a href="admin/user.php" >Profile</a></li>
-			<li><a href="admin/showMysqlDump.php" >Backup</a></li>
 			<li><a href="admin/logout.php" >Logout</a></li>
+		</div>
+		<div class="contentSettings">
+			<li><a href="admin/showMysqlDump.php" >Backup</a></li>
 		</div>
 	</div>
 	</div>
@@ -362,7 +364,7 @@ disconnect();
 
 		$(".contentIndex").css({"height":winHeight+"px"});
 		$(".contentIndexPlus").css({"height":winHeight+"px"});
-		$(".contentSettings").css({"height":winHeight+"px"});
+		//$(".contentSettings").css({"height":winHeight+"px"});
 		$(".viewer").css({"min-height":winHeight+"px"});
 		/*
 		$("header").click(function(){
@@ -480,7 +482,7 @@ disconnect();
 
 		$(".contentIndex").css({"height":winHeight+"px"});
 		$(".contentIndexPlus").css({"height":winHeight+"px"});
-		$(".contentSettings").css({"height":winHeight+"px"});
+		//$(".contentSettings").css({"height":winHeight+"px"});
 		$(".viewer").css({"min-height":winHeight+"px"});
 	});
 
@@ -506,7 +508,7 @@ disconnect();
 			var serverPicture = $(this).attr("name");
 			$("input.mediaName").val(serverPicture);
 			$(".choosenMedia").html("<img>");
-			$(".choosenMedia img").attr("src","<?php echo MEDIA_FOLDER; ?>/pictures/"+serverPicture);
+			$(".choosenMedia img").attr("src","<?php echo MEDIA_URL; ?>/pictures/"+serverPicture);
 		});
 
 		/*
@@ -555,6 +557,13 @@ disconnect();
 
 		//$("button.menuSet").click(function(){
 		$(".userBar").click(function(){
+			if ($(".userSettings").css("display")=="none") {
+				$(".userSettings").slideToggle("slow");
+			} else {
+				$(".userSettings").slideToggle("slow");
+			}
+		});
+		$("button.menuSet").click(function(){
 			if ($(".contentSettings").css("display")=="none") {
 				$(".contentSettings").slideToggle("slow");
 			} else {

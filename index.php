@@ -339,8 +339,8 @@ disconnect();
 		$('body').css({'cursor':'auto'});
 
 		var loginLocation = window.location.toString();
-		var getLocation = loginLocation.split("index.php")[1];
-		var newLocation = getLocation.substr(0,getLocation.length-1)
+		var newLocation = loginLocation.split("index.php")[1];
+		//var newLocation = getLocation.substr(0,getLocation.length)
 		$(".pathLogin").val(newLocation);
 
 
@@ -489,7 +489,7 @@ disconnect();
 			var serverPicture = $(this).attr("name");
 			$("input.mediaName").val(serverPicture);
 			$(".choosenMedia").html("<img>");
-			$(".choosenMedia img").attr("src","<?php echo MEDIA_FOLDER; ?>/pictures/"+serverPicture);
+			$(".choosenMedia img").attr("src","<?php echo MEDIA_URL; ?>/pictures/"+serverPicture);
 		});
 
 		/*

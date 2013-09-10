@@ -122,6 +122,7 @@ header {
 	}
 	.userBar {
 		float: left;
+		cursor: pointer;
 	}
 	.settingBar {
 		width: 105px;
@@ -200,7 +201,7 @@ header {
 		background-color: #000000;
 	}
 
-	.partIndex, .titleIndex, .contentIndex, .contentIndexPlus, .contentSettings {
+	.partIndex, .titleIndex, .contentIndex, .contentIndexPlus, .contentSettings, .userSettings {
 		padding: 6px;
 		overflow: auto;
 		margin-top: 40px;
@@ -208,7 +209,7 @@ header {
 	.partIndex, .titleIndex, .contentIndex, .contentIndexPlus {
 		float: left;
 	}
-	.contentSettings {
+	.contentSettings, .userSettings {
 		float: right;
 	}
 
@@ -220,12 +221,15 @@ header {
 		width: 460px;
 	}
 	
-	.contentIndexPlus, .contentSettings {
+	.contentIndexPlus, .contentSettings, .userSettings {
 		border-bottom-left-radius: 11px;
 		border-bottom-right-radius: 11px;
 		border: none;
 		box-shadow: 0px 0px 4px 0px rgba(215, 215, 215, 1.5);
 		width: 300px;
+	}
+	.contentSettings li {
+		text-align: right;
 	}
 	.titleIndex {
 		background: rgba(33, 33, 33, 0.9);
@@ -240,7 +244,7 @@ header {
 		}
 
 
-	.contentIndex, .contentIndexPlus, .contentSettings {
+	.contentIndex, .contentIndexPlus, .contentSettings, .userSettings {
 		display: none;
 		background-color: #434343;
 	}

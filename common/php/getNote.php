@@ -60,7 +60,7 @@ function showNote($note, $access){
 					echo linkIndex('note', 'project', $noteProject);
 					linkIndexMN('note','tag', $noteID);
 					//linkEdit('note', $noteID, $notePublic);
-					if(($_SERVER["QUERY_STRING"]) && (!isset($_GET["editNote"]))){
+					if(($_SERVER['QUERY_STRING']) && (!isset($_GET["editNote"]))){
 						$editLink = MainFile."?".$_SERVER['QUERY_STRING']."&amp;editNote=".$note;
 					} else {
 						$editLink = MainFile."?editNote=".$note;
@@ -86,7 +86,7 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 		case "jpeg";
 		case "tif";
 		{
-			$mediaInfo = MEDIA_FOLDER."/pictures/".$noteMedia;
+			$mediaInfo = MEDIA_URL."/pictures/".$noteMedia;
 			
 			if (@fopen($mediaInfo,"r")==true){
 			
@@ -95,18 +95,18 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 				$fileName = $mediaInfo['filename'];
 				$infoSize = getimagesize($mediaInfo);
 				// ergibt mit $infoSize[0] für breite und $infoSize[1] für höhe
-				echo "<img class='staticMedia' src='".MEDIA_FOLDER."/pictures/".$noteMedia."' alt='".$noteTitle."' title='".$noteID."' />";
+				echo "<img class='staticMedia' src='".MEDIA_URL."/pictures/".$noteMedia."' alt='".$noteTitle."' title='".$noteID."' />";
 			} else {
-				echo "<p class='warning' title='".MEDIA_FOLDER."/pictures/".$noteMedia."'>[The picture file is missing!]</p>";
+				echo "<p class='warning' title='".MEDIA_URL."/pictures/".$noteMedia."'>[The picture file is missing!]</p>";
 			}
 			break;
 		}
 		
 		case "pdf";
 		{
-			$mediaInfo = MEDIA_FOLDER."/documents/".$noteMedia;
+			$mediaInfo = MEDIA_URL."/documents/".$noteMedia;
 			if (@fopen($mediaInfo,"r")==true){
-				echo "<p class='download'>".$noteMedia." (".$size."kb) <a href='".MEDIA_FOLDER."/documents/".$noteMedia."' title='Download ".$noteMedia." (".$size."kb)' >Open</a></p><br>";
+				echo "<p class='download'>".$noteMedia." (".$size."kb) <a href='".MEDIA_URL."/documents/".$noteMedia."' title='Download ".$noteMedia." (".$size."kb)' >Open</a></p><br>";
 			} else {
 				echo "<p class='warning'>[The pdf document is missing!]</p>";
 			}
@@ -116,12 +116,12 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 		case "mp4";
 		case "webm";
 		{
-			$mediaInfo = MEDIA_FOLDER."/movies/".$noteMedia;
+			$mediaInfo = MEDIA_URL."/movies/".$noteMedia;
 			if (@fopen($mediaInfo,"r")==true){
-				echo "<video class='dynamicMedia' controls preload='auto' poster='".MEDIA_FOLDER."/movies/".$fileName.".png'>";
-					echo "<source src='".MEDIA_FOLDER."/movies/".$fileName.".mp4' >";
+				echo "<video class='dynamicMedia' controls preload='auto' poster='".MEDIA_URL."/movies/".$fileName.".png'>";
+					echo "<source src='".MEDIA_URL."/movies/".$fileName.".mp4' >";
                         //type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'
-					echo "<source src='".MEDIA_FOLDER."/movies/".$fileName.".webm' >";
+					echo "<source src='".MEDIA_URL."/movies/".$fileName.".webm' >";
                         //type='video/webm; codecs=\"vp8, vorbis\"'
 				echo "</video>";
 			} else {
@@ -133,11 +133,11 @@ function showMedia($noteID, $noteMedia, $noteTitle){
 		case "mp3";
 		case "wav";
 		{
-			$mediaInfo = MEDIA_FOLDER."/sound/".$noteMedia;
+			$mediaInfo = MEDIA_URL."/sound/".$noteMedia;
 			if (file_exists($mediaInfo)){
 				echo "<audio class='dynamicMedia' controls preload='auto'>";
-					echo "<source src='".MEDIA_FOLDER."/sound/".$fileName.".mp3' type='audio/mpeg; codecs=mp3'>";
-					echo "<source src='".MEDIA_FOLDER."/sound/".$fileName.".wav' type='audio/wav; codecs=1'>";
+					echo "<source src='".MEDIA_URL."/sound/".$fileName.".mp3' type='audio/mpeg; codecs=mp3'>";
+					echo "<source src='".MEDIA_URL."/sound/".$fileName.".wav' type='audio/wav; codecs=1'>";
 				echo "</audio>";
 			} else {
 				echo "<p class='warning'>[The audio file is missing!]</p>";
