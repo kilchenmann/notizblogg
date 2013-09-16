@@ -1,21 +1,17 @@
 <?php
 $siteTitle = "Backup MySql data from notizblogg";
 //include 'header.php';
-require_once ("../conf/settings.php");
-require_once ("../conf/.privat/conf-pw.php");
+require_once ("conf/settings.php");
+require_once ("conf/.privat/conf-pw.php");
 $date = date("Ymd");
 $filename = "nb" . $date . ".sql";
 
 	$tmpPath = split('/notizblogg', SITE_URL);
-	$backuppath = "mysql/" . $filename;
-	$downloadurl = SITE_URL . "/notizblogg/admin/mysql/" . $filename;
+	$backuppath = "export/mysql/" . $filename;
+	$downloadurl = SITE_URL . "/notizblogg/export/mysql/" . $filename;
 
-if(!is_dir("mysql")){
-	$mkDir = shell_exec("mkdir mysql");
-}
-
-$mysqldump = shell_exec("mysqldump --opt --user=".$mysqluser." --pass=".$mysqlpasswd." ".$mysqldb." --single-transaction > ". $backuppath ."");
-
+echo "mysqldump --opt --user=".$mysqluser." --pass=".$mysqlpasswd." ".$mysqldb." --single-transaction > ". $backuppath ."  2>&1";
+$mysqldump = shell_exec("mysqldump -u " . $mysqluser . " --pass=" . $mysqlpasswd . " " . $mysqldb . " --single-transaction > " . $backuppath . "  2>&1");
 
 
 ?>

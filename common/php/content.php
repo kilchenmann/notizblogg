@@ -266,9 +266,9 @@ function show($type, $part, $partID, $access){
 			} else {
 				showSource($typeID, $access);
 				if($_GET['part']=='all'){
-					$fp = fopen($backuppath, "r");
-					$data = fgets($fp, 12);
-					echo ftell($fp);
+					//$fp = fopen($backuppath, "r");
+					//$data = fgets($fp, 12);
+					//echo ftell($fp);
 					/*
 					$cursor = -1;
 					$tmp = " ";
@@ -281,15 +281,13 @@ function show($type, $part, $partID, $access){
 					fclose($read);
 					echo $tmp;
 					*/
-					/*
+					
 					$handle = fopen($backuppath, 'a');
-						
 						exportSource($typeID, $handle);
-						if($i == ($countResult - 1){
+						if($i == ($countResult - 1)){
 							fwrite($handle, "%".$i);
 						}
-						* */
-					//fclose($backuppath);
+					fclose($backuppath);
 				}
 			}
 			
