@@ -227,7 +227,7 @@ require_once ("conf/settings.php");
 			<form class="login" action="<?php echo SITE_URL."/".BASE_FOLDER."checklogin.php"; ?>" method="post">
 				<input type="text" name="name" size="20" placeholder="name" autofocus /><br />
 				<input type="password" name="pwd" placeholder='losung' size="20" /><br />
-				<input class='pathLogin' type='hidden' name='path' placeholder='path' readonly value='' />
+				<input type='hidden' name='path' placeholder='path' readonly value='' class='pathLogin' />
 				<button class="button" type="submit" value="LOGIN">LOGIN</button>
 			</form>
 		</div>

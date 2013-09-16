@@ -179,6 +179,143 @@ function showSource($source, $access){
 		echo "</div>";
 }
 
+function exportSource($source, $handle){
+
+	$authorSql = mysql_query("SELECT authorName, author.authorID FROM author, rel_source_author WHERE author.authorID = rel_source_author.authorID AND rel_source_author.sourceID = '".$source."' ORDER BY authorName");
+	$countAuthors = mysql_num_rows($authorSql);
+	if($countAuthors>0) {
+		while($row = mysql_fetch_array($authorSql)) {
+			$authorIDs[] = array('authorID' => $row['authorID'],
+									'authorName' => $row['authorName']);   
+		}
+		asort($authorIDs);
+		$authors="";
+		foreach($authorIDs as $authorID => $authorName) {
+			$authorName = $authorName['authorName'];
+			if($authors==""){
+				$authors=$authorName;
+			} else {
+				$authors.= " and ".$authorName;
+			}
+		}
+	} else {
+		$authors = "";
+	}
+
+	$locationSql = mysql_query("SELECT locationName FROM location, rel_source_location WHERE location.locationID = rel_source_location.locationID AND rel_source_location.sourceID = '".$source."' ORDER BY locationName");
+	$countLocations = mysql_num_rows($locationSql);
+	if($countLocations>0) {
+		while($row = mysql_fetch_array($locationSql)) {
+			$locationIDs[] = $row['locationName'];   
+		}
+		asort($locationIDs);
+		$locations="";
+		foreach($locationIDs as $locationName) {
+			if($locations==""){
+				$locations=$locationName;
+			} else {
+				$locations.= " and ".$locationName;
+			}
+		}
+	} else {
+		$locations = "";
+	}
+
+	$sourceSql = mysql_query("SELECT * FROM source WHERE sourceID='".$source."'");
+	while($row = mysql_fetch_object($sourceSql)){
+		$sourceID = $row->sourceID;
+		$sourceName = $row->sourceName;
+		$sourceTitle = $row->sourceTitle;
+		$sourceSubtitle = $row->sourceSubtitle;
+		$sourceYear = $row->sourceYear;
+		$sourceNote = $row->sourceNote;	
+		$sourceEditor = $row->sourceEditor;
+		$sourceCategory = $row->sourceCategory;
+		$sourceProject = $row->sourceProject;
+		$sourceTyp = $row->sourceTyp;
+
+		if($sourceTyp!=0){
+			$typSql = mysql_query("SELECT bibTypName FROM bibTyp WHERE bibTypID = ".$sourceTyp."");
+			while($typ = mysql_fetch_object($typSql)){
+				$bibTypName = $typ->bibTypName;
+				fwrite($handle, "@" . $bibTypName . "{" . $sourceName . "," . PHP_EOL);
+			}
+		}
+		if($sourceEditor==1){
+			fwrite($handle, "editor = {" . $authors . "}," . PHP_EOL);
+		} else {
+			fwrite($handle, "author = {" . $authors . "}," . PHP_EOL);
+		}
+		fwrite($handle, "title = {" . $sourceTitle . "}," . PHP_EOL);
+		
+		if($sourceSubtitle!=""){
+			fwrite($handle, "subtitle = {" . $sourceSubtitle . "}," . PHP_EOL);
+		}
+		if($locations!=""){
+			fwrite($handle, "location = {" . $locations . "}," . PHP_EOL);
+		}
+		if($sourceYear!="0000"){
+			fwrite($handle, "year = {" . $sourceYear . "}," . PHP_EOL);
+		}
+//		fwrite($handle, " = {" . $ . "}," . PHP_EOL);
+		$selectDetail = mysql_query("SELECT * FROM sourceDetail WHERE sourceID = '".$sourceID."'");
+		while($row = mysql_fetch_object($selectDetail)){
+			$bibFieldID = $row->bibFieldID;
+			$sourceDetailName = $row->sourceDetailName;
+			
+			$selectField = mysql_query("SELECT bibFieldName FROM bibField WHERE bibFieldID = '".$bibFieldID."'");
+			while($row = mysql_fetch_object($selectField)){
+				$bibFieldName = $row->bibFieldName;
+			}
+				
+			if($bibFieldName=="crossref"){
+				$selectSource = mysql_query("SELECT * FROM source WHERE sourceID = '".$sourceDetailName."'");
+				while($inrow = mysql_fetch_object($selectSource)) {
+					$sourceInID = $inrow->sourceID;
+					$sourceInName = $inrow->sourceName;
+					$sourceInTitle = $inrow->sourceTitle;
+					$sourceInSubtitle = $inrow->sourceSubtitle;
+					fwrite($handle, "crossref = {" . $sourceInName . "}," . PHP_EOL);
+					$authorSql = mysql_query("SELECT authorName FROM author, rel_source_author WHERE author.authorID = rel_source_author.authorID AND rel_source_author.sourceID = '".$sourceInID."' ORDER BY authorName");
+					$countAuthors = mysql_num_rows($authorSql);
+					if($countAuthors>0) {
+						while($row = mysql_fetch_array($authorSql)) {
+							$inAuthorIDs[] = $row['authorName'];
+						}
+						asort($inAuthorIDs);
+						$inAuthors="";
+						foreach($inAuthorIDs as $inAuthorName) {
+							if($inAuthors==""){
+								$inAuthors=$inAuthorName;
+							} else {
+								$inAuthors.= " and ".$inAuthorName;
+							}
+						}
+					} else {
+						$inAuthors = "";
+					}
+					$editorSql = mysql_query("SELECT sourceEditor FROM source WHERE sourceID = ".$sourceInID."");
+					while($row = mysql_fetch_object($editorSql)){
+						if($row->sourceEditor==0){
+							fwrite($handle, "bookauthor = {" . $inAuthors . "}," . PHP_EOL);
+						} else {
+							fwrite($handle, "editor = {" . $inAuthors . "}," . PHP_EOL);
+						}
+					}
+				}
+				fwrite($handle, "booktitle = {" . $sourceInTitle . "}," . PHP_EOL);
+				fwrite($handle, "booksubtitle = {" . $sourceInSubtitle . "}," . PHP_EOL);
+			} else {
+				fwrite($handle, $bibFieldName . " = {" . $sourceDetailName . "}," . PHP_EOL);
+			}
+		}
+		
+		fwrite($handle, "note = {" . $sourceNote . "}" . PHP_EOL);
+		fwrite($handle, "}," . PHP_EOL);
+		fwrite($handle, "" . PHP_EOL);
+	}
+}
+
 
 function showSourceLink($sourceID,$notePageStart,$notePageEnd){
 	if($sourceID!=0){

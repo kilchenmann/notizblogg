@@ -16,11 +16,11 @@ switch($part){
 		show($type, $part, $partID, $access);
 	break;
 	
-	/*
-	case 'export';
+	
+	case 'all';
 		show($type, $part, $partID, $access);
 	break;
-	*/
+	
 
 	
 	case 'collection';

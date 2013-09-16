@@ -250,11 +250,16 @@ include (SITE_PATH."/admin/checkuser.php");
 ?>
 		</div>
 		<div class="userSettings">
-			<li><a href="admin/user.php" >Profile</a></li>
-			<li><a href="admin/logout.php" >Logout</a></li>
+			<ul>
+				<li><a href="admin/user.php" >Profile</a></li>
+				<li><a href="admin/logout.php" >Logout</a></li>
+			</ul>
 		</div>
 		<div class="contentSettings">
-			<li><a href="admin/showMysqlDump.php" >Backup</a></li>
+			<ul>
+				<li><a href="?type=source&part=all" >Export bibTex</a></li>
+				<!--<li><a href="showMysqlDump.php" >Backup MySql</a></li>-->
+			</ul>
 		</div>
 	</div>
 	</div>

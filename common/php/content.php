@@ -92,6 +92,17 @@ function linkIndex($type, $part, $id) {
 			}
 	}
 }
+function getIndex($type, $part, $id) {
+	$tableName = $part."Name";
+	if ($id == 0) {
+		return "allSources";
+	} else {
+		$sql = mysql_query("SELECT ".$part."Name FROM ".$part." WHERE ".$part."ID=".$id);
+			while($row = mysql_fetch_object($sql)){
+				return $row->$tableName;
+			}
+	}
+}
 	
 function linkIndexMN($type, $part, $id){
 	$relTable = "rel_".$type."_".$part;
@@ -161,7 +172,7 @@ function show($type, $part, $partID, $access){
 	if($type == 'note'){
 		$orderBy = "pageStart, ".$type."Title, date DESC LIMIT ".$offset;
 	} else {
-		$orderBy = $type."Title, date DESC LIMIT ".$offset;
+		$orderBy = $type."Typ, " . $type."Title, date DESC LIMIT ".$offset;
 	}
 	if($access == 'public' && $type == 'note'){
 		$gpa = "AND notePublic = 1";
@@ -201,12 +212,36 @@ function show($type, $part, $partID, $access){
 				$sql = mysql_query("SELECT noteID FROM note WHERE (`noteTitle` LIKE '%".$partID."%' OR `noteContent` LIKE '%".$partID."%' OR noteSourceExtern LIKE '%".$partID."%') ".$gpa." ORDER BY date DESC");
 
 			} else {
-				$sql = mysql_query("SELECT sourceID FROM source WHERE (`sourceTitle` LIKE '%".$partID."%' OR `sourceSubtitle` LIKE '%".$partID."%' OR sourceNote LIKE '%".$partID."%') ".$gpa." ORDER BY date DESC");
+				$sql = mysql_query("SELECT sourceID FROM source WHERE (`sourceTitle` LIKE '%".$partID."%' OR `sourceSubtitle` LIKE '%".$partID."%' OR sourceNote LIKE '%".$partID."%' OR sourceName LIKE '%".$partID."%') ".$gpa." ORDER BY date DESC");
 			}
 			$partIndex = $part."ed";
 			$titleIndexLeft = "'".$partID."'";
 		break;
 		
+		case "all";
+			$sql = mysql_query("SELECT ".$type."ID FROM ".$type." WHERE ".$type."Typ != 0 ORDER BY " .$orderBy.", ".$count.";");
+			$partIndex = $part;
+					$partName = getIndex($type, $part, $partID);
+					$year = date("Y");
+					$date = date("Ymd");
+					$filename = $partName . "_" . $date . ".bib";
+					$tmpPath = split('/notizblogg', SITE_URL);
+					$backuppath = "export/bibtex/" . $filename;
+					$downloadurl = SITE_URL . "/notizblogg/export/bibtex/" . $filename;
+			$titleIndexLeft = "<a href='".$downloadurl."'>Download bibTex file</a>";
+					if(!file_exists($backuppath)){
+						$copyRight = html_entity_decode("%% %% %% %% %% %% %% %% %% %% %% %% %% %% %%\n%% This bibFile was created with\n%% Notizblogg &copy; by\n%% Andr&eacute; Kilchenmann | 2006-". $year ." \n%%\n%% -&gt; ak@notizblogg.ch\n%% -&gt; http://notizblogg.ch\n%% %% %% %% %% %% %% %% %% %% %% %% %% %% %%\n\n",ENT_NOQUOTES,'ISO-8859-15');
+						fopen($backuppath, 'w+');
+						if (!$handle = fopen($backuppath, 'w')) {
+							 echo "Cannot open file (".$backuppath.")";
+							 exit;
+						}
+						if (fwrite($handle, $copyRight) === FALSE) {
+							echo "Cannot write to file (".$backuppath.")";
+							exit;
+						}
+					}
+		break;
 		//default:
 		
 	}
@@ -223,14 +258,59 @@ function show($type, $part, $partID, $access){
 		<?php
 
 		$tableID = $type."ID";
+		for($i=0; $i<$countResult; $i++){
+			$row = mysql_fetch_object($sql);
+			$typeID = $row->$tableID;
+			if($type=="note"){
+				showNote($typeID, $access);
+			} else {
+				showSource($typeID, $access);
+				if($_GET['part']=='all'){
+					$fp = fopen($backuppath, "r");
+					$data = fgets($fp, 12);
+					echo ftell($fp);
+					/*
+					$cursor = -1;
+					$tmp = " ";
+					while ($tmp != "%".$i) {
+						fseek($read, $cursor, SEEK_END);
+						$tmp = fgetc($read);
+						$pos = $pos - 1;
+					}
+					$tmp = fgets($read);
+					fclose($read);
+					echo $tmp;
+					*/
+					/*
+					$handle = fopen($backuppath, 'a');
+						
+						exportSource($typeID, $handle);
+						if($i == ($countResult - 1){
+							fwrite($handle, "%".$i);
+						}
+						* */
+					//fclose($backuppath);
+				}
+			}
+			
+		}
+		
+		
+		/*
 		while($row = mysql_fetch_object($sql)){
 			$typeID = $row->$tableID;
 			if($type=="note"){
 				showNote($typeID, $access);
 			} else {
 				showSource($typeID, $access);
+				if($_GET['part']=='all'){
+					$handle = fopen($backuppath, 'a');
+						exportSource($typeID, $handle);
+					fclose($backuppath);
+				}
 			}
 		}
+		* */
 	} else {
 		$partIndex = $part;
 		if($part == 'source'){

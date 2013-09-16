@@ -54,12 +54,12 @@ button, input img {
 .delete {
 	color: #ff0000;
 }
-.download {
+.backup {
 		color: #E5E5E5;
 		padding: 4px;
 		margin: 3px;
 }
-.download a {
+.backup a {
 		border-radius: 11px;
 		border: none;
 		border-top: 2px solid #E5E5E5;
@@ -281,7 +281,7 @@ header {
 	.form .specificFields, .form .defaultFields {
 		clear:both;
 	}
-	.form input, .form textarea, .form select, .form button:hover, .login input, .login button:hover{
+	.form input, .form textarea, .form select, .form button:hover, .login input, .login button:hover, a.button:hover{
 		border-radius: 11px;
 		border: none;
 		border-top: 2px solid #1A1A1A;
@@ -292,7 +292,7 @@ header {
 		margin: 3px;
 	}
 
-	.form button, .login button {
+	.form button, .login button, a.button {
 		border-radius: 11px;
 		border: none;
 		border-top: 2px solid #E5E5E5;
@@ -421,7 +421,7 @@ header {
 		margin-right:auto;
 	}
 
-	.lens .login {
+	.lens .login, .lens .download {
 		display: block;
 		width: 300px;
 		margin-left: auto;
@@ -430,11 +430,11 @@ header {
 		box-shadow:0px 0px 4px 0px rgba(215, 215, 215, 1.5);
 		border-radius:5px;
 	}
-	.lens .login form {
+	.lens .login form, .lens .download form{
 		display: block;
 		margin-left: auto;
 		margin-right: auto;
-		width: 100%;
+		width: 80%;
 		text-align:center;
 		padding: 12px;
 	}
