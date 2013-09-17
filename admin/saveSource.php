@@ -2,6 +2,7 @@
 
 if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 	//0. collect Post-Data
+	$checkID = $_POST['sCheckID'];
 	$bibTypName = htmlentities($_POST['sTyp'],ENT_QUOTES,'UTF-8');
 	$bibTypSql = mysql_query("SELECT bibTypID FROM bibTyp WHERE bibTypName = '".$bibTypName."'");
 	while($row = mysql_fetch_object($bibTypSql)){
@@ -29,7 +30,11 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 	
 	$sourceEditor = $_POST['sEditor'];
 	$sourceNote = htmlentities(save4Tex($_POST['sNote']),ENT_QUOTES,'UTF-8');
-	$sourceYear = $_POST['sYear'];
+	if($_POST['sYear']!=""){
+		$sourceYear = $_POST['sYear'];
+	} else {
+		$sourceYear = 0;
+	}
 
 	$categoryName = htmlentities($_POST['sCategory'],ENT_QUOTES,'UTF-8');
 		if ($_POST['sCatNew']) {
@@ -90,30 +95,31 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 		if(preg_match('/^[a-f0-9]{32}$/',$_POST['sCheckID'])){
 			$sqlCheck = mysql_query("SELECT sourceID FROM source WHERE checkID = '".$_POST['sCheckID']."'");
 			if(@mysql_num_rows($sqlCheck) == 1){
+				while($row = mysql_fetch_object($sqlCheck)){
+					$sourceID = $row->sourceID;
+				}
 				echo "<div class='note'><p class='advice'>This source <strong>" . $sourceID . "</strong> already exists.</p></div>";
 				showSource($sourceID, $access);
 				echo "<a href='" . $back2path . "' class='goback'>Go Back</a>";
 
 			} else {
-				$sql="INSERT INTO source (sourceName, sourceTitle, sourceSubtitle, sourceYear, sourceTyp, sourceEditor, sourceNote, sourceCategory, sourceProject) VALUES
-				(\"".$sourceName."\", \"".$sourceTitle."\", \"".$sourceSubtitle."\", ".$sourceYear.", \"".$bibTypID."\", \"".$sourceEditor."\", \"".$sourceNote."\", \"".$categoryID."\", \"".$projectID."\");";
+				$sql="INSERT INTO source (sourceName, sourceTitle, sourceSubtitle, sourceYear, sourceTyp, sourceEditor, sourceNote, sourceCategory, sourceProject, checkID) VALUES
+				(\"".$sourceName."\", \"".$sourceTitle."\", \"".$sourceSubtitle."\", ".$sourceYear.", \"".$bibTypID."\", \"".$sourceEditor."\", \"".$sourceNote."\", \"".$categoryID."\", \"".$projectID."\", \"".$checkID."\");";
 				showError($sql, __LINE__);
 				$query = mysql_query("SELECT sourceID FROM `source` WHERE `sourceName` = '". $sourceName ."' ORDER BY `sourceID` DESC LIMIT 1");
-				showError($query, __LINE__);
+				//showError($query, __LINE__);
 				$countResults = mysql_num_rows($query);
 				if($countResults==1){
 					while($row = mysql_fetch_object($query)){
 						$sourceID = $row->sourceID;
 					}
-				} 
+				}
 			$saveDetails = true; 
 			}
 		} else {
 			echo "<p class='warning'>Checksum is wrong or manipulated!</p>";
 		}
-
 	} else {
-		
 		// if delete exist, we should have a sourceID!?
 		$sourceID = $_POST['sourceID'];
 		$deleteIt = $_POST['delete'];
@@ -141,7 +147,6 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 					showNote($link2noteID, $access);
 				}
 				$deleteNow = false;
-
 			}
 			// 2. check in case of 'book', 'collection' or 'proceedings': 
 			//     is there an inbook, incollection or inproceeding?
@@ -163,7 +168,6 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 						showSource($link2sourceID, $access);
 					}
 					$deleteNow = false;
-					
 				}
 				if(!isset($deleteNow)){
 					$querySource = "DELETE FROM source WHERE sourceID=".$sourceID.";";
@@ -286,7 +290,7 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 						insertField('institution', $institution, $sourceID);
 						break;
 					case "inbook";
-						$insource = htmlentities($_POST['inbook'],ENT_QUOTES, 'UTF-8');
+						$insource = $_POST['inbook'];
 						insertField('crossref', $insource, $sourceID);
 						$pageStart = htmlentities($_POST['pageStart'],ENT_QUOTES,'UTF-8');
 						$pageEnd = htmlentities($_POST['pageEnd'],ENT_QUOTES,'UTF-8');
@@ -298,7 +302,7 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 						insertField('pages', $pages, $sourceID);
 						break;
 					case "incollection";
-						$insource = htmlentities($_POST['incollection'],ENT_QUOTES, 'UTF-8');
+						$insource = $_POST['incollection'];
 						insertField('crossref', $insource, $sourceID);
 						$pageStart = htmlentities($_POST['pageStart'],ENT_QUOTES,'UTF-8');
 						$pageEnd = htmlentities($_POST['pageEnd'],ENT_QUOTES,'UTF-8');
@@ -310,7 +314,7 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 						insertField('pages', $pages, $sourceID);
 						break;
 					case "inproceedings";
-						$insource = htmlentities($_POST['inproceedings'],ENT_QUOTES, 'UTF-8');
+						$insource = $_POST['inproceedings'];
 						insertField('crossref', $insource, $sourceID);
 						$pageStart = htmlentities($_POST['pageStart'],ENT_QUOTES,'UTF-8');
 						$pageEnd = htmlentities($_POST['pageEnd'],ENT_QUOTES,'UTF-8');

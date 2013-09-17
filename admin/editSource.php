@@ -220,6 +220,7 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 				}
 			
 			echo "</div>";
+			/*
 			echo "<div class='specificFields'>";
 
 	$selectDetail = mysql_query("SELECT * FROM sourceDetail WHERE sourceID = '".$sourceID."'");
@@ -236,8 +237,9 @@ echo "<form accept-charset='utf-8' name='noteSource' class='sourceForm' action='
 				echo "<br>" . $bibFieldName . "<br><input type='text' value='" . $sourceDetailName . "' name='" . $bibFieldName . "' />";
 			}
 	}
-
 			echo "</div>";
+	*/
+
 			echo "<br>";
 			echo "<div class='defaultFields'>";
 				echo "<p class='plusDetail1'>";
