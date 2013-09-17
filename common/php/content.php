@@ -229,7 +229,7 @@ function show($type, $part, $partID, $access){
 					$filename = $partName . "_" . $date . ".bib";
 					$tmpPath = split('/notizblogg', SITE_URL);
 					$backuppath = "export/bibtex/" . $filename;
-					$downloadurl = SITE_URL . "/notizblogg/export/bibtex/" . $filename;
+					$downloadurl = DOWNLOAD_URL . "/bibtex/" . $filename;
 					$titleIndexLeft = "<a href='".$downloadurl."'>Download bibTex file</a>";
 					if(!file_exists($backuppath)){
 						$copyRight = html_entity_decode("%% %% %% %% %% %% %% %% %% %% %% %% %% %% %%\n%% This bibFile was created with\n%% Notizblogg &copy; by\n%% Andr&eacute; Kilchenmann | 2006-". $year ." \n%%\n%% -&gt; ak@notizblogg.ch\n%% -&gt; http://notizblogg.ch\n%% %% %% %% %% %% %% %% %% %% %% %% %% %% %%\n\n",ENT_NOQUOTES,'ISO-8859-15');
@@ -296,9 +296,9 @@ function show($type, $part, $partID, $access){
 							exportSource($typeID, $handle);
 							if($i == ($countResult)){
 								fwrite($handle, "%".$i);
+								fclose($backuppath);
 							}
 					}
-					fclose($backuppath);
 				}
 			}
 			

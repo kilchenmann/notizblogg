@@ -17,7 +17,7 @@ global $keywords;
 global $description;
 	$description = "Notizblogg ist der digitale Zettelkasten ".
 	"von André Kilchenmann. Nebst textuellem Inhalt kann der digitale MeMex, ".
-	"auch Bilder, Video- oder Ton-Digitalisate aufnehmen.";
+	"auch Bilder, Video- oder Ton-Dokumente aufnehmen.";
 /* path, file, url ---------------------------------------------------------- */
 global $pathInfo;
 	$pathInfo = pathinfo($_SERVER['SCRIPT_FILENAME']);
@@ -39,6 +39,7 @@ define ("MEDIA_URL", SITE_URL . MEDIA_FOLDER);
 define ('SITE_PATH', $pathInfo['dirname']);
 	// /Library/WebServer/Documents/notizblogg
 	//echo "SITE_PATH: ".SITE_PATH."<br>";
+define ('DOWNLOAD_URL', SITE_URL . "/notizblogg/export");
 
 global $count;
 	$count = "25";				// default: 25
