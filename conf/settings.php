@@ -9,7 +9,7 @@
 global $siteTitle;
 	$siteTitel = "Notizblogg = Zettelkasten + Memex in digitaler Form";
 global $nbVersion;
-	$nbVersion = 3.9;
+	$nbVersion = "4.0";
 global $pagetopic;
 	$pagetopic = "Sammelsurium von Ideen, Zitaten &amp; Präsentation von eigenen Projekten";
 global $keywords;

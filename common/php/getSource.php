@@ -146,7 +146,7 @@ function showSource($source, $access){
 								
 								
 							} elseif($bibFieldName=="url") {
-								echo "<br><a href='".$sourceDetailName."' class='text' title='extern'>".$bibFieldName."</a> = {".$sourceDetailName."},";
+								echo "<br><a href='".$sourceDetailName."' class='text' title='extern' target='blank'>".$bibFieldName."</a> = {".$sourceDetailName."},";
 							
 							} else {
 								echo "<br>".$bibFieldName." = {".$sourceDetailName."},";
