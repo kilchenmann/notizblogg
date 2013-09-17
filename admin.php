@@ -257,7 +257,7 @@ include (SITE_PATH."/admin/checkuser.php");
 		</div>
 		<div class="contentSettings">
 			<ul>
-				<li><a href="?type=source&part=all" >Export bibTex</a></li>
+				<li><a href="?type=source&part=export" >Export bibTex</a></li>
 				<!--<li><a href="showMysqlDump.php" >Backup MySql</a></li>-->
 			</ul>
 		</div>

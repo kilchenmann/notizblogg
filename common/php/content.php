@@ -13,11 +13,13 @@ function changeUmlaut($string){
 }
 
 function changeUmlaut4Tex($string){
-  $upas = array("ä"=>"{\\\"a}", "ö"=>"{\\\"o}", "ü"=>"{\\\"u}", "Ä"=>"{\\\"A}", "Ö"=>"{\\\"O}", "Ü"=>"{\\\"U}", "é"=>"{\\'e}", "è"=>"{\\`e}", "à"=>"{\\`a}", "É"=>"{\\'E}", "È"=>"{\\`E}", "À"=>"{\\`A}", "ñ"=>"{\\~n}", "ë"=>"{\\\"e}", "ç"=>"{\\c c}", "ô"=>"{\\^o}", "í"=>"{\\'i}", "ì"=>"{\\`i}" );
+  $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
+  $upas = array("ä"=>"{\\\"a}", "ö"=>"{\\\"o}", "ü"=>"{\\\"u}", "Ä"=>"{\\\"A}", "Ö"=>"{\\\"O}", "Ü"=>"{\\\"U}", "é"=>"{\\'e}", "è"=>"{\\`e}", "à"=>"{\\`a}", "É"=>"{\\'E}", "È"=>"{\\`E}", "À"=>"{\\`A}", "ñ"=>"{\\~n}", "ë"=>"{\\\"e}", "ç"=>"{\\c c}", "ô"=>"{\\^o}", "í"=>"{\\'i}", "ì"=>"{\\`i}", "_"=>"\_", "§"=>"\§", "$"=>"\$", "&"=>"\&", "#"=>"\#", "{"=>"\{", "}"=>"\}", "%"=>"\%", "~"=>"\textasciitilde", "€"=>"\texteuro" );
   /*foreach($upas as $umlaut=>$replace){
 	return (str_replace($umlaut, $replace, $string));
   }
   */
+  //$htmlString = html_entity_decode($string, ENT_NOQUOTES, 'ISO-8859-15');
   return strtr($string, $upas);
 }
 
@@ -218,7 +220,7 @@ function show($type, $part, $partID, $access){
 			$titleIndexLeft = "'".$partID."'";
 		break;
 		
-		case "all";
+		case "export";
 			$sql = mysql_query("SELECT ".$type."ID FROM ".$type." WHERE ".$type."Typ != 0 ORDER BY " .$orderBy.", ".$count.";");
 			$partIndex = $part;
 					$partName = getIndex($type, $part, $partID);
@@ -228,7 +230,7 @@ function show($type, $part, $partID, $access){
 					$tmpPath = split('/notizblogg', SITE_URL);
 					$backuppath = "export/bibtex/" . $filename;
 					$downloadurl = SITE_URL . "/notizblogg/export/bibtex/" . $filename;
-			$titleIndexLeft = "<a href='".$downloadurl."'>Download bibTex file</a>";
+					$titleIndexLeft = "<a href='".$downloadurl."'>Download bibTex file</a>";
 					if(!file_exists($backuppath)){
 						$copyRight = html_entity_decode("%% %% %% %% %% %% %% %% %% %% %% %% %% %% %%\n%% This bibFile was created with\n%% Notizblogg &copy; by\n%% Andr&eacute; Kilchenmann | 2006-". $year ." \n%%\n%% -&gt; ak@notizblogg.ch\n%% -&gt; http://notizblogg.ch\n%% %% %% %% %% %% %% %% %% %% %% %% %% %% %%\n\n",ENT_NOQUOTES,'ISO-8859-15');
 						fopen($backuppath, 'w+');
@@ -258,14 +260,22 @@ function show($type, $part, $partID, $access){
 		<?php
 
 		$tableID = $type."ID";
-		for($i=0; $i<$countResult; $i++){
+		for($i=1; $i<=$countResult; $i++){
 			$row = mysql_fetch_object($sql);
 			$typeID = $row->$tableID;
 			if($type=="note"){
 				showNote($typeID, $access);
 			} else {
 				showSource($typeID, $access);
-				if($_GET['part']=='all'){
+				if($_GET['part']=='export'){
+					//$file = escapeshellarg($backuppath); // for the security concious (should be everyone!)
+					//$line = `tail -n 1 $backuppath;
+					
+					$file_arr = file($backuppath);
+					$last_row = $file_arr[count($file_arr) - 1];  
+					$last_data = explode("%", $last_row);
+					
+					if($last_data[1] != ($countResult)){
 					//$fp = fopen($backuppath, "r");
 					//$data = fgets($fp, 12);
 					//echo ftell($fp);
@@ -282,11 +292,12 @@ function show($type, $part, $partID, $access){
 					echo $tmp;
 					*/
 					
-					$handle = fopen($backuppath, 'a');
-						exportSource($typeID, $handle);
-						if($i == ($countResult - 1)){
-							fwrite($handle, "%".$i);
-						}
+						$handle = fopen($backuppath, 'a');
+							exportSource($typeID, $handle);
+							if($i == ($countResult)){
+								fwrite($handle, "%".$i);
+							}
+					}
 					fclose($backuppath);
 				}
 			}

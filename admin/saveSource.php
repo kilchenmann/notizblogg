@@ -7,9 +7,9 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 	while($row = mysql_fetch_object($bibTypSql)){
 		$bibTypID = $row->bibTypID;
 	}
-	$sourceTitle = htmlentities($_POST['sTitle'],ENT_QUOTES,'UTF-8');
+	$sourceTitle = htmlentities(save4Tex($_POST['sTitle']),ENT_QUOTES,'UTF-8');
 	$sourceTagTitle = htmlentities($_POST['sTagTitle'],ENT_QUOTES,'UTF-8');
-	$sourceSubtitle = htmlentities($_POST['sSubTitle'],ENT_QUOTES,'UTF-8');
+	$sourceSubtitle = htmlentities(save4Tex($_POST['sSubTitle']),ENT_QUOTES,'UTF-8');
 	$author1 = "";
 	$author2 = "";
 	$author3 = "";
@@ -28,7 +28,7 @@ if($_POST['sTagTitle'] != "" && $_POST['sTyp'] != ""){
 	}
 	
 	$sourceEditor = $_POST['sEditor'];
-	$sourceNote = htmlentities($_POST['sNote'],ENT_QUOTES,'UTF-8');
+	$sourceNote = htmlentities(save4Tex($_POST['sNote']),ENT_QUOTES,'UTF-8');
 	$sourceYear = $_POST['sYear'];
 
 	$categoryName = htmlentities($_POST['sCategory'],ENT_QUOTES,'UTF-8');

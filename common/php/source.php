@@ -17,7 +17,7 @@ switch($part){
 	break;
 	
 	
-	case 'all';
+	case 'export';
 		show($type, $part, $partID, $access);
 	break;
 	

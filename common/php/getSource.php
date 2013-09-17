@@ -201,7 +201,6 @@ function exportSource($source, $handle){
 	} else {
 		$authors = "";
 	}
-
 	$locationSql = mysql_query("SELECT locationName FROM location, rel_source_location WHERE location.locationID = rel_source_location.locationID AND rel_source_location.sourceID = '".$source."' ORDER BY locationName");
 	$countLocations = mysql_num_rows($locationSql);
 	if($countLocations>0) {
@@ -242,17 +241,17 @@ function exportSource($source, $handle){
 			}
 		}
 		if($sourceEditor==1){
-			fwrite($handle, "editor = {" . $authors . "}," . PHP_EOL);
+			fwrite($handle, "editor = {" . changeUmlaut4Tex($authors) . "}," . PHP_EOL);
 		} else {
-			fwrite($handle, "author = {" . $authors . "}," . PHP_EOL);
+			fwrite($handle, "author = {" . changeUmlaut4Tex($authors) . "}," . PHP_EOL);
 		}
-		fwrite($handle, "title = {" . $sourceTitle . "}," . PHP_EOL);
+		fwrite($handle, "title = {" . changeUmlaut4Tex($sourceTitle) . "}," . PHP_EOL);
 		
 		if($sourceSubtitle!=""){
-			fwrite($handle, "subtitle = {" . $sourceSubtitle . "}," . PHP_EOL);
+			fwrite($handle, "subtitle = {" . changeUmlaut4Tex($sourceSubtitle) . "}," . PHP_EOL);
 		}
 		if($locations!=""){
-			fwrite($handle, "location = {" . $locations . "}," . PHP_EOL);
+			fwrite($handle, "location = {" . changeUmlaut4Tex($locations) . "}," . PHP_EOL);
 		}
 		if($sourceYear!="0000"){
 			fwrite($handle, "year = {" . $sourceYear . "}," . PHP_EOL);
@@ -297,20 +296,20 @@ function exportSource($source, $handle){
 					$editorSql = mysql_query("SELECT sourceEditor FROM source WHERE sourceID = ".$sourceInID."");
 					while($row = mysql_fetch_object($editorSql)){
 						if($row->sourceEditor==0){
-							fwrite($handle, "bookauthor = {" . $inAuthors . "}," . PHP_EOL);
+							fwrite($handle, "bookauthor = {" . changeUmlaut4Tex($inAuthors) . "}," . PHP_EOL);
 						} else {
-							fwrite($handle, "editor = {" . $inAuthors . "}," . PHP_EOL);
+							fwrite($handle, "editor = {" . changeUmlaut4Tex($inAuthors) . "}," . PHP_EOL);
 						}
 					}
 				}
-				fwrite($handle, "booktitle = {" . $sourceInTitle . "}," . PHP_EOL);
-				fwrite($handle, "booksubtitle = {" . $sourceInSubtitle . "}," . PHP_EOL);
+				fwrite($handle, "booktitle = {" . changeUmlaut4Tex($sourceInTitle) . "}," . PHP_EOL);
+				fwrite($handle, "booksubtitle = {" . changeUmlaut4Tex($sourceInSubtitle) . "}," . PHP_EOL);
 			} else {
-				fwrite($handle, $bibFieldName . " = {" . $sourceDetailName . "}," . PHP_EOL);
+				fwrite($handle, $bibFieldName . " = {" . changeUmlaut4Tex($sourceDetailName) . "}," . PHP_EOL);
 			}
 		}
 		
-		fwrite($handle, "note = {" . $sourceNote . "}" . PHP_EOL);
+		fwrite($handle, "note = {" . changeUmlaut4Tex($sourceNote) . "}" . PHP_EOL);
 		fwrite($handle, "}," . PHP_EOL);
 		fwrite($handle, "" . PHP_EOL);
 	}
