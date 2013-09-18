@@ -45,13 +45,12 @@ if($_POST['nContent'] != ""){
 			
 	$mediaFile = $_POST['mediaName'];
 		$allowedExts = array("jpg", "jpeg", "gif", "png", "tif", "pdf", "ogv", "mp4", "webm", "ogg", "mp3", "wav");
-					
 		$fileName = $_FILES['uploadFile']['name'];
 		$extensionPosition = strpos($fileName,".");
 		$extension = substr($fileName,($extensionPosition+1));
 			//$extension = end(explode(".", $fileName));
 			//echo "File: ".$_FILES['mediaFile']."<br />";
-		if($_FILES['uploadFile']['name']!=""){
+		if($_FILES['uploadFile']['name'] != ""){
 			echo "<div class='note'>";
 			if (($_FILES['uploadFile']['size'] < 80000000) && in_array($extension, $allowedExts)){
 				if ($_FILES['uploadFile']['error'] > 0) {
@@ -61,17 +60,41 @@ if($_POST['nContent'] != ""){
 					echo "Type: " . $_FILES['uploadFile']['type'] . "<br />";
 					echo "Size: " . ($_FILES['uploadFile']['size'] / 1024) . " Kb<br />";
 					echo "Temp file: " . $_FILES['uploadFile']['tmp_name'] . "<br />";
-					if (file_exists("media/".$_FILES['uploadFile']['name'])){
+					echo "<hr>";
+					echo 'Here is some more debugging info:<br>';
+					print_r($_FILES);
+					$mediaType = split("/", $_FILES['uploadFile']['type']);
+					switch($mediaType[0]){
+						case 'image';
+							$mediaTypeFolder = '/html/nb/media/pictures';
+						break;
+						
+						case 'video';
+							$mediaTypeFolder = '/html/nb/media/movies';
+						break;
+						
+						case 'application'; // in case of pdf?!
+							$mediaTypeFolder = '/html/nb/media/documents';
+						break;
+						
+						
+					}
+					echo "Folder: " . $mediaTypeFolder . "<br>";
+					if (file_exists($mediaTypeFolder . "/" . $_FILES['uploadFile']['name'])){
 						echo $_FILES['uploadFile']['name'] . " already exists. ";
 					} else {
-						move_uploaded_file($_FILES['uploadFile']['tmp_name'],
-						"media/" . $_FILES['uploadFile']['name']);
-						echo "Stored in: " . "media/" . $_FILES['uploadFile']['name'];
+						move_uploaded_file($_FILES['uploadFile']['tmp_name'], $mediaTypeFolder . "/" . $_FILES['uploadFile']['name']);
+						
+						echo "Stored in: " . $mediaTypeFolder .  "/" . $_FILES['uploadFile']['name'];
 					}
 					$mediaFile = $fileName;
 				}
 			} else {
 				echo "Invalid file";
+					echo "Upload: " . $_FILES['uploadFile']['name'] . "<br />";
+					echo "Type: " . $_FILES['uploadFile']['type'] . "<br />";
+					echo "Size: " . ($_FILES['uploadFile']['size'] / 1024) . " Kb<br />";
+					echo "Folder: " . $mediaTypeFolder . "<br>";
 			}
 			echo "</div>";
 		}

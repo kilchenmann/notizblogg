@@ -62,12 +62,15 @@ echo "<form accept-charset='utf-8' name='noteNew' class='noteForm' action='".SIT
 				<!--<select name='readFolder' class='readFolder'>-->
 
 				<div class="dropFile">
+					<input type="hidden" name="MAX_FILE_SIZE" value="80000000" />
 					<input type='file' name='uploadFile' class='uploadFile' placeholder='upload file' />
 					<input type="text" class="client" value="Upload (Drag'n'Drop)" />
 					<button type="button" class="client">CLIENT</button>
 					<!--<p>from CLIENT</button>-->
 				</div>
-				<button type="button" class="server">SERVER</button>
+				<div class="serverFile">
+					<button type="button" class="server">SERVER</button>
+				</div>
 				<div class="choosenMedia">
 					
 				</div>
