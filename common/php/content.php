@@ -221,13 +221,13 @@ function show($type, $part, $partID, $access){
 		break;
 		
 		case "export";
-			$sql = mysql_query("SELECT ".$type."ID FROM ".$type." WHERE ".$type."Typ != 0 ORDER BY " .$orderBy.", ".$count.";");
+			$sql = mysql_query("SELECT ".$type."ID FROM ".$type." WHERE ".$type."Typ != 0 ORDER BY sourceTyp DESC");
 			$partIndex = $part;
 					$partName = getIndex($type, $part, $partID);
 					$year = date("Y");
 					$date = date("Ymd");
 					$filename = $partName . "_" . $date . ".bib";
-					$tmpPath = split('/notizblogg', SITE_URL);
+					//$tmpPath = split('/notizblogg', SITE_URL);
 					$backuppath = "export/bibtex/" . $filename;
 					$downloadurl = DOWNLOAD_URL . "/bibtex/" . $filename;
 					$titleIndexLeft = "<a href='".$downloadurl."'>Download bibTex file</a>";
