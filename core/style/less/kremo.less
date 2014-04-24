@@ -16,16 +16,16 @@
   color: lighten(@ink, 80%);
 }
 
-input, .card {
+input, select, textarea .card {
   color: @ink;
+  background-color: lighten(@bg, 98%);
 }
 
 // buttons are defined as input button type with the following three classes // (element + position + action) // element: .btn // position: .grp_left || .grp_middle || .grp_right || grp_none // action: .toggle_drawer (as example)
 .btn {
   width: 40px;
   height: 30px;
-  margin: 5px 0 5px 0;
-  background-color: @bg;
+  background-color: darken(@bg, 2%);
   background-image: url(../../lib/icons/btn_icons.png);
   background-position: 0px 0px;
   cursor: pointer;
@@ -36,22 +36,26 @@ input, .card {
 .grp_left, .grp_middle, .grp_right {
   float: left;
 }
-
 .grp_left {
-  .border-radius-custom(4px, 0, 0, 4px);
+  .border-radius-custom(@rad, 0, 0, @rad);
 }
 .grp_middle {
   .border-radius(0);
 }
 .grp_right {
-  .border-radius-custom(0, 4px, 4px, 0);
+  .border-radius-custom(0, @rad, @rad, 0);
 }
-
 .grp_none {
-  .border-radius(4px);
+  .border-radius(@rad);
   margin-left: 3px;
   margin-right: 3px;
 }
+
+
+
+
+
+
 
 fieldset {
   border-top: 1px solid @btn;
@@ -59,14 +63,13 @@ fieldset {
   border-right: none;
   border-bottom: none;
   background: @bg;
-  margin: 6px;
-  padding: 6px;
-   .border-radius(4px);
+
+   .border-radius(@rad);
   legend {
 	color: @btn;
 	padding: 4px;
 	background: @bg;
-	.border-radius(4px);
+	.border-radius(@rad);
   }
 }
 
@@ -82,34 +85,25 @@ input, textarea, select {
 }
 
 input[placeholder] {
-
   font-size: 1em;
   color: darken(@ink, 25%);
 }
 
 input.input, select.select {
   height: 28px;
-  margin-top: 5px;
-  margin-bottom: 5px;
   padding-left: 3px;
   width: 150px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 select.select {
-
-  //	-webkit-appearance: none;
   overflow: hidden;
-  background-color: @bg;
   background-image: url('icons/btn_icons.png');
   background-position: -50px -90px;
-
 }
 
 span.searchbar {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
+
 }
 
 .nolabel {
@@ -122,7 +116,7 @@ span.searchbar {
 span.formfield {
   background-color: @bg;
   padding: 2px;
-  top: 14px;
+
 
   label {
 	margin: 2px;

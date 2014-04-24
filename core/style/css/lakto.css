@@ -42,7 +42,7 @@ h1 {
 	display: none;
 }
 h2 {
-	font-size: 1.4em;
+	font-size: 14pt;
 	font-weight: bold;
 }
 h3 {
@@ -62,19 +62,20 @@ header, footer {
 	z-index: 9;
 	text-align: center;
 	color: #f2f2f2;
-	padding: 20px 0 0 0;
+
 	box-shadow: 0 0 6px 0 rgba(11, 11, 11, 1);
 }
 
 header {
 	top: 0;
 	height: 44px;
+	padding: 22px 0 0 0;
 }
 
 
 header div {
-	width: 33%;
-
+	width: 30%;
+	height: 100%;
 }
 
 
@@ -102,24 +103,24 @@ header div.center span.search {
 
 footer {
 	bottom: 0;
-	height: 66px;
+	height: 28px;
 	position: fixed;
 	text-align: center;
 	width: 100%;
 	opacity: 0.4;
-	overflow:visible;
+	overflow: visible;
 }
 
 footer p {
-	margin-top: 33px;
 	display: block;
 	font-size: small;
 }
 
 footer img {
-	float: right;
-	margin-top: -44px;
-	margin-right: 22px;
+
+	position:absolute;
+	bottom:5px;
+	right: 5px;
 	width: 66px;
 }
 
@@ -208,3 +209,7 @@ section, .section {
 
 */
 
+.float_obj {
+	z-index: 100;
+	display: none;
+}

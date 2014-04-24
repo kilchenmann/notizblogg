@@ -1,0 +1,39 @@
+div.about {
+	height: 33%;
+	margin: 22px;
+	padding: 33px;
+	text-align: left;
+	background-color: rgba(11, 11, 11, 0.5);
+	border-radius: 11px;
+}
+
+/* LARGE SCREENS */
+@media screen and (min-width: 1024px) {
+	div.about {
+		width: 44%;
+		height: 88%;
+		margin: 22px;
+		padding: 33px;
+	}
+
+}
+/* MEDIUM SCREENS */
+@media screen and (min-width: 641px) and (max-width: 1023px) {
+	div.about {
+		width: 66%;
+		height: 88%;
+		margin: 22px;
+		padding: 33px;
+	}
+
+}
+/* SMALL SCREENS */
+@media screen and (max-width: 640px) {
+	div.about {
+		width: 88%;
+		height: 88%;
+		margin: 11px;
+		padding: 5px;
+	}
+}
+
