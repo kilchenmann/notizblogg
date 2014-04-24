@@ -83,7 +83,7 @@ if($_POST['nContent'] != ""){
 					if (file_exists($mediaTypeFolder . "/" . $_FILES['uploadFile']['name'])){
 						echo $_FILES['uploadFile']['name'] . " already exists. ";
 					} else {
-						move_uploaded_file($_FILES['uploadFile']['tmp_name'], $mediaTypeFolder . "/" . $_FILES['uploadFile']['name']);
+						move_uploaded_file($_FILES['uploadFile']['name'], $mediaTypeFolder . "/" . $_FILES['uploadFile']['name']);
 						
 						echo "Stored in: " . $mediaTypeFolder .  "/" . $_FILES['uploadFile']['name'];
 					}

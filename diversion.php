@@ -12,7 +12,7 @@ if($_SERVER["QUERY_STRING"]){
 		header ("Location: index.php?type=note&part=project&id=".$oldProjectLink);
 	}
 	if(isset($_GET["tagID"])){
-		$oldTagLink = htmlentities($_GET["tagID"]);
+		$oldTagLink = $_GET["tagID"];
 
 		$newTagSQL = mysql_query("SELECT tagID FROM tag WHERE tagName = '".$oldTagLink."';");
 		$checkResult = mysql_num_rows($newTagSQL);
@@ -26,7 +26,7 @@ if($_SERVER["QUERY_STRING"]){
 		}
 	}
 	if(isset($_GET["sourceID"])){
-		$oldSourceLink = htmlentities($_GET["sourceID"]);
+		$oldSourceLink = $_GET["sourceID"];
 		$newSourceSQL = mysql_query("SELECT sourceID FROM source WHERE sourceName = '".$oldSourceLink."';");
 		$checkResult = mysql_num_rows($newTagSQL);
 		if($checkResult > 0){

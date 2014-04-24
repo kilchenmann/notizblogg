@@ -241,12 +241,14 @@ include (SITE_PATH."/admin/checkuser.php");
 		<div class="contentIndexPlus">
 <?php
 //<?php echo MEDIA_URL;
+/*
 		$allFiles = scandir(MEDIA_URL."/pictures/"); //Ordner "media" auslesen
 		foreach ($allFiles as $file) { // Ausgabeschleife
 			if($file != "." && $file != ".." && !is_dir($file)){
 				echo "<li name='".$file."'><img src='".MEDIA_URL."/pictures/".$file."' > ".$file."</li>"; //Ausgabe Einzeldatei
 			}
 		}
+		*/
 ?>
 		</div>
 		<div class="userSettings">

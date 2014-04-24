@@ -29,17 +29,17 @@ global $protocol;
 define ('SITE_URL', $protocol.$_SERVER['HTTP_HOST']);
 	// http://iml-pluto.iml.unibas.ch
 	//echo "SITE_URL: ".SITE_URL."<br>";	
-define ('BASE_FOLDER', basename($pathInfo['dirname'])."/");	// nicht immer nötig
+define ('BASE_FOLDER', "");	// nicht immer nötig
 	// notizblogg/
 	//echo "BASE_FOLDER: ".BASE_FOLDER."<br>";	
-define ("MEDIA_FOLDER", "/MEDIA/NOTIZBLOGG");
-define ("MEDIA_URL", SITE_URL . MEDIA_FOLDER);
+define ("MEDIA_URL", SITE_URL."/media");
+
 	// http://iml-pluto.iml.unibas.ch/MEDIA/NOTIZBLOGG
-	//echo "MEDIA_URL: ".MEDIA_URL."<br>";	
+	//echo "MEDIA_FOLDER: ".MEDIA_FOLDER."<br>";	
 define ('SITE_PATH', $pathInfo['dirname']);
 	// /Library/WebServer/Documents/notizblogg
-	//echo "SITE_PATH: ".SITE_PATH."<br>";
-define ('DOWNLOAD_URL', SITE_URL . "/notizblogg/export");
+	//echo "SITE_PATH: ".SITE_PATH."<br>";	
+define ('DOWNLOAD_URL', SITE_URL . "/export");
 
 global $count;
 	$count = "25";				// default: 25

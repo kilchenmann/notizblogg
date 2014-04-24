@@ -722,7 +722,7 @@ $("img.staticMedia").mousedown(function(event) {
 
 	</script>
 		<footer>
-			<a href="http://notizblogg.ch/">NOTIZBLOGG</a> (<?php echo $nbVersion; ?>) &copy; Andr&eacute; Kilchenmann | 2006-<?php echo date("Y"); ?>
+			<a href="http://notizblogg.ch/">NOTIZBLOGG</a> (<?php echo $nbVersion; ?>) &copy; <a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">Andr&eacute; Kilchenmann</a> | 2006-<?php echo date("Y"); ?>
 		</footer>
 	</body>
 </html>
