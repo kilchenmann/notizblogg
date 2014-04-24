@@ -1,0 +1,49 @@
+/* ===========================================================================
+ *
+ * @frame: less stylesheet for default, universal style in kremo
+ *
+ * @author André Kilchenmann kremo@milchkannen.ch
+ *
+ * @copyright 2013 by André Kilchenmann (milchkannen.ch)
+ *
+ * @requires
+ *  LESS (stylesheet language - http://lesscss.org/ - min-version 1.4.1
+ *
+ * ===========================================================================
+ * ======================================================================== */
+
+// DEFINE some SIZES
+@browserheight:`$(window).height()`;
+@winheight: ~"@{browserheight}px";
+@browserwidth:`$(window).width()`;
+@winwidth: ~"@{browserwidth}px";
+
+
+
+//@drawerwidth: 214px;
+//@wspacewidth: @drawerwidth * 3;
+
+//
+// DEFINE some COLORS
+//
+@white: rgba(255, 255, 255, 1);
+@black: rgba(0, 0, 0, 1);
+@glass: rgba(255, 255, 255, 0.5);
+
+@panelCol: rgba(241, 241, 241, 1);
+@drawerCol: rgba(86, 90, 93, 1);
+@footerCol: rgba(221, 221, 221, 0.5);
+
+@borderCol: rgba( 55, 55, 55, 1);
+@btnCol: rgba(244, 244, 244, 1);
+@grpCol: rgba( 55, 55, 55, 1);
+@inpCol: rgba(250, 250, 250, 0.8);
+@activeCol: rgba(255, 215, 0, 0.5);
+@hoverCol: lighten(@activeCol, 50%);
+
+
+//
+// DEFINE some element PROPERTIES
+//
+@btnRad: 4px;
+@searchRad: 15px;

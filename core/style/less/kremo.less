@@ -1,0 +1,200 @@
+/* ===========================================================================
+ *
+ * @button: less stylesheet for default buttons and icons style in kremo
+ *
+ * @author André Kilchenmann kremo@milchkannen.ch
+ *
+ * @copyright 2013 by André Kilchenmann (milchkannen.ch)
+ *
+ * @requires
+ *  LESS (stylesheet language - http://lesscss.org/ - min-version 1.4.1
+ *
+ * ===========================================================================
+ * ======================================================================== */
+
+* {
+  color: lighten(@ink, 80%);
+}
+
+input, .card {
+  color: @ink;
+}
+
+// buttons are defined as input button type with the following three classes // (element + position + action) // element: .btn // position: .grp_left || .grp_middle || .grp_right || grp_none // action: .toggle_drawer (as example)
+.btn {
+  width: 40px;
+  height: 30px;
+  margin: 5px 0 5px 0;
+  background-color: @bg;
+  background-image: url(../../lib/icons/btn_icons.png);
+  background-position: 0px 0px;
+  cursor: pointer;
+  &:hover {
+	background-color: darken(@bg, 50%);
+  }
+}
+.grp_left, .grp_middle, .grp_right {
+  float: left;
+}
+
+.grp_left {
+  .border-radius-custom(4px, 0, 0, 4px);
+}
+.grp_middle {
+  .border-radius(0);
+}
+.grp_right {
+  .border-radius-custom(0, 4px, 4px, 0);
+}
+
+.grp_none {
+  .border-radius(4px);
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+fieldset {
+  border-top: 1px solid @btn;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  background: @bg;
+  margin: 6px;
+  padding: 6px;
+   .border-radius(4px);
+  legend {
+	color: @btn;
+	padding: 4px;
+	background: @bg;
+	.border-radius(4px);
+  }
+}
+
+label {
+
+}
+
+input, textarea, select {
+  border-top: 1px solid lighten(@bg, 8%);
+  border-left: 1px solid lighten(@bg, 8%);
+  border-right: 1px solid darken(@bg, 8%);
+  border-bottom: 1px solid darken(@bg, 8%);
+}
+
+input[placeholder] {
+
+  font-size: 1em;
+  color: darken(@ink, 25%);
+}
+
+input.input, select.select {
+  height: 28px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-left: 3px;
+  width: 150px;
+  font-size: 14px;
+}
+
+select.select {
+
+  //	-webkit-appearance: none;
+  overflow: hidden;
+  background-color: @bg;
+  background-image: url('icons/btn_icons.png');
+  background-position: -50px -90px;
+
+}
+
+span.searchbar {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.nolabel {
+  display: block;
+  clear: both;
+  width: 200px;
+
+}
+
+span.formfield {
+  background-color: @bg;
+  padding: 2px;
+  top: 14px;
+
+  label {
+	margin: 2px;
+	background-color: @bg;
+  }
+
+  input {
+	border: none;
+	border-left: 1px solid lighten(@btn, 8%);
+	background-color: lighten(@bg, 50%);
+	padding-left: 2px;
+	margin-left: 4px;
+  }
+}
+
+input.toggle_drawer {
+  background-position: -50px -30px;
+  &:hover {
+	background-position: 0px -30px;
+  }
+}
+input.toggle_add {
+  background-position: -50px -120px;
+  &:hover {
+	background-position: 0px -120px;
+  }
+}
+input.toggle_user, label.user {
+  background-position: -50px -270px;
+  &:hover {
+	background-position: 0px -270px;
+  }
+}
+input.search_filter {
+  background-position: -50px -90px;
+  &:hover {
+	background-position: -0px -90px;
+  }
+}
+input.search_btn {
+  background-position: -50px -60px;
+  &:hover {
+	background-position: 0px -60px;
+  }
+}
+input.toggle_favorite {
+  background-position: -50px -510px;
+  &:hover {
+	background-position: 0px -510px;
+  }
+}
+input.toggle_window {
+  background-position: -50px -480px;
+  &:hover {
+	background-position: 0px -480px;
+  }
+}
+input.toggle_socialnet {
+  background-position: -50px -450px;
+  &:hover {
+	background-position: 0px -450px;
+  }
+}
+input.toggle_news {
+  background-position: -50px -540px;
+  &:hover {
+	background-position: 0px -540px;
+  }
+}
+label.pass {
+  background-position: -50px -570px;
+  &:hover {
+	background-position: 0px -570px;
+  }
+}

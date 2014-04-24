@@ -1,0 +1,125 @@
+/* ===========================================================================
+ *
+ * @button: less stylesheet for default buttons and icons style in kremo
+ *
+ * @author André Kilchenmann kremo@milchkannen.ch
+ *
+ * @copyright 2013 by André Kilchenmann (milchkannen.ch)
+ *
+ * @requires
+ *  LESS (stylesheet language - http://lesscss.org/ - min-version 1.4.1
+ *
+ * ===========================================================================
+ * ======================================================================== */
+
+// buttons are defined as input button type with the following three classes // (element + position + action) // element: .btn // position: .grp_left || .grp_middle || .grp_right || grp_none // action: .toggle_drawer (as example)
+.btn {
+	width: 40px;
+	height: 30px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	background-color: @btnCol;
+	background-image: url('icons/btn_icons.png');
+	background-position: 0px 0px;
+	border-radius: @btnRad;
+	cursor: pointer;
+	&:hover {
+		background-color: darken(@btnCol, 25%);
+	}
+}
+.drawer_menu input.btn {
+	background-color: @grpCol;
+	border-top: 1px solid lighten(@grpCol, 8%);
+	border-left: 1px solid lighten(@grpCol, 8%);
+	border-right: 1px solid darken(@grpCol, 8%);
+	border-bottom: 1px solid darken(@grpCol, 8%);
+	&:hover {
+		background-color: darken(@grpCol, 25%);
+	}
+
+}
+
+.grp_left {
+	border-radius: 0px;
+	border-top-left-radius: @btnRad;
+	border-bottom-left-radius: @btnRad;
+	float: left;
+}
+.grp_middle {
+	border-radius: 0px;
+	border-left: 0px;
+	border-right: 0px;
+	float: left;
+}
+.grp_right {
+	border-radius: 0px;
+	border-top-right-radius: @btnRad;
+	border-bottom-right-radius: @btnRad;
+	float: left;
+}
+.grp_none {
+	border-radius: @btnRad;
+	margin-left: 3px;
+	margin-right: 3px;
+}
+
+input.toggle_drawer {
+	background-position: -50px -30px;
+	&:hover {
+		background-position: 0px -30px;
+	}
+}
+input.toggle_add {
+	background-position: -50px -120px;
+	&:hover {
+		background-position: 0px -120px;
+	}
+}
+input.toggle_user, label.user {
+	background-position: -50px -270px;
+	&:hover {
+		background-position: 0px -270px;
+	}
+}
+input.search_filter {
+	background-position: -50px -90px;
+	&:hover {
+		background-position: -0px -90px;
+	}
+}
+input.search_btn {
+	background-position: -50px -60px;
+	&:hover {
+		background-position: 0px -60px;
+	}
+}
+input.toggle_favorite {
+	background-position: -50px -510px;
+	&:hover {
+		background-position: 0px -510px;
+	}
+}
+input.toggle_window {
+	background-position: -50px -480px;
+	&:hover {
+		background-position: 0px -480px;
+	}
+}
+input.toggle_socialnet {
+	background-position: -50px -450px;
+	&:hover {
+		background-position: 0px -450px;
+	}
+}
+input.toggle_news {
+	background-position: -50px -540px;
+	&:hover {
+		background-position: 0px -540px;
+	}
+}
+label.pass {
+	background-position: -50px -570px;
+	&:hover {
+		background-position: 0px -570px;
+	}
+}

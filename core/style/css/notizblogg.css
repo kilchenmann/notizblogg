@@ -1,0 +1,14 @@
+#section0 {
+	background-image: url(../img/bg-notizblogg.jpg);
+}
+
+#section1 {
+	background-image: url(../img/bg-black-glass.jpg);
+}
+#section2, #section3 {
+	background-image: url(../img/bg-black.jpg);
+}
+
+.logo {
+	font-family: sverige, jellyka, glamor, Verdana, serif;
+}

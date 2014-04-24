@@ -1,0 +1,220 @@
+/* ===========================================================================
+ *
+ * @frame: less stylesheet for default, universal style in kremo
+ *
+ * @author André Kilchenmann kremo@milchkannen.ch
+ *
+ * @copyright 2013 by André Kilchenmann (milchkannen.ch)
+ *
+ * @requires
+ *  LESS (stylesheet language - http://lesscss.org/ - min-version 1.4.1
+ *
+ * ===========================================================================
+ * ======================================================================== */
+
+// GET other less styles
+@import "style.less";
+@import "form.less";
+@import "button.less";
+
+// DEFINE some SIZES @browserheight: `$(window).height()`;
+//@winheight: ~"@{browserheight}px";
+//@browserwidth: `$(window).width()`;
+//@winwidth: ~"@{browserwidth}px";
+
+/* LARGE SCREENS */
+
+@media screen and (min-width: 1024px) {
+	/* your css goes here */
+}
+/* MEDIUM SCREENS */
+
+@media screen and (min-width: 641px) and (max-width: 1023px) {
+	/* your css goes here */
+}
+/* SMALL SCREENS */
+
+@media screen and (max-width: 640px) {
+	/* your css goes here */
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	font-family: Helvetica, Arial, Verdana;
+}
+.kremo {
+	overflow: hidden;
+}
+.drawer,
+.workspace {
+	float: left;
+}
+.panel_top,
+.panel_bottom {
+	width: 100%;
+}
+.panel_top {
+	height: 40px;
+	display: inline-block;
+}
+.panel_bottom {
+	height: 20px;
+	bottom: 0px;
+	position: fixed;
+	background-color: @footerCol;
+	border-top: 1px solid lighten(@footerCol, 10%);
+}
+.panel_bottom p {
+	position: absolute;
+	font-size: x-small;
+	top: 5px;
+	left: 5px;
+}
+div.drawer {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border-right: 1px solid darken(@drawerCol, 25%);
+	background-color: @drawerCol;
+	overflow: hidden;
+	div.panel_top {
+		background-color: darken(@panelCol, 75%);
+		border-bottom: 1px solid darken(@panelCol, 85%);
+		span.drawer_menu {
+			float: right;
+			margin-right: 12px;
+			display: inline-block;
+		}
+	}
+	nav.nav {} div.panel_bottom {
+		background-color: darken(@footerCol, 25%);
+	}
+}
+div.workspace {
+	// background-color: blue;
+	// margin-left: ~"@{drawerwidth}px";
+	// width: ~'100% - 260px';
+	// width: 100%;
+	// width: -moz-calc(~'100% - @{drawerwidth}px');
+	// width: ~"@{wpwidth}px";
+	// height: @winheight;
+	// width: @wspacewidth;
+	// position: fixed;
+	// left: @drawerwidth;
+	header.panel_top {
+		background-color: @panelCol;
+		border-bottom: 1px solid darken(@panelCol, 10%);
+		.panel_top_left img {
+			height: 40px;
+		}
+		.panel_top_left, .panel_top_center {
+			float: left;
+		}
+		.panel_top_right {
+			float: right;
+			.btn {
+				float: right;
+			}
+		}
+	}
+	section.section {
+		float: left;
+		width: 240px;
+		height: 240px;
+		margin: 12px;
+		padding: 6px;
+		background: green;
+	}
+	footer.panel_bottom {}
+}
+
+div.hoverBox {
+		//delete the size definition later!!!!!
+		min-width: 200px;
+		min-height: 200px;
+		display: none;
+		position: absolute;
+		top: 44px;
+		z-index: 1000;
+		&.user {
+			right: 3px;
+		}
+		&.add {
+			right: 49px;
+			
+		}
+		&.search {
+			
+		}
+		
+	span.arrow	{
+		width: 0;
+		height: 0;
+	}
+	
+	div {
+		background-color: grey;
+	}
+	.arrow.up {
+		position: absolute;
+		border-left: 0.4em solid fade(@white, 0%);
+		border-right: 0.4em solid fade(@white, 0%);
+		border-bottom: 0.4em solid grey;
+		top: -0.3636em;
+		right: 12px;
+		margin-left: -0.2em;
+	}
+	
+	.arrow.down {
+		position: absolute;
+		border-left: 0.4em solid fade(@white, 0%);
+		border-right: 0.4em solid fade(@white, 0%);
+		border-top: 0.4em solid grey;
+		bottom: -0.3636em;
+		left: 50%;
+		margin-left: -0.2em;
+	}
+	
+	.arrow.left {
+		position: absolute;
+		border-top: 0.4em solid fade(@white, 0%);
+		border-bottom: 0.4em solid fade(@white, 0%);
+		border-right: 0.4em solid grey;
+		top: -0.3636em;
+		left: 80%;
+		margin-top: -0.2em;
+	}
+	
+	.arrow.right {
+		position: absolute;
+		border-top: 0.4em solid fade(@white, 0%);
+		border-bottom: 0.4em solid fade(@white, 0%);
+		border-left: 0.4em solid grey;
+		bottom: -0.3636em;
+		left: 50%;
+		margin-top: -0.2em;
+	}
+		
+	div.login {
+		border: 1px solid #4D4D4D;
+		padding: 1px;
+		border-radius: 4px;
+		width: auto;
+		height: 200px;
+	}
+	
+	div.logout {
+		
+	}
+	
+	div.add_resource {
+		
+	}
+	
+	div.set_search {
+		
+	}
+	
+}
