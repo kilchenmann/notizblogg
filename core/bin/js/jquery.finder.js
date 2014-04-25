@@ -67,7 +67,16 @@
 				$this.append(
 					localdata.search.extended = $('<div>')
 						.addClass('float_obj small search_extended')
-						.append()
+						.append(
+							localdata.search.extendedform = $('<form>')
+								.append($('<input>')
+									.attr({
+										'type': 'search',
+										'title': localdata.settings.placeholder,
+										'placeholder': localdata.settings.placeholder
+									})
+								)
+						)
 				);
 
 				localdata.search.filter.on('click', function(event) {
