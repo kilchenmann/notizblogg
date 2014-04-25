@@ -86,18 +86,22 @@ function makeurl($text)
 function linkIndex($type, $part, $id) {
 	$tableName = $part."Name";
 	if ($id == 0) {
-		return "<a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=0' title='no ".$part."' >--</a>";
+		return '--';
+//		return "<a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=0' title='no ".$part."' >--</a>";
 	} else {
 		$sql = mysql_query("SELECT ".$part."Name FROM ".$part." WHERE ".$part."ID=".$id);
 			while($row = mysql_fetch_object($sql)){
-				return "<a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=".$id."' title='".$part."'>".$row->$tableName."</a>";
+				return $row->$tableName;
+//				return "<a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=".$id."' title='".$part."'>".$row->$tableName."</a>";
 			}
 	}
 }
-function getIndex($type, $part, $id) {
+
+
+function getIndex($part, $id) {
 	$tableName = $part."Name";
 	if ($id == 0) {
-		return "allSources";
+		return "--";
 	} else {
 		$sql = mysql_query("SELECT ".$part."Name FROM ".$part." WHERE ".$part."ID=".$id);
 			while($row = mysql_fetch_object($sql)){
@@ -137,31 +141,42 @@ function linkIndexMN($type, $part, $id){
 	}
 	echo $relData;
 }
-function indexMN($type, $part, $id){
-	$tableID = $part."ID";
-	$tableName = $part."Name";
+
+function getIndexMN($type, $part, $id){
 	$relTable = "rel_".$type."_".$part;
 	
 	$tagSql = mysql_query("SELECT ".$part."Name FROM ".$part.", ".$relTable." WHERE ".$part.".".$part."ID = ".$relTable.".".$part."ID AND ".$relTable.".".$type."ID = '".$id."' ORDER BY ".$part."Name");
-	// $tagIDs = array();
 	$countTags = mysql_num_rows($tagSql);
+
 	if($countTags>0) {
-		while($row = mysql_fetch_array($tagSql)) {
-			$relIDs[] = $row['tagName'];
+		while ($row = mysql_fetch_array($tagSql)) {
+			$relNames[] = $row['tagName'];
 		}
+		return $relNames;
+	}
+
+		/*
 		asort($relIDs);
-			$relData="";
+			$relData = array();
+
 			foreach($relIDs as $relName) {
+				if( empty ( $relData ) ) {
+					$relData = array($relID => $relName);
+				} else {
+
+				}
+
 				if($relData==""){
 					$relData= $relName;
 				} else {
-					$relData.= " / ".$relName;
+					$relData.= ", ".$relName;
 				}
 			}
 	} else {
 		$relData = "";
 	}
-	return $relData;
+	return array ($relData);
+*/
 }
 
 

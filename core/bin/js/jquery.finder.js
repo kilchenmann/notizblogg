@@ -66,8 +66,8 @@
 					);
 				$this.append(
 					localdata.search.extended = $('<div>')
-						.addClass('float_obj search_extended')
-						.html('Hier ein Formular wie bisher')
+						.addClass('float_obj small search_extended')
+						.append()
 				);
 
 				localdata.search.filter.on('click', function(event) {
