@@ -19,8 +19,10 @@
 	-->
 	<script type="text/javascript" src="core/bin/js/jquery.slimscroll.min.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.fullPage.js"></script>
-
+	<script type="text/javascript" src="core/bin/js/jquery.finder.js"></script>
+	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
+	-->
 
 	<link rel="stylesheet/less" type="text/css" href="core/style/less/setting.less">
 
@@ -31,7 +33,7 @@
 
 	<link rel="stylesheet" type="text/css" href="core/style/css/lakto.css"/>
 	<link rel="stylesheet" type="text/css" href="core/style/css/fullPage.css"/>
-	<link rel="stylesheet" type="text/css" href="core/style/css/notizblogg.css"/>
+	<link rel="stylesheet" type="text/css" href="core/style/less/notizblogg.less"/>
 
 <!--
 	<link rel="stylesheet" type="text/css" href="core/style/css/test/jquery.fullPage.css"/>
@@ -56,8 +58,8 @@
 		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">der digitale Zettelkasten von André Kilchenmann</a>
 	</h1>
 	<div class="left"><span class="project"><a href='http://notizblogg.ch'><h2 class="logo">Notizblogg</h2></a></span></div>
-	<div class="center"><span class="search"></span></div>
-	<div class="right"><span class="login">login</span></div>
+	<div class="center"><span class="search" id="search"></span></div>
+	<div class="right"><span class="login"><input class="btn grp_none toggle_user"></span></div>
 </header>
 
 <footer>
@@ -75,85 +77,22 @@
 
 <div id="fullpage">
 	<div class="section " id="section0">
-		<div class="intro">
 
-			<p></p>
-		</div>
 	</div>
 	<div class="section " id="section1">
-		<div class="intro">
-
-			<div class="about">
-				<p>Hinter</p>
-				<h2>
-					milchkannen
-				</h2>
-				<p>steht</p>
-				<h2>
-					kilchenmann
-				</h2>
-				<p> &ndash; <a href="#aboutme">Kilchenmann André</a>
-					ist in Solothurn geboren, in Lohn aufgewachsen und studierte in Basel Kulturanthropologie und
-					Medienwissenschaft.
-				</p>
-				<p>Heute forscht er im Bereich
-					<a href="http://www.dhlab.unibas.ch">Digital Humanities</a> an einer erweiterten
-					Video-Annotations-Lösung für die Geistes- und Sozialwissenschaften (neues Modul in
-					<a href="http://salsah.org">SALSAH</a>).</p>
-			</div>
-		</div>
-	</div>
-	<div class="section" id="section2">
 		<div class="slide" id="slide1">
-			<div class="intro">
-				<div class="about">
-					<h2>André Kilchenmann</h2>
 
-					<p>interessiert sich für gutes Design und erstellt seine Möbel oder Textilien gerne selbst.
-					</p>
-					<p>Diese Produkte laufen unter dem Label <a href="http://milchkannen.ch">milchkannen</a> &ndash; ein Anagramm von Kilchenmann.</p>
-					<p>Ausgelesene Werke finden Sie <a class="initScroll next">hier --></a>
-					</p>
-					<p>Mehr Bilder und Inspirationen liegen im <a href="http://www.notizblogg.ch/">Notizblogg</a> oder bei <a href="http://www.pinterest.com/milchkannen">Pinterest</a>.
-				</div>
-			</div>
 		</div>
 
 		<div class="slide" id="slide2">
-			<h2>Biene im heimischen Garten</h2>
 
-			<p>Makrofotografie</p>
 		</div>
-		<!--
-		<div class="slide" id="slide3">
-			<h2>Biene im heimischen Garten</h2>
-			<img src="img/biene.jpg" alt="Biene im heimischen Garten (Makroaufnahme)" id="project-photo"/>
-			<p>Makrofotografie</p>
-		</div>
-		<div class="slide" id="slide4">
-			<h2>Biene im heimischen Garten</h2>
-			<img src="img/biene.jpg" alt="Biene im heimischen Garten (Makroaufnahme)" id="project-photo"/>
-			<p>Makrofotografie</p>
-		</div>
-		<div class="slide" id="slide5">
-			<h2>Notizblogg &ndash; digitaler Zettelkasten</h2>
-			<img src="img/notizblogg.jpg" alt="Zitate | Gedanken | Ideen miteinander verknüpfen'', das ist die Idee des Notizbloggs" id="project-notizblogg"/>
-			<p><a href="http://notizblogg.ch">Notizblogg öffnen</a></p>
-		</div>
-		-->
+	</div>
+	<div class="section" id="section2">
+
 	</div>
 	<div class="section" id="section3">
-		<div class="intro">
-			<div class="about">
-			<h2>Mehr Informationen</h2>
 
-			<p>gibt es bei<br>
-				<a href="http://www.swissphds.ch/members/AndreKilchenmann">SwissPhDs</a> |
-				<a href="https://twitter.com/milchkannen">Twitter</a> |
-				<a href="https://plus.google.com/102518416171514295136/posts">Google+</a>
-			</p>
-			</div>
-		</div>
 	</div>
 </div>
 
@@ -164,32 +103,17 @@
 			slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
 			css3: true
 		});
+		$('#search').finder({
+			placeholder: 'Suche',
+			filter: 'Erweiterte Suche',
+			database: ''
+		})
 	});
 	var curDate = new Date(),
 			curYear = curDate.getFullYear();
 	$('span.year').text('2006 — ' + curYear);
 
-	$('span.search').append(
-			$('<input>').attr({
-				'type': 'button',
-				'title': 'search filter'
-			})
-					.addClass('btn grp_left search_filter')
-			)
-			.append($('<input>')
-							.attr({
-								'type': 'text',
-								'title': 'search',
-								'placeholder': 'search'
-							})
-							.addClass('input grp_middle search_field'))
-			.append(
-					$('<input>')
-							.attr({
-								'type': 'button',
-								'title': 'search'
-							})
-							.addClass('btn grp_right search_btn'));
+
 </script>
 </body>
 </html>
