@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Created by IntelliJ IDEA.
  * User: ak
  * Date: 25/04/14
@@ -7,8 +7,8 @@
  */
 
 
-global $access;
-$access = 'denied';			// default: denied
+//global $access;
+//$access = 'denied';			// default: denied
 
 /* path, file, url ---------------------------------------------------------- */
 
@@ -36,20 +36,9 @@ define ('SITE_PATH', $pathInfo['dirname']);
 //echo "SITE_PATH: ".SITE_PATH."<br>";
 define ('DOWNLOAD_URL', SITE_URL . '/export');
 */
-function db($open_or_close) {
-	require ('.conf/db.php');
-	$con = mysql_connect($myhost, $myuser, $mypass);
-	if (!$con){
-		die('MySQL-Access denied:' . mysql_error());
-	} else {
-		if ($open_or_close === 1) {
-			mysql_select_db($mydb, $con) or die ('The database \''.$mydb.'\' doesn\'t exists.');
-		} else {
-			mysql_close($con);
-		}
-	}
-}
 
+
+/*
 function showError($query, $line){
 	if($access != 'public') {
 		if (!mysql_query($query)){
@@ -58,8 +47,9 @@ function showError($query, $line){
 		}
 	}
 }
+*/
 
-include ('content.php');
-include ('note.php');
-include ('source.php');
+include ('function.content.php');
+include ('class.note.php');
+include ('class.source.php');
 

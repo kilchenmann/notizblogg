@@ -1,4 +1,20 @@
 <?php
+
+
+function condb($conart) {
+	include ('.conf/db.php');
+	$connect = mysql_connect($myhost, $myuser, $mypass);
+	if (!$connect){
+		die('MySQL-Access denied:' . mysql_error());
+	} else {
+		if ($conart == 'open') {
+			mysql_select_db($mydb, $connect) or die ("The database $mydb doesn't exists.");
+		} else {
+			mysql_close($connect);
+		}
+	}
+}
+
 /* ************************************************************** 
  * Change umlauts like ä to ae: It's important for the author-links & latex
  * ************************************************************** 

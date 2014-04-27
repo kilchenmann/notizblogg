@@ -6,7 +6,7 @@
  * Time: 13:27
  */
 
-include ('conf.php');
+include ('setting.php');
 
 class note {
 
@@ -29,7 +29,7 @@ class note {
 			$gpa = '';
 		}
 
-		db(1);
+		condb('open');
 
 		$noteSql = mysql_query('SELECT * FROM note WHERE noteID=\'' . $id . '\'' . $gpa . ';');
 
@@ -74,7 +74,7 @@ class note {
 //		echo '{"notes":' . json_encode($id) . '}';
 //		echo json_encode($id) . PHP_EOL;
 
-
+		condb('close');
 	}
 
 	function editNote($id) {
@@ -90,12 +90,6 @@ class note {
 
 }
 
-$note = NEW note();
-$access = 'enable';
-
-$nID = 126;
-
-$note->getNote($nID, $access);
 /*
 $note->editNote($nID);
 $note->saveNote($nID);

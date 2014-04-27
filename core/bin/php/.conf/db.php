@@ -6,8 +6,8 @@ if(!defined('IN_PHP')){
 */
 
 // default access: denied
-global $access;
-$access = 'denied';
+//global $access;
+//$access = 'denied';
 
 $myhost = 'localhost';
 $myuser = 'root';

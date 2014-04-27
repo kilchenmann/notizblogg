@@ -23,13 +23,9 @@
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
 	-->
-
 	<link rel="stylesheet/less" type="text/css" href="core/style/less/setting.less">
 
 	<script type="text/javascript" src="core/lib/less-1.6.3.min.js"></script>
-
-
-
 
 	<link rel="stylesheet" type="text/css" href="core/style/css/lakto.css"/>
 	<link rel="stylesheet" type="text/css" href="core/style/css/fullPage.css"/>
@@ -72,11 +68,13 @@
 		<img src="core/style/img/akM-logo-small.png" alt="milchkannen | kilchenmann" title="milchkannen | andré kilchenmann"/>
 		</a>
 	</p>
-
 </footer>
 
 <div id="fullpage">
 	<div class="section " id="section0">
+		<div class="intro">
+			Hier die Tabelle!?
+		</div>
 
 	</div>
 	<div class="section " id="section1">
@@ -107,7 +105,25 @@
 			placeholder: 'Suche',
 			filter: 'Erweiterte Suche',
 			database: ''
-		})
+		});
+
+		var url="core/bin/php/get.note.php";
+		$(".intro").append($('<table>').addClass('table')
+				.html('<tr><td>id</td><td>name</td><td>content</td><td>source</td><td>media</td></tr>')
+			);
+		$.getJSON(url,function(data){
+			$.each(data.notes, function(i,note){
+				var newRow =
+						"<tr>"
+						+"<td>"+note.noteID+"</td>"
+						+"<td>"+note.noteName+"</td>"
+						+"<td>"+note.noteContent+"</td>"
+						+"<td>"+note.noteSource+"</td>"
+						+"<td>"+note.noteMedia+"</td>"
+						+"</tr>" ;
+				$(newRow).appendTo(".table");
+			});
+		});
 	});
 	var curDate = new Date(),
 			curYear = curDate.getFullYear();
