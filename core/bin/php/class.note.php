@@ -6,7 +6,7 @@
  * Time: 13:27
  */
 
-include ('setting.php');
+
 
 class note {
 
@@ -31,7 +31,10 @@ class note {
 
 		condb('open');
 
+		$var = array();
+
 		$noteSql = mysql_query('SELECT * FROM note WHERE noteID=\'' . $id . '\'' . $gpa . ';');
+
 
 		while($row = mysql_fetch_object($noteSql)) {
 			// get the category
@@ -69,6 +72,7 @@ class note {
 
 			*/
 		}
+
 
 		echo '{"notes":' . json_encode($var) . '}';
 //		echo '{"notes":' . json_encode($id) . '}';
