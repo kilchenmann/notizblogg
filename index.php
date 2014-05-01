@@ -101,6 +101,7 @@
 			slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
 			css3: true
 		});
+		/* integrate the search bar in the header panel */
 		$('#search').finder({
 			placeholder: 'Suche',
 			filter: 'Erweiterte Suche',
@@ -108,23 +109,19 @@
 		});
 
 		var url="core/bin/php/get.note.php";
-		$(".intro").append($('<table>').addClass('table')
-				.html('<tr><td>id</td><td>name</td><td>content</td><td>source</td><td>media</td></tr>')
-			);
 		$.getJSON(url,function(data){
 			$.each(data.notes, function(i,note){
 				var newRow =
-						"<tr>"
-						+"<td>"+note.noteID+"</td>"
-						+"<td>"+note.noteName+"</td>"
-						+"<td>"+note.noteContent+"</td>"
-						+"<td>"+note.noteSource+"</td>"
-						+"<td>"+note.noteMedia+"</td>"
-						+"</tr>" ;
-				$(newRow).appendTo(".table");
+						"<div class='note'><h3>" + note.title + "</h3>" +
+							"<span>" + note.content + "</span>" +
+							"<span>" + note.project + "</span>" +
+						"</div>";
+				$(newRow).addClass('note').appendTo(".intro");
 			});
 		});
 	});
+
+	/* copyright date */
 	var curDate = new Date(),
 			curYear = curDate.getFullYear();
 	$('span.year').text('2006 — ' + curYear);

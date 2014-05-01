@@ -107,8 +107,8 @@ function linkIndex($type, $part, $id) {
 	} else {
 		$sql = mysql_query("SELECT ".$part."Name FROM ".$part." WHERE ".$part."ID=".$id);
 			while($row = mysql_fetch_object($sql)){
-				return $row->$tableName;
-//				return "<a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=".$id."' title='".$part."'>".$row->$tableName."</a>";
+//				return $row->$tableName;
+				return "<a href='?type=".$type."&amp;part=".$part."&amp;id=".$id."' title='".$part."'>".$row->$tableName."</a>";
 			}
 	}
 }

@@ -38,44 +38,47 @@ class note {
 
 		while($row = mysql_fetch_object($noteSql)) {
 			// get the category
-			$categoryName = getIndex('category', $row->noteCategory);
+			$categoryName = linkIndex('note', 'category', $row->noteCategory);
 
 			// get the project
-			$projectName = getIndex('project', $row->noteProject);
+			$projectName = linkIndex('note', 'project', $row->noteProject);
 
 			// get the tags
 			$tagNames = getIndexMN('note','tag', $id);
 
 			$var[] = $row;
 
-			/*
-			$id = array(
-				'noteID' => $row->noteID,
-				'noteTitle' => $row->noteTitle,
-				'noteContent' => $row->noteContent,
-				'noteCategory' => array(
+
+			$id = array([
+				'id' => $row->noteID,
+				'title' => $row->noteTitle,
+				'content' => $row->noteContent,
+				'category' => array(
 					array('catID' => $row->noteCategory, 'catName' => $categoryName)
 				),
-				'noteProject' => array(
+				'project' => $projectName,
+/*
+				'project' => array(
 					array('proID' => $row->noteProject, 'proName' => $projectName)
 				),
-				'noteSource' => array(
-					array('sourceExtern' => $row->noteSourceExtern),
-					array('sourceID' => $row->noteSource),
-					array('sourcePageStart' => $row->pageStart),
-					array('sourcePageEnd' => $row->pageEnd)
+*/
+				'source' => array(
+					array(
+						'extern' => $row->noteSourceExtern,
+						'id' => $row->noteSource,
+						'pageStart' => $row->pageStart,
+						'pageEnd' => $row->pageEnd
+					)
 				),
-				'noteTag' => $tagNames,
-				'noteMedia' => $row->noteMedia,
-				'notePublic' => $row->notePublic
-			);
-
-			*/
+				'tag' => $tagNames,
+				'media' => $row->noteMedia,
+				'access' => $row->notePublic
+			]);
 		}
 
 
-		echo '{"notes":' . json_encode($var) . '}';
-//		echo '{"notes":' . json_encode($id) . '}';
+//		echo '{"notes":' . json_encode($var) . '}';
+		echo '{"notes":' . json_encode($id) . '}';
 //		echo json_encode($id) . PHP_EOL;
 
 		condb('close');
