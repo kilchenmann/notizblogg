@@ -42,7 +42,7 @@
 
 				// set the title of the document and the project specific data
 				$this
-					.append(localdata.search.filter = $('<input>')
+					.append(localdata.search.filter = $('<button>')
 						.attr({
 							'type': 'button',
 							'title': localdata.settings.filter
@@ -51,19 +51,20 @@
 					)
 					.append(localdata.search.field = $('<input>')
 						.attr({
-							'type': 'search',
+							'type': 'text',
 							'title': localdata.settings.placeholder,
 							'placeholder': localdata.settings.placeholder
 						})
 						.addClass('input grp_middle search_field')
 					)
-					.append(localdata.search.button = $('<input>')
+					.append(localdata.search.button = $('<button>')
 						.attr({
 							'type': 'button',
 							'title': localdata.settings.placeholder
 						})
 						.addClass('btn grp_right search_btn')
 					);
+
 				$this.append(
 					localdata.search.extended = $('<div>')
 						.addClass('float_obj small search_extended')

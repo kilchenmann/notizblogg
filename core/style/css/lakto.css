@@ -16,6 +16,9 @@ html, body {
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 	font-family: stylus, Verdana, sans-serif;
 }
+h1, h2, h3, h4, h5, h6, p, span {
+	color: #131224;
+}
 
 p {
 	font-size: 22px;
@@ -25,17 +28,14 @@ p {
 /*-webkit-font-smoothing: antialiased; }*/
 
 a {
-	color: rgba(255,255,255,0.8);
 	font-weight: 600;
 	text-decoration: none;
 	/*padding-bottom: -1px !important;*/
-	border-bottom: 0px solid rgba(255,255,255,0.3);
-
+	color: #261A13
 }
 
 a:hover {
-	color: #fff;
-	border-bottom: 0px solid rgba(255,255,255,1);
+	color: #6b4834;
 }
 
 h1 {
@@ -52,18 +52,15 @@ h4 {
 
 }
 
+header, footer, nav {
+	position: fixed;
+	display: block;
+}
 
 header, footer {
-	position: fixed;
-
-	display: block;
 	width: 100%;
-	background: rgba(33, 33, 33, 0.8);
-	z-index: 9;
 	text-align: center;
-	color: #f2f2f2;
-
-	box-shadow: 0 0 6px 0 rgba(11, 11, 11, 1);
+	z-index: 33;
 }
 
 header {
@@ -72,18 +69,17 @@ header {
 	padding: 22px 0 0 0;
 }
 
-
 header div {
 	width: 30%;
 	height: 100%;
 }
-
 
 header div.left {
 	float: left;
 	text-align: left;
 	margin-left: 22px;
 }
+
 header div.center {
 	float: left;
 }
@@ -99,6 +95,14 @@ header div.center span.search {
 	margin-left: -130px;
 	margin-right: auto;
 	position: absolute;
+	display: table-cell;
+}
+
+nav {
+	width: 240px;
+	height: 100%;
+	top: 66px;
+	z-index: 22;
 }
 
 footer {
@@ -119,9 +123,9 @@ footer p {
 footer img {
 
 	position:absolute;
-	bottom:5px;
-	right: 5px;
-	width: 66px;
+	bottom:2px;
+	right: 12px;
+	width: 24px;
 }
 
 

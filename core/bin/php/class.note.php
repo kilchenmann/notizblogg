@@ -6,10 +6,7 @@
  * Time: 13:27
  */
 
-
-
 class note {
-
 
 	function note() {
 		/*
@@ -38,10 +35,10 @@ class note {
 
 		while($row = mysql_fetch_object($noteSql)) {
 			// get the category
-			$categoryName = linkIndex('note', 'category', $row->noteCategory);
+			$categoryName = getIndex('category', $row->noteCategory);
 
 			// get the project
-			$projectName = linkIndex('note', 'project', $row->noteProject);
+			$projectName = getIndex('project', $row->noteProject);
 
 			// get the tags
 			$tagNames = getIndexMN('note','tag', $id);
@@ -53,10 +50,10 @@ class note {
 				'id' => $row->noteID,
 				'title' => $row->noteTitle,
 				'content' => $row->noteContent,
-				'category' => array(
-					array('catID' => $row->noteCategory, 'catName' => $categoryName)
-				),
+				'category' => $categoryName,
+				'categoryID' => $row->noteCategory,
 				'project' => $projectName,
+				'projectID' => $row->noteProject,
 /*
 				'project' => array(
 					array('proID' => $row->noteProject, 'proName' => $projectName)

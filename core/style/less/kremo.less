@@ -25,12 +25,12 @@ input, select, textarea .card {
 .btn {
   width: 40px;
   height: 30px;
-  background-color: darken(@bg, 2%);
+  background-color: @bg;
   background-image: url(../../lib/icons/btn_icons.png);
   background-position: 0px 0px;
   cursor: pointer;
   &:hover {
-	background-color: darken(@bg, 50%);
+	background-color: darken(@bg, 2%);
   }
 }
 .grp_left, .grp_middle, .grp_right {
@@ -77,11 +77,14 @@ label {
 
 }
 
-input, textarea, select {
+input, select, textarea, button {
   border-top: 1px solid lighten(@bg, 8%);
   border-left: 1px solid lighten(@bg, 8%);
   border-right: 1px solid darken(@bg, 8%);
   border-bottom: 1px solid darken(@bg, 8%);
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
+  border-radius: 0;
 }
 
 input[placeholder] {
@@ -123,7 +126,7 @@ span.formfield {
 	background-color: @bg;
   }
 
-  input {
+  input, button {
 	border: none;
 	border-left: 1px solid lighten(@btn, 8%);
 	background-color: lighten(@bg, 50%);
@@ -132,55 +135,55 @@ span.formfield {
   }
 }
 
-input.toggle_drawer {
+button.toggle_drawer {
   background-position: -50px -30px;
   &:hover {
 	background-position: 0px -30px;
   }
 }
-input.toggle_add {
+button.toggle_add {
   background-position: -50px -120px;
   &:hover {
 	background-position: 0px -120px;
   }
 }
-input.toggle_user, label.user {
+button.toggle_user, label.user {
   background-position: -50px -270px;
   &:hover {
 	background-position: 0px -270px;
   }
 }
-input.search_filter {
+button.search_filter {
   background-position: -50px -90px;
   &:hover {
 	background-position: -0px -90px;
   }
 }
-input.search_btn {
+button.search_btn {
   background-position: -50px -60px;
   &:hover {
 	background-position: 0px -60px;
   }
 }
-input.toggle_favorite {
+button.toggle_favorite {
   background-position: -50px -510px;
   &:hover {
 	background-position: 0px -510px;
   }
 }
-input.toggle_window {
+button.toggle_window {
   background-position: -50px -480px;
   &:hover {
 	background-position: 0px -480px;
   }
 }
-input.toggle_socialnet {
+button.toggle_socialnet {
   background-position: -50px -450px;
   &:hover {
 	background-position: 0px -450px;
   }
 }
-input.toggle_news {
+button.toggle_news {
   background-position: -50px -540px;
   &:hover {
 	background-position: 0px -540px;

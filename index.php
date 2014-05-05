@@ -20,6 +20,7 @@
 	<script type="text/javascript" src="core/bin/js/jquery.slimscroll.min.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.fullPage.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.finder.js"></script>
+	<script type="text/javascript" src="core/bin/js/jquery.drawer.js"></script>
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
 	-->
@@ -29,7 +30,9 @@
 
 	<link rel="stylesheet" type="text/css" href="core/style/css/lakto.css"/>
 	<link rel="stylesheet" type="text/css" href="core/style/css/fullPage.css"/>
+<!--
 	<link rel="stylesheet" type="text/css" href="core/style/less/notizblogg.less"/>
+-->
 
 <!--
 	<link rel="stylesheet" type="text/css" href="core/style/css/test/jquery.fullPage.css"/>
@@ -55,9 +58,11 @@
 	</h1>
 	<div class="left"><span class="project"><a href='http://notizblogg.ch'><h2 class="logo">Notizblogg</h2></a></span></div>
 	<div class="center"><span class="search" id="search"></span></div>
-	<div class="right"><span class="login"><input class="btn grp_none toggle_user"></span></div>
+	<div class="right"><span class="login"><button class="btn grp_none toggle_user"></span></div>
 </header>
+<nav id="drawer">
 
+</nav>
 <footer>
 	<p>
 		<a href="http://notizblogg.ch">Notizblogg</a>
@@ -107,14 +112,18 @@
 			filter: 'Erweiterte Suche',
 			database: ''
 		});
+		$('#drawer').drawer({
+			menu: 'btn-grp'
+		});
 
 		var url="core/bin/php/get.note.php";
 		$.getJSON(url,function(data){
 			$.each(data.notes, function(i,note){
 				var newRow =
 						"<div class='note'><h3>" + note.title + "</h3>" +
-							"<span>" + note.content + "</span>" +
-							"<span>" + note.project + "</span>" +
+							"<span><p>" + note.content + "<br>" +
+							"<br>" + note.project + "(" + note.projectID + ")<br>" +
+							"<br>" + note.category + "(" + note.categoryID + ")</p></span>" +
 						"</div>";
 				$(newRow).addClass('note').appendTo(".intro");
 			});
@@ -124,7 +133,7 @@
 	/* copyright date */
 	var curDate = new Date(),
 			curYear = curDate.getFullYear();
-	$('span.year').text('2006 — ' + curYear);
+	$('span.year').text('2006-' + curYear);
 
 
 </script>

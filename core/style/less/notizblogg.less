@@ -2,16 +2,29 @@
 	background-image: url(../img/bg-notizblogg.jpg);
 }
 #section1 {
-	background-image: url(../img/bg-black-glass.jpg);
+	background-image: url(../img/bg-empty.jpg);
 }
 #section2, #section3 {
-	background-image: url(../img/bg-black.jpg);
+	background-image: url(../img/bg-empty.jpg);
 }
 
 .logo {
 	font-family: sverige, jellyka, glamor, Verdana, serif;
 }
 
-h1, h2, h3, h4, h5, h6, p {
-  color: darken(@bg, 2%);
+h1, h2, h3, h4, h5, h6, p, span {
+  color: @ink;
+}
+a {
+  color: darken(@link, 20%);
+}
+a:hover {
+  color: @link;
+}
+
+header, footer {
+  background-color: fade(@bg, 50%);
+  box-shadow: 0 0 4px 0 fade(@ink, 30%);
+ // border-bottom: 1px solid fade(@ink, 30%);
+  color: @ink;
 }
