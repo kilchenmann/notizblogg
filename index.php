@@ -100,6 +100,7 @@
 </div>
 
 <script type="text/javascript">
+
 	$(document).ready(function () {
 		$('#fullpage').fullpage({
 			anchors: ['start', 'info', 'projects', 'aboutme' ],
@@ -116,18 +117,21 @@
 			menu: 'btn-grp'
 		});
 
-		var url="core/bin/php/get.note.php";
-		$.getJSON(url,function(data){
-			$.each(data.notes, function(i,note){
-				var newRow =
-						"<div class='note'><h3>" + note.title + "</h3>" +
-							"<span><p>" + note.content + "<br>" +
-							"<br>" + note.project + "(" + note.projectID + ")<br>" +
-							"<br>" + note.category + "(" + note.categoryID + ")</p></span>" +
-						"</div>";
-				$(newRow).addClass('note').appendTo(".intro");
-			});
-		});
+
+		$('.intro').append(
+			$('<button>').html('Inhalt').click(function() {
+
+				var url = "data/example/notes.json";
+//				var url = "core/bin/php/get.note.php";
+
+				$.getJSON(url,
+					function(data){
+						$.each(data.notes, function(i, note){
+							$('.intro').append('<p>' + note.title + '<br>' + note.content + '</p>');
+						});
+					});
+			}));
+
 	});
 
 	/* copyright date */

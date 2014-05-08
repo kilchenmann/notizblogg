@@ -28,9 +28,11 @@ class note {
 
 		condb('open');
 
-		$var = array();
+//		$notes = array();
 
 		$noteSql = mysql_query('SELECT * FROM note WHERE noteID=\'' . $id . '\'' . $gpa . ';');
+//		$row = array();
+
 
 
 		while($row = mysql_fetch_object($noteSql)) {
@@ -43,9 +45,32 @@ class note {
 			// get the tags
 			$tagNames = getIndexMN('note','tag', $id);
 
-			$var[] = $row;
+//			$notes[] = $row;
 
 
+
+
+			$note = new stdClass();
+			$note->id = $row->noteID;
+			$note->title = $row->noteTitle;
+			$note->content = $row->noteContent;
+			$note->category->id = $row->noteCategory;
+			$note->category->name = $categoryName;
+			$note->project->id = $row->noteProject;
+			$note->project->name = $projectName;
+			$note->tags = $tagNames;
+			$note->media = $row->noteMedia;
+			$note->access = $row->notePublic;
+
+			/*
+			echo '
+				{
+				"id":"'.$row->noteID.'",
+				"title":"'.$row->noteTitle.'",
+				"content":"'.$row->noteContent.'"
+				},';
+			*/
+			/*
 			$id = array([
 				'id' => $row->noteID,
 				'title' => $row->noteTitle,
@@ -59,6 +84,7 @@ class note {
 					array('proID' => $row->noteProject, 'proName' => $projectName)
 				),
 */
+			/*
 				'source' => array(
 					array(
 						'extern' => $row->noteSourceExtern,
@@ -71,14 +97,28 @@ class note {
 				'media' => $row->noteMedia,
 				'access' => $row->notePublic
 			]);
+			*/
 		}
+		condb('close');
+
+		echo json_encode($note);
+
 
 
 //		echo '{"notes":' . json_encode($var) . '}';
-		echo '{"notes":' . json_encode($id) . '}';
+//		echo '{"notes":' . json_encode($id) . '}';
+//		$notes = 'notes: [{' . json_encode($id) . '}]';
+//		echo json_encode($notes);
+//		echo ']}';
 //		echo json_encode($id) . PHP_EOL;
-
-		condb('close');
+//		$json = json_encode($note);
+//		echo "notes: [" . $json . "] " . PHP_EOL;
+/*
+		echo "Decoded JSON (as associative array):" . PHP_EOL;
+		print_r(json_decode($json, true)) . PHP_EOL;
+		echo "Decoded JSON (as stdClass object):" . PHP_EOL;
+		print_r(json_decode($json)) . PHP_EOL;
+*/
 	}
 
 	function editNote($id) {

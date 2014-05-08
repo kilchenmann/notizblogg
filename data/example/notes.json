@@ -1,0 +1,243 @@
+{"notes": [
+	{
+		"id": "1",
+		"title": "Notizblogg",
+		"content": "&quot;Zitate | Gedanken | Ideen miteinander verkn&uuml;pfen&#039;&#039;, das ist die Idee des &lt;nb:Notizblogg&gt;s. Dieser ist nichts anderes als die digitale Verwirklichung eines Zettelkastens, wie er beispielsweise von &lt;wiki:Niklas_Luhmann&gt; genutzt wurde. Die Hauptaufgabe des Notizbloggs ist daher die Sammlung von Notizen und Zitaten bearbeiteter Literatur. Dabei werden die Zitate mit der entsprechenden Quelle verkn&uuml;pft und f&uuml;r die Weiterarbeit mit LaTeX vorbereitet. Nebst textuellem Inhalt k&ouml;nnen aber auch Bilder, Video- oder Ton-Daten aufgenommen werden.\r\n\r\nDiese Seite entspricht dem &ouml;ffentlichen Zugang und zeigt lediglich einen vereinfachten Einblick.",
+		"category": {
+			"id": "10",
+			"name": "Notizblogg"
+		},
+		"project": {
+			"id": "24",
+			"name": "Info"
+		},
+		"tags": null,
+		"media": "notizblogg.png",
+		"access": "1"
+	},
+	{
+		"id": "2",
+		"title": "Die Person hinter Notizblogg",
+		"content": "&lt;link:notizblogg.ch:Notizblogg&gt; wurde von Andr&eacute; Kilchenmann kreiert und programmiert. Kilchenmann studierte Kulturanthropologie und Medienwissenschaft an der Universit&auml;t Basel; hier entstanden die ersten Versionen des digitalen Zettelkastens in Form von Seminar- und Zertifikatsarbeit.\r\nKilchenmann arbeitet heute als Doktorand im &lt;link:www.dhlab.unibas.ch:digital_humanities_lab&gt; derselben Universit&auml;t.",
+		"category": {
+			"id": "10",
+			"name": "Notizblogg"
+		},
+		"project": {
+			"id": "25",
+			"name": "Autor"
+		},
+		"tags": null,
+		"media": "kilchenmann.png",
+		"access": "1"
+	},
+	{
+		"id": "3",
+		"title": "Funktionen des Notizbloggs",
+		"content": "Zentral stehen Notiz und Quelle. Erstere kann mit Bild-, Bewegtbild- oder Tonmaterial erg&auml;nzt und\/oder mit einem Quellenhinweis verkn&uuml;pft werden. Eine weitere Verkn&uuml;pfung erfolgt durch Kategorisierung, Projektzuordnung oder &uuml;ber Stichworte (tags) (s. unterste Zeile; in dieser Reihenfolge).\r\n\r\nEine weitere M&ouml;glichkeit der Verkn&uuml;pfung besteht direkt in diesem Textfeld. Durch das Stichwort &lt;wiki:wiki&gt; k&ouml;nnen einzelne W&ouml;rter in Verbindung zur freien Enzyklop&auml;die &lt;wiki:Wikipedia&gt; gesetzt werden. Durch ein weiteres Stichwort kann aber auch der &lt;nb:Notizblogg&gt; selbst nach dem markierten Wort durchsucht werden.\r\n\r\nDie Suche kann f&uuml;r Notizen oder f&uuml;r Quellen erweitert werden. In dieser &ouml;ffentlichen Pr&auml;sentation ist nur die Suche nach den offen publizierten Notizen m&ouml;glich.\r\nDie Quellen werden nach den Regeln von bibLaTex erstellt. Dadurch wird es m&ouml;glich, eine bib-Datei aus dem Notizblogg zu exportieren.\r\n\r\nBei Fragen wenden Sie sich bitte an den Autoren: Andr&eacute; Kilchenmann -- &lt;mailto:ak@notizblogg.ch&gt;",
+		"category": {
+			"id": "10",
+			"name": "Notizblogg"
+		},
+		"project": {
+			"id": "24",
+			"name": "Info"
+		},
+		"tags": null,
+		"media": "",
+		"access": "1"
+	},
+	{
+		"id": "122",
+		"title": "",
+		"content": "Die Passwortdatei wird mit dem Apache-Hilfsprogramm htpasswd erzeugt. Dabei geben sie die Option -c [...], den Namen der Passwortdatei und einen Benutzernamen an.",
+		"category": {
+			"id": "0",
+			"name": "--"
+		},
+		"project": {
+			"id": "0",
+			"name": "--"
+		},
+		"tags": ["passwort", "php", "sicherheit", "zertifikat"],
+		"media": "",
+		"access": "0"
+	},
+	{
+		"id": "123",
+		"title": "",
+		"content": "Von allem was er [&lt;nb:Luhmann&gt;] liest und ihm einf&auml;llt, fertigt er Notizzettel an und ordnet sie in Zettelk&auml;sten ein. Mit diesem Material -- bzw. mit sich selbst in diesem Material -- kann er dann regelrecht `kommunizieren&#039;, die Zettel `denken&#039; mit.",
+		"category": {
+			"id": "10",
+			"name": "Notizblogg"
+		},
+		"project": {
+			"id": "23",
+			"name": "Idee"
+		},
+		"tags": ["luhmann", "zertifikat", "zettelkasten"],
+		"media": "",
+		"access": "1"
+	},
+	{
+		"id": "125",
+		"title": "",
+		"content": "Den guten alten Karteikasten jedenfalls &uuml;bertreffen sie [die Personal Computer] [...] allemal.",
+		"category": {
+			"id": "0",
+			"name": "--"
+		},
+		"project": {
+			"id": "0",
+			"name": "--"
+		},
+		"tags": ["datenbank", "zettelkasten"],
+		"media": "",
+		"access": "0"
+	},
+	{
+		"id": "126",
+		"title": "03 Informatik",
+		"content": "Man sollte auf keinen Fall die M&uuml;he scheuen, sich ein wenig mit den Prinzipien vertraut zu machen, auf denen ein Datenbanksystem fusst. [...] keineswegs diffizile Technische Details [...] sondern lediglich Gesichtspunkte der Struktur und der Organisation der Daten, des Formats also, in dem Informationen und Beziehungen zwischen Informationseinheiten im System erfasst werden.",
+		"category": {
+			"id": "0",
+			"name": "--"
+		},
+		"project": {
+			"id": "1",
+			"name": "Zertifikat"
+		},
+		"tags": ["datenbank", "technik"],
+		"media": "",
+		"access": "0"
+	},
+	{
+		"id": "127",
+		"title": "02 Problematik",
+		"content": "Wenn die Entwicklung von Unordnung bedroht ist, m&uuml;ssen Prinzipien aufgestellt werden, um die Ordnung herzustellen. [Le Corbusier]",
+		"category": {
+			"id": "0",
+			"name": "--"
+		},
+		"project": {
+			"id": "1",
+			"name": "Zertifikat"
+		},
+		"tags": ["ordnung", "unordnung"],
+		"media": "",
+		"access": "0"
+	},
+	{
+		"id": "128",
+		"title": "01 Einleitung",
+		"content": "Ohne zu schreiben, kann man nicht denken",
+		"category": {
+			"id": "0",
+			"name": "--"
+		},
+		"project": {
+			"id": "1",
+			"name": "Zertifikat"
+		},
+		"tags": ["denken", "schreiben"],
+		"media": "",
+		"access": "0"
+	},
+	{
+		"id": "129",
+		"title": "Problematik-L&ouml;sung mit Luhmann",
+		"content": "F&uuml;r das Innere des &lt;wiki:Zettelkasten&gt;s [...], f&uuml;r sein geistiges Leben ist entscheidend, dass man sich gegen eine systematische Ordnung nach Themen [...] und statt dessen f&uuml;r eine feste Stellordnung entscheidet.",
+		"category": {
+			"id": "10",
+			"name": "Notizblogg"
+		},
+		"project": {
+			"id": "23",
+			"name": "Idee"
+		},
+		"tags": ["ordnung", "zettelkasten"],
+		"media": "",
+		"access": "1"
+	},
+	{
+		"id": "130",
+		"title": "Zettelkasten als Zweitged&auml;chtnis",
+		"content": "mit dieser Technik entsteht eine Art Zweitged&auml;chtnis, [...] mit dem man laufend kommunizieren kann. Es weist, darin dem eigenen Ged&auml;chtnis &auml;hnlich, keine durchkonstruierte Gesamtordnung auf, auch keine Hierarchie und erst recht keine lineare Struktur wie ein Buch. Eben dadurch gewinnt es ein von seinem Autor unabh&auml;ngiges Eigenleben.",
+		"category": {
+			"id": "10",
+			"name": "Notizblogg"
+		},
+		"project": {
+			"id": "23",
+			"name": "Idee"
+		},
+		"tags": ["ged&auml;chtnis", "ordnung"],
+		"media": "",
+		"access": "1"
+	},
+	{
+		"id": "131",
+		"title": "04 Notizblogg",
+		"content": "Eine notwendige Voraussetzung f&uuml;r die Speicherung von Informationen ist die Definition eines Klassifizierungsschemas, mit dem Informationen in einem multidimensionalen Kriterienraum charakterisiert und geordnet werden, so dass nach der Ablage wieder gezielt auf sie zugegriffen werden kann. Eine wesentliche Rolle spielen dabei [...] Metainformationen oder Attribute",
+		"category": {
+			"id": "0",
+			"name": "--"
+		},
+		"project": {
+			"id": "1",
+			"name": "Zertifikat"
+		},
+		"tags": ["meta"],
+		"media": "",
+		"access": "0"
+	},
+	{
+		"id": "132",
+		"title": "03 Informatik",
+		"content": "Eine Datenbank ist eine einheitlich beschriebene Darstellung eines Weltausschnitts durch diskrete Daten auf externen und persistenten Speichermedien [...].\r\nEin Datenbank-Management-System (DBMS) ist eine Software, die die einheitliche Beschreibung und sichere Bearbeitung einer Datenbank erm&ouml;glicht.",
+		"category": {
+			"id": "0",
+			"name": "--"
+		},
+		"project": {
+			"id": "1",
+			"name": "Zertifikat"
+		},
+		"tags": ["datenbank"],
+		"media": "",
+		"access": "0"
+	},
+	{
+		"id": "133",
+		"title": "03 Informatik",
+		"content": "Relationale Datenmodellierung basiert auf dem mathematischen Relationenmodell. [...] Das kartesische Produkt W(Auftragsnummer) x W(Auftragswert) enth&auml;lt dann alle m&ouml;glichen Kombinationen beider Werte. [...] Relationen k&ouml;nnen als zweidimensionale Tabelle dargestellt werden [...] Jeder Spalte ist ein Attribut zugeordnet. Jede der Zeilen, die man auch als Tupel oder (pragmatische) als Datensatz bezeichnet, charakterisiert ein so genanntes Entity mit seinen Attributen.",
+		"category": {
+			"id": "0",
+			"name": "--"
+		},
+		"project": {
+			"id": "1",
+			"name": "Zertifikat"
+		},
+		"tags": ["datenbank", "n:m", "relation"],
+		"media": "",
+		"access": "0"
+	},
+	{
+		"id": "134",
+		"title": "05 Ausblick",
+		"content": "Datenerhebung, -speicherung und -verwaltung sind in jeder erdenklichen Form und Gr&ouml;ssenordnung mithilfe moderner Informations- und Kommunikationstechnologie selbstverst&auml;ndlich. Datenbanken werden dabei jedoch h&auml;ufig so gross, dass sie vom Menschen nicht mehr &Uuml;berblickt und somit manuelle Analysetechniken nicht mehr angewendet werden k&ouml;nnen. [...] Wunsch nach automatischen Auswertungsmechanismen umfangreicher Datenbanken.",
+		"category": {
+			"id": "0",
+			"name": "--"
+		},
+		"project": {
+			"id": "1",
+			"name": "Zertifikat"
+		},
+		"tags": ["datenbank"],
+		"media": "",
+		"access": "0"
+	}
+]
+}
