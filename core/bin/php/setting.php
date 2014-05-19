@@ -48,6 +48,13 @@ function showError($query, $line){
 	}
 }
 */
+/* path, file, url ---------------------------------------------------------- */
+global $pathInfo;
+$pathInfo = pathinfo($_SERVER['SCRIPT_FILENAME']);
+
+global $mainFile;
+$mainFile = $pathInfo['filename'].".".$pathInfo['extension'];
+define ('MainFile', $pathInfo['filename'].".".$pathInfo['extension']);
 
 include ('function.content.php');
 include ('class.note.php');

@@ -30,6 +30,9 @@ class note {
 
 //		$notes = array();
 		$note = new stdClass();
+		$note->category = new stdClass();
+		$note->project = new stdClass();
+		$note->source = new stdClass();
 		$noteSql = mysql_query('SELECT * FROM note WHERE noteID=\'' . $id . '\'' . $gpa . ';');
 //		$row = array();
 
@@ -56,7 +59,31 @@ class note {
 			$note->project->name = $projectName;
 			$note->tags = $tagNames;
 			$note->media = $row->noteMedia;
+			$note->source->id = $row->noteSource;
+			$note->source->start = $row->pageStart;
+			$note->source->end = $row->pageEnd;
+			$note->url = $row->noteSourceExtern;
 			$note->access = $row->notePublic;
+
+			echo '<div class="note">';
+			if ($note->media !== '') {
+				echo $note->media;
+				//showMedia($noteID, $noteMedia, $noteTitle);
+			}
+			echo '<h3>' . $note->title . '</h3>';
+			echo '<p class="content">';
+			if ($note->source->id != 0) {
+				echo "``".makeurl(nl2br($note->content))."''";
+			} else {
+				echo makeurl(nl2br($note->content));
+			}
+//			showSourceCite($note->source->name,$note->source->start,$note->source->end);
+			echo '</p>';
+			if ($note->url !== '') {
+				echo '<p class="linkText"> --&gt; <a href="' . $note->url . '" title="extern">' . $note->url . '</a></p>';
+			}
+			echo '</div>';
+
 
 			/*
 			echo '
@@ -99,7 +126,7 @@ class note {
 
 
 //		echo '<div class=\'note\'>';
-		echo json_encode($note);
+//		echo json_encode($note);
 //		echo '</div>';
 
 //		echo '<div>note.title + '<br>' + note.content + '</div>

@@ -66,8 +66,27 @@
 
 <div id="fullpage">
 	<div class="section " id="section0">
-		<div class="intro">
-			Hier die Tabelle!?
+		<div class="lens"></div>
+		<div class="viewer">
+
+			<?php
+			require 'core/bin/php/setting.php';
+			$access = 'enable';
+			$note = NEW note();
+			condb('open');
+
+				echo '<div class="desk">';
+				$sql = mysql_query('SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 3 ORDER BY date DESC LIMIT 25;');
+				while($row = mysql_fetch_object($sql)){
+					$nID = $row->noteID;
+
+					$note->getNote($nID, $access);
+					//showNote($typeID, $access);
+				}
+				echo '</div>';
+
+			condb('close');
+			?>
 		</div>
 
 	</div>
