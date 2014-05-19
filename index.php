@@ -25,28 +25,17 @@
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
 	-->
 	<link rel="stylesheet/less" type="text/css" href="core/style/less/setting.less">
+	<link rel="stylesheet" type="text/css" href="core/style/css/lakto.css"/>
+	<link rel="stylesheet" type="text/css" href="core/style/css/fullPage.css"/>
 
 	<script type="text/javascript" src="core/lib/less-1.6.3.min.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="core/style/css/lakto.css"/>
-	<link rel="stylesheet" type="text/css" href="core/style/css/fullPage.css"/>
-<!--
-	<link rel="stylesheet" type="text/css" href="core/style/less/notizblogg.less"/>
--->
-
-<!--
-	<link rel="stylesheet" type="text/css" href="core/style/css/test/jquery.fullPage.css"/>
-	<link rel="stylesheet" type="text/css" href="core/style/css/test/style.css"/>
-	<link rel="stylesheet" type="text/css" href="core/style/css/test/setting.css"/>
--->
 	<!--[if IE]>
 	<script type="text/javascript">
 		var console = { log: function () {
 		} };
 	</script>
 	<![endif]-->
-
-
 
 </head>
 <body>
@@ -118,20 +107,21 @@
 		});
 
 
-		$('.intro').append(
-			$('<button>').html('Inhalt').click(function() {
-
+//		$('.intro').append(
+//			$('<button>').html('Inhalt').click(function() {
+/*
 				var url = "data/example/notes.json";
 //				var url = "core/bin/php/get.note.php";
 
 				$.getJSON(url,
 					function(data){
 						$.each(data.notes, function(i, note){
-							$('.intro').append('<p>' + note.title + '<br>' + note.content + '</p>');
+							$('.intro').append('<div>' + note.title + '<br>' + note.content + '</div><br>')
+								.addClass('note');
 						});
 					});
-			}));
-
+//			}));
+*/
 	});
 
 	/* copyright date */

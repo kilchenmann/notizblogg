@@ -29,7 +29,7 @@ class note {
 		condb('open');
 
 //		$notes = array();
-
+		$note = new stdClass();
 		$noteSql = mysql_query('SELECT * FROM note WHERE noteID=\'' . $id . '\'' . $gpa . ';');
 //		$row = array();
 
@@ -47,10 +47,6 @@ class note {
 
 //			$notes[] = $row;
 
-
-
-
-			$note = new stdClass();
 			$note->id = $row->noteID;
 			$note->title = $row->noteTitle;
 			$note->content = $row->noteContent;
@@ -101,7 +97,12 @@ class note {
 		}
 		condb('close');
 
+
+//		echo '<div class=\'note\'>';
 		echo json_encode($note);
+//		echo '</div>';
+
+//		echo '<div>note.title + '<br>' + note.content + '</div>
 
 
 
@@ -133,8 +134,3 @@ class note {
 
 
 }
-
-/*
-$note->editNote($nID);
-$note->saveNote($nID);
-*/

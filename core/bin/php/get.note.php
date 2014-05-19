@@ -1,6 +1,7 @@
 <?php
 require ('setting.php');
 
+
 $note = NEW note();
 $access = 'enable';
 
@@ -26,3 +27,15 @@ echo '{"notes": [';
 echo ']}';
 
 
+/*
+			$note = NEW note();
+			$access = 'enable';
+//			echo '<div class=\'desk\'>';
+			$sql = mysql_query("SELECT noteID FROM note WHERE notePublic = 1 AND noteID <= 3 ORDER BY noteID ASC");
+			while($row = mysql_fetch_object($sql)){
+				$typeID = $row->noteID;
+				//showNote($typeID, $access);
+				$note->getNote($typeID, $access);
+			}
+//			echo '</div>';
+*/
