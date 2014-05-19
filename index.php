@@ -47,11 +47,12 @@
 	</h1>
 	<div class="left"><span class="project"><a href='http://notizblogg.ch'><h2 class="logo">Notizblogg</h2></a></span></div>
 	<div class="center"><span class="search" id="search"></span></div>
-	<div class="right"><span class="login"><button class="btn grp_none toggle_user"></span></div>
+	<div class="right">
+		<span class="login"><button class="btn grp_none toggle_user"></span>
+		<span class="menu"><button class="btn grp_none toggle_drawer"></span>
+	</div>
 </header>
-<nav id="drawer">
 
-</nav>
 <footer>
 	<p>
 		<a href="http://notizblogg.ch">Notizblogg</a>
@@ -66,41 +67,57 @@
 
 <div id="fullpage">
 	<div class="section " id="section0">
-		<div class="lens"></div>
-		<div class="viewer">
 
-			<?php
-			require 'core/bin/php/setting.php';
-			$access = 'enable';
-			$note = NEW note();
-			condb('open');
 
-				echo '<div class="desk">';
-				$sql = mysql_query('SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 3 ORDER BY date DESC LIMIT 25;');
+	</div>
+	<div class="section " id="section1">
+		<div class="slide" id="slide1">
+
+				<?php
+				require 'core/bin/php/setting.php';
+				$access = 'enable';
+				$note = NEW note();
+				condb('open');
+
+				$sql = mysql_query('SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 3 ORDER BY date DESC LIMIT 1;');
 				while($row = mysql_fetch_object($sql)){
 					$nID = $row->noteID;
 
 					$note->getNote($nID, $access);
 					//showNote($typeID, $access);
 				}
-				echo '</div>';
 
-			condb('close');
-			?>
-		</div>
-
-	</div>
-	<div class="section " id="section1">
-		<div class="slide" id="slide1">
-
+				condb('close');
+				?>
 		</div>
 
 		<div class="slide" id="slide2">
 
+
+				<?php
+
+				$note2 = NEW note();
+
+				$i=1;
+				while($i<4){
+
+					$note2->getNote($i, $access);
+					//showNote($typeID, $access);
+					$i++;
+				}
+
+
+				?>
+
 		</div>
 	</div>
 	<div class="section" id="section2">
-
+		<div class="slide" id="slide1">
+			<div class="note">Notiz N° 1</div>
+		</div>
+		<div class="slide" id="slide2">
+			<div class="note">Notiz N° 2</div>
+		</div>
 	</div>
 	<div class="section" id="section3">
 
@@ -111,7 +128,7 @@
 
 	$(document).ready(function () {
 		$('#fullpage').fullpage({
-			anchors: ['start', 'info', 'projects', 'aboutme' ],
+			anchors: ['search', 'note', 'source', 'about' ],
 			slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
 			css3: true
 		});

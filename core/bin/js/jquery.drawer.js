@@ -76,14 +76,16 @@
 
 				// set the title of the document and the project specific data
 				$this.append(
-					localdata.drawer.menu = $('<span>').addClass('drawer_menu').html('Auswahl hier')
+			//		localdata.drawer.menu = $('<span>').addClass('drawer_menu').html('Auswahl hier')
 				).addClass('open').append(
+					/*
 					localdata.drawer.btn = $('<input>')
 						.attr({
 							'type': 'button',
 							'title': 'toggle drawer'
 						})
 						.addClass('btn grp_right toggle_drawer')
+				*/
 				)
 			});											// end "return this.each"
 		},												// end "init"

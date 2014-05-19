@@ -180,13 +180,13 @@ section, .section {
 	margin-top: -38px;
 }
 .controlArrow.prev {
-	left: 15px;
+	left: 5px;
 	width: 0;
 	border-width: 38.5px 34px 38.5px 0;
 	border-color: transparent #fff transparent transparent;
 }
 .controlArrow.next {
-	right: 15px;
+	right: 5px;
 	border-width: 38.5px 0 38.5px 34px;
 	border-color: transparent transparent transparent #fff;
 }

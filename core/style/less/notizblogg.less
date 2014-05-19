@@ -1,10 +1,8 @@
 #section0 {
 	background-image: url(../img/bg-notizblogg.jpg);
 }
-#section1 {
-	background-image: url(../img/bg-empty.jpg);
-}
-#section2, #section3 {
+
+#section1, #section2, #section3 {
 	background-image: url(../img/bg-empty.jpg);
 }
 
@@ -23,16 +21,49 @@ a:hover {
 }
 
 header, footer {
-  background-color: fade(@bg, 50%);
-  box-shadow: 0 0 4px 0 fade(@ink, 30%);
+  background-color: fade(@bg, 88%);
+  box-shadow: 0 0 2px 0 fade(@ink, 30%);
  // border-bottom: 1px solid fade(@ink, 30%);
   color: @ink;
 }
 
 div.note {
-  width: 320px;
-  margin: 5px;
-  padding: 20px;
-  background-color: fade(@bg, 30%);
+
+}
+
+div.viewer {
+  padding: 66px 44px;
+  clear: both;
+
+}
+
+div.slide {
+  -moz-column-width: 420px;
+  -moz-column-count: 3;
+  -moz-column-gap: 5px;
+  -moz-column-fill: 3;
+  -webkit-column-width: 420px;
+  -webkit-column-count: 3;
+  -webkit-column-gap: 5px;
+  -webkit-column-fill: 3;
+  column-width: 420px;
+  column-count: 3;
+  column-gap: 5px;
+  column-fill: 3;
+}
+
+div.note {
+  width: 40%;
+  height: 50%;
+  margin-left: 44px;
+  padding: 5px;
+  overflow: hidden;
+  background-color: fade(@card, 30%);
+  .border-radius(@rad);
+  .box-shadow();
   float: left;
+  -moz-column-break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  column-break-inside: avoid;
+  display: inline-block;
 }
