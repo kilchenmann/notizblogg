@@ -20,6 +20,7 @@
 	<script type="text/javascript" src="core/bin/js/jquery.slimscroll.min.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.fullPage.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.finder.js"></script>
+	<script type="text/javascript" src="core/bin/js/jquery.login.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.drawer.js"></script>
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
@@ -76,14 +77,8 @@
 		require 'core/bin/php/setting.php';
 		$access = 'enable';
 		$info = NEW note();
-		$i=1;
-		while($i<3){
-			$info->getNote($i, $access);
-			//showNote($typeID, $access);
-			$i++;
-		}
+		$info->getNote(1, $access);
 		?>
-
 	</div>
 	<div class="section " id="section1">
 		<div class="slide" id="slide1">
@@ -115,36 +110,56 @@
 		</div>
 	</div>
 	<div class="section" id="section2">
-		<div class="slide" id="slide1">
-			<div class="note">Notiz N° 1</div>
-		</div>
-		<div class="slide" id="slide2">
-			<div class="note">Notiz N° 2</div>
-		</div>
-	</div>
-	<div class="section" id="section3">
 
 	</div>
+	<div class="section" id="section3">
+		<?php
+		$about = NEW note();
+		$about->getNote(2, $access);
+		?>
+	</div>
+	<div class="section" id="section4">
+		<div class="note">
+			<form class="login">
+				<input type="text" placeholder="name" /><br>
+				<input type="password" placeholder="key" /><br>
+				<input type="button" title="Login" />
+			</form>
+		</div>
+		<?php
+
+		?>
+	</div>
+
 </div>
 
 <script type="text/javascript">
 
 	$(document).ready(function () {
 		$('#fullpage').fullpage({
-			anchors: ['search', 'note', 'source', 'about' ],
+			anchors: ['info', 'demo', 'tools', 'about', 'login' ],
 			slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
 			css3: true
 		});
+		$('.toggle_user').click(function() {
+			$(this).login({
+				user: 'Benutzername',
+				pass: 'Passwort',
+				submit: 'Login'
+			});
+		});
 		/* integrate the search bar in the header panel */
+		/*
 		$('#search').finder({
 			placeholder: 'Suche',
 			filter: 'Erweiterte Suche',
 			database: ''
 		});
+
 		$('#drawer').drawer({
 			menu: 'btn-grp'
 		});
-
+*/
 
 //		$('.intro').append(
 //			$('<button>').html('Inhalt').click(function() {

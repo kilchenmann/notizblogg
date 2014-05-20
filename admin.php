@@ -5,7 +5,7 @@
 /* Website: http://notizblogg.ch  ------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 require_once ("conf/settings.php");
-include (SITE_PATH."/admin/checkuser.php");
+include ("/admin/checkuser.php");
 ?>
 
 <!DOCTYPE html>
