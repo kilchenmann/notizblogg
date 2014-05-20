@@ -48,8 +48,13 @@
 	<div class="left"><span class="project"><a href='http://notizblogg.ch'><h2 class="logo">Notizblogg</h2></a></span></div>
 	<div class="center"><span class="search" id="search"></span></div>
 	<div class="right">
-		<span class="login"><button class="btn grp_none toggle_user"></span>
-		<span class="menu"><button class="btn grp_none toggle_drawer"></span>
+		<span class="user"><button class="btn grp_none toggle_user"></button></span>
+
+		<!--
+		<span class="menu"></span>
+		-->
+
+		<span class="sandwich"><button class="btn grp_none toggle_drawer"></button></span>
 	</div>
 </header>
 
@@ -72,7 +77,7 @@
 		$access = 'enable';
 		$info = NEW note();
 		$i=1;
-		while($i<4){
+		while($i<3){
 			$info->getNote($i, $access);
 			//showNote($typeID, $access);
 			$i++;
