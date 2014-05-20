@@ -67,48 +67,46 @@
 
 <div id="fullpage">
 	<div class="section " id="section0">
-
+		<?php
+		require 'core/bin/php/setting.php';
+		$access = 'enable';
+		$info = NEW note();
+		$i=1;
+		while($i<4){
+			$info->getNote($i, $access);
+			//showNote($typeID, $access);
+			$i++;
+		}
+		?>
 
 	</div>
 	<div class="section " id="section1">
 		<div class="slide" id="slide1">
-
 				<?php
-				require 'core/bin/php/setting.php';
-				$access = 'enable';
 				$note = NEW note();
 				condb('open');
-
-				$sql = mysql_query('SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 3 ORDER BY date DESC LIMIT 1;');
+				$sql = mysql_query('SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 3 AND noteID < 150 ORDER BY date DESC LIMIT 4;');
 				while($row = mysql_fetch_object($sql)){
 					$nID = $row->noteID;
-
 					$note->getNote($nID, $access);
 					//showNote($typeID, $access);
 				}
-
 				condb('close');
 				?>
 		</div>
 
 		<div class="slide" id="slide2">
-
-
-				<?php
-
-				$note2 = NEW note();
-
-				$i=1;
-				while($i<4){
-
-					$note2->getNote($i, $access);
-					//showNote($typeID, $access);
-					$i++;
-				}
-
-
-				?>
-
+			<?php
+			$note2 = NEW note();
+			condb('open');
+			$sql = mysql_query('SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 130 ORDER BY date DESC LIMIT 4;');
+			while($row = mysql_fetch_object($sql)){
+				$nID = $row->noteID;
+				$note2->getNote($nID, $access);
+				//showNote($typeID, $access);
+			}
+			condb('close');
+			?>
 		</div>
 	</div>
 	<div class="section" id="section2">
