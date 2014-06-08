@@ -36,8 +36,6 @@ class note {
 		$noteSql = mysql_query('SELECT * FROM note WHERE noteID=\'' . $id . '\'' . $gpa . ';');
 //		$row = array();
 
-
-
 		while($row = mysql_fetch_object($noteSql)) {
 			// get the category
 			$categoryName = getIndex('category', $row->noteCategory);
@@ -47,8 +45,6 @@ class note {
 
 			// get the tags
 			$tagNames = getIndexMN('note','tag', $id);
-
-//			$notes[] = $row;
 
 			$note->id = $row->noteID;
 			$note->title = $row->noteTitle;
@@ -65,6 +61,8 @@ class note {
 			$note->url = $row->noteSourceExtern;
 			$note->access = $row->notePublic;
 
+			// +_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+
+			/*
 			echo '<div class="note">';
 			if ($note->media !== '') {
 				echo $note->media;
@@ -83,6 +81,9 @@ class note {
 				echo '<p class="linkText"> --&gt; <a href="' . $note->url . '" title="extern">' . $note->url . '</a></p>';
 			}
 			echo '</div>';
+			*/
+			// _+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+
+
 
 
 			/*
@@ -123,6 +124,7 @@ class note {
 			*/
 		}
 		condb('close');
+		return '{"note":'.json_encode($note).'}';
 
 
 //		echo '<div class=\'note\'>';

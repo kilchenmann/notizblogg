@@ -218,4 +218,28 @@ section, .section {
 .float_obj {
 	z-index: 100;
 	display: none;
+	padding: 8px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 240px;
+	height: 160px;
+	clear: both;
+	float: none;
+	background-color: rgba(251, 251, 251, 0.5);
+
 }
+
+.float_obj.small{
+	height: 80px;
+	width: 70px;
+}
+.float_obj.medium{
+	height: 160px;
+	width: 256px;
+}
+.float_obj.large{
+	height: 320px;
+	width: 560px;
+}
+

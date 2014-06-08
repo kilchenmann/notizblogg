@@ -41,47 +41,65 @@
 				$this.data('localdata', localdata);
 
 				// set the title of the document and the project specific data
-				$this
-					.append(localdata.login.frame = $('<div>')
-						.attr({
-							'type': 'button',
-							'title': localdata.settings.filter
-						})
-						.addClass('btn grp_left search_filter')
-				)
-					.append(localdata.search.field = $('<input>')
-						.attr({
-							'type': 'text',
-							'title': localdata.settings.placeholder,
-							'placeholder': localdata.settings.placeholder
-						})
-						.addClass('input grp_middle search_field')
-				)
-					.append(localdata.search.button = $('<button>')
-						.attr({
-							'type': 'button',
-							'title': localdata.settings.placeholder
-						})
-						.addClass('btn grp_right search_btn')
+				$this.append(
+					localdata.login.button = $('<button>')
+						.addClass('btn grp_none toggle_user')
 				);
 
 				$this.append(
-					localdata.search.extended = $('<div>')
-						.addClass('float_obj small search_extended')
+					localdata.login.frame = $('<div>')
+						.addClass('float_obj medium login_frame')
 						.append(
-						localdata.search.extendedform = $('<form>')
-							.append($('<input>')
-								.attr({
-									'type': 'search',
-									'title': localdata.settings.placeholder,
-									'placeholder': localdata.settings.placeholder
-								})
+							localdata.login.loginform = $('<form>')
+								.append($('<p>')
+									.append(localdata.login.name = $('<input>')
+										.attr({
+											'type': 'text',
+											'title': localdata.settings.user,
+											'placeholder': localdata.settings.user,
+										})
+										.addClass('field_obj medium')
+									)
+								)
+								.append($('<p>')
+									.append($('<input>')
+										.attr({
+											'type': 'password',
+											'title': localdata.settings.key,
+											'placeholder': localdata.settings.key
+										})
+										.addClass('field_obj medium')
+									)
+								)
+								.append($('<p>')
+									.append($('<input>')
+										.attr({
+											'type': 'button',
+											'title': localdata.settings.submit,
+											'value': localdata.settings.submit
+										})
+										.addClass('button small submit')
+									)
+								)
+
 						)
-					)
 				);
 
-				localdata.search.filter.on('click', function(event) {
-					localdata.search.extended.toggle();
+				// set position of float_obj
+				localdata.login.button.on('mouseover', function() {
+					var logpos=$this.position();
+					localdata.login.frame.css({
+						top: logpos.top + 24 +'px',
+						left: logpos.left - 192 + 'px'
+					})
+
+				});
+
+				localdata.login.button.on('click', function() {
+					localdata.login.frame.toggle();
+					if(localdata.login.frame.is(':visible')) {
+						localdata.login.name.focus();
+					}
 				});
 
 			});											// end "return this.each"

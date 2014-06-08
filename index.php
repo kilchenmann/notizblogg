@@ -49,7 +49,7 @@
 	<div class="left"><span class="project"><a href='http://notizblogg.ch'><h2 class="logo">Notizblogg</h2></a></span></div>
 	<div class="center"><span class="search" id="search"></span></div>
 	<div class="right">
-		<span class="user"><button class="btn grp_none toggle_user"></button></span>
+		<span class="user"></span>
 
 		<!--
 		<span class="menu"></span>
@@ -78,6 +78,8 @@
 		$access = 'enable';
 		$info = NEW note();
 		$info->getNote(1, $access);
+		$info->getNote(2, $access);
+		echo $info->getNote(3, $access);
 		?>
 	</div>
 	<div class="section " id="section1">
@@ -85,6 +87,7 @@
 				<?php
 				$note = NEW note();
 				condb('open');
+
 				$sql = mysql_query('SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 3 AND noteID < 150 ORDER BY date DESC LIMIT 4;');
 				while($row = mysql_fetch_object($sql)){
 					$nID = $row->noteID;
@@ -141,12 +144,10 @@
 			slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
 			css3: true
 		});
-		$('.toggle_user').click(function() {
-			$(this).login({
+		$('.user').login({
 				user: 'Benutzername',
-				pass: 'Passwort',
-				submit: 'Login'
-			});
+				key: 'Passwort',
+				submit: 'Anmelden'
 		});
 		/* integrate the search bar in the header panel */
 		/*
