@@ -3,10 +3,9 @@
   margin: 0;
   text-decoration: none;
   list-style-type: none;
-  font-size: 1em;
   letter-spacing: 0.2em;
   line-height: 1.2em;
-
+  font-size: 16px;
 }
 
 html, body {
@@ -19,9 +18,30 @@ html, body {
 h1, h2, h3, h4, h5, h6, p, span {
   color: #131224;
 }
-
+h1 {
+  font-size: 28px;
+}
+h2 {
+  font-size: 26px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 22px;
+}
+h5 {
+  font-size: 20px;
+}
+h6 {
+  font-size: 18px;
+}
 p {
-  font-size: 9pt;
+  font-size: 16px;
+}
+
+p.small {
+  font-size: 12px;
 }
 /*-webkit-font-smoothing: antialiased; }*/
 
@@ -118,7 +138,6 @@ footer {
 
 footer p {
   display: block;
-  font-size: x-small;
   padding: 1px;
 }
 
@@ -244,3 +263,21 @@ section, .section {
   width: 512px;
 }
 
+
+.float_obj.warning {
+
+  background-color: firebrick;
+  h3, p {
+	letter-spacing: 1px;
+	color: #FFFFFF;
+  }
+  h3 {
+	font-weight: bold;
+	text-shadow: 0 -1px 0 #050505;
+	text-align: center;
+  }
+  p {
+
+  }
+  cursor: pointer
+}

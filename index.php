@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
+	<meta charset="UTF-8">
+<!--
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+-->
 	<title>Notizblogg</title>
 	<link rel="shortcut icon" href="core/style/img/favicon.ico">
 
@@ -19,9 +22,11 @@
 	-->
 	<script type="text/javascript" src="core/bin/js/jquery.slimscroll.min.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.fullPage.js"></script>
+	<script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.finder.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.login.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.drawer.js"></script>
+	<script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
 	-->
@@ -57,9 +62,9 @@
 
 	</div>
 </header>
-
+<div class="float_obj medium warning"></div>
 <footer>
-	<p>
+	<p class="small">
 		<a href="http://notizblogg.ch">Notizblogg</a>
 		is a <a href="http://milchkannen.ch">milchkannen</a> project created by
 		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">André Kilchenmann</a> (content &amp; design) &copy;
@@ -70,11 +75,12 @@
 	</p>
 </footer>
 
+
 <div id="fullpage">
 	<div class="section " id="section0">
 		<?php
 		require 'core/bin/php/setting.php';
-		$access = 'enable';
+		$access = '';
 		$info = NEW note();
 		$info->getNote(1, $access);
 		$info->getNote(2, $access);
@@ -136,17 +142,37 @@
 </div>
 
 <script type="text/javascript">
+	// Read a page's GET URL variables and return them as an associative array.
+	function getUrlVars()
+	{
+		var vars = [], hash;
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++)
+		{
+			hash = hashes[i].split('=');
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
+		}
+		return vars;
+	}
+
+
 
 	$(document).ready(function () {
+
 		$('#fullpage').fullpage({
-			anchors: ['info', 'demo', 'tools', 'about', 'login' ],
-			slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
+		//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
+			anchors: ['info'],
+		//	slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
+			slidesColor: ['#1A1A1A'],
 			css3: true
 		});
 		$('.user').login({
+			type: 'login',
 			user: 'Benutzername',
 			key: 'Passwort',
-			submit: 'Anmelden'
+			submit: 'Anmelden',
+			action: 'core/bin/php/check.in.php'
 		});
 		/* integrate the search bar in the header panel */
 
@@ -175,6 +201,15 @@
 					});
 //			}));
 */
+
+		if(getUrlVars()["access"] !== undefined) {
+			$('body').warning({
+				type: 'access'
+			});
+			$(this).on('click', function(){
+				window.location.href = window.location.href.split('?')[0];
+			})
+		}
 	});
 
 	/* copyright date */
@@ -184,5 +219,8 @@
 
 
 </script>
+
+
+
 </body>
 </html>
