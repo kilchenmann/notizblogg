@@ -37,11 +37,7 @@ if (!isset ($_SESSION["user_id"]))
 	<script src="lib/jqueryui/1.9.1/jquery-ui.min.js"></script>
 	-->
 	<script type="text/javascript" src="core/bin/js/jquery.slimscroll.min.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.fullPage.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.finder.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.login.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.drawer.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
@@ -98,8 +94,10 @@ if (!isset ($_SESSION["user_id"]))
 
 		$access = '';
 		$info = NEW note();
-		$info->getNote(1, $access);
-		$info->getNote(2, $access);
+		echo $info->getNote(1, $access);
+		echo '<br>';
+		echo $info->getNote(2, $access);
+		echo '<br>';
 		echo $info->getNote(3, $access);
 		?>
 	</div>
@@ -176,30 +174,43 @@ if (!isset ($_SESSION["user_id"]))
 
 	$(document).ready(function () {
 
-		$('#fullpage').fullpage({
-			//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
-			anchors: ['info'],
-			//	slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
-			slidesColor: ['#1A1A1A'],
-			css3: true
+		$.getScript('core/bin/js/jquery.fullpage.min.js', function() {
+			$('#fullpage').fullpage({
+				//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
+				anchors: ['info'],
+				//	slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
+				slidesColor: ['#1A1A1A'],
+				css3: true
+			});
 		});
-		$('.user').login({
-			type: 'logout',
-			user: <?php echo $userid; ?>,
-			submit: 'Abmelden',
-			action: 'core/bin/php/check.out.php'
+		$.getScript('core/bin/js/jquery.login.js', function() {
+			$('.user').login({
+				type: 'logout',
+				user: <?php echo $userid; ?>,
+				submit: 'Abmelden',
+				action: 'core/bin/php/check.out.php'
+			});
 		});
+		$.getScript('core/bin/js/jquery.finder.js', function() {
 		/* integrate the search bar in the header panel */
-
-		$('.search').finder({
-			search: 'Suche',
-			filter: 'Erweiterte Suche',
-			database: ''
+			$('.search').finder({
+				search: 'Suche',
+				filter: 'Erweiterte Suche',
+				database: ''
+			});
+		});
+		$.getScript('core/bin/js/jquery.drawer.js', function() {
+			$('.drawer').append(
+				$('<button>').addClass('btn grp_none toggle_drawer')
+			);
 		});
 
-		$('.drawer').append(
-			$('<button>').addClass('btn grp_none toggle_drawer')
-		);
+		$.getJSON('core/bin/php/get.note.php', function(data) {
+				$.each(data.notes, function(i, note){
+					$('.drawer').append('<div>' + note.title + '<br>' + note.content + '</div><br>')
+						.addClass('note');
+				});
+			});
 
 //		$('.intro').append(
 //			$('<button>').html('Inhalt').click(function() {

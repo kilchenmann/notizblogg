@@ -21,11 +21,7 @@
 	<script src="lib/jqueryui/1.9.1/jquery-ui.min.js"></script>
 	-->
 	<script type="text/javascript" src="core/bin/js/jquery.slimscroll.min.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.fullPage.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.finder.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.login.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.drawer.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
@@ -160,31 +156,31 @@
 
 	$(document).ready(function () {
 
-		$('#fullpage').fullpage({
-		//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
-			anchors: ['info'],
-		//	slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
-			slidesColor: ['#1A1A1A'],
-			css3: true
+		$.getScript('core/bin/js/jquery.fullpage.min.js', function() {
+			$('#fullpage').fullpage({
+				//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
+				anchors: ['info'],
+				//	slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
+				slidesColor: ['#1A1A1A'],
+				css3: true
+			});
 		});
-		$('.user').login({
-			type: 'login',
-			user: 'Benutzername',
-			key: 'Passwort',
-			submit: 'Anmelden',
-			action: 'core/bin/php/check.in.php'
-		});
-		/* integrate the search bar in the header panel */
-
-		$('.search').finder({
-			search: 'Suche',
-			filter: 'Erweiterte Suche',
-			database: ''
+		$.getScript('core/bin/js/jquery.login.js', function() {
+			$('.user').login({
+				type: 'login',
+				user: 'Benutzername',
+				key: 'Passwort',
+				submit: 'Anmelden',
+				action: 'core/bin/php/check.in.php'
+			});
 		});
 
-		$('.drawer').append(
-			$('<button>').addClass('btn grp_none toggle_drawer')
-		);
+
+		$.getScript('core/bin/js/jquery.drawer.js', function() {
+			$('.drawer').append(
+		//		$('<button>').addClass('btn grp_none toggle_drawer')
+			);
+		});
 
 //		$('.intro').append(
 //			$('<button>').html('Inhalt').click(function() {

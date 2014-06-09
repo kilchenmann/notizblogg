@@ -90,7 +90,7 @@
 					);
 				} else if(localdata.settings.type === 'login'){
 					// alert('login');
-					localdata.login.size = 194;
+					localdata.login.size = 228;
 					localdata.login.loginform.append($('<p>')
 							.append(localdata.login.name = $('<input>')
 								.attr({

@@ -66,7 +66,7 @@
 
 				$this.append(
 					localdata.search.frame = $('<div>')
-						.addClass('float_obj medium search_frame')
+						.addClass('float_obj large search_frame')
 						.append(
 						localdata.search.extended = $('<form>')
 							.attr({
