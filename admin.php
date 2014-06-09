@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<head>
+	<meta charset="UTF-8">
 <?php
 $username = "gast";
 session_start ();
@@ -11,14 +13,13 @@ if (!isset ($_SESSION["user_id"]))
 	$sql = mysql_query("SELECT username FROM user WHERE uid = " . $_SESSION["user_id"] . ";");
 	while($row = mysql_fetch_object($sql)){
 		$username = $row->username;
-		$userid = $_SESSION["user_id"];
 	}
 	condb('close');
+	$userid = $_SESSION["user_id"];
 }
 ?>
 
-<head>
-	<meta charset="UTF-8">
+
 	<!--
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	-->
@@ -205,12 +206,19 @@ if (!isset ($_SESSION["user_id"]))
 			);
 		});
 
+
+		/*
 		$.getJSON('core/bin/php/get.note.php', function(data) {
-				$.each(data.notes, function(i, note){
-					$('.drawer').append('<div>' + note.title + '<br>' + note.content + '</div><br>')
-						.addClass('note');
-				});
+			var items = [];
+			$.each( data, function( key, val ) {
+				items.push( "<li id='" + key + "'>" + val + "</li>" );
 			});
+			$( "<ul/>", {
+				"class": "my-new-list",
+				html: items.join( "" )
+			}).appendTo( "body" );
+		});
+		*/
 
 //		$('.intro').append(
 //			$('<button>').html('Inhalt').click(function() {
@@ -247,4 +255,3 @@ if (!isset ($_SESSION["user_id"]))
 
 
 </body>
-</html>
