@@ -28,11 +28,10 @@
 				var $this = $(this),
 					localdata = {};
 
-
 				localdata.search = {};
 
 				localdata.settings = {
-					placeholder: 'search',
+					search: 'search',
 					filter: 'search filter',
 					database: ''
 				};
@@ -51,9 +50,9 @@
 					)
 					.append(localdata.search.field = $('<input>')
 						.attr({
-							'type': 'text',
-							'title': localdata.settings.placeholder,
-							'placeholder': localdata.settings.placeholder
+							'type': 'search',
+							'title': localdata.settings.search,
+							'placeholder': localdata.settings.search
 						})
 						.addClass('input grp_middle search_field')
 					)
@@ -66,23 +65,68 @@
 					);
 
 				$this.append(
-					localdata.search.extended = $('<div>')
-						.addClass('float_obj small search_extended')
+					localdata.search.frame = $('<div>')
+						.addClass('float_obj medium search_frame')
 						.append(
-							localdata.search.extendedform = $('<form>')
+						localdata.search.extended = $('<form>')
+							.attr({
+								'action': 'core/bin/php/search.php',
+								'method': 'post'
+							})
+
+							.append($('<p>')
+								.append($('<label>')
+									.text('Name')
+								)
+								.append(localdata.search.first = $('<input>')
+									.attr({
+										'type': 'text'
+									})
+									.addClass('field_obj medium')
+							)
+						)
+							.append($('<p>')
 								.append($('<input>')
 									.attr({
-										'type': 'search',
-										'title': localdata.settings.placeholder,
-										'placeholder': localdata.settings.placeholder
+										'type': 'text'
 									})
-								)
+									.addClass('field_obj medium')
+							)
 						)
+							.append($('<p>')
+								.append($('<button>')
+									.attr({
+										'type': 'submit',
+										'title': localdata.settings.search,
+										'value': localdata.settings.search
+									}).text(localdata.settings.search)
+									.addClass('button small submit')
+							)
+						)
+					)
 				);
 
-				localdata.search.filter.on('click', function(event) {
-					localdata.search.extended.toggle();
+
+
+
+
+				// set position of float_obj
+				localdata.search.filter.on('mouseover', function() {
+					var filpos = $this.position();
+					localdata.search.frame.css({
+						top: $('header').position().top + 44 +'px',
+						left: $(this).position().left - 256 + 'px'
+					})
+
 				});
+
+				localdata.search.filter.on('click', function() {
+					localdata.search.frame.toggle();
+					if(localdata.search.frame.is(':visible')) {
+						localdata.search.first.focus();
+					}
+				});
+
 
 			});											// end "return this.each"
 		},												// end "init"

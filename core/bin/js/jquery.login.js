@@ -51,12 +51,18 @@
 						.addClass('float_obj medium login_frame')
 						.append(
 							localdata.login.loginform = $('<form>')
+								.attr({
+									'action': 'core/bin/php/checklogin.php',
+									'method': 'post'
+								})
+
 								.append($('<p>')
 									.append(localdata.login.name = $('<input>')
 										.attr({
 											'type': 'text',
+											'name': 'usr',
 											'title': localdata.settings.user,
-											'placeholder': localdata.settings.user,
+											'placeholder': localdata.settings.user
 										})
 										.addClass('field_obj medium')
 									)
@@ -65,6 +71,7 @@
 									.append($('<input>')
 										.attr({
 											'type': 'password',
+											'name': 'key',
 											'title': localdata.settings.key,
 											'placeholder': localdata.settings.key
 										})
@@ -72,25 +79,23 @@
 									)
 								)
 								.append($('<p>')
-									.append($('<input>')
+									.append($('<button>')
 										.attr({
-											'type': 'button',
+											'type': 'submit',
 											'title': localdata.settings.submit,
 											'value': localdata.settings.submit
-										})
+										}).text(localdata.settings.submit)
 										.addClass('button small submit')
 									)
 								)
-
 						)
 				);
 
 				// set position of float_obj
 				localdata.login.button.on('mouseover', function() {
-					var logpos=$this.position();
 					localdata.login.frame.css({
-						top: logpos.top + 24 +'px',
-						left: logpos.left - 192 + 'px'
+						top: $('header').position().top + 44 +'px',
+						left: $(this).position().left - 192 + 'px'
 					})
 
 				});

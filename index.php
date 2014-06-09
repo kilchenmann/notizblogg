@@ -26,8 +26,8 @@
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
 	-->
 	<link rel="stylesheet/less" type="text/css" href="core/style/less/setting.less">
-	<link rel="stylesheet" type="text/css" href="core/style/css/lakto.css"/>
-	<link rel="stylesheet" type="text/css" href="core/style/css/fullPage.css"/>
+
+	<link rel="stylesheet" type="text/css" href="core/style/css/fullPage.css">
 
 	<script type="text/javascript" src="core/lib/less-1.6.3.min.js"></script>
 
@@ -47,15 +47,14 @@
 		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">der digitale Zettelkasten von André Kilchenmann</a>
 	</h1>
 	<div class="left"><span class="project"><a href='http://notizblogg.ch'><h2 class="logo">Notizblogg</h2></a></span></div>
-	<div class="center"><span class="search" id="search"></span></div>
+	<div class="center"><span class="search"></span></div>
 	<div class="right">
 		<span class="user"></span>
-
+		<span class="drawer"></span>
 		<!--
 		<span class="menu"></span>
 		-->
 
-		<span class="sandwich"><button class="btn grp_none toggle_drawer"></button></span>
 	</div>
 </header>
 
@@ -145,22 +144,21 @@
 			css3: true
 		});
 		$('.user').login({
-				user: 'Benutzername',
-				key: 'Passwort',
-				submit: 'Anmelden'
+			user: 'Benutzername',
+			key: 'Passwort',
+			submit: 'Anmelden'
 		});
 		/* integrate the search bar in the header panel */
-		/*
-		$('#search').finder({
-			placeholder: 'Suche',
+
+		$('.search').finder({
+			search: 'Suche',
 			filter: 'Erweiterte Suche',
 			database: ''
 		});
 
-		$('#drawer').drawer({
-			menu: 'btn-grp'
-		});
-*/
+		$('.drawer').append(
+			$('<button>').addClass('btn grp_none toggle_drawer')
+		);
 
 //		$('.intro').append(
 //			$('<button>').html('Inhalt').click(function() {

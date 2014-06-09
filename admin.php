@@ -4,8 +4,9 @@
 /* Author & Copyright notizblogg: André Kilchenmann, 2006 - 2013 ------------ */
 /* Website: http://notizblogg.ch  ------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-require_once ("conf/settings.php");
-include ("/admin/checkuser.php");
+
+//require_once ("conf/settings.php");
+//include ("/admin/checkuser.php");
 ?>
 
 <!DOCTYPE html>
@@ -108,7 +109,10 @@ include ("/admin/checkuser.php");
 	</script>
 </head>
 <body>
-<?php connect(); ?>
+
+<?php
+echo $_SESSION["user_name"];
+connect(); ?>
 	<div class="preload">
 	<!-- evt. Bilder hier vorladen -->
 	</div>
