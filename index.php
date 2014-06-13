@@ -80,7 +80,9 @@
 		$info = NEW note();
 		$info->getNote(1, $access);
 		$info->getNote(2, $access);
+		echo '<div class=\'note\'>';
 		echo $info->getNote(3, $access);
+		echo '</div>';
 		?>
 	</div>
 	<div class="section " id="section1">
@@ -165,6 +167,13 @@
 				css3: true
 			});
 		});
+
+		$.getScript('core/bin/js/jquery.rightClick.js', function() {
+			$('.note').rightClick(
+				//		$('<button>').addClass('btn grp_none toggle_drawer')
+			);
+		});
+
 		$.getScript('core/bin/js/jquery.login.js', function() {
 			$('.user').login({
 				type: 'login',
