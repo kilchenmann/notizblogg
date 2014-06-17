@@ -74,8 +74,11 @@
 
 <div id="fullpage">
 	<div class="section " id="section0">
+		<div class="note"></div>
 		<?php
 		require 'core/bin/php/setting.php';
+		/*
+
 		$access = '';
 		$info = NEW note();
 		$info->getNote(1, $access);
@@ -83,12 +86,15 @@
 		echo '<div class=\'note\'>';
 		echo $info->getNote(3, $access);
 		echo '</div>';
+		*/
+
 		?>
 	</div>
 	<div class="section " id="section1">
 		<div class="slide" id="slide1">
 				<?php
 				$note = NEW note();
+				$access = '';
 				condb('open');
 
 				$sql = mysql_query('SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 3 AND noteID < 150 ORDER BY date DESC LIMIT 4;');
@@ -158,6 +164,7 @@
 
 	$(document).ready(function () {
 
+
 		$.getScript('core/bin/js/jquery.fullpage.min.js', function() {
 			$('#fullpage').fullpage({
 				//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
@@ -168,12 +175,13 @@
 			});
 		});
 
+		/*
 		$.getScript('core/bin/js/jquery.lookFor.js', function() {
 			$('.note').lookFor(
 				//		$('<button>').addClass('btn grp_none toggle_drawer')
 			);
 		});
-
+*/
 		$.getScript('core/bin/js/jquery.login.js', function() {
 			$('.user').login({
 				type: 'login',
@@ -190,6 +198,8 @@
 		//		$('<button>').addClass('btn grp_none toggle_drawer')
 			);
 		});
+
+
 
 //		$('.intro').append(
 //			$('<button>').html('Inhalt').click(function() {
@@ -217,9 +227,26 @@
 		}
 	});
 
+	var url="http://localhost/nb/core/bin/php/get.note.php?id=3";
+	$.getJSON(url,function(json){
+// loop through the members here
+		$.each(json.notes,function(i,note){
+			$(".note")//.html($('<div>').addClass('note')
+				.append($('<h3>').html(note.title))
+				.append($('<p>').html(note.content))
+				.append($('<p>')
+					.append($('<a>').attr({href: '?type=note&part=category&id=' + note.category.id }).html(note.category.name))
+					.append($('<span>').html(' | '))
+					.append($('<a>').attr({href: '?type=note&part=project&id=' + note.project.id }).html(note.project.name))
+				);
+			//);
+		});
+	});
+
+
 	/* copyright date */
 	var curDate = new Date(),
-			curYear = curDate.getFullYear();
+		curYear = curDate.getFullYear();
 	$('span.year').text('2006-' + curYear);
 
 

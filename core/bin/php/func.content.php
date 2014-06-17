@@ -75,7 +75,7 @@ function makeurl($text)
 	$text = preg_replace
 		("!&amp;lt;(wiki:)([^ >\n\t]+)&amp;gt;!i", "<a href=\"http://de.wikipedia.org/wiki/\\2\" target=\"_blank\" title=\"Look for <\\2> in wikipedia\">\\2</a>", $text);
 	$text = preg_replace
-		("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "<a href=\"".MainFile."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
+		("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "<a href=\"".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
 		
 	$text = preg_replace
 		("!&lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&gt;!i", "<a href=\"http://\\2\" target=\"_blank\">\\4</a>", $text);
@@ -85,7 +85,7 @@ function makeurl($text)
 	$text = preg_replace
 		("!&lt;(wiki:)([^ >\n\t]+)&gt;!i", "<a href=\"http://de.wikipedia.org/wiki/\\2\" target=\"_blank\" title=\"Look for <\\2> in wikipedia\">\\2</a>", $text);
 	$text = preg_replace
-		("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "<a href=\"".MainFile."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
+		("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "<a href=\"".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
 		
 	$text = preg_replace
 		("!<(link:)([^ >\n\t]+)(:)([^ >\n\t]+)>!i", "<a href=\"http://\\2\" target=\"_blank\">\\4</a>", $text);
@@ -95,7 +95,7 @@ function makeurl($text)
 	$text = preg_replace
 		("!<(wiki:)([^ >\n\t]+)>!i", "<a href=\"http://de.wikipedia.org/wiki/\\2\" target=\"_blank\" title=\"Look for <\\2> in wikipedia\">\\2</a>", $text);
 	$text = preg_replace
-		("!<(nb:)([^ >\n\t]+)>!i", "<a href=\"".MainFile."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
+		("!<(nb:)([^ >\n\t]+)>!i", "<a href=\"".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
 	return $text;
 }
 
@@ -103,7 +103,7 @@ function linkIndex($type, $part, $id) {
 	$tableName = $part."Name";
 	if ($id == 0) {
 		return '--';
-//		return "<a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=0' title='no ".$part."' >--</a>";
+//		return "<a href='".__MAIN_FILE__."?type=".$type."&amp;part=".$part."&amp;id=0' title='no ".$part."' >--</a>";
 	} else {
 		$sql = mysql_query("SELECT ".$part."Name FROM ".$part." WHERE ".$part."ID=".$id);
 			while($row = mysql_fetch_object($sql)){
@@ -147,9 +147,9 @@ function linkIndexMN($type, $part, $id){
 				}
 				
 				if($relData==""){
-					$relData=" || <a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+					$relData=" || <a href='".__MAIN_FILE__."?type=".$type."&amp;part=".$part."&amp;id=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
 				} else {
-					$relData.= " | <a href='".MainFile."?type=".$type."&amp;part=".$part."&amp;id=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+					$relData.= " | <a href='".__MAIN_FILE__."?type=".$type."&amp;part=".$part."&amp;id=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
 				}
 			}
 	} else {
@@ -198,6 +198,7 @@ function getIndexMN($type, $part, $id){
 
 function show($type, $part, $partID, $access){
 	$count = 200;
+	$sql = '';
 	if(!isset($_GET['page'])){
 		$_GET['page'] = 1;
 	}

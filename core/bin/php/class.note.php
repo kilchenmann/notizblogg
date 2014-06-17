@@ -28,27 +28,27 @@ class note {
 
 		condb('open');
 
-//		$notes = array();
+		//$notes[] = array();
 		$note = new stdClass();
 		$note->category = new stdClass();
 		$note->project = new stdClass();
 		$note->source = new stdClass();
 		$noteSql = mysql_query('SELECT * FROM note WHERE noteID=\'' . $id . '\'' . $gpa . ';');
-//		$row = array();
 
 		while($row = mysql_fetch_object($noteSql)) {
+			//$arr[] = $row;
 			// get the category
 			$categoryName = getIndex('category', $row->noteCategory);
-
 			// get the project
 			$projectName = getIndex('project', $row->noteProject);
-
 			// get the tags
 			$tagNames = getIndexMN('note','tag', $id);
-
+			// set the content correct
+			$noteContent = makeurl($row->noteContent);
+/*
 			$note->id = $row->noteID;
 			$note->title = $row->noteTitle;
-			$note->content = $row->noteContent;
+			$note->content = $noteContent;
 			$note->category->id = $row->noteCategory;
 			$note->category->name = $categoryName;
 			$note->project->id = $row->noteProject;
@@ -60,6 +60,26 @@ class note {
 			$note->source->end = $row->pageEnd;
 			$note->url = $row->noteSourceExtern;
 			$note->access = $row->notePublic;
+			*/
+
+
+			$notes[] = array(
+				'id' => $row->noteID,
+				'title' => $row->noteTitle,
+				'content' => $noteContent,
+				'category' => array(
+					'name' => $categoryName,
+					'id' => $row->noteCategory
+				),
+				'project' => array(
+					'name' => $projectName,
+					'id' => $row->noteProject
+				),
+				'tag' => array(
+					'name' => $tagNames
+				),
+				'media' => $row->noteMedia
+			);
 
 			// +_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+
 			/*
@@ -124,7 +144,8 @@ class note {
 			*/
 		}
 		condb('close');
-		return '{"note":'.json_encode($note).'}';
+		return '{"notes":'.json_encode($notes).'}';	// <-- orig!
+		//return '{"notes":'.json_encode($arr).'}';
 
 
 //		echo '<div class=\'note\'>';
