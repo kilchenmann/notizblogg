@@ -99,7 +99,7 @@
 
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"
 			charset="utf-8"></script>
-	<script src="jquery.lookFor.js" type="text/javascript" charset="utf-8"></script>
+	<script src="jquery.contextMenu.js" type="text/javascript" charset="utf-8"></script>
 
 	<script type="text/javascript" charset="utf-8">
 		$(document).ready(function(){
@@ -108,11 +108,41 @@
 
 		//	$(this).lookFor(window.getSelection);
 
-
 			$(".target").hover(
+
 				// mouseover function
+
 				function() {
-					$(this).lookFor();
+					var txtSel = window.getSelection ? window.getSelection() : document.selection.createRange(); // FF : IE
+					$(this).contextMenu(
+							'lookfor',
+							{
+								hoverword : {
+									klass: 'lf_title'
+								},
+								'notizblogg' : {
+									link: '<a href=' + url + '?type=note&part=search&id=' + txtSel + '">Notizblogg</a>',
+									klass: 'lf_notizblogg'
+								},
+
+								'wikipedia' : {
+									link: '<a href="http://wikipedia.org/wiki/' + txtSel + '">Wikipedia</a>',
+									klass: 'lf_wikipedia'
+								},
+
+								'pinterest' : {
+									link: '<a href="http://www.pinterest.com/search/pins/?q=' + txtSel + '">Pinterest</a>',
+									klass: 'lf_pinterest'
+								},
+
+								'google' : {
+									link: '<a href="http://www.google.com/?q=' + txtSel + '">Google</a>',
+									klass: 'google'
+								}
+							},
+							{
+								disable_native_context_menu: true
+							});
 				},
 
 				// mouseout function

@@ -168,8 +168,8 @@
 			});
 		});
 
-		$.getScript('core/bin/js/jquery.rightClick.js', function() {
-			$('.note').rightClick(
+		$.getScript('core/bin/js/jquery.lookFor.js', function() {
+			$('.note').lookFor(
 				//		$('<button>').addClass('btn grp_none toggle_drawer')
 			);
 		});

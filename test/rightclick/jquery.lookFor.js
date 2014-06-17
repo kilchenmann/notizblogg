@@ -1,6 +1,7 @@
 /* ===========================================================================
  *
- * @frame: jQuery plugin
+ * @frame: jQuery plugin lookFor: mark some text and look for this content on
+ * 			other websites like Wikipedia, Google a.s.o.
  *
  * @author André Kilchenmann code@milchkannen.ch
  *
@@ -16,11 +17,21 @@
 	// -----------------------------------------------------------------------
 	// define some functions
 	// -----------------------------------------------------------------------
-	var function1 = function (value) {
-			if (value === 1) {
-				return value;
+	var hideMenu = function() {
+			$('.context-menu:visible').each(function() {
+				$(this).trigger("closed");
+				$(this).hide();
+				$('body').unbind('click', hideMenu);
+			});
+		},
+
+		showMenu = function(localdata){
+
+
+			if(localdata.settings.content === '') {
+				alert('etwas auswählen');
 			} else {
-				return 0;
+				console.log('content:  \'' + localdata.settings.content + '\'');
 			}
 		},
 
@@ -37,29 +48,67 @@
 			return this.each(function() {
 				var $this = $(this),
 					localdata = {};
-					
+
+
 					localdata.settings = {
-						opt1: 'par1',
-						opt2: 'par2'
+						content: ''
 					};
+
+
 
 					localdata.default = {
 						contextMenu: false, // disables the native contextmenu everywhere you click
 						leftClick: false // show menu on left mouse click instead of right
 					};
-					
+
+				localdata.content = {};
+
 				$.extend(localdata.settings, options);
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
+
 
 				document.oncontextmenu = function() {
 					return localdata.default.contextMenu;
 				};
 
+				$(document).bind('contextmenu', function(e) {
+					if (localdata.default.contextMenu) {
+						e.preventDefault();
+					}
+					hideMenu();
+				});
+
+
+
+
 				$(document).mousedown(function(e){
+
+					localdata.settings.content = window.getSelection ? window.getSelection() : document.selection.createRange(); // FF : IE
+
 					if(e.button == 2) {
-						var sel = window.getSelection ? window.getSelection() : document.selection.createRange(); // FF : IE
-						console.log('Sel: ' + sel);
+						console.log(localdata.settings.content);
+
+						if(localdata.settings.content !== '') {
+							console.log('mark: ' + localdata.settings.content);
+						} else {
+							console.log(localdata.settings.content);
+
+						}
+
+
+
+
+						if (typeof localdata.settings.content === undefined) {
+						//	alert('nothing');
+						} else {
+						//	localdata.settings.content = $this.val();
+						//	alert(localdata.settings.content);
+						}
+
+	//					showMenu(localdata);
+						//console.log('Sel: ' + sel);
+
 /*
 						if(sel.getRangeAt){ // thats for FF
 							var range = sel.getRangeAt(0);
