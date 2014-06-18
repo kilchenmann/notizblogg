@@ -2,7 +2,7 @@
 require ('setting.php');
 if(isset($_GET["id"])){
 	$partID = $_GET["id"];
-}
+} else
 
 $access = '';
 $info = NEW note();
