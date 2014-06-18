@@ -138,3 +138,11 @@
 .fullPage-tooltip.left {
 	left: 20px;
 }
+
+
+div.desk {
+	padding: 22px;
+	background-color: greenyellow;
+
+	overflow: scroll;
+}
