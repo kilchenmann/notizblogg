@@ -20,18 +20,25 @@
 	<!--
 	<script src="lib/jqueryui/1.9.1/jquery-ui.min.js"></script>
 	-->
+	<!--
 	<script type="text/javascript" src="core/bin/js/jquery.slimscroll.min.js"></script>
+	-->
 	<script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
 	-->
-	<link rel="stylesheet/less" type="text/css" href="core/style/less/setting.less">
-
 
 	<link rel="stylesheet" type="text/css" href="core/style/css/fullPage.css">
 
+	<link rel="stylesheet" type="text/css" href="core/style/css/nb.css">
+
+	<link rel="stylesheet" type="text/css" href="core/style/css/responsive.css">
+
+	<!--
+	<link rel="stylesheet/less" type="text/css" href="core/style/less/setting.less">
 	<script type="text/javascript" src="core/lib/less-1.6.3.min.js"></script>
+	-->
 
 	<!--[if IE]>
 	<script type="text/javascript">
@@ -71,9 +78,12 @@
 	</p>
 </footer>
 
-<div id="fullpage" class="fullpage">
-	<div class="section" id="section0">
-		<div class="desk">
+<div id="fullpage">
+	<div id="section0" class="section">
+
+
+		<div class="viewer">
+			<div class="desk">
 
 			<?php
 			require 'core/bin/php/setting.php';
@@ -95,38 +105,31 @@
 					$type = 'search';
 					$query = $_GET['search'];
 				}
-
+				?>
+				<script type="text/javascript">
+					$('#section0').css({'background-image': 'url(core/style/img/bg-empty.jpg)'})
+				</script>
+				<?php
 
 			} else {
 				// Startseite:
-				echo '<div class=\'note\'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div>';
-				echo '<div class=\'note\'>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>';
-				echo '<div class=\'note\'>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer</div>';
-				echo '<div class=\'note\'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer</div>';
-				echo '<div class=\'note\'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer</div>';
-				echo '<div class=\'note\'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer</div>';
-				echo '<div class=\'note\'>Letzte ZEILE!!!</div>';
+				$type = 'source';
+				$query = 'all';
+
 			}
 
-			include (__SITE_PATH__ . '/core/bin/php/get.data.php');
+			$access='restricted';
+			show($type, $query, $access);
+
 			?>
 
 
-		</div>
-	</div>
-	<!--
-	<div class="section" id="section1">
-
-		<div class="desk">
-			Etwas anderes hier
-
-
+			</div>
 		</div>
 
 	</div>
-	-->
-
 </div>
+
 
 <script type="text/javascript">
 	// Read a page's GET URL variables and return them as an associative array.
@@ -155,10 +158,8 @@
 				slidesColor: ['#1A1A1A'],
 				css3: true
 			});
-			var height = $('.fullpage').height() - $('header').height() - $('footer').height();
-			var width = $(window).width();
-			$('div.desk').css({overflow: 'scroll', 'background-color': 'red', height: height, width: '1024px'});
-			$('div.tableCell').addClass('viewer');
+			var height = $(window).height() - $('header').height() - $('footer').height();
+			$('div.viewer').css({'max-height': height, overflow: 'scroll'});
 		});
 
 
@@ -211,6 +212,12 @@
 				window.location.href = window.location.href.split('?')[0];
 			})
 		}
+	});
+
+	$(window).resize(function() {
+		console.log($(window).width());
+		var height = $(window).height() - $('header').height() - $('footer').height();
+		$('div.viewer').css({'max-height': height, overflow: 'scroll'});
 	});
 
 	/*
