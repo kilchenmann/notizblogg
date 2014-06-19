@@ -36,41 +36,46 @@ div.note {
 }
 
 div.viewer {
-  padding: 66px 44px;
+  padding: 22px 33px 66px 33px;
   clear: both;
 
 }
 
 div.desk {
-  -moz-column-width: 320px;
+  -moz-column-width:330px;
   -moz-column-count: 3;
-  -moz-column-gap: 0px;
+  -moz-column-gap: 2px;
   -moz-column-fill: 3;
-  -webkit-column-width: 320px;
+  -webkit-column-width:330px;
   -webkit-column-count: 3;
-  -webkit-column-gap: 0px;
+  -webkit-column-gap: 2px;
   -webkit-column-fill: 3;
-  column-width: 320px;
+  column-width:330px;
   column-count: 3;
-  column-gap: 0px;
+  column-gap: 2px;
   column-fill: 3;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 div.note {
-  width: 480px;
-  margin: 10px;
-  padding: 10px;
-  overflow: hidden;
   background-color: fade(@bg, 100%);
   .border-radius(@rad);
   .box-shadow();
-  float: left;
+  box-shadow:0px 0px 4px 0px rgba(215, 215, 215, 1.5);
+  border-radius:5px;
+  width: 318px;
+  z-index: -20;
+  margin: 6px;
+  padding: 0px;
   -moz-column-break-inside: avoid;
   -webkit-column-break-inside: avoid;
   column-break-inside: avoid;
   display: inline-block;
+  float: left;
 }
 
-div.note p {
-  font-size: 11pt;
+div.note {
+  font-size: 10pt;
 }
