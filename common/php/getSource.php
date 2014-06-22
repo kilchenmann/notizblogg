@@ -257,6 +257,7 @@ function exportSource($source, $handle){
 			fwrite($handle, "year = {" . $sourceYear . "}," . PHP_EOL);
 		}
 //		fwrite($handle, " = {" . $ . "}," . PHP_EOL);
+
 		$selectDetail = mysql_query("SELECT * FROM sourceDetail WHERE sourceID = '".$sourceID."'");
 		while($row = mysql_fetch_object($selectDetail)){
 			$bibFieldID = $row->bibFieldID;

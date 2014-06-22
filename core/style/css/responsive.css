@@ -1,20 +1,26 @@
 /* BIG SCREENS */
 @media screen and (min-width: 1920px)  {
 	.desk {
-		-webkit-column-count: 5;
-		-moz-column-count: 5;
-		column-count: 5;
+		-webkit-column-count: 4;
+		-moz-column-count: 4;
+		column-count: 4;
 		max-width: 1800px;
+	}
+	.note {
+		width: 400px;
 	}
 
 }
 /* LARGE SCREENS */
 @media screen and (min-width: 1280px) and (max-width: 1919px) {
 	.desk {
-		-webkit-column-count: 4;
-		-moz-column-count: 4;
-		column-count: 4;
+		-webkit-column-count: 3;
+		-moz-column-count: 3;
+		column-count: 3;
 		max-width: 1200px;
+	}
+	.note {
+		width: 380px;
 	}
 
 }
@@ -27,6 +33,10 @@
 		max-width: 600px;
 	}
 
+	.note {
+		width: 300px;
+	}
+
 }
 /* SMALL SCREENS */
 @media screen and (max-width: 640px) {
@@ -37,6 +47,6 @@
 		max-width: 300px;
 	}
 	.note {
-
+		width: 280px;
 	}
 }

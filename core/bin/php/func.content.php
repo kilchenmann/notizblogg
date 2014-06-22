@@ -124,7 +124,7 @@ function getIndex($part, $id) {
 	}
 }
 	
-function linkIndexMN($type, $part, $id){
+function linkIndexMN($type, $part, $id, $delimiter){
 	$relTable = "rel_".$type."_".$part;
 	$partID = $part."ID";
 	$mnSql = mysql_query("SELECT ".$part."Name FROM ".$part.", ".$relTable." WHERE ".$part.".".$part."ID = ".$relTable.".".$part."ID AND ".$relTable.".".$type."ID = '".$id."' ORDER BY ".$part."Name");
@@ -145,9 +145,9 @@ function linkIndexMN($type, $part, $id){
 				}
 				
 				if($relData==""){
-					$relData=" <a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+					$relData="<a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
 				} else {
-					$relData.= ", <a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+					$relData.= $delimiter . " <a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
 				}
 			}
 	} else {
@@ -270,4 +270,23 @@ function showMedia($id, $media, $title) {
 		}
 
 	}
+}
+
+function showError($lineNumber, $fileNumber) {
+	echo '<div class=\'note warning\'>';
+	echo '<h3>';
+	echo 'FATAL ERROR';
+	echo '</h3>';
+	echo '<p>Error N° ' . $lineNumber . '</p>';
+	echo '<p>' . $fileNumber . '</p>';
+	echo '</div>';
+}
+
+function showZeroResults() {
+	echo '<div class=\'note warning\'>';
+	echo '<h3>';
+	echo '#Results: 0';
+	echo '</h3>';
+	echo '<p>Either you are not allowed to see the note or there are no notes with this item!</p>';
+	echo '</div>';
 }

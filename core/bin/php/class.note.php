@@ -19,11 +19,14 @@ class note {
 
 	function getNote($id, $access) {
 
-		if($access === 'public') {
-			$gpa = ' AND notePublic = 1';
-			$editNote = '';
-		} else {
-			$gpa = '';
+		if($access === 'public' && $id === 'all') {
+			$query = 'WHERE notePublic = 1';
+		} else if($access === 'public' && $id !== 'all') {
+			$query = 'WHERE noteID=\'' . $id . '\' AND notePublic = 1';
+		} else if($access !== 'public' && $id !== 'all') {
+			$query = 'WHERE noteID=\'' . $id . '\'';
+		} else { // ($access !== 'public' && $id === 'all')
+			$query = '';
 		}
 
 		condb('open');
@@ -33,34 +36,41 @@ class note {
 		$note->category = new stdClass();
 		$note->project = new stdClass();
 		$note->source = new stdClass();
-		$noteSql = mysql_query('SELECT * FROM note WHERE noteID=\'' . $id . '\'' . $gpa . ';');
+		$noteSql = mysql_query('SELECT * FROM note ' . $query . ';');
 
-		while($row = mysql_fetch_object($noteSql)) {
-			// get the category
-			$categoryName = getIndex('category', $row->noteCategory);
-			// get the project
-			$projectName = getIndex('project', $row->noteProject);
-			// get the tags
-			$tagNames = getIndexMN('note','tag', $id);
-			// set the content correct
-			$noteContent = ($row->noteContent);
+		$num_results = mysql_num_rows($noteSql);
+		if($num_results > 0) {
+			while ($row = mysql_fetch_object($noteSql)) {
+				// get the category
+				$categoryName = getIndex('category', $row->noteCategory);
+				// get the project
+				$projectName = getIndex('project', $row->noteProject);
+				// get the tags
+				$tagNames = linkIndexMN('note', 'tag', $id, ' |');
+				// get the labels
+//				$labelNames = linkIndexMN('source', 'label', $id, '|');
 
+				$notes = array(
+					'id' => $row->noteID,
+					'title' => $row->noteTitle,
+					'content' => $row->noteContent,
+					'category' => array(
+						'name' => $categoryName,
+						'id' => $row->noteCategory
+					),
+					'project' => array(
+						'name' => $projectName,
+						'id' => $row->noteProject
+					),
+					'tag' => array(
+						'name' => $tagNames
+					),
+					'media' => $row->noteMedia
+				);
+			}
+		} else {
 			$notes = array(
-				'id' => $row->noteID,
-				'title' => $row->noteTitle,
-				'content' => $noteContent,
-				'category' => array(
-					'name' => $categoryName,
-					'id' => $row->noteCategory
-				),
-				'project' => array(
-					'name' => $projectName,
-					'id' => $row->noteProject
-				),
-				'tag' => array(
-					'name' => $tagNames
-				),
-				'media' => $row->noteMedia
+				'id' => 0
 			);
 		}
 		condb('close');
@@ -75,21 +85,25 @@ class note {
 		$note = NEW note();
 		$data = json_decode($note->getNote($id, $access), true);
 
-		if($data['media'] !== ''){
-			echo '<div class=\'media\'>';
-				showMedia($id, $data['media'], $data['title']);
-			echo '</div>';
-		}
+		if($data['id'] !== 0) {
 
-		echo '<div class=\'text\'>';
+			if ($data['media'] !== '') {
+				echo '<div class=\'media\'>';
+				showMedia($id, $data['media'], $data['title']);
+				echo '</div>';
+			}
+
+			echo '<div class=\'text\'>';
 			echo '<h3>' . $data['title'] . '</h3>';
 			echo '<p>' . makeurl($data['content']) . '</p>';
-		echo '</div>';
+			echo '</div>';
 
-		echo '<div class=\'tools\'>';
-		echo '<p><a href=\'?label=' . $data['category']['id'] . '\'>' . $data['category']['name'] . '</a></p>';
+			echo '<div class=\'tools\'>';
+			echo '<p><a href=\'?label=' . $data['category']['id'] . '\'>' . $data['category']['name'] . '</a></p>';
+			echo '<p>' . $data['tag']['name'] . '</p>';
 
-		echo '</div>';
+			echo '</div>';
+		}
 
 	}
 

@@ -7,6 +7,8 @@
  */
 
 //$indexTitle = "note";
+
+
 if($access == 'public'){
 	$gpa = "AND notePublic = 1";
 } else {
@@ -18,35 +20,39 @@ function show($type, $query, $access)
 {
 	switch ($type) {
 		case 'source';
-			echo $type . ": " . $query . PHP_EOL;
 			$source = NEW source();
-			echo '<div class=\'note\'>';
 				$source->showSource($query, $access);
-			echo '</div>';
 			break;
 
 		case 'note';
 			$note = NEW note();
-			echo '<div class=\'note\'>';
-				$note->showNote($query, $access);
-			echo '</div>';
+			$note->showNote($query, $access);
 			break;
 
 		case 'label';
-			$note = NEW note();
+			$source = NEW source();
 			condb('open');
-			$sql = mysql_query("SELECT noteID FROM note WHERE noteCategory=" . $query);
+			$sql = mysql_query("SELECT sourceID FROM source WHERE sourceCategory=" . $query);
 			condb('close');
-			while($row = mysql_fetch_object($sql)){
-				echo '<div class=\'note\'>';
-					$note->showNote($row->noteID, $access);
-				echo '</div>';
+			$num_results = mysql_num_rows($sql);
+			if($num_results > 0) {
+				while ($row = mysql_fetch_object($sql)) {
+					$source->showSource($row->noteID, $access);
+				}
 			}
-
 			break;
 
 		case 'author';
-
+			condb('open');
+			$sql = mysql_query("SELECT sourceID FROM rel_source_author WHERE authorID=".$query.";");
+			condb('close');
+			$num_results = mysql_num_rows($sql);
+			if($num_results > 0) {
+				while ($row = mysql_fetch_object($sql)) {
+					$source = NEW source();
+					$source->showSource($row->sourceID, $access);
+				}
+			}
 			break;
 
 		case 'collection';
@@ -58,14 +64,21 @@ function show($type, $query, $access)
 			break;
 
 		default:
-			echo 'source: ALL';
-			echo '<div class=\'note\'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div>';
-			echo '<div class=\'note\'>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>';
-			echo '<div class=\'note\'>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer</div>';
-			echo '<div class=\'note\'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div>';
-			echo '<div class=\'note\'>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</div>';
-			echo '<div class=\'note\'>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer</div>';
-			echo '<div class=\'note\'>Letzte ZEILE!!!</div>';
+			if($access === 'public') {
+				$query = 'WHERE sourcePublic = 1';
+			} else { // ($access !== 'public' && $id === 'all')
+				$query = '';
+			}
+			condb('open');
+			$sql = mysql_query("SELECT sourceID FROM source " . $query . ";");
+			condb('close');
+			$num_results = mysql_num_rows($sql);
+			if($num_results > 0) {
+				while ($row = mysql_fetch_object($sql)) {
+					$source = NEW source();
+					$source->showSource($row->sourceID, $access);
+				}
+			}
 	}
 }
 

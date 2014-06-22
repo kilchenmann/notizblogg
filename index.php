@@ -1,3 +1,35 @@
+<?php
+session_start ();
+$access = 'public';
+$user = '--';
+$uid = '';
+
+require 'core/bin/php/setting.php';
+
+if (!isset ($_SESSION["token"])) {
+	$access = 'public';
+	$user = '--';
+	$uid = '';
+} else {
+	condb('open');
+	$token = (explode("-",$_SESSION["token"]));
+	$sql = mysql_query("SELECT username FROM user WHERE uid = " . $token[1] . " AND token = '" . $token[0] . "';");
+
+	while($row = mysql_fetch_object($sql)){
+		$user = $row->username;
+	}
+	condb('close');
+
+	if($user != '') {
+		$access = 'private';
+		$uid = $token[1];
+	} else {
+		$user = '--';
+	}
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -80,15 +112,14 @@
 
 <div id="fullpage">
 	<div id="section0" class="section">
-
-
 		<div class="viewer">
 			<div class="desk">
 
 			<?php
-			require 'core/bin/php/setting.php';
-
 			if($_SERVER['QUERY_STRING']){
+				// default values; in case of wrong queries; these variables would be overwritten in the right case
+				$type = '';
+				$query = 'all';
 				if(isset($_GET['source'])){
 					$type = 'source';
 					$query = $_GET['source'];
@@ -101,6 +132,10 @@
 					$type = 'label';
 					$query = $_GET['label'];
 				}
+				if(isset($_GET['author'])){
+					$type = 'author';
+					$query = $_GET['author'];
+				}
 				if(isset($_GET['search'])){
 					$type = 'search';
 					$query = $_GET['search'];
@@ -110,15 +145,12 @@
 					$('#section0').css({'background-image': 'url(core/style/img/bg-empty.jpg)'})
 				</script>
 				<?php
-
 			} else {
 				// Startseite:
-				$type = 'source';
+				$type = '';
 				$query = 'all';
-
 			}
 
-			$access='restricted';
 			show($type, $query, $access);
 
 			?>
@@ -170,14 +202,39 @@
 			);
 		});
 */
+
+		var user = '<?php echo $user; ?>',
+			access = '<?php echo $access; ?>',
+			uid = '<?php echo $uid; ?>';
+
+
+
 		$.getScript('core/bin/js/jquery.login.js', function() {
-			$('.user').login({
-				type: 'login',
-				user: 'Benutzername',
-				key: 'Passwort',
-				submit: 'Anmelden',
-				action: 'core/bin/php/check.in.php'
-			});
+			if(user !== '--' && access !== 'public' && uid !== '') {
+				$('.user').login({
+					type: 'logout',
+					user: uid,
+					submit: 'Abmelden',
+					action: 'core/bin/php/check.out.php'
+				});
+				$.getScript('core/bin/js/jquery.finder.js', function() {
+					/* integrate the search bar in the header panel */
+					$('.search').finder({
+						search: 'Suche',
+						filter: 'Erweiterte Suche',
+						database: ''
+					});
+				});
+
+			} else {
+				$('.user').login({
+					type: 'login',
+					user: 'Benutzername',
+					key: 'Passwort',
+					submit: 'Anmelden',
+					action: 'core/bin/php/check.in.php'
+				});
+			}
 		});
 
 
@@ -212,10 +269,19 @@
 				window.location.href = window.location.href.split('?')[0];
 			})
 		}
+		if ($('.note').length === 0) {
+			$('body').warning({
+				type: 'noresults',
+				lang: 'de'
+			});
+			$(this).on('click', function(){
+				window.location.href = window.location.href.split('?')[0];
+			})
+		}
+
 	});
 
 	$(window).resize(function() {
-		console.log($(window).width());
 		var height = $(window).height() - $('header').height() - $('footer').height();
 		$('div.viewer').css({'max-height': height, overflow: 'scroll'});
 	});

@@ -45,24 +45,40 @@
 				if(localdata.settings.lang === 'de') {
 					localdata.warning.object
 						.append($('<h3>').html('Hoppela'))
-						.append(localdata.warning.line1 = $('<p>').html('Da ging etwas schief!'))
+						.append(localdata.warning.line_de = $('<p>').html('Da ging etwas schief!'))
 				} else {
 					localdata.warning.object
 						.append($('<h3>').html('Warning'))
-						.append(localdata.warning.line1 = $('<p>').html('Something went wrong!'))
+						.append(localdata.warning.line_en = $('<p>').html('Something went wrong!'))
 				}
 
 				switch (localdata.settings.type) {
 					case 'access':
-						localdata.warning.line1.append($('<p>').html('Do you have a Loginname and a Password?'));
+						if(!localdata.warning.line_de) {
+							localdata.warning.line_en.append($('<p>').html('Do you have a Loginname and a Password?'));
+						} else {
+							localdata.warning.line_de.append($('<p>').html('Hast du einen Loginname und ein Passwort?'));
+						}
 						break;
 
 					case 'permission':
-						localdata.warning.line1.append($('<p>').html('You don\'t have the permission to do that!'));
+						if(!localdata.warning.line_de) {
+							localdata.warning.line_en.append($('<p>').html('You don\'t have the permission to do that!'));
+						} else {
+							localdata.warning.line_de.append($('<p>').html('Du hast keine Berechtigung für diesen Vorgang!'));
+						}
+						break;
+
+					case 'noresults':
+						if(!localdata.warning.line_de) {
+							localdata.warning.line_en.append($('<p>').html('Either you are not allowed to see the note or there are no notes with this item.'));
+						} else {
+							localdata.warning.line_de.append($('<p>').html('Entweder hast du keine Berechtigung für diese Anfrage oder die Notiz existiert nicht.'));
+						}
 						break;
 
 					default:
-						localdata.warning.line1.append($('<p>').html('not allowed'));
+						localdata.warning.line_en.append($('<p>').html('not allowed'));
 				}
 
 
