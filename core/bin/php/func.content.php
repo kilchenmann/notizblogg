@@ -145,9 +145,9 @@ function linkIndexMN($type, $part, $id){
 				}
 				
 				if($relData==""){
-					$relData=" <a href='".__MAIN_FILE__."?type=".$type."&amp;part=".$part."&amp;id=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+					$relData=" <a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
 				} else {
-					$relData.= ", <a href='".__MAIN_FILE__."?type=".$type."&amp;part=".$part."&amp;id=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+					$relData.= ", <a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
 				}
 			}
 	} else {
