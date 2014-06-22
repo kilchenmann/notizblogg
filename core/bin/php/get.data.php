@@ -28,7 +28,7 @@ function show($type, $query, $access)
 		case 'note';
 			$note = NEW note();
 			echo '<div class=\'note\'>';
-			$note->showNote($query, $access);
+				$note->showNote($query, $access);
 			echo '</div>';
 			break;
 
@@ -46,7 +46,7 @@ function show($type, $query, $access)
 			break;
 
 		case 'author';
-			echo $type . ": " . $query . PHP_EOL;
+
 			break;
 
 		case 'collection';

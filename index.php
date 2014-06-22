@@ -159,7 +159,7 @@
 				css3: true
 			});
 			var height = $(window).height() - $('header').height() - $('footer').height();
-			$('div.viewer').css({'max-height': height, overflow: 'scroll'});
+			$('div.viewer').css({'max-height': height});
 		});
 
 
