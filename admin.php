@@ -2,7 +2,8 @@
 <head>
 	<meta charset="UTF-8">
 <?php
-$username = "gast";
+$username = 'gast';
+$userid = '';
 session_start ();
 if (!isset ($_SESSION["user_id"]))
 {
@@ -89,10 +90,11 @@ if (!isset ($_SESSION["user_id"]))
 </footer>
 
 
-<div id="fullpage">
-	<div class="section " id="section0">
+<div id="main">
+	<div class="section0">
+		<div class="note"></div>
 		<?php
-
+/*
 		$access = '';
 		$info = NEW note();
 		echo $info->getNote(1, $access);
@@ -100,11 +102,12 @@ if (!isset ($_SESSION["user_id"]))
 		echo $info->getNote(2, $access);
 		echo '<br>';
 		echo $info->getNote(3, $access);
+*/
 		?>
 	</div>
-	<div class="section " id="section1">
-		<div class="slide" id="slide1">
+
 			<?php
+			/*
 			$note = NEW note();
 			condb('open');
 
@@ -115,11 +118,11 @@ if (!isset ($_SESSION["user_id"]))
 				//showNote($typeID, $access);
 			}
 			condb('close');
+			*/
 			?>
-		</div>
 
-		<div class="slide" id="slide2">
 			<?php
+			/*
 			$note2 = NEW note();
 			condb('open');
 			$sql = mysql_query('SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 130 ORDER BY date DESC LIMIT 4;');
@@ -129,32 +132,10 @@ if (!isset ($_SESSION["user_id"]))
 				//showNote($typeID, $access);
 			}
 			condb('close');
+			*/
 			?>
 		</div>
-	</div>
-	<div class="section" id="section2">
 
-	</div>
-	<div class="section" id="section3">
-		<?php
-		$about = NEW note();
-		$about->getNote(2, $access);
-		?>
-	</div>
-	<div class="section" id="section4">
-		<div class="note">
-			<form class="login">
-				<input type="text" placeholder="name" /><br>
-				<input type="password" placeholder="key" /><br>
-				<input type="button" title="Login" />
-			</form>
-		</div>
-		<?php
-
-		?>
-	</div>
-
-</div>
 
 <script type="text/javascript">
 	// Read a page's GET URL variables and return them as an associative array.
@@ -174,7 +155,14 @@ if (!isset ($_SESSION["user_id"]))
 
 
 	$(document).ready(function () {
-
+/*
+		$.getScript('core/bin/js/jquery.loader.js', function(){
+			$('body').loader({
+				plugins: ['login', 'finder', 'drawer']
+			})
+		});
+*/
+/*
 		$.getScript('core/bin/js/jquery.fullpage.min.js', function() {
 			$('#fullpage').fullpage({
 				//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
@@ -184,6 +172,7 @@ if (!isset ($_SESSION["user_id"]))
 				css3: true
 			});
 		});
+		*/
 		$.getScript('core/bin/js/jquery.login.js', function() {
 			$('.user').login({
 				type: 'logout',
@@ -246,6 +235,38 @@ if (!isset ($_SESSION["user_id"]))
 		}
 	});
 
+	var request = getUrlVars(),
+		type = 'note',
+		part = '',
+		qid = '';
+	if(request.type !== undefined){
+		type = request.type;
+		if(request.part !== undefined){
+			part = '?part='+request.part;
+			if(request.id !== undefined){
+				qid = '&id='+request.id;
+			}
+		}
+	}
+
+//	for( var i = 1; i < 4; i++ ){
+		var url='http://localhost/nb/core/bin/php/get.' + type + '.php' + part + qid; // + type + part + qid;
+		$.getJSON(url,function(json){
+// loop through the members here
+			var note = {};
+			$.each(json.notes,function(i,note){
+				$(".section0").append($('<div>').addClass('note')
+					.append($('<h3>').html(note.title))
+					.append($('<p>').html(note.content))
+					.append($('<p>')
+						.append($('<a>').attr({href: '?type=note&part=category&id=' + note.category.id }).html(note.category.name))
+						.append($('<span>').html(' | '))
+						.append($('<a>').attr({href: '?type=note&part=project&id=' + note.project.id }).html(note.project.name))
+					)
+				);
+			});
+		});
+//	}
 	/* copyright date */
 	var curDate = new Date(),
 		curYear = curDate.getFullYear();

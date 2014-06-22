@@ -20,17 +20,25 @@
 	<!--
 	<script src="lib/jqueryui/1.9.1/jquery-ui.min.js"></script>
 	-->
+	<!--
 	<script type="text/javascript" src="core/bin/js/jquery.slimscroll.min.js"></script>
+	-->
 	<script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
 	-->
-	<link rel="stylesheet/less" type="text/css" href="core/style/less/setting.less">
 
 	<link rel="stylesheet" type="text/css" href="core/style/css/fullPage.css">
 
+	<link rel="stylesheet" type="text/css" href="core/style/css/nb.css">
+
+	<link rel="stylesheet" type="text/css" href="core/style/css/responsive.css">
+
+	<!--
+	<link rel="stylesheet/less" type="text/css" href="core/style/less/setting.less">
 	<script type="text/javascript" src="core/lib/less-1.6.3.min.js"></script>
+	-->
 
 	<!--[if IE]>
 	<script type="text/javascript">
@@ -55,7 +63,6 @@
 		<!--
 		<span class="menu"></span>
 		-->
-
 	</div>
 </header>
 <div class="float_obj medium warning"></div>
@@ -71,71 +78,58 @@
 	</p>
 </footer>
 
-
 <div id="fullpage">
-	<div class="section " id="section0">
-		<?php
-		require 'core/bin/php/setting.php';
-		$access = '';
-		$info = NEW note();
-		$info->getNote(1, $access);
-		$info->getNote(2, $access);
-		echo $info->getNote(3, $access);
-		?>
-	</div>
-	<div class="section " id="section1">
-		<div class="slide" id="slide1">
-				<?php
-				$note = NEW note();
-				condb('open');
+	<div id="section0" class="section">
 
-				$sql = mysql_query('SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 3 AND noteID < 150 ORDER BY date DESC LIMIT 4;');
-				while($row = mysql_fetch_object($sql)){
-					$nID = $row->noteID;
-					$note->getNote($nID, $access);
-					//showNote($typeID, $access);
-				}
-				condb('close');
-				?>
-		</div>
 
-		<div class="slide" id="slide2">
+		<div class="viewer">
+			<div class="desk">
+
 			<?php
-			$note2 = NEW note();
-			condb('open');
-			$sql = mysql_query('SELECT noteID FROM note WHERE notePublic = 1 AND noteID > 130 ORDER BY date DESC LIMIT 4;');
-			while($row = mysql_fetch_object($sql)){
-				$nID = $row->noteID;
-				$note2->getNote($nID, $access);
-				//showNote($typeID, $access);
+			require 'core/bin/php/setting.php';
+
+			if($_SERVER['QUERY_STRING']){
+				if(isset($_GET['source'])){
+					$type = 'source';
+					$query = $_GET['source'];
+				}
+				if(isset($_GET['note'])){
+					$type = 'note';
+					$query = $_GET['note'];
+				}
+				if(isset($_GET['label'])){
+					$type = 'label';
+					$query = $_GET['label'];
+				}
+				if(isset($_GET['search'])){
+					$type = 'search';
+					$query = $_GET['search'];
+				}
+				?>
+				<script type="text/javascript">
+					$('#section0').css({'background-image': 'url(core/style/img/bg-empty.jpg)'})
+				</script>
+				<?php
+
+			} else {
+				// Startseite:
+				$type = 'source';
+				$query = 'all';
+
 			}
-			condb('close');
+
+			$access='restricted';
+			show($type, $query, $access);
+
 			?>
+
+
+			</div>
 		</div>
-	</div>
-	<div class="section" id="section2">
 
 	</div>
-	<div class="section" id="section3">
-		<?php
-		$about = NEW note();
-		$about->getNote(2, $access);
-		?>
-	</div>
-	<div class="section" id="section4">
-		<div class="note">
-			<form class="login">
-				<input type="text" placeholder="name" /><br>
-				<input type="password" placeholder="key" /><br>
-				<input type="button" title="Login" />
-			</form>
-		</div>
-		<?php
-
-		?>
-	</div>
-
 </div>
+
 
 <script type="text/javascript">
 	// Read a page's GET URL variables and return them as an associative array.
@@ -159,12 +153,23 @@
 		$.getScript('core/bin/js/jquery.fullpage.min.js', function() {
 			$('#fullpage').fullpage({
 				//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
-				anchors: ['info'],
+				anchors: ['start'],
 				//	slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
 				slidesColor: ['#1A1A1A'],
 				css3: true
 			});
+			var height = $(window).height() - $('header').height() - $('footer').height();
+			$('div.viewer').css({'max-height': height, overflow: 'scroll'});
 		});
+
+
+		/*
+		$.getScript('core/bin/js/jquery.lookFor.js', function() {
+			$('.note').lookFor(
+				//		$('<button>').addClass('btn grp_none toggle_drawer')
+			);
+		});
+*/
 		$.getScript('core/bin/js/jquery.login.js', function() {
 			$('.user').login({
 				type: 'login',
@@ -181,6 +186,7 @@
 		//		$('<button>').addClass('btn grp_none toggle_drawer')
 			);
 		});
+
 
 //		$('.intro').append(
 //			$('<button>').html('Inhalt').click(function() {
@@ -208,9 +214,33 @@
 		}
 	});
 
+	$(window).resize(function() {
+		console.log($(window).width());
+		var height = $(window).height() - $('header').height() - $('footer').height();
+		$('div.viewer').css({'max-height': height, overflow: 'scroll'});
+	});
+
+	/*
+	var url="http://localhost/nb/core/bin/php/get.note.php?id=3";
+	$.getJSON(url,function(json){
+// loop through the members here
+		$.each(json.notes,function(i,note){
+			$(".note")//.html($('<div>').addClass('note')
+				.append($('<h3>').html(note.title))
+				.append($('<p>').html(note.content))
+				.append($('<p>')
+					.append($('<a>').attr({href: '?type=note&part=category&id=' + note.category.id }).html(note.category.name))
+					.append($('<span>').html(' | '))
+					.append($('<a>').attr({href: '?type=note&part=project&id=' + note.project.id }).html(note.project.name))
+				);
+			//);
+		});
+	});
+	*/
+
 	/* copyright date */
 	var curDate = new Date(),
-			curYear = curDate.getFullYear();
+		curYear = curDate.getFullYear();
 	$('span.year').text('2006-' + curYear);
 
 

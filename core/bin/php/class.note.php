@@ -28,132 +28,69 @@ class note {
 
 		condb('open');
 
-//		$notes = array();
+		//$notes[] = array();
 		$note = new stdClass();
 		$note->category = new stdClass();
 		$note->project = new stdClass();
 		$note->source = new stdClass();
 		$noteSql = mysql_query('SELECT * FROM note WHERE noteID=\'' . $id . '\'' . $gpa . ';');
-//		$row = array();
 
 		while($row = mysql_fetch_object($noteSql)) {
 			// get the category
 			$categoryName = getIndex('category', $row->noteCategory);
-
 			// get the project
 			$projectName = getIndex('project', $row->noteProject);
-
 			// get the tags
 			$tagNames = getIndexMN('note','tag', $id);
+			// set the content correct
+			$noteContent = ($row->noteContent);
 
-			$note->id = $row->noteID;
-			$note->title = $row->noteTitle;
-			$note->content = $row->noteContent;
-			$note->category->id = $row->noteCategory;
-			$note->category->name = $categoryName;
-			$note->project->id = $row->noteProject;
-			$note->project->name = $projectName;
-			$note->tags = $tagNames;
-			$note->media = $row->noteMedia;
-			$note->source->id = $row->noteSource;
-			$note->source->start = $row->pageStart;
-			$note->source->end = $row->pageEnd;
-			$note->url = $row->noteSourceExtern;
-			$note->access = $row->notePublic;
-
-			// +_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+
-			/*
-			echo '<div class="note">';
-			if ($note->media !== '') {
-				echo $note->media;
-				//showMedia($noteID, $noteMedia, $noteTitle);
-			}
-			echo '<h3>' . $note->title . '</h3>';
-			echo '<p class="content">';
-			if ($note->source->id != 0) {
-				echo "``".makeurl(nl2br($note->content))."''";
-			} else {
-				echo makeurl(nl2br($note->content));
-			}
-//			showSourceCite($note->source->name,$note->source->start,$note->source->end);
-			echo '</p>';
-			if ($note->url !== '') {
-				echo '<p class="linkText"> --&gt; <a href="' . $note->url . '" title="extern">' . $note->url . '</a></p>';
-			}
-			echo '</div>';
-			*/
-			// _+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+
-
-
-
-			/*
-			echo '
-				{
-				"id":"'.$row->noteID.'",
-				"title":"'.$row->noteTitle.'",
-				"content":"'.$row->noteContent.'"
-				},';
-			*/
-			/*
-			$id = array([
+			$notes = array(
 				'id' => $row->noteID,
 				'title' => $row->noteTitle,
-				'content' => $row->noteContent,
-				'category' => $categoryName,
-				'categoryID' => $row->noteCategory,
-				'project' => $projectName,
-				'projectID' => $row->noteProject,
-/*
+				'content' => $noteContent,
+				'category' => array(
+					'name' => $categoryName,
+					'id' => $row->noteCategory
+				),
 				'project' => array(
-					array('proID' => $row->noteProject, 'proName' => $projectName)
+					'name' => $projectName,
+					'id' => $row->noteProject
 				),
-*/
-			/*
-				'source' => array(
-					array(
-						'extern' => $row->noteSourceExtern,
-						'id' => $row->noteSource,
-						'pageStart' => $row->pageStart,
-						'pageEnd' => $row->pageEnd
-					)
+				'tag' => array(
+					'name' => $tagNames
 				),
-				'tag' => $tagNames,
-				'media' => $row->noteMedia,
-				'access' => $row->notePublic
-			]);
-			*/
+				'media' => $row->noteMedia
+			);
 		}
 		condb('close');
-		return '{"note":'.json_encode($note).'}';
 
+		return json_encode($notes);
 
-//		echo '<div class=\'note\'>';
-//		echo json_encode($note);
-//		echo '</div>';
-
-//		echo '<div>note.title + '<br>' + note.content + '</div>
-
-
-
-//		echo '{"notes":' . json_encode($var) . '}';
-//		echo '{"notes":' . json_encode($id) . '}';
-//		$notes = 'notes: [{' . json_encode($id) . '}]';
-//		echo json_encode($notes);
-//		echo ']}';
-//		echo json_encode($id) . PHP_EOL;
-//		$json = json_encode($note);
-//		echo "notes: [" . $json . "] " . PHP_EOL;
-/*
-		echo "Decoded JSON (as associative array):" . PHP_EOL;
-		print_r(json_decode($json, true)) . PHP_EOL;
-		echo "Decoded JSON (as stdClass object):" . PHP_EOL;
-		print_r(json_decode($json)) . PHP_EOL;
-*/
+		// or as another json:
+		// return '{"notes":'.json_encode($notes).'}';	// <-- orig!
 	}
 
-	function __call($name, $arguments)
-	{
-		// TODO: Implement __call() method.
+	function showNote($id, $access) {
+		$note = NEW note();
+		$data = json_decode($note->getNote($id, $access), true);
+
+		if($data['media'] !== ''){
+			echo '<div class=\'media\'>';
+				showMedia($id, $data['media'], $data['title']);
+			echo '</div>';
+		}
+
+		echo '<div class=\'text\'>';
+			echo '<h3>' . $data['title'] . '</h3>';
+			echo '<p>' . makeurl($data['content']) . '</p>';
+		echo '</div>';
+
+		echo '<div class=\'tools\'>';
+		echo '<p><a href=\'?label=' . $data['category']['id'] . '\'>' . $data['category']['name'] . '</a></p>';
+
+		echo '</div>';
+
 	}
 
 	function editNote($id) {

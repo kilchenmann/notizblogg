@@ -278,7 +278,6 @@ connect(); ?>
 
 
 <?php
-
 	if($_SERVER["QUERY_STRING"]){
 		if(isset($_GET["type"])){
 			$type = $_GET["type"];

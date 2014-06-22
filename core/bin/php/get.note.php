@@ -1,10 +1,17 @@
 <?php
 require ('setting.php');
+if(isset($_GET["id"])){
+	$partID = $_GET["id"];
+} else
+
+$access = '';
+$info = NEW note();
+//echo $info->getNote(1, $access);
+echo $info->getNote($partID, $access);
+//echo $info->getNote('3', $access);
 
 
-$note = NEW note();
-$access = 'enable';
-
+/*
 $notes = array();
 
 echo '{"notes": [';
