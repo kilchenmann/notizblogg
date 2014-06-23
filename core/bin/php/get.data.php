@@ -16,20 +16,36 @@ if($access == 'public'){
 }
 
 
-function show($type, $query, $access)
+function show($type, $query, $access, $viewer)
 {
 	switch ($type) {
 		case 'source';
 			$source = NEW source();
-				$source->showSource($query, $access);
+			echo '<div class=\'' . $viewer . '\'>';
+			$source->showSource($query, $access);
+			// 2. get the note to this source
+			$note = NEW note();
+			condb('open');
+			$noteSql = mysql_query("SELECT noteID FROM note WHERE noteSource=" . $query . " ORDER BY pageStart, noteTitle ASC");
+			condb('close');
+			$num_notes = mysql_num_rows($noteSql);
+			if($num_notes > 0) {
+				while ($noteRow = mysql_fetch_object($noteSql)) {
+					$note->showNote($noteRow->noteID, $access);
+				}
+			}
+			echo '</div>';
 			break;
 
 		case 'note';
 			$note = NEW note();
-			$note->showNote($query, $access);
+			echo '<div class=\'' . $viewer . '\'>';
+				$note->showNote($query, $access);
+			echo '</div>';
 			break;
 
 		case 'label';
+			// 1. get the source
 			$source = NEW source();
 			condb('open');
 			$sql = mysql_query("SELECT sourceID FROM source WHERE sourceCategory=" . $query);
@@ -37,7 +53,20 @@ function show($type, $query, $access)
 			$num_results = mysql_num_rows($sql);
 			if($num_results > 0) {
 				while ($row = mysql_fetch_object($sql)) {
-					$source->showSource($row->noteID, $access);
+					echo '<div class=\'' . $viewer . '\'>';
+					$source->showSource($row->sourceID, $access);
+					// 2. get the note to this source
+					$note = NEW note();
+					condb('open');
+					$noteSql = mysql_query("SELECT noteID FROM note WHERE noteSource=" . $row->sourceID . " ORDER BY pageStart, noteTitle ASC");
+					condb('close');
+					$num_notes = mysql_num_rows($noteSql);
+					if($num_notes > 0) {
+						while ($noteRow = mysql_fetch_object($noteSql)) {
+							$note->showNote($noteRow->noteID, $access);
+						}
+					}
+					echo '</div>';
 				}
 			}
 			break;
@@ -48,10 +77,12 @@ function show($type, $query, $access)
 			condb('close');
 			$num_results = mysql_num_rows($sql);
 			if($num_results > 0) {
+				echo '<div class=\'' . $viewer . '\'>';
 				while ($row = mysql_fetch_object($sql)) {
 					$source = NEW source();
 					$source->showSource($row->sourceID, $access);
 				}
+				echo '</div>';
 			}
 			break;
 
@@ -74,10 +105,12 @@ function show($type, $query, $access)
 			condb('close');
 			$num_results = mysql_num_rows($sql);
 			if($num_results > 0) {
+				echo '<div class=\'' . $viewer . '\'>';
 				while ($row = mysql_fetch_object($sql)) {
 					$source = NEW source();
 					$source->showSource($row->sourceID, $access);
 				}
+				echo '</div>';
 			}
 	}
 }

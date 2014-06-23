@@ -113,13 +113,14 @@ if (!isset ($_SESSION["token"])) {
 <div id="fullpage">
 	<div id="section0" class="section">
 		<div class="viewer">
-			<div class="desk">
+
 
 			<?php
 			if($_SERVER['QUERY_STRING']){
 				// default values; in case of wrong queries; these variables would be overwritten in the right case
 				$type = '';
 				$query = 'all';
+				$viewer = 'desk';
 				if(isset($_GET['source'])){
 					$type = 'source';
 					$query = $_GET['source'];
@@ -149,14 +150,15 @@ if (!isset ($_SESSION["token"])) {
 				// Startseite:
 				$type = '';
 				$query = 'all';
+				$viewer = 'desk';
 			}
 
-			show($type, $query, $access);
+			show($type, $query, $access, $viewer);
 
 			?>
 
 
-			</div>
+
 		</div>
 
 	</div>
@@ -283,7 +285,7 @@ if (!isset ($_SESSION["token"])) {
 
 	$(window).resize(function() {
 		var height = $(window).height() - $('header').height() - $('footer').height();
-		$('div.viewer').css({'max-height': height, overflow: 'scroll'});
+		$('div.viewer').css({'height': height});
 	});
 
 	/*

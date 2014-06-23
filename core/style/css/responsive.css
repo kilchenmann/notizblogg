@@ -4,7 +4,7 @@
 		-webkit-column-count: 4;
 		-moz-column-count: 4;
 		column-count: 4;
-		max-width: 1800px;
+		width: 1664px;
 	}
 	.note {
 		width: 400px;
@@ -17,7 +17,7 @@
 		-webkit-column-count: 3;
 		-moz-column-count: 3;
 		column-count: 3;
-		max-width: 1200px;
+		width: 1188px;
 	}
 	.note {
 		width: 380px;
@@ -30,7 +30,7 @@
 		-webkit-column-count: 2;
 		-moz-column-count: 2;
 		column-count: 2;
-		max-width: 600px;
+		width: 632px;
 	}
 
 	.note {
@@ -44,9 +44,12 @@
 		-webkit-column-count: 1;
 		-moz-column-count: 1;
 		column-count: 1;
-		max-width: 300px;
+		width: 296px;
 	}
 	.note {
 		width: 280px;
+	}
+	.note p {
+		font-size: 0.8em;
 	}
 }

@@ -51,9 +51,11 @@ class source {
 				// get the type
 				$bibTyp = getIndex('bibTyp', $row->sourceTyp);
 				// get the authors
-				$authorNames = linkIndexMN('source', 'author', $row->sourceID, ',');
+				$authorNames = getIndexMN('source', 'author', $row->sourceID, ', ', 'link');
 				// get the locations
-				$locationNames = linkIndexMN('source', 'location', $row->sourceID, ',');
+				$locationNames = getIndexMN('source', 'location', $row->sourceID, ', ', '');
+				// get the labels
+				$labelNames = getIndexMN('source', 'label', $row->sourceID, ', ', 'link');
 
 
 				$sources = array(
@@ -81,6 +83,9 @@ class source {
 					),
 					'location' => array(
 						'name' => $locationNames
+					),
+					'label' => array(
+						'name' => $labelNames
 					),
 					'comment' => $row->sourceNote,
 				);
@@ -143,67 +148,167 @@ class source {
 		// return '{"sources":'.json_encode($sources).'}';	// <-- orig!
 	}
 
-	function showSource($id, $access) {
-		$source = NEW source();
-		$data = json_decode($source->getSource($id, $access), true);
+	function showTex($data, $access) {
+		if($data['bibTyp']['id'] !== '') {
+			echo '@' . $data['bibTyp']['name'] . '{' . $data['name'] . ',<br>';
+		}
+		if($data['editor'] == 1){
+			echo 'editor = { ' . ($data['author']['name']) . '},<br>';
+		} else {
+			echo 'author = {' . ($data['author']['name']) . '},<br>';
+		}
+		echo 'title = {' . ($data['title']) . '},<br>';
 
-//		echo '<div class="note">';
-//		print_r ($source->getSource($id, $access));
-//		echo '</div>';
-
-		if($data['id'] !== 0) {
-			echo '<div class=\'note ' . $data['id'] . '\'>';
-			echo '<div class=\'text\'>';
-			if($data['bibTyp']['id'] !== '') {
-				echo '@' . $data['bibTyp']['name'] . '{' . $data['name'] . ',<br>';
-			}
-			if($data['editor'] == 1){
-				echo 'editor = { ' . ($data['author']['name']) . '},<br>';
+		if($data['subtitle'] != ''){
+			echo 'subtitle = {' . ($data['subtitle']) . '},<br>';
+		}
+		if(array_key_exists('crossref', $data)) {
+			$inSource = New source();
+			$inData = json_decode($inSource->getSource($data['crossref']['id'], $access), true);
+			echo 'crossref = {<a target=\'_blank\' href=\'?source=' . $data['crossref']['id'] . '\'>' . ($data['crossref']['name']) . '</a>},<br>';
+			if($inData['editor'] == 1){
+				echo 'editor = { ' . ($inData['author']['name']) . '},<br>';
 			} else {
-				echo 'author = {' . ($data['author']['name']) . '},<br>';
+				echo 'author = {' . ($inData['author']['name']) . '},<br>';
 			}
-			echo 'title = {' . ($data['title']) . '},<br>';
+			echo 'booktitle = {' . ($inData['title']) . '},<br>';
+
+			if($inData['subtitle'] != ''){
+				echo 'booksubtitle = {' . ($inData['subtitle']) . '},<br>';
+			}
+
+			if($inData['location']['name'] != ''){
+				echo 'location = {' . ($inData['location']['name']) . '},<br>';
+			}
+
+		}
+
+		if(array_key_exists('detail', $data)) {
+			$countDetail = count(array_keys($data['detail']));
+			$i = 0;
+			while ($countDetail > 0) {
+				$detail = array_keys($data['detail']);
+				if($detail[$i] === 'url') {
+					echo $detail[$i] . ' = {<a target=\'_blank\' href=\'' . $data['detail'][$detail[$i]] . '\' >' . $data['detail'][$detail[$i]] . '</a>},<br>';
+				} else {
+					echo $detail[$i] . ' = {' . $data['detail'][$detail[$i]] . '},<br>';
+				}
+				$countDetail--;
+				$i++;
+			}
+		}
+
+		if($data['location']['name'] != ''){
+			echo 'location = {' . ($data['location']['name']) . '},<br>';
+		}
+		if($data['year'] != '0000'){
+			echo 'year = {' . $data['year'] . '},<br>';
+		}
+		echo 'note = {' . $data['comment'] . '}}';
+
+	}
+	function showBib($data, $access) {
+		if($data['bibTyp']['name'] !== '') {
+			//echo '@' . $data['bibTyp']['name'] . '{' . $data['name'] . ',<br>';
+			if($data['editor'] == 1){
+				echo $data['author']['name'] . ' (Hg.):<br>';
+			} else {
+				echo $data['author']['name'] . ':<br>';
+			}
+			echo $data['title'] . '. ';
 
 			if($data['subtitle'] != ''){
-				echo 'subtitle = {' . ($data['subtitle']) . '},<br>';
+				echo $data['subtitle'] . '.<br>';
 			}
 			if(array_key_exists('crossref', $data)) {
-				echo 'crossref = {<a href=\'?source=' . $data['crossref']['id'] . '\'>' . ($data['crossref']['name']) . '</a>},<br>';
+				echo 'In: ';
+				$inSource = New source();
+				$inData = json_decode($inSource->getSource($data['crossref']['id'], $access), true);
+
+				if($inData['editor'] == 1){
+					echo $inData['author']['name'] . ' (Hg.):<br>';
+				} else {
+					echo $inData['author']['name'] . ':<br>';
+				}
+				echo '<a target=\'_blank\' href=\'?source=' . $data['crossref']['id'] . '\'>' . $inData['title'] . '. </a>';
+
+				if($inData['subtitle'] != ''){
+					echo $inData['subtitle'] . '.<br>';
+				}
+				if($inData['location']['name'] != ''){
+					echo $inData['location']['name'] . ', ';
+				}
+				if($inData['year'] != '0000'){
+					echo $inData['year'] . '';
+				}
+			} else {
+				if($data['location']['name'] != ''){
+					echo $data['location']['name'] . ', ';
+				}
+				if($data['year'] != '0000'){
+					echo $data['year'] . '';
+				}
 			}
 			if(array_key_exists('detail', $data)) {
 				$countDetail = count(array_keys($data['detail']));
 				$i = 0;
 				while ($countDetail > 0) {
 					$detail = array_keys($data['detail']);
-					if($detail[$i] === 'url') {
-						echo $detail[$i] . ' = {<a href=\'' . $data['detail'][$detail[$i]] . '\' target=\'_blank\'>' . $data['detail'][$detail[$i]] . '</a>},<br>';
-					} else {
-						echo $detail[$i] . ' = {' . $data['detail'][$detail[$i]] . '},<br>';
+					switch ($detail[$i]) {
+						case 'url';
+							echo ', URL: <a target=\'_blank\' href=\'' . $data['detail'][$detail[$i]] . '\'>' . $data['detail'][$detail[$i]] . '</a> ';
+							break;
+
+						case 'urldate';
+							echo '(Stand: ' . $data['detail'][$detail[$i]] . ').';
+							break;
+
+						case 'pages';
+							echo ', S. ' . $data['detail'][$detail[$i]];
+
+							break;
+
+						default;
+							echo $data['detail'][$detail[$i]];
+
+
 					}
+
 					$countDetail--;
 					$i++;
 				}
 			}
+			echo '.<br>';
+		} else {
+			echo $data['comment'];
+		}
 
-			if($data['location']['name'] != ''){
-				echo 'location = {' . ($data['location']['name']) . '},<br>';
-			}
-			if($data['year'] != '0000'){
-				echo 'year = {' . $data['year'] . '},<br>';
-			}
-			echo 'note = {' . $data['comment'] . '}}';
 
-/*
-					echo '<p>' . $data['author']['name'] . '</p>';
-					echo '<h3>' . $data['title'] . '</h3>';
-					echo '<p>' . $data['subtitle'] . '</p>';
-					echo '<p>' . makeurl($data['comment']) . '</p>';
-			*/
+
+		//echo 'note = {' . $data['comment'] . '}}';
+
+	}
+
+
+	function showSource($id, $access) {
+		$source = NEW source();
+		$data = json_decode($source->getSource($id, $access), true);
+
+		if($data['id'] !== 0) {
+			echo '<div class=\'note topic s_' . $data['id'] . '\'>';
+				echo '<div class=\'text\'>';
+					echo '<p>';
+						$source->showBib($data, $access);
+					echo '</p>';
+
 				echo '</div>';
+				echo '<div class=\'tooltip\'>';
+					$source->showTex($data, $access);
+				echo '</div>';
+
 				echo '<div class=\'tools\'>';
 					echo '<div class=\'left\'>';
-						echo '<p><a href=\'?label=' . $data['category']['id'] . '\'>' . $data['category']['name'] . '</a></p>';
-						echo '<p><a href=\'?label=' . $data['project']['id'] . '\'>' . $data['project']['name'] . '</a></p>';
+						echo '<p>' . $data['label']['name'] . '</p>';
 					echo '</div>';
 					echo '<div class=\'right\'>';
 						echo '<p>info</p>';
@@ -215,6 +320,10 @@ class source {
 			echo '</div>';
 		}
 	}
+
+
+
+
 
 	function editSource($id) {
 

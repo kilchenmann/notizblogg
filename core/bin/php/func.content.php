@@ -40,7 +40,7 @@ function changeUmlaut4Tex($string){
 }
 
 function change4Tex($string){
-  $upas = array("_"=>"\_", "§"=>"\§", "$"=>"\$", "&"=>"\&", "#"=>"\#", "{"=>"\{", "}"=>"\}", "%"=>"\%", "~"=>"\textasciitilde", "€"=>"\texteuro");
+  $upas = array(" \""=>" ``", "\" "=>"\'\' ", " '"=>" `", " - "=>" -- ", "_"=>"\_", "§"=>"\§", "$"=>"\$", "&"=>"\&", "#"=>"\#", "{"=>"\{", "}"=>"\}", "%"=>"\%", "~"=>"\textasciitilde", "€"=>"\texteuro");
   /*foreach($upas as $umlaut=>$replace){
 	return (str_replace($umlaut, $replace, $string));
   }
@@ -97,7 +97,25 @@ function makeurl($text)
 	return $text;
 }
 
+function getIndex($part, $id) {
+	$tableName = $part."Name";
+	if ($id == 0) {
+		return "";
+	} else {
+		$sql = mysql_query("SELECT ".$part."Name FROM ".$part." WHERE ".$part."ID=".$id);
+		while($row = mysql_fetch_object($sql)){
+			return $row->$tableName;
+		}
+	}
+}
+
+
+
 function linkIndex($type, $part, $id) {
+	return $type . ' + ' . $part . ' + ' . $id;
+//	return "<a href='?type=".$type."&amp;part=".$part."&amp;id=".$id."' title='".$part."'>".$row->$tableName."</a>";
+
+/*
 	$tableName = $part."Name";
 	if ($id == 0) {
 		return '--';
@@ -109,28 +127,16 @@ function linkIndex($type, $part, $id) {
 				return "<a href='?type=".$type."&amp;part=".$part."&amp;id=".$id."' title='".$part."'>".$row->$tableName."</a>";
 			}
 	}
+*/
 }
 
 
-function getIndex($part, $id) {
-	$tableName = $part."Name";
-	if ($id == 0) {
-		return "--";
-	} else {
-		$sql = mysql_query("SELECT ".$part."Name FROM ".$part." WHERE ".$part."ID=".$id);
-			while($row = mysql_fetch_object($sql)){
-				return $row->$tableName;
-			}
-	}
-}
-	
-function linkIndexMN($type, $part, $id, $delimiter){
+function getIndexMN($type, $part, $id, $delimiter, $link) {
 	$relTable = "rel_".$type."_".$part;
 	$partID = $part."ID";
 	$mnSql = mysql_query("SELECT ".$part."Name FROM ".$part.", ".$relTable." WHERE ".$part.".".$part."ID = ".$relTable.".".$part."ID AND ".$relTable.".".$type."ID = '".$id."' ORDER BY ".$part."Name");
-
 	$countMN = mysql_num_rows($mnSql);
-	if($countMN>0) {
+	if($countMN > 0) {
 		while($row = mysql_fetch_array($mnSql)) {
 			$relIDs[] = $row[$part."Name"];
 		}
@@ -143,11 +149,20 @@ function linkIndexMN($type, $part, $id, $delimiter){
 					$countSql = mysql_query("SELECT ".$type.".".$type."ID FROM ".$type.", ".$relTable." WHERE ".$part."ID = ".$relID." AND ".$relTable.".".$type."ID = ".$type.".".$type."ID ORDER BY ".$type.".".$type."Title, ".$type.".date DESC");
 					$countResult = mysql_num_rows($countSql);
 				}
-				
-				if($relData==""){
-					$relData="<a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+				if($link === 'link'){
+					if($relData === ""){
+						$relData="<a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+					} else {
+						$relData.= $delimiter . " <a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+					}
+
 				} else {
-					$relData.= $delimiter . " <a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
+					if($relData === ""){
+						$relData= $relName;
+					} else {
+						$relData.= $delimiter . "" . $relName . "</a>";
+					}
+
 				}
 			}
 	} else {
@@ -156,9 +171,9 @@ function linkIndexMN($type, $part, $id, $delimiter){
 	return $relData;
 }
 
-function getIndexMN($type, $part, $id){
+function oldgetIndexMN($type, $part, $id){
 	$relTable = "rel_".$type."_".$part;
-	
+
 	$tagSql = mysql_query("SELECT ".$part."Name FROM ".$part.", ".$relTable." WHERE ".$part.".".$part."ID = ".$relTable.".".$part."ID AND ".$relTable.".".$type."ID = '".$id."' ORDER BY ".$part."Name");
 	$countTags = mysql_num_rows($tagSql);
 
