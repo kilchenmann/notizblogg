@@ -28,10 +28,10 @@ input, select, button, textarea .card {
 // buttons are defined as input button type with the following three classes // (element + position + action) // element: .btn // position: .grp_left || .grp_middle || .grp_right || grp_none // action: .toggle_drawer (as example)
 .btn {
   width: 40px;
-  height: 30px;
+  height: 32px;
   background-color: @bg;
   background-image: url(../../lib/icons/btn_icons.png);
-  background-position: 0px 0px;
+
   cursor: pointer;
   &:hover {
 	background-color: darken(@bg, 20%);
@@ -59,63 +59,153 @@ input, select, button, textarea .card {
 /* button icons */
 /* ------------ */
 button.toggle_drawer {
-  background-position: -50px -30px;
+  background-position: -30px -30px;
   &:hover {
 	background-position: 0px -30px;
   }
 }
-button.toggle_add {
-  background-position: -50px -120px;
-  &:hover {
-	background-position: 0px -120px;
-  }
-}
-button.toggle_user, label.user {
-  background-position: -50px -270px;
-  &:hover {
-	background-position: 0px -270px;
-  }
-}
-button.search_filter {
-  background-position: -50px -90px;
-  &:hover {
-	background-position: -0px -90px;
-  }
-}
-button.search_btn {
-  background-position: -50px -60px;
+button.toggle_power {
+  background-position: -30px -60px;
   &:hover {
 	background-position: 0px -60px;
   }
 }
-button.toggle_favorite {
-  background-position: -50px -510px;
+button.search_btn {
+  background-position: -30px -90px;
   &:hover {
-	background-position: 0px -510px;
+	background-position: 0px -90px;
   }
 }
-button.toggle_window {
-  background-position: -50px -480px;
+button.search_filter {
+  background-position: -30px -120px;
   &:hover {
-	background-position: 0px -480px;
+	background-position: 0px -120px;
   }
 }
-button.toggle_socialnet {
-  background-position: -50px -450px;
+button.toggle_add {
+  background-position: -30px -150px;
+  &:hover {
+	background-position: 0px -150px;
+  }
+}
+button.toggle_delete {
+  background-position: -30px -180px;
+  &:hover {
+	background-position: 0px -180px;
+  }
+}
+button.toggle_link {
+  background-position: -30px -210px;
+  &:hover {
+	background-position: 0px -210px;
+  }
+}
+button.toggle_unlink {
+  background-position: -30px -240px;
+  &:hover {
+	background-position: 0px -240px;
+  }
+}
+button.toggle_user, label.user {
+  background-position: -30px -270px;
+  &:hover {
+	background-position: 0px -270px;
+  }
+}
+button.toggle_grp {
+  background-position: -30px -300px;
+  &:hover {
+	background-position: 0px -300px;
+  }
+}
+button.toggle_label, label.label {
+  background-position: -30px -330px;
+  &:hover {
+	background-position: 0px -330px;
+  }
+}
+button.toggle_labels, label.labels {
+  background-position: -30px -360px;
+  &:hover {
+	background-position: 0px -360px;
+  }
+}
+button.view_desk {
+  background-position: -30px -390px;
+  &:hover {
+	background-position: 0px -390px;
+  }
+}
+button.view_list {
+  background-position: -30px -420px;
+  &:hover {
+	background-position: 0px -420px;
+  }
+}
+button.view_table {
+  background-position: -30px -450px;
   &:hover {
 	background-position: 0px -450px;
   }
 }
-button.toggle_news {
-  background-position: -50px -540px;
+button.toggle_cite {
+  background-position: -30px -480px;
+  &:hover {
+	background-position: 0px -480px;
+  }
+}
+button.toggle_comment {
+  background-position: -30px -510px;
+  &:hover {
+	background-position: 0px -510px;
+  }
+}
+button.toggle_expand {
+  background-position: -30px -540px;
   &:hover {
 	background-position: 0px -540px;
   }
 }
-label.pass {
-  background-position: -50px -570px;
+button.toggle_collaps {
+  background-position: -30px -570px;
   &:hover {
 	background-position: 0px -570px;
+  }
+}
+button.toggle_notes {
+  background-position: -30px -600px;
+  &:hover {
+	background-position: 0px -600px;
+  }
+}
+button.toggle_edit {
+  background-position: -30px -630px;
+  &:hover {
+	background-position: 0px -630px;
+  }
+}
+button.toggle_tools {
+  background-position: -30px -660px;
+  &:hover {
+	background-position: 0px -660px;
+  }
+}
+button.warning, label.warning {
+  background-position: -30px -690px;
+  &:hover {
+	background-position: 0px -690px;
+  }
+}
+button.alert, label.alert {
+  background-position: -30px -720px;
+  &:hover {
+	background-position: 0px -720px;
+  }
+}
+button.toggle_lock {
+  background-position: -30px -750px;
+  &:hover {
+	background-position: 0px -750px;
   }
 }
 
@@ -209,7 +299,7 @@ label {
 
 
 input.input, select.select {
-  height: 28px;
+  height: 30px;
   padding-left: 3px;
   width: 150px;
   font-size: 13px;

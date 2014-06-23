@@ -165,7 +165,7 @@ class source {
 		if(array_key_exists('crossref', $data)) {
 			$inSource = New source();
 			$inData = json_decode($inSource->getSource($data['crossref']['id'], $access), true);
-			echo 'crossref = {<a target=\'_blank\' href=\'?source=' . $data['crossref']['id'] . '\'>' . ($data['crossref']['name']) . '</a>},<br>';
+			echo 'crossref = {<a href=\'?source=' . $data['crossref']['id'] . '\'>' . ($data['crossref']['name']) . '</a>},<br>';
 			if($inData['editor'] == 1){
 				echo 'editor = { ' . ($inData['author']['name']) . '},<br>';
 			} else {
@@ -230,7 +230,7 @@ class source {
 				} else {
 					echo $inData['author']['name'] . ':<br>';
 				}
-				echo '<a target=\'_blank\' href=\'?source=' . $data['crossref']['id'] . '\'>' . $inData['title'] . '. </a>';
+				echo '<a href=\'?source=' . $data['crossref']['id'] . '\'>' . $inData['title'] . '. </a>';
 
 				if($inData['subtitle'] != ''){
 					echo $inData['subtitle'] . '.<br>';
