@@ -18,10 +18,10 @@ h1, h2, h3, h4, h5, h6, p, span {
   color: @ink;
 }
 a {
-  color: darken(@link, 20%);
+  color: darken(@link, 5%);
 }
 a:hover {
-  color: @link;
+  color: fade(@link, 50%);
 }
 
 header, footer {
@@ -191,22 +191,21 @@ div.note {
   .latex {
 	display: none;
   }
+  .label, .tools {
+	background: fade(@bg, 33%);
+  }
   .label {
 	border-top: 1px solid fade(@bg, 25%);
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
 	min-height: 33px;
-	.left, .right {
-	float: left;
-	  .left {
-		width: 44px;
-		float: left;
-	  }
-	  .right {
-		float: left;
-	  }
+	p {
+	  margin: 5px auto;
+	  text-align: center;
+	  display: block;
+	  margin-left: auto;
+	  margin-right: auto;
+
 	}
+
 
 
   }
@@ -219,29 +218,27 @@ div.note {
 	height: 33px;
 
 	.left, .center, .right {
-	  display: block;
-	  margin-left: auto;
-	  margin-right: auto;
 	  font-size: 0.8em;
 	  float: left;
-	  .left {
-		width: 44px;
-	  }
-	  .center {
-	  }
-	  .right {
-		float: left;
+	  width: 33%;
+
+	  button {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
 	  }
 	}
+	.left {
 
+	}
+	.center {
+	}
+	.right {
+
+	}
   }
-
 }
 
-.note.topic {
+.note.topic .text, .note.topic .latex{
   background-color: darken(@bg, 33%);
-}
-
-.desk:hover .note:not(:hover) {
-  background: fade(@bg, 33%);
 }

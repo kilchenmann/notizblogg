@@ -307,15 +307,29 @@ class source {
 					$source->showTex($data, $access);
 				echo '</div>';
 
-				echo '<div class=\'tools\'>';
-					echo '<div class=\'left\'>';
+				if($data['label']['name'] != '') {
+					echo '<div class=\'label\'>';
 						echo '<p>' . $data['label']['name'] . '</p>';
 					echo '</div>';
-					echo '<div class=\'right\'>';
-						echo '<p>info</p>';
-						if (isset ($_SESSION["token"]) && $access === 'private') {
-							echo '<p>edit</p>';
+				}
+
+				echo '<div class=\'tools\'>';
+					echo '<div class=\'left\'>';
+						if($access != 'public' && isset($_SESSION['token'])) {
+							echo '<button class=\'btn grp_none toggle_edit\'></button>';
+						} else {
+							echo '<button class=\'btn grp_none fake_btn\'></button>';
 						}
+					echo '</div>';
+					echo '<div class=\'center\'>';
+						if($data['id'] != 0 && $data['bibTyp']['name'] != 'projcet'){
+							echo '<button class=\'btn grp_none toggle_cite\'></button>';
+						} else {
+							echo '<button class=\'btn grp_none fake_btn\'></button>';
+						}
+					echo '</div>';
+					echo '<div class=\'right\'>';
+						echo '<button class=\'btn grp_none toggle_expand\'></button>';
 					echo '</div>';
 				echo '</div>';
 			echo '</div>';

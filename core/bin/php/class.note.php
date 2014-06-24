@@ -182,30 +182,27 @@ class note {
 //					}
 				}
 				echo '</div>';
-				echo '<div class=\'label\'>';
-					echo '<div class=\'left\'>';
-						echo '<button class=\'btn grp_none toggle_labels\'></button>';
-					echo '</div>';
-					echo '<div class=\'right\'>';
+				if($data['label']['name'] != '') {
+					echo '<div class=\'label\'>';
 						echo '<p>' . $data['label']['name'] . '</p>';
 					echo '</div>';
-				echo '</div>';
-			echo '<div class=\'tools\'>';
-					echo '<div class=\'left\'>';
-						echo '<button class=\'btn grp_none toggle_expand\'></button>';
-					echo '</div>';
-						echo '<div class=\'center\'>';
-						if($data['source']['id'] != 0 && $data['source']['bibTyp']['name'] != 'projcet'){
-							echo '<button class=\'btn grp_none toggle_cite\'></button>';
-						}
+				}
+				echo '<div class=\'tools\'>';
+						echo '<div class=\'left\'>';
+							if($access != 'public' && isset($_SESSION['token'])) {
+								echo '<button class=\'btn grp_none toggle_edit\'></button>';
+							}
 						echo '</div>';
-					echo '<div class=\'right\'>';
-						if($access != 'public' && isset($_SESSION['token'])) {
-							echo '<button class=\'btn grp_none toggle_edit\'></button>';
-						}
+							echo '<div class=\'center\'>';
+							if($data['source']['id'] != 0 && $data['source']['bibTyp']['name'] != 'projcet'){
+								echo '<button class=\'btn grp_none toggle_cite\'></button>';
+							}
+							echo '</div>';
+						echo '<div class=\'right\'>';
+							echo '<button class=\'btn grp_none toggle_expand\'></button>';
+						echo '</div>';
 					echo '</div>';
 				echo '</div>';
-			echo '</div>';
 		}
 
 	}

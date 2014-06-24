@@ -306,6 +306,26 @@ if (!isset ($_SESSION["token"])) {
 	});
 	*/
 
+
+	$('div.desk').mouseenter(function() {
+		$('.note').children('div').css({'background-color': 'transparent'});
+
+		$('div.note')
+			.hover(function() {
+			$(this).children('div').css({'background-color': ''});
+		})
+		.mouseleave(function() {
+			$(this).children('div').css({'background-color': 'transparent'});
+		});
+
+
+	})
+	.mouseleave(function() {
+		$('.note').children('div').css({'background-color': ''});
+	});
+
+
+
 	/* copyright date */
 	var curDate = new Date(),
 		curYear = curDate.getFullYear();

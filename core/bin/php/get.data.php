@@ -29,7 +29,7 @@ function show($type, $query, $access, $viewer)
 			$noteSql = mysql_query("SELECT noteID FROM note WHERE noteSource=" . $query . " ORDER BY pageStart, noteTitle ASC");
 			condb('close');
 			$num_notes = mysql_num_rows($noteSql);
-			if($num_notes > 0) {
+			if ($num_notes > 0) {
 				while ($noteRow = mysql_fetch_object($noteSql)) {
 					$note->showNote($noteRow->noteID, $access);
 				}
@@ -40,7 +40,7 @@ function show($type, $query, $access, $viewer)
 		case 'note';
 			$note = NEW note();
 			echo '<div class=\'' . $viewer . '\'>';
-				$note->showNote($query, $access);
+			$note->showNote($query, $access);
 			echo '</div>';
 			break;
 
@@ -51,7 +51,7 @@ function show($type, $query, $access, $viewer)
 			$sql = mysql_query("SELECT labelName FROM label WHERE labelID=" . $query);
 			condb('close');
 			$num_results = mysql_num_rows($sql);
-			if($num_results > 0) {
+			if ($num_results > 0) {
 				while ($row = mysql_fetch_object($sql)) {
 					$label = $row->labelName;
 				}
@@ -107,20 +107,58 @@ function show($type, $query, $access, $viewer)
 			break;
 
 		case 'author';
+			echo '<div class=\'' . $viewer . '\'>';
+			// 1. get the author name
 			condb('open');
-			$sql = mysql_query("SELECT sourceID FROM rel_source_author WHERE authorID=".$query.";");
+			$sql = mysql_query("SELECT authorName FROM author WHERE authorID=" . $query . ";");
 			condb('close');
 			$num_results = mysql_num_rows($sql);
-			if($num_results > 0) {
-				echo '<div class=\'' . $viewer . '\'>';
-		//			echo '# '.$num_results;
+			if ($num_results > 0) {
 				while ($row = mysql_fetch_object($sql)) {
-					$source = NEW source();
-					$source->showSource($row->sourceID, $access);
+					echo '<h3 id="note">Sources with the author \'' . $row->authorName . '\'</h3>';
+				}
+				//2. get the sources
+				condb('open');
+				$sourceSql = mysql_query("SELECT sourceID FROM rel_source_author WHERE authorID=" . $query . ";");
+				condb('close');
+				$num_sources = mysql_num_rows($sourceSql);
+				if ($num_sources > 0) {
+					echo '# ' . $num_sources;
+					echo '</div>';
+					echo '<div class=\'' . $viewer . '\'>';
+
+					while ($sourceRow = mysql_fetch_object($sourceSql)) {
+						$source = NEW source();
+						$source->showSource($sourceRow->sourceID, $access);
+
+						// 2. get the note to this source
+						$note = NEW note();
+						condb('open');
+						$noteSql = mysql_query("SELECT noteID FROM note WHERE noteSource=" . $sourceRow->sourceID . " ORDER BY pageStart, noteTitle ASC");
+						condb('close');
+						$num_notes = mysql_num_rows($noteSql);
+						if ($num_notes > 0) {
+							while ($noteRow = mysql_fetch_object($noteSql)) {
+								$note->showNote($noteRow->noteID, $access);
+							}
+						}
+					}
+
+
 				}
 				echo '</div>';
+
+
 			}
 			break;
+
+
+
+
+
+
+
+
 
 		case 'collection';
 			echo $type . ": " . $query . PHP_EOL;
