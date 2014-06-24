@@ -177,7 +177,8 @@ div.note {
 	}
   }
   .text, .latex {
-	background-color: @bg;
+	background-color: fade(@bg, 22%);
+//	background-color: @bg;
 	margin: 0;
 	padding: 10px;
 	.text p {
@@ -188,11 +189,13 @@ div.note {
 	  font-style: italic;
 	}
   }
+
+
   .latex {
 	display: none;
   }
   .label, .tools {
-	background: fade(@bg, 33%);
+	background: fade(@bg, 22%);
   }
   .label {
 	border-top: 1px solid fade(@bg, 25%);
@@ -201,21 +204,15 @@ div.note {
 	  margin: 5px auto;
 	  text-align: center;
 	  display: block;
-	  margin-left: auto;
-	  margin-right: auto;
-
 	}
-
-
-
   }
-
   .tools {
 	border-top: 1px solid fade(@bg, 25%);
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	height: 33px;
+	opacity: 0.1;
 
 	.left, .center, .right {
 	  font-size: 0.8em;
@@ -239,6 +236,13 @@ div.note {
   }
 }
 
+.note.active .text, .note.active .latex{
+  background-color: @bg;
+}
+
 .note.topic .text, .note.topic .latex{
+  background-color: fade(darken(@bg, 33%), 33%);
+}
+.note.topic.active .text, .note.topic.active .latex{
   background-color: darken(@bg, 33%);
 }

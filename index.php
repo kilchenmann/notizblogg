@@ -57,6 +57,7 @@ if (!isset ($_SESSION["token"])) {
 	-->
 	<script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
+	<script type="text/javascript" src="core/bin/js/jquery.pamphlet.js"></script>
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
 	-->
@@ -98,6 +99,7 @@ if (!isset ($_SESSION["token"])) {
 	</div>
 </header>
 <div class="float_obj medium warning"></div>
+<div class="float_obj large pamphlet"></div>
 <footer>
 	<p class="small">
 		<a href="http://notizblogg.ch">Notizblogg</a>
@@ -185,6 +187,7 @@ if (!isset ($_SESSION["token"])) {
 	$(document).ready(function () {
 
 		$.getScript('core/bin/js/jquery.fullpage.min.js', function() {
+			/*
 			$('#fullpage').fullpage({
 				//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
 				anchors: ['start'],
@@ -192,8 +195,9 @@ if (!isset ($_SESSION["token"])) {
 				slidesColor: ['#1A1A1A'],
 				css3: true
 			});
+			*/
 			var height = $(window).height() - $('header').height() - $('footer').height();
-			$('div.viewer').css({'max-height': height});
+			$('div.viewer').css({'height': height});
 		});
 
 
@@ -264,19 +268,19 @@ if (!isset ($_SESSION["token"])) {
 */
 
 		if(getUrlVars()["access"] !== undefined) {
-			$('body').warning({
+			$('#fullpage').warning({
 				type: 'access'
 			});
-			$(this).on('click', function(){
+			$('body').on('click', function(){
 				window.location.href = window.location.href.split('?')[0];
 			})
 		}
 		if ($('.note').length === 0) {
-			$('body').warning({
+			$('#fullpage').warning({
 				type: 'noresults',
 				lang: 'de'
 			});
-			$(this).on('click', function(){
+			$('body').on('click', function(){
 				window.location.href = window.location.href.split('?')[0];
 			})
 		}
@@ -288,6 +292,16 @@ if (!isset ($_SESSION["token"])) {
 		$('div.viewer').css({'height': height});
 	});
 
+	$.getScript('core/bin/js/jquery.mousewheel.min.js', function() {
+		/*
+		$('div.viewer').on('mousewheel', function (e, d) {
+			var viewer = $(this);
+			if ((this.scrollTop === (viewer[0].scrollHeight - viewer.height()) && d < 0) || (this.scrollTop === 0 && d > 0)) {
+				e.preventDefault();
+			}
+		})
+		*/
+	});
 	/*
 	var url="http://localhost/nb/core/bin/php/get.note.php?id=3";
 	$.getJSON(url,function(json){
@@ -307,22 +321,73 @@ if (!isset ($_SESSION["token"])) {
 	*/
 
 
-	$('div.desk').mouseenter(function() {
-		$('.note').children('div').css({'background-color': 'transparent'});
-
-		$('div.note')
-			.hover(function() {
-			$(this).children('div').css({'background-color': ''});
+	$('div.desk')
+		.mouseenter(function() {
+//			$('.note').toggleClass('active');
+//			$('.note').children('div').css({'background-color': 'rgba(251, 251, 251, 0.3)'});
+		})
+		.hover(function() {
+//			$('.note').children('div').css({'background-color': 'rgba(251, 251, 251, 0.3)'});
 		})
 		.mouseleave(function() {
-			$(this).children('div').css({'background-color': 'transparent'});
+//			$('.note').toggleClass('active');
+//			$('.note').children('div').css({'background-color': ''});
+	});
+	$('div.note')
+		.mouseenter(function () {
+			$(this).toggleClass('active');
+			$(this).children('div.tools').css({'opacity': '1'});
+
+			// we have to change the following setting !!!!!!!!!
+			var noteID = $(this).prop('id'),
+				noteClass = $(this).attr('class').split(' '),
+				type;
+			if(jQuery.inArray('topic', noteClass) > 0){
+				type = 'source';
+			} else {
+				type = 'note';
+			}
+			$('.active .tools button.toggle_expand').click( function() {
+				$('#fullpage').pamphlet({
+					view: 'booklet',
+					type: type,
+					id: noteID
+				})
+			})
+		})
+		.hover(function() {
+			if(!$(this).hasClass('active')) {
+				$(this).addClass('active')
+			}
+		})
+		.mouseleave(function() {
+			$(this).toggleClass('active');
+			$(this).children('div.tools').css({'opacity': '0.1'});
+		})
+
+		.on('touchstart', function(){
+			$(this).toggleClass('active');
+			$(this).children('div.tools').css({'opacity': '1'});
+
+			var noteID = $(this).prop('id'),
+				noteClass = $(this).attr('class').split(' '),
+				type;
+			if(jQuery.inArray('topic', noteClass) > 0){
+				type = 'source';
+// window.location = '?source=' + noteID;
+			} else {
+				type = 'note';
+//							window.location = '?note=' + noteID;
+			}
+			$('.active .tools button.toggle_expand').click( function() {
+				$('#fullpage').pamphlet({
+					view: 'booklet',
+					type: type,
+					id: noteID
+				})
+			})
 		});
 
-
-	})
-	.mouseleave(function() {
-		$('.note').children('div').css({'background-color': ''});
-	});
 
 
 

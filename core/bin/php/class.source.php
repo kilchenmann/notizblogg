@@ -294,9 +294,10 @@ class source {
 	function showSource($id, $access) {
 		$source = NEW source();
 		$data = json_decode($source->getSource($id, $access), true);
+		//print_r($data);
 
 		if($data['id'] !== 0) {
-			echo '<div class=\'note topic s_' . $data['id'] . '\'>';
+			echo '<div class=\'note topic\' id=\'' . $data['id'] . '\'>';
 				echo '<div class=\'text\'>';
 					echo '<p>';
 						$source->showBib($data, $access);
@@ -316,23 +317,25 @@ class source {
 				echo '<div class=\'tools\'>';
 					echo '<div class=\'left\'>';
 						if($access != 'public' && isset($_SESSION['token'])) {
-							echo '<button class=\'btn grp_none toggle_edit\'></button>';
+							echo '<button class=\'btn grp_none toggle_edit\' id=\'edit_source_' . $id . '\'></button>';
 						} else {
 							echo '<button class=\'btn grp_none fake_btn\'></button>';
 						}
 					echo '</div>';
 					echo '<div class=\'center\'>';
 						if($data['id'] != 0 && $data['bibTyp']['name'] != 'projcet'){
-							echo '<button class=\'btn grp_none toggle_cite\'></button>';
+							echo '<button class=\'btn grp_none toggle_cite\' id=\'cite_source_' . $id . '\'></button>';
 						} else {
 							echo '<button class=\'btn grp_none fake_btn\'></button>';
 						}
 					echo '</div>';
 					echo '<div class=\'right\'>';
-						echo '<button class=\'btn grp_none toggle_expand\'></button>';
+						echo '<button class=\'btn grp_none toggle_expand\' id=\'expand_source_' . $id . '\'></button>';
 					echo '</div>';
 				echo '</div>';
 			echo '</div>';
+		} else {
+			// no results
 		}
 	}
 

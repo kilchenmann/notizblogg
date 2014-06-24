@@ -9,12 +9,6 @@
 //$indexTitle = "note";
 
 
-if($access == 'public'){
-	$gpa = "AND notePublic = 1";
-} else {
-	$gpa = "";
-}
-
 
 function show($type, $query, $access, $viewer)
 {
@@ -57,7 +51,7 @@ function show($type, $query, $access, $viewer)
 				}
 
 				// 2. get the sources
-				echo '<h3 id="source">Sources with \'' . $label . '\'</h3>';
+				echo '<h3 id="source">Sources with the label \'' . $label . '\'</h3>';
 
 				$source = NEW source();
 				condb('open');
@@ -89,7 +83,7 @@ function show($type, $query, $access, $viewer)
 
 				// 3. get the notes
 				echo '<div class=\'' . $viewer . '\'>';
-				echo '<h3 id="note">Notes with \'' . $label . '\'</h3>';
+				echo '<h3 id="note">Notes with the label \'' . $label . '\'</h3>';
 				$note = NEW note();
 				condb('open');
 				$sql = mysql_query("SELECT noteID FROM rel_note_label WHERE labelID=" . $query);
@@ -263,6 +257,13 @@ function show($type, $query, $access, $viewer)
 
 
 function show_oldversion($type, $part, $partID, $access){
+
+	if($access == 'public'){
+		$gpa = "AND notePublic = 1";
+	} else {
+		$gpa = "";
+	}
+
 	$count = 200;
 	$sql = '';
 	if(!isset($_GET['page'])){
