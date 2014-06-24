@@ -23,7 +23,7 @@
 
 	var methods = {
 		/*========================================================================*/
-		init: function(options) {
+		init: function() {
 			return this.each(function() {
 				var $this = $(this),
 					localdata = {};
