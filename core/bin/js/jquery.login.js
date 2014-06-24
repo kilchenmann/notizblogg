@@ -79,7 +79,7 @@
 							.html('')
 						)
 						.append($('<p>')
-							.append($('<button>')
+							.append($('<input>')
 								.attr({
 									'type': 'submit',
 									'title': localdata.settings.submit,
@@ -114,7 +114,7 @@
 						)
 					)
 						.append($('<p>')
-							.append($('<button>')
+							.append($('<input>')
 								.attr({
 									'type': 'submit',
 									'title': localdata.settings.submit,

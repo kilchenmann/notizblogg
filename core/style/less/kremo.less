@@ -31,7 +31,8 @@ input, select, button, textarea .card {
   height: 32px;
   background-color: @bg;
   background-image: url(../../lib/icons/btn_icons.png);
-
+  background-position: 0px 0px;
+  background-repeat: none;
   cursor: pointer;
   &:hover {
 	background-color: darken(@bg, 20%);
@@ -55,157 +56,166 @@ input, select, button, textarea .card {
   margin-right: 3px;
 }
 
+button.toggle_labels, button.toggle_edit, button.toggle_cite, button.toggle_expand {
+  background-color: transparent;
+  border: none;
+  &:hover {
+	background-color: transparent;
+	border: 0px solid transparent;
+  }
+}
+
 /* ------------ */
 /* button icons */
 /* ------------ */
 button.toggle_drawer {
-  background-position: -30px -30px;
+  background-position: -25px -30px;
   &:hover {
-	background-position: 0px -30px;
+	background-position: 5px -30px;
   }
 }
 button.toggle_power {
-  background-position: -30px -60px;
+  background-position: -25px -60px;
   &:hover {
-	background-position: 0px -60px;
+	background-position: 5px -60px;
   }
 }
 button.search_btn {
-  background-position: -30px -90px;
+  background-position: -25px -90px;
   &:hover {
-	background-position: 0px -90px;
+	background-position: 5px -90px;
   }
 }
 button.search_filter {
-  background-position: -30px -120px;
+  background-position: -25px -120px;
   &:hover {
-	background-position: 0px -120px;
+	background-position: 5px -120px;
   }
 }
 button.toggle_add {
-  background-position: -30px -150px;
+  background-position: -25px -150px;
   &:hover {
-	background-position: 0px -150px;
+	background-position: 5px -150px;
   }
 }
 button.toggle_delete {
-  background-position: -30px -180px;
+  background-position: -25px -180px;
   &:hover {
-	background-position: 0px -180px;
+	background-position: 5px -180px;
   }
 }
 button.toggle_link {
-  background-position: -30px -210px;
+  background-position: -25px -210px;
   &:hover {
-	background-position: 0px -210px;
+	background-position: 5px -210px;
   }
 }
 button.toggle_unlink {
-  background-position: -30px -240px;
+  background-position: -25px -240px;
   &:hover {
-	background-position: 0px -240px;
+	background-position: 5px -240px;
   }
 }
 button.toggle_user, label.user {
-  background-position: -30px -270px;
+  background-position: -26px -270px;
   &:hover {
-	background-position: 0px -270px;
+	background-position: 5px -270px;
   }
 }
 button.toggle_grp {
-  background-position: -30px -300px;
+  background-position: -25px -300px;
   &:hover {
-	background-position: 0px -300px;
+	background-position: 5px -300px;
   }
 }
 button.toggle_label, label.label {
-  background-position: -30px -330px;
+  background-position: -25px -330px;
   &:hover {
-	background-position: 0px -330px;
+	background-position: 5px -330px;
   }
 }
 button.toggle_labels, label.labels {
-  background-position: -30px -360px;
+  background-position: -25px -360px;
   &:hover {
-	background-position: 0px -360px;
+	background-position: 5px -360px;
   }
 }
 button.view_desk {
-  background-position: -30px -390px;
+  background-position: -25px -390px;
   &:hover {
-	background-position: 0px -390px;
+	background-position: 5px -390px;
   }
 }
 button.view_list {
-  background-position: -30px -420px;
+  background-position: -25px -420px;
   &:hover {
-	background-position: 0px -420px;
+	background-position: 5px -420px;
   }
 }
 button.view_table {
-  background-position: -30px -450px;
+  background-position: -25px -450px;
   &:hover {
-	background-position: 0px -450px;
+	background-position: 5px -450px;
   }
 }
 button.toggle_cite {
-  background-position: -30px -480px;
+  background-position: -25px -480px;
   &:hover {
-	background-position: 0px -480px;
+	background-position: 5px -480px;
   }
 }
 button.toggle_comment {
-  background-position: -30px -510px;
+  background-position: -25px -510px;
   &:hover {
-	background-position: 0px -510px;
+	background-position: 5px -510px;
   }
 }
 button.toggle_expand {
-  background-position: -30px -540px;
+  background-position: -25px -540px;
   &:hover {
-	background-position: 0px -540px;
+	background-position: 5px -540px;
   }
 }
 button.toggle_collaps {
-  background-position: -30px -570px;
+  background-position: -25px -570px;
   &:hover {
-	background-position: 0px -570px;
+	background-position: 5px -570px;
   }
 }
 button.toggle_notes {
-  background-position: -30px -600px;
+  background-position: -25px -600px;
   &:hover {
-	background-position: 0px -600px;
+	background-position: 5px -600px;
   }
 }
 button.toggle_edit {
-  background-position: -30px -630px;
+  background-position: -25px -630px;
   &:hover {
-	background-position: 0px -630px;
+	background-position: 5px -630px;
   }
 }
 button.toggle_tools {
-  background-position: -30px -660px;
+  background-position: -25px -660px;
   &:hover {
-	background-position: 0px -660px;
+	background-position: 5px -660px;
   }
 }
 button.warning, label.warning {
-  background-position: -30px -690px;
+  background-position: -25px -690px;
   &:hover {
-	background-position: 0px -690px;
+	background-position: 5px -690px;
   }
 }
 button.alert, label.alert {
-  background-position: -30px -720px;
+  background-position: -25px -720px;
   &:hover {
-	background-position: 0px -720px;
+	background-position: 5px -720px;
   }
 }
 button.toggle_lock {
-  background-position: -30px -750px;
+  background-position: -25px -750px;
   &:hover {
-	background-position: 0px -750px;
+	background-position: 5px -750px;
   }
 }
 
@@ -242,7 +252,7 @@ input.field_obj.large {
   width: 484px;
 }
 
-button[type=submit], button[type=reset] {
+input[type=submit], input[type=reset] {
   .border-radius(@rad);
   border: 1px solid rgba(0, 0, 0, 0);
   font-size: 13px;
@@ -257,14 +267,14 @@ button[type=submit], button[type=reset] {
   color: #FFFFFF;
   cursor: pointer;
 }
-button[type=submit].submit {
+input[type=submit].submit {
   background-color: @pos;
   &:hover {
 	background-color: lighten(@pos, 11%);
   }
 }
 
-button[type=reset].reset, button[type=submit].reset {
+input[type=reset].reset, input[type=submit].reset {
   background-color: @neg;
   &:hover {
 	background-color: lighten(@neg, 11%);

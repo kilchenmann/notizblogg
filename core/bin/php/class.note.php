@@ -49,6 +49,54 @@ class note {
 				$labelNames = getIndexMN('note', 'label', $id, ' | ', 'link');
 				// get the labels
 //				$labelNames = linkIndexMN('source', 'label', $id, '|');
+				// get the source
+				if($row->noteSource != 0) {
+					$source = NEW source();
+					$sourceData = json_decode($source->getSource($row->noteSource, $access), true);
+					$source2note = array(
+							'id' => $row->noteSource,
+							'name' => $sourceData['name'],
+							'title' => $sourceData['title'],
+							'subtitle' => $sourceData['subtitle'],
+							'year' => $sourceData['year'],
+
+							'bibTyp' => array(
+								'name' => $sourceData['bibTyp']['name'],
+								'id' => $sourceData['bibTyp']['id']
+							),
+							'category' => array(
+								'name' => $sourceData['category']['name'],
+								'id' => $sourceData['category']['id']
+							),
+							'project' => array(
+								'name' => $sourceData['project']['name'],
+								'id' => $sourceData['project']['id']
+							),
+							'editor' => $sourceData['editor'],
+							'author' => array(
+								'name' => $sourceData['author']['name']
+							),
+							'location' => array(
+								'name' => $sourceData['location']['name']
+							),
+							'label' => array(
+								'name' => $sourceData['label']['name']
+							),
+							'comment' => $sourceData['comment'],
+							'extern' => $row->noteSourceExtern
+					);
+
+				} else {
+					$source2note = array(
+							'id' => $row->noteSource,
+							'bibTyp' => array(
+								'name' => 'project',
+								'id' => 0
+							),
+							'extern' => $row->noteSourceExtern
+					);
+				}
+
 
 				$notes = array(
 					'id' => $row->noteID,
@@ -66,14 +114,11 @@ class note {
 						'name' => $labelNames
 					),
 					'media' => $row->noteMedia,
-					'source' => array(
-						'id' => $row->noteSource,
-						'extern' => $row->noteSourceExtern
-					),
+					'source' => $source2note,
 					'page' => array(
 						'start' => $row->pageStart,
 						'end' => $row->pageEnd
-					)
+					),
 				);
 			}
 		} else {
@@ -95,19 +140,17 @@ class note {
 
 		if($data['id'] !== 0) {
 			echo '<div class=\'note n_' . $data['id'] . '\'>';
+				// show media, if exist
 				if ($data['media'] !== '') {
 					echo '<div class=\'media\'>';
 					showMedia($id, $data['media'], $data['title']);
 					echo '</div>';
 				}
-
+				// show text
 				echo '<div class=\'text\'>';
 				echo '<h3>' . $data['title'] . '</h3>';
 				echo '<p>' . makeurl($data['content']) . '</p>';
-				if($data['source']['id'] != ''){
-					$source = NEW source();
-					$sourceData = json_decode($source->getSource($data['source']['id'], $access), true);
-					if($sourceData['bibTyp']['name'] != 'project'){
+				if($data['source']['id'] != 0 && $data['source']['bibTyp']['name'] != 'projcet'){
 						$pages = "";
 						if($data['page']['start'] != 0){
 							$pages = $data['page']['start'];
@@ -115,22 +158,50 @@ class note {
 								$pages .= '-' . $data['page']['end'];
 							}
 						}
-						echo '<p class=\'small\'>\cite[][' . $pages . ']{' . $sourceData['name'] . '}</p>';
-					}
+						echo '<p class=\'small\'>(' . $data['source']['author']['name'] .': <a href=\'?source=' . $data['source']['id'] . '\'>' . $data['source']['title'] . '</a>, S. ' . $pages . ')</p>';
+//						echo '<p class=\'small\'>\cite[][' . $pages . ']{' . $sourceData['name'] . '}</p>';
 
 				}
-
-
-
 				echo '</div>';
 
-				echo '<div class=\'tools\'>';
+				echo '<div class=\'latex\'>';
+				echo '<h3>' . $data['title'] . '</h3>';
+				echo '<p>``' . change4Tex(makeurl($data['content'])) . '\'\'</p>';
+				if($data['source']['id'] != 0 && $data['source']['bibTyp']['name'] != 'projcet'){
+//					$source = NEW source();
+//					$sourceData = json_decode($source->getSource($data['source']['id'], $access), true);
+//					if($sourceData['bibTyp']['name'] != 'project'){
+						$pages = "";
+						if($data['page']['start'] != 0){
+							$pages = $data['page']['start'];
+							if($data['page']['end'] != 0) {
+								$pages .= '-' . $data['page']['end'];
+							}
+						}
+						echo '<p class=\'small\'>\cite[][' . $pages . ']{' . $data['source']['name'] . '}</p>';
+//					}
+				}
+				echo '</div>';
+				echo '<div class=\'label\'>';
 					echo '<div class=\'left\'>';
-						echo '<p>' . $data['label']['name'] . '</p>';
+						echo '<button class=\'btn grp_none toggle_labels\'></button>';
 					echo '</div>';
 					echo '<div class=\'right\'>';
-						if (isset ($_SESSION["token"]) && $access === 'private') {
-							echo '<p>edit</p>';
+						echo '<p>' . $data['label']['name'] . '</p>';
+					echo '</div>';
+				echo '</div>';
+			echo '<div class=\'tools\'>';
+					echo '<div class=\'left\'>';
+						echo '<button class=\'btn grp_none toggle_expand\'></button>';
+					echo '</div>';
+						echo '<div class=\'center\'>';
+						if($data['source']['id'] != 0 && $data['source']['bibTyp']['name'] != 'projcet'){
+							echo '<button class=\'btn grp_none toggle_cite\'></button>';
+						}
+						echo '</div>';
+					echo '<div class=\'right\'>';
+						if($access != 'public' && isset($_SESSION['token'])) {
+							echo '<button class=\'btn grp_none toggle_edit\'></button>';
 						}
 					echo '</div>';
 				echo '</div>';

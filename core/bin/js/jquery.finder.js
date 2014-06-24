@@ -41,28 +41,38 @@
 
 				// set the title of the document and the project specific data
 				$this
-					.append(localdata.search.filter = $('<button>')
+					.append(localdata.search.simple = $('<form>')
 						.attr({
-							'type': 'button',
-							'title': localdata.settings.filter
+							'accept-charset': 'utf-8',
+							'name': 'simpleSearch',
+							'action': 'core/bin/php/search.data.php',
+							'method': 'get'
 						})
-						.addClass('btn grp_left search_filter')
-					)
-					.append(localdata.search.field = $('<input>')
-						.attr({
-							'type': 'search',
-							'title': localdata.settings.search,
-							'placeholder': localdata.settings.search
-						})
-						.addClass('input grp_middle search_field')
-					)
-					.append(localdata.search.button = $('<button>')
-						.attr({
-							'type': 'button',
-							'title': localdata.settings.placeholder
-						})
-						.addClass('btn grp_right search_btn')
+						.append(localdata.search.filter = $('<button>')
+							.attr({
+								'type': 'button',
+								'title': localdata.settings.filter
+							})
+							.addClass('btn grp_left search_filter')
+						)
+						.append(localdata.search.field = $('<input>')
+							.attr({
+								'type': 'search',
+								'title': localdata.settings.search,
+								'placeholder': localdata.settings.search,
+								'name': 'swq'
+							})
+							.addClass('input grp_middle search_field')
+						)
+						.append(localdata.search.button = $('<button>')
+							.attr({
+								'type': 'submit',
+								'title': localdata.settings.placeholder
+							})
+							.addClass('btn grp_right search_btn')
+						)
 					);
+
 
 				$this.append(
 					localdata.search.frame = $('<div>')
@@ -70,7 +80,7 @@
 						.append(
 						localdata.search.extended = $('<form>')
 							.attr({
-								'action': 'core/bin/php/search.php',
+								'action': 'core/bin/php/search.data.php',
 								'method': 'post'
 							})
 

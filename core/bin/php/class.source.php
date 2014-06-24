@@ -215,7 +215,8 @@ class source {
 			} else {
 				echo $data['author']['name'] . ':<br>';
 			}
-			echo $data['title'] . '. ';
+
+			echo '<a href=\'?source=' . $data['id'] . '\' >'. $data['title'] . '</a>. ';
 
 			if($data['subtitle'] != ''){
 				echo $data['subtitle'] . '.<br>';
@@ -280,7 +281,7 @@ class source {
 			}
 			echo '.<br>';
 		} else {
-			echo $data['comment'];
+			echo '<a href=\'?source=' . $data['id'] . '\' >'. $data['comment'] . '</a>';
 		}
 
 
@@ -302,7 +303,7 @@ class source {
 					echo '</p>';
 
 				echo '</div>';
-				echo '<div class=\'tooltip\'>';
+				echo '<div class=\'latex\'>';
 					$source->showTex($data, $access);
 				echo '</div>';
 
