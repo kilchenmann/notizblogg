@@ -53,7 +53,10 @@ class note {
 				if($row->noteSource != 0) {
 					$source = NEW source();
 					$sourceData = json_decode($source->getSource($row->noteSource, $access), true);
-					$source2note = array(
+
+					//print_r($sourceData);
+					if ($sourceData['bibTyp']['id'] != '') {
+						$source2note = array(
 							'id' => $row->noteSource,
 							'name' => $sourceData['name'],
 							'title' => $sourceData['title'],
@@ -84,18 +87,22 @@ class note {
 							),
 							'comment' => $sourceData['comment'],
 							'extern' => $row->noteSourceExtern
-					);
+						);
 
-				} else {
-					$source2note = array(
+					} else {
+
+						//		} else {
+						$source2note = array(
 							'id' => $row->noteSource,
 							'bibTyp' => array(
 								'name' => 'project',
 								'id' => 0
 							),
 							'extern' => $row->noteSourceExtern
-					);
+						);
+					}
 				}
+
 
 
 				$notes = array(
