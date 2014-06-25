@@ -7,6 +7,8 @@
  */
 
 class note {
+	var $id;
+	var $access;
 
 	function note() {
 		/*
@@ -17,15 +19,15 @@ class note {
 
 	}
 
-	function getNote($id, $access) {
+	function getNote() {
 
-		if($access === 'public' && $id === 'all') {
+		if($this->access === 'public' && $this->id === 'all') {
 			$query = 'WHERE notePublic = 1';
-		} else if($access === 'public' && $id !== 'all') {
-			$query = 'WHERE noteID=\'' . $id . '\' AND notePublic = 1';
-		} else if($access !== 'public' && $id !== 'all') {
-			$query = 'WHERE noteID=\'' . $id . '\'';
-		} else { // ($access !== 'public' && $id === 'all')
+		} else if($this->access === 'public' && $this->id !== 'all') {
+			$query = 'WHERE noteID=\'' . $this->id . '\' AND notePublic = 1';
+		} else if($this->access !== 'public' && $this->id !== 'all') {
+			$query = 'WHERE noteID=\'' . $this->id . '\'';
+		} else { // ($this->access !== 'public' && $this->id === 'all')
 			$query = '';
 		}
 
@@ -36,7 +38,9 @@ class note {
 		$note->category = new stdClass();
 		$note->project = new stdClass();
 		$note->source = new stdClass();
+		$notes = array();
 		$noteSql = mysql_query('SELECT * FROM note ' . $query . ';');
+
 
 		$num_results = mysql_num_rows($noteSql);
 		if($num_results > 0) {
@@ -46,13 +50,13 @@ class note {
 				// get the project
 				$projectName = getIndex('project', $row->noteProject);
 				// get the tags
-				$labelNames = getIndexMN('note', 'label', $id, ' | ', 'link');
+				$labelNames = getIndexMN('note', 'label', $this->id, ' | ', 'link');
 				// get the labels
-//				$labelNames = linkIndexMN('source', 'label', $id, '|');
+//				$labelNames = linkIndexMN('source', 'label', $this->id, '|');
 				// get the source
 				if($row->noteSource != 0) {
 					$source = NEW source();
-					$sourceData = json_decode($source->getSource($row->noteSource, $access), true);
+					$sourceData = json_decode($source->getSource($row->noteSource, $this->access), true);
 
 					//print_r($sourceData);
 					if ($sourceData['bibTyp']['id'] != '') {
@@ -141,9 +145,11 @@ class note {
 		// return '{"notes":'.json_encode($notes).'}';	// <-- orig!
 	}
 
-	function showNote($id, $access) {
+	function showNote() {
 		$note = NEW note();
-		$data = json_decode($note->getNote($id, $access), true);
+		$note->id = $this->id;
+		$note->access =  $this->access;
+		$data = json_decode($note->getNote(), true);
 		//print_r($data);
 
 		if($data['id'] !== 0) {
@@ -151,7 +157,7 @@ class note {
 				// show media, if exist
 				if ($data['media'] !== '') {
 					echo '<div class=\'media\'>';
-					showMedia($id, $data['media'], $data['title']);
+					showMedia($this->id, $data['media'], $data['title']);
 					echo '</div>';
 				}
 				// show text
@@ -177,7 +183,7 @@ class note {
 				echo '<p>``' . change4Tex(makeurl($data['content'])) . '\'\'</p>';
 				if($data['source']['id'] != 0 && $data['source']['bibTyp']['name'] != 'projcet'){
 //					$source = NEW source();
-//					$sourceData = json_decode($source->getSource($data['source']['id'], $access), true);
+//					$sourceData = json_decode($source->getSource($data['source']['id'], $this->access), true);
 //					if($sourceData['bibTyp']['name'] != 'project'){
 						$pages = "";
 						if($data['page']['start'] != 0){
@@ -197,21 +203,21 @@ class note {
 				}
 				echo '<div class=\'tools\'>';
 						echo '<div class=\'left\'>';
-							if($access != 'public' && isset($_SESSION['token'])) {
-								echo '<button class=\'btn grp_none toggle_edit\' id=\'edit_note_' . $id . '\'></button>';
+							if($this->access != 'public' && isset($_SESSION['token'])) {
+								echo '<button class=\'btn grp_none toggle_edit\' id=\'edit_note_' . $this->id . '\'></button>';
 							} else {
 								echo '<button class=\'btn grp_none fake_btn\'></button>';
 							}
 						echo '</div>';
 							echo '<div class=\'center\'>';
 							if($data['source']['id'] != 0 && $data['source']['bibTyp']['name'] != 'projcet'){
-								echo '<button class=\'btn grp_none toggle_cite\' id=\'cite_note_' . $id . '\'></button>';
+								echo '<button class=\'btn grp_none toggle_cite\' id=\'cite_note_' . $this->id . '\'></button>';
 							} else {
 								echo '<button class=\'btn grp_none fake_btn\'></button>';
 							}
 							echo '</div>';
 						echo '<div class=\'right\'>';
-							echo '<button class=\'btn grp_none toggle_expand\' id=\'expand_note_' . $id . '\'></button>';
+							echo '<button class=\'btn grp_none toggle_expand\' id=\'expand_note_' . $this->id . '\'></button>';
 						echo '</div>';
 					echo '</div>';
 				echo '</div>';
@@ -222,12 +228,12 @@ class note {
 
 	}
 
-	function editNote($id) {
+	function editNote() {
 
 
 	}
 
-	function saveNote($id) {
+	function saveNote() {
 
 
 	}

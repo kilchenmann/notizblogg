@@ -32,7 +32,9 @@ define ('__DOWNLOAD_URL__', __SITE_URL__ . "/export");
 /* include all my classes and other php files ------------------------------ */
 
 include ('func.content.php');
-include ('class.note.php');
-include ('class.source.php');
+
+//include ('class.note.php');
+//include ('class.source.php');
 include ('get.data.php');
+include ('show.data.php');
 
