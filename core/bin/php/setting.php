@@ -35,6 +35,7 @@ include ('func.content.php');
 
 //include ('class.note.php');
 //include ('class.source.php');
-include ('get.data.php');
+include ('class.get.php');
+include ('class.show.php');
 include ('show.data.php');
 

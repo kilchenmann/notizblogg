@@ -210,7 +210,7 @@ function oldgetIndexMN($type, $part, $id){
 
 
 
-function showMedia($id, $media, $title) {
+function showMediaOld($id, $media, $title) {
 	$mediaFile = explode(".", $media);
 	$fileName = $mediaFile[0];
 	$extension = $mediaFile[1];

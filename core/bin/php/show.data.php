@@ -32,7 +32,7 @@ function show($type, $query, $access, $viewer)
 			break;
 
 		case 'note';
-			$note = NEW data();
+			$note = NEW show();
 			$note->id = $query;
 			$note->access = $access;
 			$note->type = $type;
