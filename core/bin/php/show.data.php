@@ -14,18 +14,25 @@ function show($type, $query, $access, $viewer)
 {
 	switch ($type) {
 		case 'source';
-			$source = NEW source();
+			$source = NEW show();
+			$source->id = $query;
+			$source->access = $access;
+			$source->type = $type;
 			echo '<div class=\'' . $viewer . '\'>';
-			$source->showSource($query, $access);
+			$source->showData();
 			// 2. get the note to this source
-			$note = NEW note();
+
 			condb('open');
 			$noteSql = mysql_query("SELECT noteID FROM note WHERE noteSource=" . $query . " ORDER BY pageStart, noteTitle ASC");
 			condb('close');
 			$num_notes = mysql_num_rows($noteSql);
 			if ($num_notes > 0) {
 				while ($noteRow = mysql_fetch_object($noteSql)) {
-					$note->showNote($noteRow->noteID, $access);
+					$note = NEW show();
+					$note->id = $noteRow->noteID;
+					$note->access = $access;
+					$note->type = 'note';
+					$note->showData();
 				}
 			}
 			echo '</div>';
@@ -246,8 +253,8 @@ function show($type, $query, $access, $viewer)
 			if($num_results > 0) {
 				echo '<div class=\'' . $viewer . '\'>';
 				while ($row = mysql_fetch_object($sql)) {
-					$source = NEW source();
-					$source->showSource($row->sourceID, $access);
+					//$source = NEW source();
+					//$source->showSource($row->sourceID, $access);
 				}
 				echo '</div>';
 			}

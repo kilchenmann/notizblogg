@@ -17,8 +17,6 @@ class get {
 	}
 
 	function getNote() {
-		echo $_SESSION['token'];
-
 		if($this->access === 'public' && $this->id === 'all') {
 			$query = 'WHERE notePublic = 1';
 		} else if($this->access === 'public' && $this->id !== 'all') {
@@ -48,7 +46,7 @@ class get {
 					$source = NEW get();
 					$source->id = $row->noteSource;
 					$sourceData = json_decode($source->getSource(), true);
-					//print_r($sourceData);
+
 					if ($sourceData['bibTyp']['id'] != '') {
 						$source2note = array(
 							'id' => $row->noteSource,
@@ -201,17 +199,71 @@ class get {
 						while($row = mysql_fetch_object($selectField)) {
 							$bibFieldName = $row->bibFieldName;
 							if($bibFieldName === 'crossref'){
+								$inSource = NEW get();
+								$inSource->id = $sourceDetailName;
+								$sourceData = json_decode($inSource->getSource(), true);
+
+								if ($sourceData['bibTyp']['id'] != '') {
+									$crossref = array(
+										'id' => $sourceDetailName,
+										'name' => $sourceData['name'],
+										'title' => $sourceData['title'],
+										'subtitle' => $sourceData['subtitle'],
+										'year' => $sourceData['year'],
+
+										'bibTyp' => array(
+											'name' => $sourceData['bibTyp']['name'],
+											'id' => $sourceData['bibTyp']['id']
+										),
+										'category' => array(
+											'name' => $sourceData['category']['name'],
+											'id' => $sourceData['category']['id']
+										),
+										'project' => array(
+											'name' => $sourceData['project']['name'],
+											'id' => $sourceData['project']['id']
+										),
+										'editor' => $sourceData['editor'],
+										'author' => array(
+											'name' => $sourceData['author']['name']
+										),
+										'location' => array(
+											'name' => $sourceData['location']['name']
+										),
+										'label' => array(
+											'name' => $sourceData['label']['name']
+										),
+										'comment' => $sourceData['comment'],
+										'extern' => $row->noteSourceExtern
+									);
+									$source['crossref'] = $crossref;
+								}
+
+
+								/*
+								$inSource = NEW get();
+								$inSource->id = $sourceDetailName;
+								$inSource->access = $this->access;
+								$crossref = json_decode($inSource->getSource(), true);
+
+								$source['crossref']['id'] = $crossref['id'];
+								$source['crossref']['title'] = $crossref['title'];
+*/
+
+
+								/*
 								$selectSource = mysql_query('SELECT sourceName FROM source WHERE sourceID = ' . $sourceDetailName . ';');
 								while($inrow = mysql_fetch_object($selectSource)) {
 									$sources['crossref'] = array('id' => $sourceDetailName, 'name' => $inrow->sourceName);
 									// get the locations
 									// $locationNames = linkIndexMN('source', 'location', $sourceDetailName, ',');
 								}
+								*/
 							} else {
-								if (!isset($sources['detail'][$bibFieldName])) {
-									$sources['detail'][$bibFieldName] = $sourceDetailName;
+								if (!isset($source['detail'][$bibFieldName])) {
+									$source['detail'][$bibFieldName] = $sourceDetailName;
 								} else {
-									$sources['detail'][$bibFieldName] = $sourceDetailName;
+									$source['detail'][$bibFieldName] = $sourceDetailName;
 								}
 							}
 						}
