@@ -118,11 +118,12 @@ if (!isset ($_SESSION["token"])) {
 
 
 			<?php
+			// default parameters
+			$type = '';
+			$query = 'all';
+			$viewer = 'desk';
 			if($_SERVER['QUERY_STRING']){
 				// default values; in case of wrong queries; these variables would be overwritten in the right case
-				$type = '';
-				$query = 'all';
-				$viewer = 'desk';
 				if(isset($_GET['source'])){
 					$type = 'source';
 					$query = $_GET['source'];
@@ -148,18 +149,11 @@ if (!isset ($_SESSION["token"])) {
 					$('#section0').css({'background-image': 'url(core/style/img/bg-empty.jpg)'})
 				</script>
 				<?php
-			} else {
-				// Startseite:
-				$type = '';
-				$query = 'all';
-				$viewer = 'desk';
 			}
 
 			show($type, $query, $access, $viewer);
 
 			?>
-
-
 
 		</div>
 

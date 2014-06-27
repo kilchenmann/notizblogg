@@ -149,15 +149,15 @@ function getIndexMN($type, $part, $id, $delimiter, $link) {
 					$countSql = mysql_query("SELECT ".$type.".".$type."ID FROM ".$type.", ".$relTable." WHERE ".$part."ID = ".$relID." AND ".$relTable.".".$type."ID = ".$type.".".$type."ID ORDER BY ".$type.".".$type."Title, ".$type.".date DESC");
 					$countResult = mysql_num_rows($countSql);
 				}
-				if($link === 'link'){
-					if($relData === ""){
+				if($link == 'link'){
+					if($relData == ""){
 						$relData="<a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
 					} else {
 						$relData.= $delimiter . " <a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
 					}
 
 				} else {
-					if($relData === ""){
+					if($relData == ""){
 						$relData= $relName;
 					} else {
 						$relData.= $delimiter . "" . $relName . "</a>";
@@ -168,6 +168,7 @@ function getIndexMN($type, $part, $id, $delimiter, $link) {
 	} else {
 		$relData = "";
 	}
+
 	return $relData;
 }
 

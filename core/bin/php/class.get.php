@@ -39,7 +39,7 @@ class get {
 				// get the project
 				$projectName = getIndex('project', $row->noteProject);			// delete this query
 				// get the labels and link them
-				$labelNames = getIndexMN('note', 'label', $this->id, ' | ', 'link');
+				$labelNames = getIndexMN('note', 'label', $row->noteID, ', ', 'link');
 				$source2note = array();
 				// get the source
 				if($row->noteSource != 0) {
