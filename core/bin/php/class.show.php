@@ -195,7 +195,7 @@ class show {
 	function showTools() {
 		$show_tools_left = '<div class=\'left\'>';
 		if($this->access != 'public' && isset($_SESSION['token'])) {
-			$show_tools_left .= '<button class=\'btn grp_none toggle_edit\' id=\'edit_note_' . $this->id . '\'></button>';
+			$show_tools_left .= '<button class=\'btn grp_none toggle_edit\' id=\'edit note ' . $this->id . '\'></button>';
 		} else {
 			$show_tools_left .= '<button class=\'btn grp_none fake_btn\'></button>';
 		}
@@ -234,6 +234,7 @@ class show {
 
 			case 'note';
 				$this->data = json_decode($show->getNote(), true);
+				$this->open_note = '<div class=\'note\' id=\'' . $show->id . '\'>';
 				if ($this->data['id'] !== 0) {
 					// show media, if exist
 					if ($this->data['media'] != '') {
@@ -293,7 +294,7 @@ class show {
 
 			default; // source
 				$this->data = json_decode($show->getSource(), true);
-				$this->open_note = '<div class=\'note topic\'>';
+				$this->open_note = '<div class=\'note topic\' id=\'' . $show->id . '\'>';
 					$biblio = $this->showBib();
 					//$biblio = array('LATEX','BIBLIO');
 					$this->show_media .= $this->close;

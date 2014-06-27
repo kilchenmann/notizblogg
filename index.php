@@ -279,6 +279,8 @@ if (!isset ($_SESSION["token"])) {
 			})
 		}
 
+
+
 	});
 
 	$(window).resize(function() {
@@ -329,26 +331,12 @@ if (!isset ($_SESSION["token"])) {
 	});
 	$('div.note')
 		.mouseenter(function () {
-			$(this).toggleClass('active');
-			$(this).children('div.tools').css({'opacity': '1'});
-
-			// we have to change the following setting !!!!!!!!!
-			var noteID = $(this).prop('id'),
-				noteClass = $(this).attr('class').split(' '),
-				type;
-			if(jQuery.inArray('topic', noteClass) > 0){
-				type = 'source';
-			} else {
-				type = 'note';
-			}
-			$('.active .tools button.toggle_expand').click( function() {
-				$('#fullpage').pamphlet({
-					view: 'booklet',
-					type: type,
-					id: noteID
-				})
-			})
+			activator($(this));
 		})
+		.on('touchstart', function(){
+			activator($(this));
+		})
+
 		.hover(function() {
 			if(!$(this).hasClass('active')) {
 				$(this).addClass('active')
@@ -357,30 +345,40 @@ if (!isset ($_SESSION["token"])) {
 		.mouseleave(function() {
 			$(this).toggleClass('active');
 			$(this).children('div.tools').css({'opacity': '0.1'});
-		})
+		});
 
-		.on('touchstart', function(){
-			$(this).toggleClass('active');
-			$(this).children('div.tools').css({'opacity': '1'});
 
-			var noteID = $(this).prop('id'),
-				noteClass = $(this).attr('class').split(' '),
-				type;
-			if(jQuery.inArray('topic', noteClass) > 0){
+
+
+
+	var activator = function(element){
+		element.toggleClass('active');
+		element.children('div.tools').css({'opacity': '1'});
+		var type, typeID;
+		if(!element.attr('id')) {
+			// title element
+			type = 'title';
+			typeID = 0;
+		} else {
+			if(element.hasClass('topic')) {
 				type = 'source';
-// window.location = '?source=' + noteID;
 			} else {
 				type = 'note';
-//							window.location = '?note=' + noteID;
 			}
-			$('.active .tools button.toggle_expand').click( function() {
-				$('#fullpage').pamphlet({
-					view: 'booklet',
-					type: type,
-					id: noteID
-				})
-			})
-		});
+			typeID = element.attr('id');
+		}
+
+		//var activeNote = $('.active .tools button').attr('id');
+		var activeNote = {
+			type: type,
+			id: typeID
+		};
+		return(activeNote);
+
+	};
+
+
+
 
 
 
