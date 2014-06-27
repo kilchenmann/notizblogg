@@ -234,8 +234,8 @@ class show {
 
 			case 'note';
 				$this->data = json_decode($show->getNote(), true);
-				$this->open_note = '<div class=\'note\' id=\'' . $show->id . '\'>';
 				if ($this->data['id'] !== 0) {
+					$this->open_note = '<div class=\'note\' id=\'' . $show->id . '\'>';
 					// show media, if exist
 					if ($this->data['media'] != '') {
 						$this->show_media .= $this->showMedia();
@@ -294,7 +294,8 @@ class show {
 
 			default; // source
 				$this->data = json_decode($show->getSource(), true);
-				$this->open_note = '<div class=\'note topic\' id=\'' . $show->id . '\'>';
+				if ($this->data['id'] !== 0) {
+					$this->open_note = '<div class=\'note topic\' id=\'' . $show->id . '\'>';
 					$biblio = $this->showBib();
 					//$biblio = array('LATEX','BIBLIO');
 					$this->show_media .= $this->close;
@@ -306,6 +307,9 @@ class show {
 					$this->show_label .= '<p>' . $this->data['label']['name'] . '</p>' . $this->close;
 					// and get the tools
 					$this->show_tools .= $this->showTools() . $this->close;
+				} else {
+					// no results
+				}
 
 		}
 

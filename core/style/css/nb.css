@@ -485,6 +485,7 @@ button.toggle_labels,
 button.toggle_edit,
 button.toggle_cite,
 button.toggle_expand,
+button.toggle_collapse,
 button.fake_btn {
   background-color: transparent;
   border: none;
@@ -493,6 +494,7 @@ button.toggle_labels:hover,
 button.toggle_edit:hover,
 button.toggle_cite:hover,
 button.toggle_expand:hover,
+button.toggle_collapse:hover,
 button.fake_btn:hover {
   background-color: transparent;
   border: 0px solid transparent;
@@ -617,10 +619,10 @@ button.toggle_expand {
 button.toggle_expand:hover {
   background-position: 0px -540px;
 }
-button.toggle_collaps {
+button.toggle_collapse {
   background-position: -40px -570px;
 }
-button.toggle_collaps:hover {
+button.toggle_collapse:hover {
   background-position: 0px -570px;
 }
 button.toggle_notes {

@@ -40,10 +40,17 @@
 				$.extend(localdata.settings, options);
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
-				localdata.pamphlet.object = $('.pamphlet');
+				localdata.pamphlet.object = $('.pamphlet').empty();
 				localdata.pamphlet.object
-					.append($('<h3>').html('Show'))
-					.append($('<p>').html(localdata.settings.view + ': ' + localdata.settings.type + ' = ' + localdata.settings.id));
+					.append($('<div>').addClass('panel top')
+						.append($('<div>').addClass('left')
+							.append($('<h3>').html(localdata.settings.view + ': ' + localdata.settings.type + ' = ' + localdata.settings.id))
+						)
+						.append($('<div>').addClass('center'))
+						.append($('<div>').addClass('right')
+							.append($('<button>').addClass('btn grp_none toggle_collapse'))
+						)
+					);
 
 
 				/*
@@ -77,11 +84,26 @@
 				}
 				*/
 
-				$this.children(':not(.pamphlet)').fadeTo('slow', 0.25);
-				$('header').fadeTo('slow', 0.25);
-				$('footer').fadeTo('slow', 0.25);
 
-				localdata.pamphlet.object.fadeTo('fast', 1.00).center();
+
+				if(localdata.pamphlet.object.hasClass('visible')) {
+					$('button.toggle_collapse').click(function(){
+						alert('cklick?');
+						$('header').fadeTo('slow', 1);
+						$this.children(':not(.pamphlet)').fadeTo('slow', 1);
+						localdata.pamphlet.object.fadeTo('fast', 0).empty();
+						$('footer').fadeTo('slow', 1);
+					});
+				} else {
+					$('header').fadeTo('slow', 0.25);
+					$this.children(':not(.pamphlet)').fadeTo('slow', 0.25);
+					localdata.pamphlet.object.fadeTo('fast', 1.00).center().toggleClass('visible');
+					$('footer').fadeTo('slow', 0.25);
+
+				}
+
+
+
 
 			});											// end "return this.each"
 		},												// end "init"

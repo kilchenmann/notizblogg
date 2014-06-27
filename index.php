@@ -329,12 +329,13 @@ if (!isset ($_SESSION["token"])) {
 //			$('.note').toggleClass('active');
 //			$('.note').children('div').css({'background-color': ''});
 	});
+	var active = {};
 	$('div.note')
 		.mouseenter(function () {
-			activator($(this));
+			active = activator($(this));
 		})
 		.on('touchstart', function(){
-			activator($(this));
+			active = activator($(this));
 		})
 
 		.hover(function() {
@@ -345,7 +346,20 @@ if (!isset ($_SESSION["token"])) {
 		.mouseleave(function() {
 			$(this).toggleClass('active');
 			$(this).children('div.tools').css({'opacity': '0.1'});
+		})
+		.on('touchend', function(){
+
 		});
+
+	$('button.toggle_expand').click( function() {
+
+		$('#fullpage').pamphlet({
+			view: 'booklet',
+			type: active.type,
+			id: active.id
+		})
+	});
+
 
 
 
