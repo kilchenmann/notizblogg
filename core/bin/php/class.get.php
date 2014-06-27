@@ -34,12 +34,14 @@ class get {
 		$num_results = mysql_num_rows($sql);
 		if($num_results > 0) {
 			while ($row = mysql_fetch_object($sql)) {
+				condb('open');
 				// get the category
 				$categoryName = getIndex('category', $row->noteCategory);		// delete this query
 				// get the project
 				$projectName = getIndex('project', $row->noteProject);			// delete this query
 				// get the labels and link them
 				$labelNames = getIndexMN('note', 'label', $row->noteID, ', ', 'link');
+				condb('close');
 				$source2note = array();
 				// get the source
 				if($row->noteSource != 0) {
@@ -120,6 +122,9 @@ class get {
 				'id' => 0
 			);
 		}
+
+		//return $note;
+
 		$this->data = json_encode($note);
 		return $this->data;
 		// or as another json:
@@ -140,14 +145,16 @@ class get {
 		$source = array();
 		condb('open');
 		$sql = mysql_query('SELECT * FROM source ' . $query . ';');
+		condb('close');
 		$num_results = mysql_num_rows($sql);
 
 		if($num_results > 0) {
+			condb('open');
 			while ($row = mysql_fetch_object($sql)) {
 				// get the category
-				$categoryName = getIndex('category', $row->sourceCategory);		// delete this query
+				$categoryName = getIndex('category', $row->sourceCategory); // delete this query
 				// get the project
-				$projectName = getIndex('project', $row->sourceProject);		// delete this query
+				$projectName = getIndex('project', $row->sourceProject); // delete this query
 				// get the type
 				$bibTyp = getIndex('bibTyp', $row->sourceTyp);
 				// get the authors and link them
@@ -156,7 +163,7 @@ class get {
 				$locationNames = getIndexMN('source', 'location', $row->sourceID, ', ', '');
 				// get the labels and link them
 				$labelNames = getIndexMN('source', 'label', $row->sourceID, ', ', 'link');
-
+			condb('close');
 				$source = array(
 					'id' => $row->sourceID,
 					'name' => $row->sourceName,
@@ -187,18 +194,21 @@ class get {
 					),
 					'comment' => $row->sourceNote,
 				);
-
+				condb('open');
 				$selectDetail = mysql_query('SELECT * FROM sourceDetail WHERE sourceID = ' . $this->id . ';');
+				condb('close');
 				$num_results = mysql_num_rows($selectDetail);
-				if($num_results > 0) {
-					while($row = mysql_fetch_object($selectDetail)){
+				if ($num_results > 0) {
+					while ($row = mysql_fetch_object($selectDetail)) {
 						$bibFieldID = $row->bibFieldID;
 						$sourceDetailName = $row->sourceDetailName;
+						condb('open');
 						$selectField = mysql_query('SELECT bibFieldName FROM bibField WHERE bibFieldID = ' . $bibFieldID . ';');
+						condb('close');
 
-						while($row = mysql_fetch_object($selectField)) {
+						while ($row = mysql_fetch_object($selectField)) {
 							$bibFieldName = $row->bibFieldName;
-							if($bibFieldName === 'crossref'){
+							if ($bibFieldName == 'crossref') {
 								$inSource = NEW get();
 								$inSource->id = $sourceDetailName;
 								$sourceData = json_decode($inSource->getSource(), true);
@@ -233,8 +243,7 @@ class get {
 										'label' => array(
 											'name' => $sourceData['label']['name']
 										),
-										'comment' => $sourceData['comment'],
-										'extern' => $row->noteSourceExtern
+										'comment' => $sourceData['comment']
 									);
 									$source['crossref'] = $crossref;
 								}
@@ -269,6 +278,19 @@ class get {
 						}
 					}
 				}
+				//get also the noteIDs to this source
+				condb('open');
+				$noteSql = mysql_query("SELECT noteID FROM note WHERE noteSource=" . $this->id . " ORDER BY pageStart, noteTitle ASC");
+				condb('close');
+//				echo "SELECT noteID FROM note WHERE noteSource=" . $this->id . " ORDER BY pageStart, noteTitle ASC";
+				$notes = array();
+				$num_results = mysql_num_rows($noteSql);
+				if ($num_results > 0) {
+					while ($row = mysql_fetch_object($noteSql)) {
+						array_push($notes, $row->noteID);
+					}
+				}
+				$source['notes'] = $notes;
 			}
 		} else {
 			$source = array(
@@ -276,7 +298,13 @@ class get {
 			);
 		}
 
+		//return $source;
+
+
+
 		$this->data = json_encode($source);
+
+//		print_r($this->data);
 		return $this->data;
 	}
 }

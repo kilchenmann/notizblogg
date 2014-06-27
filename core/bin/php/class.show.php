@@ -92,11 +92,10 @@ class show {
 	}
 	function showBib() {
 		// two returns: showBibtex and showBiblio
+		if($this->data['bibTyp']['id'] != 0) {
 
-
-		if($this->data['bibTyp']['id'] !== '') {
 			$showBibtex = '@' . $this->data['bibTyp']['name'] . '{' . $this->data['name'] . ',<br>';
-			$showBiblio = '';
+			$showBiblio = ''; // $this->data['id'];
 
 			if($this->data['editor'] == 1){
 				$showBibtex .= 'editor = { ' . ($this->data['author']['name']) . '},<br>';
@@ -118,7 +117,7 @@ class show {
 				$showBibtex .= 'crossref = {<a href=\'?source=' . $this->data['crossref']['id'] . '\'>' . ($this->data['crossref']['name']) . '</a>},<br>';
 
 				$showBiblio .= 'In: ';
-				if($inData['editor'] == 1){
+				if($this->data['crossref']['editor'] == 1){
 					$showBibtex .= 'editor = { ' . ($this->data['crossref']['author']['name']) . '},<br>';
 					$showBiblio .= $this->data['crossref']['author']['name'] . ' (Hg.):<br>';
 				} else {
@@ -203,10 +202,16 @@ class show {
 		$show_tools_left .= $this->close;
 
 		$show_tools_center = '<div class=\'center\'>';
-		if(($this->data['source']['id'] != 0 || $this->data['id'] != 0) && $this->data['source']['bibTyp']['name'] != 'projcet'){
+
+		if(!empty($this->data['source'])) {
+			// note with source
+			if($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'projcet') {
+				$show_tools_center .= '<button class=\'btn grp_none toggle_cite\' id=\'cite_note_' . $this->id . '\'></button>';
+			}
+		} else if ((isset($this->data['bibTyp']) && $this->data['bibTyp']['name'] != 'projcet')) {
 			$show_tools_center .= '<button class=\'btn grp_none toggle_cite\' id=\'cite_note_' . $this->id . '\'></button>';
 		} else {
-			$show_tools_center .= '<button class=\'btn grp_none fake_btn\'></button>';
+			$show_tools_center .= '<button class=\'btn grp_none toggle_cite\' id=\'cite_note_' . $this->id . '\'></button>';
 		}
 		$show_tools_center .= $this->close;
 
@@ -241,24 +246,29 @@ class show {
 					// set content
 					$this->show_text .= '<p>' . makeurl($this->data['content']) . '</p>';
 					// set source, if exists
-					if ($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'projcet') {
-						$pages = "";
-						if ($this->data['page']['start'] != 0) {
-							$pages = $this->data['page']['start'];
-							if ($this->data['page']['end'] != 0) {
-								$pages .= '-' . $this->data['page']['end'];
+					if(!empty($this->data['source'])) {
+						//print_r(json_encode($this->data));
+						if ($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'projcet') {
+							$pages = "";
+							if ($this->data['page']['start'] != 0) {
+								$pages = $this->data['page']['start'];
+								if ($this->data['page']['end'] != 0) {
+									$pages .= '-' . $this->data['page']['end'];
+								}
 							}
+							$this->show_text .= '<p class=\'small\'>(' . $this->data['source']['author']['name'] . ': <a href=\'?source=' . $this->data['source']['id'] . '\'>' . $this->data['source']['title'] . '</a>, S. ' . $pages . ')</p>';
 						}
-						$this->show_text .= '<p class=\'small\'>(' . $this->data['source']['author']['name'] . ': <a href=\'?source=' . $this->data['source']['id'] . '\'>' . $this->data['source']['title'] . '</a>, S. ' . $pages . ')</p>';
 					}
 					$this->show_text .= $this->close;
 
 					// show text with quotation marks. to use in latex later
 					$this->show_latex .= '<h3>' . $this->data['title'] . '</h3>';
 					$this->show_latex .= '<p>``' . change4Tex(makeurl($this->data['content'])) . '\'\'</p>';
-					if ($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'projcet') {
-						$pages = "";
-						$this->show_latex .= '<p class=\'small\'>\cite[][' . $pages . ']{' . $this->data['source']['name'] . '}</p>';
+					if(!empty($this->data['source'])) {
+						if ($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'projcet') {
+							$pages = "";
+							$this->show_latex .= '<p class=\'small\'>\cite[][' . $pages . ']{' . $this->data['source']['name'] . '}</p>';
+						}
 					}
 					$this->show_latex .= $this->close;
 
@@ -312,6 +322,29 @@ class show {
 		} else {
 			// no results
 		}
+	}
+
+	function showSourceWithNotes() {
+		$this->showData();
+
+		if($this->data['notes'] != '') {
+			$i = 0;
+			$count = count($this->data['notes']);
+			while ($count > 0) {
+				$note = NEW show();
+				$note->id = $this->data['notes'][$i];
+				$note->access = $this->access;
+				$note->type = 'note';
+				$note->showData();
+				$i++;
+				$count--;
+			}
+
+
+		}
+
+
+
 	}
 
 }

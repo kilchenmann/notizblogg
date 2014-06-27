@@ -98,13 +98,21 @@ function makeurl($text)
 }
 
 function getIndex($part, $id) {
-	$tableName = $part."Name";
+
 	if ($id == 0) {
-		return "";
+		return '';
 	} else {
-		$sql = mysql_query("SELECT ".$part."Name FROM ".$part." WHERE ".$part."ID=".$id);
-		while($row = mysql_fetch_object($sql)){
-			return $row->$tableName;
+		$partName = $part.'Name';
+		$partID = $part.'ID';
+		$query = 'SELECT ' . $partName . ' FROM ' . $part . ' WHERE `' . $partID . '` = ' . $id . ';';
+
+		$sql = mysql_query($query);
+
+		$countIndex = mysql_num_rows($sql);
+		if($countIndex > 0) {
+			while($row = mysql_fetch_object($sql)){
+				return $row->$partName;
+			}
 		}
 	}
 }
