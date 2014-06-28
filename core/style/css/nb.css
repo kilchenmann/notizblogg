@@ -402,8 +402,9 @@ section,
   text-align: center;
 }
 .float_obj.pamphlet {
+  height: 544px;
+  width: 720px;
   background-color: #7b7b7b;
-  cursor: pointer;
 }
 .float_obj.pamphlet h3,
 .float_obj.pamphlet p {
@@ -414,6 +415,16 @@ section,
   font-weight: bold;
   text-shadow: 0 -1px 0 #050505;
   text-align: center;
+}
+.panel {
+  height: 44px;
+  width: 100%;
+}
+.panel .left,
+.panel .center,
+.panel .right {
+  width: 33%;
+  float: left;
 }
 /* ===========================================================================
  *
@@ -944,55 +955,76 @@ div.note {
 .note .text,
 .note .latex {
   background-color: rgba(251, 251, 251, 0.22);
-  margin: 0;
-  padding: 10px;
-}
-.note .text .text p,
-.note .latex .text p {
-  font-size: 1em;
-}
-.note .text .latex p,
-.note .latex .latex p {
-  font-size: 0.9em;
-  font-style: italic;
-}
-.note .latex {
-  display: none;
 }
 .note .label,
 .note .tools {
   background: rgba(251, 251, 251, 0.22);
 }
-.note .label {
-  border-top: 1px solid rgba(251, 251, 251, 0.25);
-  min-height: 33px;
-}
-.note .label p {
-  margin: 5px auto;
-  text-align: center;
-  display: block;
-}
 .note .tools {
+  opacity: 0.1;
+}
+.note .tools,
+.pamphlet .tools {
   border-top: 1px solid rgba(251, 251, 251, 0.25);
   display: block;
   margin-left: auto;
   margin-right: auto;
   height: 33px;
-  opacity: 0.1;
 }
 .note .tools .left,
+.pamphlet .tools .left,
 .note .tools .center,
-.note .tools .right {
+.pamphlet .tools .center,
+.note .tools .right,
+.pamphlet .tools .right {
   font-size: 0.8em;
   float: left;
   width: 33%;
 }
 .note .tools .left button,
+.pamphlet .tools .left button,
 .note .tools .center button,
-.note .tools .right button {
+.pamphlet .tools .center button,
+.note .tools .right button,
+.pamphlet .tools .right button {
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+.note .text,
+.pamphlet .text,
+.note .latex,
+.pamphlet .latex {
+  margin: 0;
+  padding: 10px;
+}
+.note .text .text p,
+.pamphlet .text .text p,
+.note .latex .text p,
+.pamphlet .latex .text p {
+  font-size: 1em;
+}
+.note .text .latex p,
+.pamphlet .text .latex p,
+.note .latex .latex p,
+.pamphlet .latex .latex p {
+  font-size: 0.9em;
+  font-style: italic;
+}
+.note .latex,
+.pamphlet .latex {
+  display: none;
+}
+.note .label,
+.pamphlet .label {
+  border-top: 1px solid rgba(251, 251, 251, 0.25);
+  min-height: 33px;
+}
+.note .label p,
+.pamphlet .label p {
+  margin: 5px auto;
+  text-align: center;
+  display: block;
 }
 .note.active .text,
 .note.active .latex {

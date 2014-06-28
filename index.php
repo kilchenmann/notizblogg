@@ -339,10 +339,11 @@ if (!isset ($_SESSION["token"])) {
 		})
 
 		.hover(function() {
-			if(!$(this).hasClass('active')) {
-				$(this).addClass('active')
+			if($(this).hasClass('active')) {
+				
 			}
 		})
+
 		.mouseleave(function() {
 			$(this).toggleClass('active');
 			$(this).children('div.tools').css({'opacity': '0.1'});
@@ -350,15 +351,19 @@ if (!isset ($_SESSION["token"])) {
 		.on('touchend', function(){
 
 		});
+/*
+	$('div.tools button').hover(function(){
+			// first function is for the mouseover/mouseenter events
+			console.log($(this).attr('id'));
+		},
+		function(){
+			// second function is for mouseleave/mouseout events
+			$(this).find('button').show();
+		});
+*/
 
-	$('button.toggle_expand').click( function() {
 
-		$('#fullpage').pamphlet({
-			view: 'booklet',
-			type: active.type,
-			id: active.id
-		})
-	});
+
 
 
 
@@ -381,14 +386,22 @@ if (!isset ($_SESSION["token"])) {
 			}
 			typeID = element.attr('id');
 		}
-
 		//var activeNote = $('.active .tools button').attr('id');
 		var activeNote = {
 			type: type,
 			id: typeID
 		};
-		return(activeNote);
 
+		$('button.toggle_expand').click( function() {
+			$('header').pamphlet({
+				view: 'booklet',
+				type: activeNote.type,
+				id: activeNote.id,
+				mainele: $('#fullpage')
+			})
+		});
+
+		return(activeNote);
 	};
 
 
