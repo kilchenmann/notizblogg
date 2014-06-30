@@ -18,7 +18,7 @@ class show {
 	var $show_text = '<div class=\'text\'>';
 	var $show_latex = '<div class=\'latex\'>';
 	var $show_label = '<div class=\'label\'>';
-	var $show_tools = '<div class=\'tools\'>';
+	var $show_tools = '';
 
 	var $close = '</div>';
 
@@ -193,33 +193,34 @@ class show {
 
 
 	function showTools() {
-		$show_tools_left = '<div class=\'left\'>';
-		if($this->access != 'public' && isset($_SESSION['token'])) {
-			$show_tools_left .= '<button class=\'btn grp_none toggle_edit\' id=\'edit note ' . $this->id . '\'></button>';
+
+		// is it public
+		if($this->data['public'] > 0) {
+			$class_public = 'public';
 		} else {
-			$show_tools_left .= '<button class=\'btn grp_none fake_btn\'></button>';
+			$class_public = '';
 		}
-		$show_tools_left .= $this->close;
 
-		$show_tools_center = '<div class=\'center\'>';
+		if($this->data['type'] == 'note'){
+			// if it's a note and there is also a source connected with it,
+			// we need the sourceID for our expand (booklet) button
+			if(!empty($this->data['source'])) {
+				$id_expand = $this->data['source']['id'];
 
-		if(!empty($this->data['source'])) {
-			// note with source
-			if($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'projcet') {
-				$show_tools_center .= '<button class=\'btn grp_none toggle_cite\' id=\'cite_note_' . $this->id . '\'></button>';
+			} else {
+				$id_expand = '';
 			}
-		} else if ((isset($this->data['bibTyp']) && $this->data['bibTyp']['name'] != 'projcet')) {
-			$show_tools_center .= '<button class=\'btn grp_none toggle_cite\' id=\'cite_note_' . $this->id . '\'></button>';
 		} else {
-			$show_tools_center .= '<button class=\'btn grp_none toggle_cite\' id=\'cite_note_' . $this->id . '\'></button>';
+			// else it's a source
+			$id_expand = $this->data['id'];
 		}
-		$show_tools_center .= $this->close;
 
-		$show_tools_right = '<div class=\'right\'>';
-		$show_tools_right .= '<button class=\'btn grp_none toggle_expand\' id=\'expand_note_' . $this->id . '\'></button>';
-		$show_tools_right .= $this->close;
+		// finally return: <div class='tools [public]' id='noteID OR sourceID'></div>
+		// class 'public' is needed for the edit button; the id is needed for the expand (booklet) button
 
-		return $show_tools_left . $show_tools_center . $show_tools_right;
+		return '<div class=\'tools ' . $class_public . '\' id=\'' . $id_expand . '\'></div>';
+
+
 	}
 
 	function showData() {
@@ -279,7 +280,7 @@ class show {
 					}
 					$this->show_label .= $this->close;
 
-					$this->show_tools .= $this->showTools() . $this->close;
+					$this->show_tools .= $this->showTools();
 
 				} else {
 					// no results
@@ -306,7 +307,7 @@ class show {
 					// show labels
 					$this->show_label .= '<p>' . $this->data['label']['name'] . '</p>' . $this->close;
 					// and get the tools
-					$this->show_tools .= $this->showTools() . $this->close;
+					$this->show_tools .= $this->showTools();
 				} else {
 					// no results
 				}

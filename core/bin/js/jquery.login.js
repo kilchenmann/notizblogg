@@ -73,7 +73,7 @@
 						'border': 'none'
 				});
 					localdata.login.frame.toggleClass('medium small');
-					localdata.login.size = 64;
+					localdata.login.size = 96;
 
 					localdata.login.loginform.append($('<h3>')
 							.html('')

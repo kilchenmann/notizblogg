@@ -29,13 +29,17 @@ input, select, button, textarea .card {
 .btn {
   width: 40px;
   height: 32px;
-  background-color: @bg;
+//  background-color: @bg;
+  background-color: transparent;
   background-image: url(../../lib/icons/btn_icons.png);
   background-position: 0px 0px;
   background-repeat: no-repeat;
+  border: 0px solid transparent;
   cursor: pointer;
   &:hover {
-	background-color: darken(@bg, 20%);
+	//background-color: darken(@bg, 20%);
+	background-color: transparent;
+	border: 0px solid transparent;
   }
 }
 .grp_left, .grp_middle, .grp_right {

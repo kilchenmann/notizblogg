@@ -95,6 +95,8 @@ class get {
 				}
 
 				$note = array(
+					'type' => 'note',
+					'public' => $row->notePublic,
 					'id' => $row->noteID,
 					'title' => $row->noteTitle,
 					'content' => $row->noteContent,
@@ -165,6 +167,8 @@ class get {
 				$labelNames = getIndexMN('source', 'label', $row->sourceID, ', ', 'link');
 			condb('close');
 				$source = array(
+					'type' => 'source',
+					'public' => $row->sourcePublic,
 					'id' => $row->sourceID,
 					'name' => $row->sourceName,
 					'title' => $row->sourceTitle,

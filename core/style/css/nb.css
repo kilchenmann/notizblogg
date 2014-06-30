@@ -456,14 +456,16 @@ textarea .card {
 .btn {
   width: 40px;
   height: 32px;
-  background-color: #fbfbfb;
+  background-color: transparent;
   background-image: url(../../lib/icons/btn_icons.png);
   background-position: 0px 0px;
   background-repeat: no-repeat;
+  border: 0px solid transparent;
   cursor: pointer;
 }
 .btn:hover {
-  background-color: #c8c8c8;
+  background-color: transparent;
+  border: 0px solid transparent;
 }
 .grp_left,
 .grp_middle,
@@ -965,6 +967,7 @@ div.note {
 }
 .note .tools,
 .pamphlet .tools {
+  background-color: red;
   border-top: 1px solid rgba(251, 251, 251, 0.25);
   display: block;
   margin-left: auto;
@@ -990,6 +993,10 @@ div.note {
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+.note .tools.public,
+.pamphlet .tools.public {
+  background-color: green;
 }
 .note .text,
 .pamphlet .text,

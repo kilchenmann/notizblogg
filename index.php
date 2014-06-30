@@ -339,9 +339,11 @@ if (!isset ($_SESSION["token"])) {
 		})
 
 		.hover(function() {
+/*
 			if($(this).hasClass('active')) {
-				
+
 			}
+*/
 		})
 
 		.mouseleave(function() {
@@ -363,17 +365,11 @@ if (!isset ($_SESSION["token"])) {
 */
 
 
-
-
-
-
-
-
-
 	var activator = function(element){
 		element.toggleClass('active');
 		element.children('div.tools').css({'opacity': '1'});
-		var type, typeID;
+		var type = undefined,
+			typeID = undefined;
 		if(!element.attr('id')) {
 			// title element
 			type = 'title';
@@ -392,21 +388,26 @@ if (!isset ($_SESSION["token"])) {
 			id: typeID
 		};
 
+		var edit_btn;
+
+		if ($('div.tools').find('button.toggle_edit').length) {
+			$('button.toggle_edit').click( function() {
+				$('header').pamphlet('form', activeNote.type, activeNote.id, $('#fullpage'));
+			});
+		} else {
+			edit_btn = false;
+		}
+
+
+
+
 		$('button.toggle_expand').click( function() {
-			$('header').pamphlet({
-				view: 'booklet',
-				type: activeNote.type,
-				id: activeNote.id,
-				mainele: $('#fullpage')
-			})
+			var source = $(this).attr('id');
+			$('header').pamphlet('booklet', activeNote.type, activeNote.id, source, $('#fullpage'), edit_btn);
 		});
 
 		return(activeNote);
 	};
-
-
-
-
 
 
 
