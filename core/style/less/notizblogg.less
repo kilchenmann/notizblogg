@@ -135,7 +135,6 @@ div.note {
 }
 
 .note {
-
   .border-radius(@rad);
   display: inline-block;
   border: 0px solid #FAFAFA;
@@ -176,31 +175,51 @@ div.note {
 	  text-align: center;
 	}
   }
+}
+
+.note, .pamphlet {
   .text, .latex {
 	background-color: fade(@bg, 22%);
+	margin: 0;
+	padding: 10px;
+	.text p {
+	  font-size: 1em;
+	}
+	.latex p {
+	  font-size: 0.9em;
+	  font-style: italic;
+	}
+  }
+
+  .text {
+
+  }
+
+  .latex {
+	display: none;
   }
 
   .label, .tools {
 	background: fade(@bg, 22%);
   }
 
+  .label {
+	border-top: 1px solid fade(@bg, 25%);
+	min-height: 33px;
+	p {
+	  margin: 5px auto;
+	  text-align: center;
+	  display: block;
+	}
+  }
+
+  .label.private {
+	border-top: 1px solid fade(indianred, 25%);
+  }
+
   .tools {
 	opacity: 0.1;
-  }
-	.left {
-
-	}
-	.center {
-	}
-	.right {
-
-	}
-}
-
-.note, .pamphlet{
-  .tools {
-	background-color: red;
-	border-top: 1px solid fade(@bg, 25%);
+	border-top: 1px solid fade(@bg, 22%);
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -218,44 +237,15 @@ div.note {
 	  }
 	}
   }
-  .tools.public {
-	background-color: green;
-  }
-  .text, .latex {
-	//	background-color: @bg;
-	margin: 0;
-	padding: 10px;
-	.text p {
-	  font-size: 1em;
-	}
-	.latex p {
-	  font-size: 0.9em;
-	  font-style: italic;
-	}
-  }
-
-
-  .latex {
-	display: none;
-  }
-  .label {
-	border-top: 1px solid fade(@bg, 25%);
-	min-height: 33px;
-	p {
-	  margin: 5px auto;
-	  text-align: center;
-	  display: block;
-	}
-  }
-
 
 }
 
-.note.active .text, .note.active .latex{
+
+.note.active .text, .note.active .latex {
   background-color: @bg;
 }
 
-.note.topic .text, .note.topic .latex{
+.note.topic .text, .note.topic .latex {
   background-color: fade(darken(@bg, 33%), 33%);
 }
 .note.topic.active .text, .note.topic.active .latex{

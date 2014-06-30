@@ -194,19 +194,11 @@ class show {
 
 	function showTools() {
 
-		// is it public
-		if($this->data['public'] > 0) {
-			$class_public = 'public';
-		} else {
-			$class_public = '';
-		}
-
 		if($this->data['type'] == 'note'){
 			// if it's a note and there is also a source connected with it,
 			// we need the sourceID for our expand (booklet) button
 			if(!empty($this->data['source'])) {
 				$id_expand = $this->data['source']['id'];
-
 			} else {
 				$id_expand = '';
 			}
@@ -218,7 +210,7 @@ class show {
 		// finally return: <div class='tools [public]' id='noteID OR sourceID'></div>
 		// class 'public' is needed for the edit button; the id is needed for the expand (booklet) button
 
-		return '<div class=\'tools ' . $class_public . '\' id=\'' . $id_expand . '\'></div>';
+		return '<div class=\'tools\' id=\'' . $id_expand . '\'></div>';
 
 
 	}
@@ -250,7 +242,7 @@ class show {
 					// set source, if exists
 					if(!empty($this->data['source'])) {
 						//print_r(json_encode($this->data));
-						if ($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'projcet') {
+						if ($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'project') {
 							$pages = "";
 							if ($this->data['page']['start'] != 0) {
 								$pages = $this->data['page']['start'];
@@ -264,17 +256,24 @@ class show {
 					$this->show_text .= $this->close;
 
 					// show text with quotation marks. to use in latex later
-					$this->show_latex .= '<h3>' . $this->data['title'] . '</h3>';
-					$this->show_latex .= '<p>``' . change4Tex(makeurl($this->data['content'])) . '\'\'</p>';
 					if(!empty($this->data['source'])) {
-						if ($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'projcet') {
+						$this->show_latex .= '<h3>' . $this->data['title'] . '</h3>';
+						$this->show_latex .= '<p>``' . change4Tex(makeurl($this->data['content'])) . '\'\'</p>';
+						if ($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'project') {
 							$pages = "";
 							$this->show_latex .= '<p class=\'small\'>\cite[][' . $pages . ']{' . $this->data['source']['name'] . '}</p>';
 						}
+						$this->show_latex .= $this->close;
+					} else {
+						$this->show_latex = '';
 					}
-					$this->show_latex .= $this->close;
 
 					// show labels
+					// is it public?
+					if($this->data['public'] == 0) {
+						$this->show_label = '<div class=\'label private\'>';
+					}
+
 					if ($this->data['label']['name'] != '') {
 						$this->show_label .= '<p>' . $this->data['label']['name'] . '</p>';
 					}

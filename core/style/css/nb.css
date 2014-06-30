@@ -448,23 +448,22 @@ button,
 textarea .card {
   color: #131224;
   background-color: #ffffff;
-  border-top: 1px solid #ffffff;
+  border-top: 1px solid #e7e7e7;
   border-left: 1px solid #ffffff;
-  border-right: 1px solid #e7e7e7;
+  border-right: 1px solid #ffffff;
   border-bottom: 1px solid #e7e7e7;
 }
 .btn {
   width: 40px;
   height: 32px;
-  background-color: transparent;
   background-image: url(../../lib/icons/btn_icons.png);
   background-position: 0px 0px;
   background-repeat: no-repeat;
-  border: 0px solid transparent;
+  border: 1px solid #eeeeee;
   cursor: pointer;
 }
 .btn:hover {
-  background-color: transparent;
+  background-color: #c8c8c8;
   border: 0px solid transparent;
 }
 .grp_left,
@@ -688,7 +687,8 @@ input[type=date] {
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0);
+  border-top: 1px solid rgba(0, 0, 0, 0);
+  border-bottom: 1px solid rgba(0, 0, 0, 0);
   font-size: 13px;
   padding: 8px;
   width: 228px;
@@ -955,20 +955,55 @@ div.note {
   text-align: center;
 }
 .note .text,
-.note .latex {
+.pamphlet .text,
+.note .latex,
+.pamphlet .latex {
   background-color: rgba(251, 251, 251, 0.22);
+  margin: 0;
+  padding: 10px;
+}
+.note .text .text p,
+.pamphlet .text .text p,
+.note .latex .text p,
+.pamphlet .latex .text p {
+  font-size: 1em;
+}
+.note .text .latex p,
+.pamphlet .text .latex p,
+.note .latex .latex p,
+.pamphlet .latex .latex p {
+  font-size: 0.9em;
+  font-style: italic;
+}
+.note .latex,
+.pamphlet .latex {
+  display: none;
 }
 .note .label,
-.note .tools {
+.pamphlet .label,
+.note .tools,
+.pamphlet .tools {
   background: rgba(251, 251, 251, 0.22);
 }
-.note .tools {
-  opacity: 0.1;
+.note .label,
+.pamphlet .label {
+  border-top: 1px solid rgba(251, 251, 251, 0.25);
+  min-height: 33px;
+}
+.note .label p,
+.pamphlet .label p {
+  margin: 5px auto;
+  text-align: center;
+  display: block;
+}
+.note .label.private,
+.pamphlet .label.private {
+  border-top: 1px solid rgba(205, 92, 92, 0.25);
 }
 .note .tools,
 .pamphlet .tools {
-  background-color: red;
-  border-top: 1px solid rgba(251, 251, 251, 0.25);
+  opacity: 0.1;
+  border-top: 1px solid rgba(251, 251, 251, 0.22);
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -993,45 +1028,6 @@ div.note {
   display: block;
   margin-left: auto;
   margin-right: auto;
-}
-.note .tools.public,
-.pamphlet .tools.public {
-  background-color: green;
-}
-.note .text,
-.pamphlet .text,
-.note .latex,
-.pamphlet .latex {
-  margin: 0;
-  padding: 10px;
-}
-.note .text .text p,
-.pamphlet .text .text p,
-.note .latex .text p,
-.pamphlet .latex .text p {
-  font-size: 1em;
-}
-.note .text .latex p,
-.pamphlet .text .latex p,
-.note .latex .latex p,
-.pamphlet .latex .latex p {
-  font-size: 0.9em;
-  font-style: italic;
-}
-.note .latex,
-.pamphlet .latex {
-  display: none;
-}
-.note .label,
-.pamphlet .label {
-  border-top: 1px solid rgba(251, 251, 251, 0.25);
-  min-height: 33px;
-}
-.note .label p,
-.pamphlet .label p {
-  margin: 5px auto;
-  text-align: center;
-  display: block;
 }
 .note.active .text,
 .note.active .latex {

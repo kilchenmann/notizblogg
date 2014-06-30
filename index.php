@@ -57,7 +57,7 @@ if (!isset ($_SESSION["token"])) {
 	-->
 	<script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.pamphlet.js"></script>
+	<script type="text/javascript" src="core/bin/js/jquery.expand.js"></script>
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
 	-->
@@ -91,6 +91,7 @@ if (!isset ($_SESSION["token"])) {
 	<div class="left"><span class="project"><a href='http://notizblogg.ch'><h2 class="logo">Notizblogg</h2></a></span></div>
 	<div class="center"><span class="search"></span></div>
 	<div class="right">
+		<span class="add"></span>
 		<span class="user"></span>
 		<span class="drawer"></span>
 		<!--
@@ -113,7 +114,6 @@ if (!isset ($_SESSION["token"])) {
 </footer>
 
 <div id="fullpage">
-	<div id="section0" class="section">
 		<div class="viewer">
 
 
@@ -146,7 +146,7 @@ if (!isset ($_SESSION["token"])) {
 				}
 				?>
 				<script type="text/javascript">
-					$('#section0').css({'background-image': 'url(core/style/img/bg-empty.jpg)'})
+					$('.viewer').css({'background-image': 'url(core/style/img/bg-empty.jpg)'})
 				</script>
 				<?php
 			}
@@ -157,7 +157,6 @@ if (!isset ($_SESSION["token"])) {
 
 		</div>
 
-	</div>
 </div>
 
 
@@ -180,34 +179,9 @@ if (!isset ($_SESSION["token"])) {
 
 	$(document).ready(function () {
 
-		$.getScript('core/bin/js/jquery.fullpage.min.js', function() {
-			/*
-			$('#fullpage').fullpage({
-				//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
-				anchors: ['start'],
-				//	slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
-				slidesColor: ['#1A1A1A'],
-				css3: true
-			});
-			*/
-			var height = $(window).height() - $('header').height() - $('footer').height();
-			$('div.viewer').css({'height': height});
-		});
-
-
-		/*
-		$.getScript('core/bin/js/jquery.lookFor.js', function() {
-			$('.note').lookFor(
-				//		$('<button>').addClass('btn grp_none toggle_drawer')
-			);
-		});
-*/
-
 		var user = '<?php echo $user; ?>',
 			access = '<?php echo $access; ?>',
 			uid = '<?php echo $uid; ?>';
-
-
 
 		$.getScript('core/bin/js/jquery.login.js', function() {
 			if(user !== '--' && access !== 'public' && uid !== '') {
@@ -225,6 +199,17 @@ if (!isset ($_SESSION["token"])) {
 						database: ''
 					});
 				});
+				$.getScript('core/bin/js/jquery.create.js', function() {
+					/* integrate the add button */
+					$('.add').create({
+						type: 'new'
+					});
+				});
+				$.getScript('core/bin/js/jquery.drawer.js', function() {
+					$('.drawer').append(
+						//		$('<button>').addClass('btn grp_none toggle_drawer')
+					);
+				});
 
 			} else {
 				$('.user').login({
@@ -237,29 +222,76 @@ if (!isset ($_SESSION["token"])) {
 			}
 		});
 
+		$('.note .tools').each(function() {
+			var $tools = $(this),
+				$note = $tools.parent($('.note')),
+				nID = $note.attr('id'),
+				sID = $tools.attr('id'),
+				edit_ele,
+				tex_ele,
+				exp_ele,
+				type,
+				access = '<?php echo $access; ?>';
+			if($note.hasClass('topic') && nID === sID) {
+				type = 'source';
+			} else {
+				type = 'note';
+			}
 
-		$.getScript('core/bin/js/jquery.drawer.js', function() {
-			$('.drawer').append(
-		//		$('<button>').addClass('btn grp_none toggle_drawer')
+			if(access === 'public') {
+				edit_ele = $('<button>').addClass('btn grp_none fake_btn');
+				edit = false;
+			} else {
+				edit_ele = $('<button>').addClass('btn grp_none toggle_edit');
+				edit = true;
+			}
+
+			if($note.children('.latex').length > 0) {
+				tex_ele = $('<button>').addClass('btn grp_none toggle_cite');
+				exp_ele = $('<button>').addClass('btn grp_none toggle_expand').expand({
+					type: type,
+					noteid: nID,
+					sourceid: sID,
+					edit: edit
+				});
+			} else {
+				tex_ele = $('<button>').addClass('btn grp_none fake_btn');
+				exp_ele = $('<button>').addClass('btn grp_none fake_btn');
+			}
+
+			$tools
+				.append(
+				$('<div>').addClass('left').append(edit_ele)
+			)
+				.append(
+				$('<div>').addClass('center').append(tex_ele)
+			)
+				.append(
+				$('<div>').addClass('right').append(exp_ele)
 			);
+
 		});
 
 
-//		$('.intro').append(
-//			$('<button>').html('Inhalt').click(function() {
-/*
-				var url = "data/example/notes.json";
-//				var url = "core/bin/php/get.note.php";
 
-				$.getJSON(url,
-					function(data){
-						$.each(data.notes, function(i, note){
-							$('.intro').append('<div>' + note.title + '<br>' + note.content + '</div><br>')
-								.addClass('note');
-						});
-					});
-//			}));
-*/
+		var height = $(window).height() - $('header').height() - $('footer').height();
+		$('div.viewer').css({'height': height});
+		$('.float_obj').center();
+
+
+		//$.getScript('core/bin/js/jquery.fullpage.min.js', function() {
+			/*
+			$('#fullpage').fullpage({
+				//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
+				anchors: ['start'],
+				//	slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
+				slidesColor: ['#1A1A1A'],
+				css3: true
+			});
+			*/
+		//});
+
+
 
 		if(getUrlVars()["access"] !== undefined) {
 			$('#fullpage').warning({
@@ -278,14 +310,13 @@ if (!isset ($_SESSION["token"])) {
 				window.location.href = window.location.href.split('?')[0];
 			})
 		}
-
-
-
 	});
+
 
 	$(window).resize(function() {
 		var height = $(window).height() - $('header').height() - $('footer').height();
 		$('div.viewer').css({'height': height});
+		$('.float_obj').center();
 	});
 
 	$.getScript('core/bin/js/jquery.mousewheel.min.js', function() {
@@ -389,24 +420,25 @@ if (!isset ($_SESSION["token"])) {
 		};
 
 		var edit_btn;
-
+/*
 		if ($('div.tools').find('button.toggle_edit').length) {
 			$('button.toggle_edit').click( function() {
-				$('header').pamphlet('form', activeNote.type, activeNote.id, $('#fullpage'));
+				$('header').expand('form', activeNote.type, activeNote.id, $('#fullpage'));
 			});
 		} else {
 			edit_btn = false;
 		}
+*/
 
-
-
+/*
 
 		$('button.toggle_expand').click( function() {
 			var source = $(this).attr('id');
-			$('header').pamphlet('booklet', activeNote.type, activeNote.id, source, $('#fullpage'), edit_btn);
+			$('header').expand('booklet', activeNote.type, activeNote.id, source, $('#fullpage'), edit_btn);
 		});
-
+*/
 		return(activeNote);
+
 	};
 
 

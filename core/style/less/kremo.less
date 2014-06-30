@@ -19,9 +19,9 @@
 input, select, button, textarea .card {
   color: @ink;
   background-color: lighten(@bg, 98%);
-  border-top: 1px solid lighten(@bg, 8%);
+  border-top: 1px solid darken(@bg, 8%);
   border-left: 1px solid lighten(@bg, 8%);
-  border-right: 1px solid darken(@bg, 8%);
+  border-right: 1px solid lighten(@bg, 8%);
   border-bottom: 1px solid darken(@bg, 8%);
 }
 
@@ -30,15 +30,15 @@ input, select, button, textarea .card {
   width: 40px;
   height: 32px;
 //  background-color: @bg;
-  background-color: transparent;
+//  background-color: lighten(@bg, 20%);
   background-image: url(../../lib/icons/btn_icons.png);
   background-position: 0px 0px;
   background-repeat: no-repeat;
-  border: 0px solid transparent;
+  border: 1px solid darken(@bg, 5%);
   cursor: pointer;
   &:hover {
-	//background-color: darken(@bg, 20%);
-	background-color: transparent;
+	background-color: darken(@bg, 20%);
+	//background-color: transparent;
 	border: 0px solid transparent;
   }
 }
@@ -242,7 +242,8 @@ input, textarea, select {
 
 input[type=text], input[type=password], input[type=email], input[type=date]  {
   .border-radius(@rad);
-  border: 1px solid rgba(0, 0, 0, 0);
+  border-top: 1px solid rgba(0, 0, 0, 0);
+  border-bottom: 1px solid rgba(0, 0, 0, 0);
   font-size: 13px;
   padding: 8px;
   width: 228px;

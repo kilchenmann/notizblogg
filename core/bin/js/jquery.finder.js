@@ -63,6 +63,24 @@
 								'name': 'swq'
 							})
 							.addClass('input grp_middle search_field')
+							.focus(function(){
+								localdata.search.field
+									.attr({
+										'placeholder': ''
+									})
+									.css({
+										'background-color': '#ffffe0'
+									})
+							})
+							.focusout(function(){
+								localdata.search.field
+									.attr({
+										'placeholder': localdata.settings.search
+									})
+									.css({
+										'background-color': 'transparent'
+									})
+							})
 						)
 						.append(localdata.search.button = $('<button>')
 							.attr({
