@@ -26,6 +26,7 @@
 		init: function(options) {
 			return this.each(function() {
 				var $this = $(this),
+					checkID,
 					localdata = {};
 
 				localdata.expand = {};
@@ -69,10 +70,9 @@
 								} else {
 									if(localdata.settings.sourceID === localdata.settings.noteID) {
 
-										// get the source data from get.JSON.php
-										console.log('core/bin/php/get.JSON.php?source=' + localdata.settings.sourceID);
+										// get the source data from api/data.php
 										$.getJSON('api/data.php?source=' + localdata.settings.sourceID, function(data) {
-											console.log(data.author);
+
 										});
 
 
@@ -81,27 +81,39 @@
 										localdata.expand.content = $('<div>').addClass('form entire edit_source')
 											.append($('<h3>').html('You want to edit the existing source ' + localdata.settings.sourceID))
 											.append($('<form>').attr({'action': 'save.php', 'method': 'post', 'accept-charset': 'utf-8' })
-												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'checkID', 'readonly': 'readonly', 'name': 'checkID', 'value': checkID }))
-												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'noteID', 'readonly': 'readonly', 'name': 'noteID', 'value': localdata.settings.noteID }))
+												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'checkID', 'readonly': 'readonly', 'name': 'checkID', 'value': check_id() }))
+												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'noteID', 'readonly': 'readonly', 'name': 'noteID', 'value': localdata.settings.sourceID }))
 												.append($('<input>').attr({'type': 'text', 'name': 'title', 'placeholder': 'Title', 'value': ''}))
 												.append($('<textarea>').attr({'type': 'text', 'name': 'content', 'placeholder': 'Content', 'required': 'required', 'rows': '10', 'cols': '50', 'value': ''}))
 										)
 
 									} else {
-										// split the text to get the title and the content
-										var title = localdata.settings.data['text'].split('</h3><p>')[0];
-										var text = localdata.settings.data['text'].split('</h3><p>')[1];
+										localdata.expand.content = $('<div>').addClass('form entire edit_note');
+										// get the note data from api/data.php
+										$.getJSON('api/data.php?note=' + localdata.settings.noteID, function(data) {
 
-										console.log(text);
-										var checkID = check_id();
-										localdata.expand.content = $('<div>').addClass('form entire edit_note')
-											.append($('<h3>').html('You want to edit the existing note ' + localdata.settings.noteID))
-											.append($('<form>').attr({'action': 'save.php', 'method': 'post', 'accept-charset': 'utf-8' })
-												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'checkID', 'readonly': 'readonly', 'name': 'checkID', 'value': checkID }))
-												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'noteID', 'readonly': 'readonly', 'name': 'noteID', 'value': localdata.settings.noteID }))
-												.append($('<input>').attr({'type': 'text', 'name': 'title', 'placeholder': 'Title', 'value': title}))
-												.append($('<textarea>').attr({'type': 'text', 'name': 'content', 'placeholder': 'Content', 'required': 'required', 'rows': '10', 'cols': '50'}).html(text))
-										)
+											if(data.setting.checkID === null){
+												checkID = check_id();
+											} else {
+												checkID = data.setting.checkID;
+											}
+											localdata.expand.content.append($('<h3>').html('You want to edit the existing note ' + data.id))
+												.append($('<form>').attr({'action': 'save.php', 'method': 'post', 'accept-charset': 'utf-8' })
+													.append($('<img>').attr({'src': '../media/pictures/' + data.media, 'alt': data.media}))
+													.append($('<input>').attr({'type': 'hidden', 'placeholder': 'checkID', 'readonly': 'readonly', 'name': 'checkID', 'value': checkID }))
+													.append($('<input>').attr({'type': 'hidden', 'placeholder': 'noteID', 'readonly': 'readonly', 'name': 'noteID', 'value': data.id }))
+													.append($('<input>').attr({'type': 'text', 'name': 'title', 'placeholder': 'Title', 'value': data.title}))
+													.append($('<textarea>').attr({'type': 'text', 'name': 'content', 'placeholder': 'Content', 'required': 'required', 'rows': '10', 'cols': '50'}).html(data.content))
+													.append($('<input>').attr({'type': 'text', 'name': 'label', 'placeholder': 'Label', 'value': data.label.name}))
+											)
+
+
+
+
+										})
+
+
+
 									}
 								}
 								localdata.expand.edit_ele = $('<button>').addClass('btn grp_none toggle_lock');

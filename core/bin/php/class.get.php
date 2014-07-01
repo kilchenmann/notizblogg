@@ -95,6 +95,11 @@ class get {
 				}
 
 				$note = array(
+					'setting' => array(
+						'checkID' => $row->checkID,
+						'date' => $row->date,
+						'public' => $row->notePublic
+					),
 					'type' => 'note',
 					'public' => $row->notePublic,
 					'id' => $row->noteID,
