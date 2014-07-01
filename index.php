@@ -291,7 +291,10 @@ if (!isset ($_SESSION["token"])) {
 			}
 
 			if($note.children('.latex').length > 0) {
-				tex_ele = $('<button>').addClass('btn grp_none toggle_cite');
+				tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function() {
+					$note.children('.text').toggle();
+					$note.children('.latex').toggle();
+				});
 				exp_ele = $('<button>').addClass('btn grp_none toggle_expand').expand({
 					type: type,
 					noteID: nID,

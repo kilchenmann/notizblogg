@@ -97,7 +97,7 @@ class show {
 			$showBiblio = ''; // $this->data['id'];
 
 			if($this->data['editor'] == 1){
-				$showBibtex .= 'editor = { ' . ($this->data['author']['name']) . '},<br>';
+				$showBibtex .= 'editor = {' . ($this->data['author']['name']) . '},<br>';
 				$showBiblio .= $this->data['author']['name'] . ' (Hg.):<br>';
 			} else {
 				$showBibtex .= 'author = {' . ($this->data['author']['name']) . '},<br>';
@@ -117,14 +117,14 @@ class show {
 
 				$showBiblio .= 'In: ';
 				if($this->data['crossref']['editor'] == 1){
-					$showBibtex .= 'editor = { ' . ($this->data['crossref']['author']['name']) . '},<br>';
+					$showBibtex .= 'editor = {' . ($this->data['crossref']['author']['name']) . '},<br>';
 					$showBiblio .= $this->data['crossref']['author']['name'] . ' (Hg.):<br>';
 				} else {
 					$showBibtex .= 'author = {' . ($this->data['crossref']['author']['name']) . '},<br>';
 					$showBiblio .= $this->data['crossref']['author']['name'] . ':<br>';
 				}
 				$showBibtex .= 'booktitle = {' . ($this->data['crossref']['title']) . '},<br>';
-				$showBiblio .= '<a href=\'?source=' . $this->data['crossref']['id'] . '\'>' . $this->data['crossref']['title'] . '. </a>';
+				$showBiblio .= '<a href=\'?source=' . $this->data['crossref']['id'] . '\'>' . $this->data['crossref']['title'] . '.</a>';
 
 				if($this->data['crossref']['subtitle'] != ''){
 					$showBibtex .= 'booksubtitle = {' . ($this->data['crossref']['subtitle']) . '},<br>';
@@ -261,6 +261,12 @@ class show {
 						$this->show_latex .= '<p>``' . change4Tex(makeurl($this->data['content'])) . '\'\'</p>';
 						if ($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'project') {
 							$pages = "";
+							if ($this->data['page']['start'] != 0) {
+								$pages = $this->data['page']['start'];
+								if ($this->data['page']['end'] != 0) {
+									$pages .= '-' . $this->data['page']['end'];
+								}
+							}
 							$this->show_latex .= '<p class=\'small\'>\cite[][' . $pages . ']{' . $this->data['source']['name'] . '}</p>';
 						}
 						$this->show_latex .= $this->close;
