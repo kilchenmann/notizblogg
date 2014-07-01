@@ -68,22 +68,47 @@
 										.append($('<h4>').html('First you have to choose a source or create a new one'))
 								} else {
 									if(localdata.settings.sourceID === localdata.settings.noteID) {
+
+										// get the source data from get.JSON.php
+										console.log('core/bin/php/get.JSON.php?source=' + localdata.settings.sourceID);
+										$.getJSON('api/data.php?source=' + localdata.settings.sourceID, function(data) {
+											console.log(data.author);
+										});
+
+
 										// the note is a source ;)
+										var checkID = check_id();
 										localdata.expand.content = $('<div>').addClass('form entire edit_source')
 											.append($('<h3>').html('You want to edit the existing source ' + localdata.settings.sourceID))
-											.append($('<h4>').html(''))
+											.append($('<form>').attr({'action': 'save.php', 'method': 'post', 'accept-charset': 'utf-8' })
+												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'checkID', 'readonly': 'readonly', 'name': 'checkID', 'value': checkID }))
+												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'noteID', 'readonly': 'readonly', 'name': 'noteID', 'value': localdata.settings.noteID }))
+												.append($('<input>').attr({'type': 'text', 'name': 'title', 'placeholder': 'Title', 'value': ''}))
+												.append($('<textarea>').attr({'type': 'text', 'name': 'content', 'placeholder': 'Content', 'required': 'required', 'rows': '10', 'cols': '50', 'value': ''}))
+										)
 
 									} else {
+										// split the text to get the title and the content
+										var title = localdata.settings.data['text'].split('</h3><p>')[0];
+										var text = localdata.settings.data['text'].split('</h3><p>')[1];
+
+										console.log(text);
+										var checkID = check_id();
 										localdata.expand.content = $('<div>').addClass('form entire edit_note')
 											.append($('<h3>').html('You want to edit the existing note ' + localdata.settings.noteID))
-											.append($('<h4>').html(''))
+											.append($('<form>').attr({'action': 'save.php', 'method': 'post', 'accept-charset': 'utf-8' })
+												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'checkID', 'readonly': 'readonly', 'name': 'checkID', 'value': checkID }))
+												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'noteID', 'readonly': 'readonly', 'name': 'noteID', 'value': localdata.settings.noteID }))
+												.append($('<input>').attr({'type': 'text', 'name': 'title', 'placeholder': 'Title', 'value': title}))
+												.append($('<textarea>').attr({'type': 'text', 'name': 'content', 'placeholder': 'Content', 'required': 'required', 'rows': '10', 'cols': '50'}).html(text))
+										)
 									}
 								}
 								localdata.expand.edit_ele = $('<button>').addClass('btn grp_none toggle_lock');
 							} else {
 								localdata.expand.content = $('<div>').addClass('booklet')
 									.append($('<h3>').html('You want to see the booklet of source ' + localdata.settings.sourceID))
-									.append($('<h4>').html(''))
+									.append($('<h4>').html(''));
 								localdata.expand.edit_ele = $('<button>').addClass('btn grp_none toggle_edit');
 							}
 						}

@@ -40,7 +40,7 @@ function changeUmlaut4Tex($string){
 }
 
 function change4Tex($string){
-  $upas = array(" \""=>" ``", "\" "=>"\'\' ", " '"=>" `", " - "=>" -- ", "_"=>"\_", "§"=>"\§", "$"=>"\$", "&"=>"\&", "#"=>"\#", "{"=>"\{", "}"=>"\}", "%"=>"\%", "~"=>"\textasciitilde", "€"=>"\texteuro");
+  $upas = array(" \""=>" ``", "\" "=>"'' ", " '"=>" `", " - "=>" -- ", " — "=>" -- ", "_"=>"\_", "§"=>"\§", "$"=>"\$", " & "=>" \& ", "#"=>"\#", "{"=>"\{", "}"=>"\}", "%"=>"\%", "~"=>"\textasciitilde", "€"=>"\texteuro");
   /*foreach($upas as $umlaut=>$replace){
 	return (str_replace($umlaut, $replace, $string));
   }
@@ -48,8 +48,17 @@ function change4Tex($string){
   return strtr($string, $upas);
 }
 
+function getLastChar($string){
+	$lastChar = substr($string, -1);
+
+	if(($lastChar != '?') && ($lastChar != '!')) {
+		$string .=  '.';
+	}
+	return $string;
+}
+
 function save4Tex($string){
-  $upas = array(" \""=>" ``", "\" "=>"\'\' ", " '"=>" `", " - "=>" -- " );
+  $upas = array(" \""=>" ``", "\" "=>"'' ", " '"=>" `", " - "=>" -- " );
   /*foreach($upas as $umlaut=>$replace){
 	return (str_replace($umlaut, $replace, $string));
   }

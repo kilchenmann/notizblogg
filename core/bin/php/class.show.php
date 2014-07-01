@@ -104,11 +104,11 @@ class show {
 				$showBiblio .= $this->data['author']['name'] . ':<br>';
 			}
 			$showBibtex .= 'title = {' . ($this->data['title']) . '},<br>';
-			$showBiblio .= '<a href=\'?source=' . $this->data['id'] . '\' >'. $this->data['title'] . '</a>. ';
+			$showBiblio .= '<a href=\'?source=' . $this->data['id'] . '\' >'. getLastChar($this->data['title']) . '</a> ';
 
 			if($this->data['subtitle'] != ''){
 				$showBibtex .= 'subtitle = {' . ($this->data['subtitle']) . '},<br>';
-				$showBiblio .= $this->data['subtitle'] . '.<br>';
+				$showBiblio .= getLastChar($this->data['subtitle']) . '<br>';
 			}
 
 			if(array_key_exists('crossref', $this->data)) {
@@ -124,11 +124,11 @@ class show {
 					$showBiblio .= $this->data['crossref']['author']['name'] . ':<br>';
 				}
 				$showBibtex .= 'booktitle = {' . ($this->data['crossref']['title']) . '},<br>';
-				$showBiblio .= '<a href=\'?source=' . $this->data['crossref']['id'] . '\'>' . $this->data['crossref']['title'] . '.</a>';
+				$showBiblio .= '<a href=\'?source=' . $this->data['crossref']['id'] . '\'>' . getLastChar($this->data['crossref']['title']) . ' </a>';
 
 				if($this->data['crossref']['subtitle'] != ''){
 					$showBibtex .= 'booksubtitle = {' . ($this->data['crossref']['subtitle']) . '},<br>';
-					$showBiblio .= $this->data['crossref']['subtitle'] . '.<br>';
+					$showBiblio .= getLastChar($this->data['crossref']['subtitle']) . '<br>';
 				}
 
 				if($this->data['crossref']['location']['name'] != ''){
@@ -250,7 +250,7 @@ class show {
 									$pages .= '-' . $this->data['page']['end'];
 								}
 							}
-							$this->show_text .= '<p class=\'small\'>(' . $this->data['source']['author']['name'] . ': <a href=\'?source=' . $this->data['source']['id'] . '\'>' . $this->data['source']['title'] . '</a>, S. ' . $pages . ')</p>';
+							$this->show_text .= '<p class=\'small\'>(' . $this->data['source']['author']['name'] . ': <a href=\'?source=' . $this->data['source']['id'] . '\'>' . getLastChar($this->data['source']['title']) . '</a> S. ' . $pages . ')</p>';
 						}
 					}
 					$this->show_text .= $this->close;

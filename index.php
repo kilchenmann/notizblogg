@@ -55,6 +55,7 @@ if (!isset ($_SESSION["token"])) {
 	<!--
 	<script type="text/javascript" src="core/bin/js/jquery.slimscroll.min.js"></script>
 	-->
+	<script type="text/javascript" src="core/bin/js/md5.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
 	<script type="text/javascript" src="core/bin/js/jquery.expand.js"></script>
