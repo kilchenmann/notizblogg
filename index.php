@@ -231,7 +231,39 @@ if (!isset ($_SESSION["token"])) {
 				tex_ele,
 				exp_ele,
 				type,
+				divs = $note.contents();
 				access = '<?php echo $access; ?>';
+
+
+			var note_obj = {};
+			for (var i = 0; i < divs.filter("div").length; i++) {
+				var ele;
+				switch(i) {
+					case 0:
+						ele = 'media';
+						break;
+					case 1:
+						ele = 'text';
+						break;
+					case 2:
+						ele = 'latex';
+						break;
+					case 3:
+						ele = 'label';
+						break;
+					case 4:
+						ele = 'tools';
+						break;
+					default:
+						ele = 'empty';
+				}
+				note_obj[ele] = divs[i].innerHTML;
+			}
+
+
+
+
+
 			if($note.hasClass('topic') && nID === sID) {
 				type = 'source';
 			} else {
@@ -252,7 +284,8 @@ if (!isset ($_SESSION["token"])) {
 					type: type,
 					noteid: nID,
 					sourceid: sID,
-					edit: edit
+					edit: edit,
+					content: note_obj
 				});
 			} else {
 				tex_ele = $('<button>').addClass('btn grp_none fake_btn');
@@ -261,7 +294,12 @@ if (!isset ($_SESSION["token"])) {
 
 			$tools
 				.append(
-				$('<div>').addClass('left').append(edit_ele)
+				$('<div>').addClass('left').append(edit_ele).click(function() {
+					if(jQuery.inArray('text', divs)) {
+						//console.log(note_obj);
+
+					}
+				})
 			)
 				.append(
 				$('<div>').addClass('center').append(tex_ele)
@@ -269,6 +307,8 @@ if (!isset ($_SESSION["token"])) {
 				.append(
 				$('<div>').addClass('right').append(exp_ele)
 			);
+
+	//		console.log(note_obj);
 
 		});
 

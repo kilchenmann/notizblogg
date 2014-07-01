@@ -30,7 +30,6 @@ class show {
 
 	function showMedia()
 	{
-
 		$mediaFile = explode(".", $this->data['media']);
 		$fileName = $mediaFile[0];
 		$extension = $mediaFile[1];
@@ -230,10 +229,11 @@ class show {
 				if ($this->data['id'] !== 0) {
 					$this->open_note = '<div class=\'note\' id=\'' . $show->id . '\'>';
 					// show media, if exist
-					if ($this->data['media'] != '') {
-						$this->show_media .= $this->showMedia();
+					if(!empty($this->data['media'])) {
+						$this->show_media .= $this->showMedia() . $this->close;
+					} else {
+						$this->show_media .= $this->close;
 					}
-					$this->show_media .= $this->close;
 					// show text
 					// set title
 					$this->show_text .= '<h3>' . $this->data['title'] . '</h3>';
@@ -265,7 +265,7 @@ class show {
 						}
 						$this->show_latex .= $this->close;
 					} else {
-						$this->show_latex = '';
+						$this->show_latex = '<div></div>';
 					}
 
 					// show labels
@@ -298,7 +298,11 @@ class show {
 					$this->open_note = '<div class=\'note topic\' id=\'' . $show->id . '\'>';
 					$biblio = $this->showBib();
 					//$biblio = array('LATEX','BIBLIO');
-					$this->show_media .= $this->close;
+					if(!empty($this->data['media'])) {
+						$this->show_media .= $this->showMedia() . $this->close;
+					} else {
+						$this->show_media .= $this->close;
+					}
 					// show biblio
 					$this->show_text .= $biblio[1] . $this->close;
 					// show biblio in latex style

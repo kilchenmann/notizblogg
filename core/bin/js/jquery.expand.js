@@ -34,8 +34,12 @@
 					type: 'source', // or edit / delete
 					noteid: '',
 					sourceid: '',
-					edit: false
+					edit: false,
+					content: ''
 				};
+
+
+
 				$.extend(localdata.settings, options);
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
@@ -58,7 +62,6 @@
 
 
 
-
 					localdata.expand.frame = $('.float_obj.large.pamphlet').empty();
 
 					localdata.expand.frame
@@ -66,13 +69,13 @@
 						$('<h3>').html()
 					)
 						.append(
-						$('<div>').addClass('text')
+						$('<div>').addClass('text').html(localdata.settings.content.text)
 					)
 						.append(
-						$('<div>').addClass('latex')
+						$('<div>').addClass('latex').html(localdata.settings.content.latex)
 					)
 						.append(
-						$('<div>').addClass('label')
+						$('<div>').addClass('label').html(localdata.settings.content.label)
 					)
 						.append(
 						$('<div>').addClass('tools').css({opacity: '1'})
