@@ -352,6 +352,19 @@ if (!isset ($_SESSION["token"])) {
 		}
 	});
 
+	$(document).keyup(function(e) {
+		if(e.keyCode == 27) {
+				if($('.float_obj').is(':visible')) {
+					$('.float_obj').hide();
+					$('.viewer').css({'opacity': '1'});
+
+					if($('button.toggle_add').hasClass('toggle_delete')) {
+						$('button.toggle_add').toggleClass('toggle_delete');
+					}
+
+				}
+		}
+	});
 
 	$(window).resize(function() {
 		var height = $(window).height() - $('header').height() - $('footer').height();

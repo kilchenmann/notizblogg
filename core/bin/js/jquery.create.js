@@ -67,11 +67,11 @@
 						$('.viewer').css({'opacity': '0.3'});
 						if (localdata.settings.type === 'new') {
 							localdata.select.source.focus();
-							localdata.create.button.toggleClass('toggle_add toggle_delete');
+							localdata.create.button.toggleClass('toggle_delete');
 						}
 					} else {
 						$('.viewer').css({'opacity': '1'});
-						localdata.create.button.toggleClass('toggle_add toggle_delete');
+						localdata.create.button.toggleClass('toggle_delete');
 						localdata.create.frame.empty();
 					}
 				});

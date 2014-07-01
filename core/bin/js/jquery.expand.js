@@ -94,15 +94,15 @@
 					$('.viewer').css({'opacity': '0.3'});
 
 					if(localdata.expand.frame.is(':visible')) {
-						$('button.toggle_add').toggleClass('toggle_add toggle_delete');
+						$('button.toggle_add').toggleClass('toggle_delete');
 						localdata.expand.col_ele.click(function() {
 							localdata.expand.frame.toggle();
 							$('.viewer').css({'opacity': '1'});
 							localdata.expand.frame.empty();
-							$('button.toggle_delete').toggleClass('toggle_add toggle_delete');
+							$('button.toggle_delete').toggleClass('toggle_delete');
 						})
 					} else {
-						$('button.toggle_delete').toggleClass('toggle_add toggle_delete');
+						$('button.toggle_delete').toggleClass('toggle_delete');
 					}
 
 				});
