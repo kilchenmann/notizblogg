@@ -38,7 +38,7 @@
 				$.extend(localdata.settings, options);
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
-				localdata.warning.object = $('.warning');
+				localdata.warning.object = $('.warning').empty();
 
 				// set some text
 				// change the if clause to a switch element
@@ -84,6 +84,11 @@
 
 				$this.children(':not(.warning)').fadeTo('slow', 0.25);
 				localdata.warning.object.fadeTo('slow', 0.95).center();
+
+				localdata.warning.object.click(function() {
+					localdata.warning.object.hide();
+				$this.children(':not(.warning)').fadeTo('slow', 1);
+				});
 
 			});											// end "return this.each"
 		},												// end "init"

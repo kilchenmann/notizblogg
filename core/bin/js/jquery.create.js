@@ -64,13 +64,13 @@
 					localdata.create.frame.toggle();
 
 					if(localdata.create.frame.is(':visible')) {
-						$('.viewer').css({'opacity': '0.3'});
+						$('.viewer').fadeTo('slow', '0.2');
 						if (localdata.settings.type === 'new') {
 							localdata.select.source.focus();
 							localdata.create.button.toggleClass('toggle_delete');
 						}
 					} else {
-						$('.viewer').css({'opacity': '1'});
+						$('.viewer').fadeTo('slow', '1');
 						localdata.create.button.toggleClass('toggle_delete');
 						localdata.create.frame.empty();
 					}

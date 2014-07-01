@@ -62,10 +62,8 @@ if (!isset ($_SESSION["token"])) {
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
 	-->
 
-	<link rel="stylesheet" type="text/css" href="core/style/css/fullPage.css">
 
 	<link rel="stylesheet" type="text/css" href="core/style/css/nb.css">
-
 	<link rel="stylesheet" type="text/css" href="core/style/css/responsive.css">
 
 	<!--
@@ -88,7 +86,7 @@ if (!isset ($_SESSION["token"])) {
 		<a href='http://notizblogg.ch'>Notizblogg</a> |
 		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">der digitale Zettelkasten von André Kilchenmann</a>
 	</h1>
-	<div class="left"><span class="project"><a href='http://notizblogg.ch'><h2 class="logo">Notizblogg</h2></a></span></div>
+	<div class="left"><span class="project"><a href='index.php'><h2 class="logo">Notizblogg</h2></a></span></div>
 	<div class="center"><span class="search"></span></div>
 	<div class="right">
 		<span class="add"></span>
@@ -115,7 +113,6 @@ if (!isset ($_SESSION["token"])) {
 
 <div id="fullpage">
 		<div class="viewer">
-
 
 			<?php
 			// default parameters
@@ -144,11 +141,12 @@ if (!isset ($_SESSION["token"])) {
 					$type = 'search';
 					$query = $_GET['search'];
 				}
+			} else {
 				?>
 				<script type="text/javascript">
-					$('.viewer').css({'background-image': 'url(core/style/img/bg-empty.jpg)'})
+					$('#fullpage').css({'background-image': 'url(core/style/img/bg-notizblogg.jpg)'});
 				</script>
-				<?php
+			<?php
 			}
 
 			show($type, $query, $access, $viewer);
@@ -199,13 +197,19 @@ if (!isset ($_SESSION["token"])) {
 						database: ''
 					});
 				});
-				$.getScript('core/bin/js/jquery.create.js', function() {
 					/* integrate the add button */
-					$('.add').create({
-						type: 'new'
-					});
-				});
+					$('.add')
+						.append($('<button>').addClass('btn grp_none toggle_add'))
+						.expand({
+							type: 'source',		// source || note
+							sourceID: 'new',
+							noteID: 'new',
+							edit: true,		// true || false
+							data: undefined,
+							show: 'form'		// booklet || form
+						});
 				$.getScript('core/bin/js/jquery.drawer.js', function() {
+
 					$('.drawer').append(
 						//		$('<button>').addClass('btn grp_none toggle_drawer')
 					);
@@ -271,21 +275,30 @@ if (!isset ($_SESSION["token"])) {
 			}
 
 			if(access === 'public') {
-				edit_ele = $('<button>').addClass('btn grp_none fake_btn');
 				edit = false;
+				edit_ele = $('<button>').addClass('btn grp_none fake_btn');
 			} else {
-				edit_ele = $('<button>').addClass('btn grp_none toggle_edit');
 				edit = true;
+				edit_ele = $('<button>').addClass('btn grp_none toggle_edit').expand({
+					type: type,
+					noteID: nID,
+					sourceID: sID,
+					edit: edit,
+					data: note_obj,
+					show: 'form'
+				});
+
 			}
 
 			if($note.children('.latex').length > 0) {
 				tex_ele = $('<button>').addClass('btn grp_none toggle_cite');
 				exp_ele = $('<button>').addClass('btn grp_none toggle_expand').expand({
 					type: type,
-					noteid: nID,
-					sourceid: sID,
+					noteID: nID,
+					sourceID: sID,
 					edit: edit,
-					content: note_obj
+					data: note_obj,
+					show: 'booklet'
 				});
 			} else {
 				tex_ele = $('<button>').addClass('btn grp_none fake_btn');

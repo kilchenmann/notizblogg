@@ -31,28 +31,120 @@
 				localdata.expand = {};
 
 				localdata.settings = {
-					type: 'source', // or edit / delete
-					noteid: '',
-					sourceid: '',
-					edit: false,
-					content: ''
+					type: 'source',		// source || note
+					noteID: undefined,
+					sourceID: undefined,
+					edit: false,		// true || false
+					data: undefined,
+					show: 'booklet'		// booklet || form
 				};
-
-
 
 				$.extend(localdata.settings, options);
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
 
 
-				if(edit === false) {
-					localdata.expand.edit_ele = $('<button>').addClass('btn grp_none fake_btn');
-				} else {
-					localdata.expand.edit_ele = $('<button>').addClass('btn grp_none toggle_edit');
-				}
+				$this.click(function() {
+					localdata.expand.frame = $('.float_obj.large.pamphlet').empty();
+					localdata.expand.content = '';
+					if(localdata.settings.noteID === undefined && localdata.settings.sourceID === undefined && localdata.settings.data === undefined) {
+						// nothing is defined! There is no object to show
+						// abort or alert
+						$('#fullpage').warning({
+							type: 'noresults',
+							lang: 'de'
+						});
+					} else {
+						// set the various content of the floating element
+						if(localdata.settings.edit === false) {
+							localdata.expand.edit_ele = $('<button>').addClass('btn grp_none fake_btn');
+						} else {
+							if(localdata.settings.show === 'form') {
+								localdata.expand.edit_ele = $('<button>').addClass('btn grp_none toggle_lock');
+								if(localdata.settings.noteID === 'new' && localdata.settings.sourceID === 'new' && localdata.settings.data === undefined) {
+									// in this case we have to show the edit form for new notes
+									localdata.expand.content = $('<div>').addClass('form part select_source')
+										.append($('<h3>').html('You want to add a NEW note'))
+										.append($('<h4>').html('First you have to choose a source or create a new one'))
+								} else {
+									if(localdata.settings.sourceID === localdata.settings.noteID) {
+										// the note is a source ;)
+										localdata.expand.content = $('<div>').addClass('form entire edit_source')
+											.append($('<h3>').html('You want to edit the existing source ' + localdata.settings.sourceID))
+											.append($('<h4>').html(''))
 
-				localdata.expand.tex_ele = $('<button>').addClass('btn grp_none toggle_cite');
-				localdata.expand.col_ele= $('<button>').addClass('btn grp_none toggle_collapse');
+									} else {
+										localdata.expand.content = $('<div>').addClass('form entire edit_note')
+											.append($('<h3>').html('You want to edit the existing note ' + localdata.settings.noteID))
+											.append($('<h4>').html(''))
+									}
+								}
+								localdata.expand.edit_ele = $('<button>').addClass('btn grp_none toggle_lock');
+							} else {
+								localdata.expand.content = $('<div>').addClass('booklet')
+									.append($('<h3>').html('You want to see the booklet of source ' + localdata.settings.sourceID))
+									.append($('<h4>').html(''))
+								localdata.expand.edit_ele = $('<button>').addClass('btn grp_none toggle_edit');
+							}
+						}
+
+							localdata.expand.tex_ele = $('<button>').addClass('btn grp_none toggle_cite');
+							localdata.expand.col_ele= $('<button>').addClass('btn grp_none toggle_collapse');
+
+
+
+
+						// create the floating element
+							localdata.expand.frame
+								.append(localdata.expand.content)
+								.append(
+								$('<div>').addClass('tools').css({opacity: '1'})
+									.append(
+									$('<div>').addClass('left').append(localdata.expand.edit_ele)
+								)
+									.append(
+									$('<div>').addClass('center').append(localdata.expand.tex_ele)
+								)
+									.append(
+									$('<div>').addClass('right').append(localdata.expand.col_ele)
+								)
+							);
+
+
+
+						// the real action by clicking (from above)
+						if($this.hasClass('toggle_delete') || localdata.expand.frame.is(':visible')) {
+							// close the element, show the viewer and remove the delete class from add button
+							localdata.expand.frame.toggle().empty();
+							$('.viewer').fadeTo('slow', '1');
+							$('button.toggle_delete').toggleClass('toggle_delete');
+						} else {
+							// hide the viewer, show the floating element and change the add button to a close button
+							$('.viewer').fadeTo('slow', '0.2');
+							localdata.expand.frame.toggle();
+							$('button.toggle_add').toggleClass('toggle_delete');
+							localdata.expand.col_ele.click(function() {
+								// by clicking on the collapse button:
+								// close the element, show the viewer and remove the delete class from add-button
+								localdata.expand.frame.toggle().empty();
+								$('.viewer').fadeTo('slow', '1');
+								$('button.toggle_delete').toggleClass('toggle_delete');
+							})
+						}
+
+
+					}		// end of if(data exists)
+				});		// end of $this.click function
+
+
+
+
+
+				/*
+
+
+
+
 
 
 
@@ -62,51 +154,14 @@
 
 
 
-					localdata.expand.frame = $('.float_obj.large.pamphlet').empty();
 
-					localdata.expand.frame
-						.append(
-						$('<h3>').html()
-					)
-						.append(
-						$('<div>').addClass('text').html(localdata.settings.content.text)
-					)
-						.append(
-						$('<div>').addClass('latex').html(localdata.settings.content.latex)
-					)
-						.append(
-						$('<div>').addClass('label').html(localdata.settings.content.label)
-					)
-						.append(
-						$('<div>').addClass('tools').css({opacity: '1'})
-							.append(
-							$('<div>').addClass('left').append(localdata.expand.edit_ele)
-						)
-							.append(
-							$('<div>').addClass('center').append(localdata.expand.tex_ele)
-						)
-							.append(
-							$('<div>').addClass('right').append(localdata.expand.col_ele)
-						)
-					);
 
-					localdata.expand.frame.toggle();
-					$('.viewer').css({'opacity': '0.3'});
 
-					if(localdata.expand.frame.is(':visible')) {
-						$('button.toggle_add').toggleClass('toggle_delete');
-						localdata.expand.col_ele.click(function() {
-							localdata.expand.frame.toggle();
-							$('.viewer').css({'opacity': '1'});
-							localdata.expand.frame.empty();
-							$('button.toggle_delete').toggleClass('toggle_delete');
-						})
-					} else {
-						$('button.toggle_delete').toggleClass('toggle_delete');
-					}
+
+
 
 				});
-
+*/
 
 
 

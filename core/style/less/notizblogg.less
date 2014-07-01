@@ -1,15 +1,3 @@
-#section0 {
-	background-image: url(../img/bg-notizblogg.jpg);
-}
-
-#section1, #section2, #section3{
-	background-image: url(../img/bg-empty.jpg);
-}
-
-#main {
-  background-image: url(../img/bg-empty.jpg);
-}
-
 .logo {
 	font-family: sverige, jellyka, glamor, Verdana, serif;
 }
@@ -80,16 +68,26 @@ div.note {
 }
 */
 
-
+#fullpage {
+  background-image: url(../img/bg-empty.jpg);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+//  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/bg-empty.jpg', sizingMethod='scale');
+//  -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/bg-empty.jpg', sizingMethod='scale')";
+}
 
 .viewer {
-
   margin: 45px auto;
   overflow-x: hidden;
   overflow-y: scroll;
   margin-right: -15px;
-
-
 }
 
 .desk {
@@ -219,7 +217,7 @@ div.note {
 
   .tools {
 	opacity: 0.1;
-	border-top: 1px solid fade(@bg, 22%);
+	border-top: 1px solid fade(@bg, 33%);
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
