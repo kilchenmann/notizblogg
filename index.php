@@ -293,6 +293,7 @@ if (!isset ($_SESSION["token"])) {
 
 			if($note.children('.latex').length > 0) {
 				tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function() {
+					$(this).toggleClass('toggle_comment');
 					$note.children('.text').toggle();
 					$note.children('.latex').toggle();
 				});
