@@ -235,7 +235,6 @@ section, .section {
 .float_obj {
   z-index: 100;
   display: none;
-  padding: 8px;
   position: absolute;
   top: 0;
   left: 0;
@@ -281,34 +280,37 @@ section, .section {
 }
 
 .float_obj.pamphlet {
-  height: 544px;
+  height: 640px;
   width: 720px;
-//  background-color: darken(@bg, 50%);
-  h3, p {
-	letter-spacing: 1px;
-	text-align: 1.5em;
+  background-color: fade(@bg, 25%);
 
-  }
-  h3 {
-	font-weight: bold;
-	text-shadow: 0 -1px 0 #050505;
-	text-align: center;
-  }
-  p {
+  .panel {
+	border-bottom: 1px solid fade(@bg, 88%);
+	background-color: fade(@link, 77%);
+	height: 33px;
+	.border-radius-custom(@rad, @rad, 0, 0);
+	margin: 0;
+	padding: 0;
 
-  }
+	.left {
+	  width: 80%;
+	  float: left;
+	  margin-top: 6px;
+	  text-align: center;
+	  overflow: hidden;
+	  h3 {
+		color: @bg;
+	  }
+	}
 
+	.right {
+	  width: 20%;
+	  float: left;
+	  text-align: right;
+	}
+  }
 }
 
 
-.panel {
-  height: 44px;
-  width: 100%;
 
-  .left, .center, .right {
-	width: 33%;
-	float: left;
-  }
-
-}
 

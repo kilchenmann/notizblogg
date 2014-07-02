@@ -99,7 +99,7 @@
 									'title': localdata.settings.user,
 									'placeholder': localdata.settings.user
 								})
-								.addClass('field_obj medium')
+								.addClass('field_obj small')
 						)
 					)
 						.append($('<p>')
@@ -110,7 +110,7 @@
 									'title': localdata.settings.key,
 									'placeholder': localdata.settings.key
 								})
-								.addClass('field_obj medium')
+								.addClass('field_obj small')
 						)
 					)
 						.append($('<p>')

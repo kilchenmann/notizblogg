@@ -73,7 +73,8 @@ button.fake_btn {
   border: none;
 //  background-color: lighten(@bg, 8%);
   &:hover {
-	background-color: fade(darken(@bg, 8%), 8%);
+	// background-color: fade(darken(@bg, 8%), 8%);
+	background-color: transparent;
 	border: 0px solid transparent;
   }
 }
@@ -241,66 +242,150 @@ button.toggle_lock {
 
 /* form start */
 
-form p {
-
+label, input[type=submit], input[type=reset], input[type=file] {
+  cursor: pointer;
 }
 
-input, textarea, select {
 
+
+input[type=search] {
+  margin: 0;
+  padding: 0;
 }
 
-input[type=text], input[type=password], input[type=email], input[type=date]  {
+input[type=text], input[type=password], input[type=email], input[type=date], input[type=file], textarea, select, .media.field_obj, label span {
+  border-top: 1px solid fade(@link, 44%);
+  border-right: none;
+  border-bottom: 1px solid fade(@link, 44%);
+  border-left: none;
+  height: 24px;
+}
+
+
+input[type=file], .media.field_obj {
+  height: 160px;
+  background-color: @bg;
+}
+
+input.upload.field_obj {
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: -160px;
+}
+
+input[type=checkbox], input[type=radio] {
+  width: 22px;
+  height: 22px;
+}
+
+textarea.field_obj {
+  height: 380px;
+}
+
+input, textarea, select, label, .media.field_obj, label span {
   .border-radius(@rad);
-  border-top: 1px solid rgba(0, 0, 0, 0);
-  border-bottom: 1px solid rgba(0, 0, 0, 0);
-  font-size: 13px;
-  padding: 8px;
-  width: 228px;
-  float: right;
+  padding: 5px;
   margin: 5px;
+
+}
+.field_obj.small {
+  width: 160px;
+}
+.field_obj.medium {
+  width: 300px;
+}
+.field_obj.large {
+  width: 480px;
+}
+/*
+input.field_obj.small, textarea.field_obj.small, .media.field_obj.small, label p.small{
+  width: 160px;
+}
+input.field_obj.medium, textarea.field_obj.medium, .media.field_obj.medium, label p.medium {
+  width: 320px;
+}
+input.field_obj.large, textarea.field_obj.large, .media.field_obj.large, label p.large {
+  width: 480px;
+}
+*/
+label span {
+  background-color: @bg;
 }
 
-input.field_obj.small {
-  width: 100px;
+label span.checked {
+  background-color: @pos;
 }
-input.field_obj.medium {
-  width: 228px;
+
+label span.warning.checked {
+  background-color: @neg;
 }
-input.field_obj.large {
-  width: 484px;
+
+input[type=checkbox].field_obj {
+  opacity: 0;
 }
 
 input[type=submit], input[type=reset] {
-  .border-radius(@rad);
   border: 1px solid rgba(0, 0, 0, 0);
   font-size: 13px;
   font-weight: bold;
   letter-spacing: 1px;
   text-shadow: 0 -1px 0 #050505;
-  padding: 8px;
-  width: 100px;
-  float: right;
-  margin: 5px;
-
   color: #FFFFFF;
   cursor: pointer;
 }
 input[type=submit].submit {
   background-color: @pos;
   &:hover {
-	background-color: lighten(@pos, 11%);
+	background-color: fade(@pos, 44%);
   }
 }
 
 input[type=reset].reset, input[type=submit].reset {
   background-color: @neg;
   &:hover {
-	background-color: lighten(@neg, 11%);
+	background-color: fade(@neg, 44%);
   }
 }
 
+.form {
+
+  .left, .right {
+	float: left;
+	padding: 3px;
+	height: 100%;
+  }
+  .col_small {
+	width: 200px;
+  }
+  .col_medium {
+	width: 500px;
+  }
+  .col_large {
+	width: 700px;
+  }
+
+}
+
+.form .upload {
 
 
+}
+
+img.media, video.media, audio.media {
+  max-width: 160px;
+  max-height: 160px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  .border-radius(12px);
+
+}
+
+label.warning {
+
+}
 
 
 fieldset {
