@@ -451,6 +451,7 @@ if (!isset ($_SESSION["token"])) {
 		.mouseleave(function() {
 			$(this).toggleClass('active');
 			$(this).children('div.tools').css({'opacity': '0.1'});
+			$('div.media').css({'opacity': '1'});
 		})
 		.on('touchend', function(){
 
@@ -468,8 +469,10 @@ if (!isset ($_SESSION["token"])) {
 
 
 	var activator = function(element){
+		$('div.media').css({'opacity': '0.5'});
 		element.toggleClass('active');
 		element.children('div.tools').css({'opacity': '1'});
+		element.children('div.media').css({'opacity': '1'});
 		var type = undefined,
 			typeID = undefined;
 		if(!element.attr('id')) {
