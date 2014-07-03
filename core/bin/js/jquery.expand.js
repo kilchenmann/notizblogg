@@ -19,7 +19,7 @@
 	//
 
 	var form4note = function(ele, settings) {
-			var checkID, publicID, pages, check_ele = {};
+			var checkID, publicID, pages, check_ele = {}, media_ele;
 			$.getJSON('api/data.php?note=' + settings.noteID, function(data) {
 
 				if (data.setting.checkID === null) {
@@ -32,85 +32,76 @@
 				}
 				if(data.page.start !== '0') {
 					pages = data.page.start;
-					if(data.page.end !== pages) {
+					if(data.page.end !== pages && data.page.end !== '0') {
+						console.log(data.page.end);
 						pages += '-' + data.page.end;
 					}
+				}
+				if(data.media !== '') {
+					media_ele = $('<img>').attr({'src': '../media/pictures/' + data.media, 'alt': data.media}).addClass('media');
+
+				} else {
+					media_ele = $('<img>').attr({'src': '', 'alt': 'upload a media (picture, video, etc.)'}).addClass('media').css({'width':'160px', 'height': '160px'});
 				}
 				ele
 					.append($('<form>').attr({'action': 'save.php', 'method': 'post', 'accept-charset': 'utf-8' })
 						.append($('<div>').addClass('form col_medium left')
 							.append($('<input>').attr({'type': 'text', 'name': 'title', 'placeholder': 'Title', 'value': data.title}).addClass('field_obj large'))
 							.append($('<textarea>').attr({'type': 'text', 'name': 'content', 'placeholder': 'Content', 'required': 'required'}).addClass('field_obj large').html(data.content))
-
 					)
 						.append($('<div>').addClass('form col_small right')
 							.append($('<input>').attr({'type': 'hidden', 'placeholder': 'checkID', 'readonly': 'readonly', 'name': 'checkID', 'value': checkID }))
 							.append($('<input>').attr({'type': 'hidden', 'placeholder': 'noteID', 'readonly': 'readonly', 'name': 'noteID', 'value': data.id }))
 							.append($('<input>').attr({'type': 'text', 'name': 'media', 'placeholder': 'Filename', 'value': data.media}).addClass('field_obj small'))
 							.append($('<div>').addClass('media field_obj small')
-								.append($('<img>').attr({'src': '../media/pictures/' + data.media, 'alt': data.media}).addClass('media'))
-
+								.append(media_ele)
 								.append($('<input>').attr({'type': 'file', 'name': 'upload', 'placeholder': 'Upload new file'}).addClass('upload field_obj small'))
-						)
-
-
+						).append($('<p>').html('<br><br><br>'))
+							.append(check_ele.label4public = $('<label>').attr({'name': 'check_public'}).addClass('field_obj small')
+								.append(check_ele.span4public = $('<span>').text('Public note?').addClass('field_obj small ' + publicID)
+									.append(check_ele.input4public = $('<input>').attr({'type': 'checkbox', 'name': 'public', 'checked': publicID }).addClass('field_obj check_public')
+										.on('change', function(){
+											check_ele.span4public.toggleClass('checked');
+										})
+								)
+							)
+						).append($('<p>').html('<br><br>'))
+							.append(check_ele.label4delete = $('<label>').attr({'name': 'check_delete'}).addClass('field_obj small')
+								.append(check_ele.span4delete = $('<span>').text('Delete note?').addClass('field_obj warning small')
+									.append(check_ele.input4delete = $('<input>').attr({'type': 'checkbox', 'name': 'delete'}).addClass('field_obj check_delete')
+										.on('change', function(){
+											check_ele.span4delete.toggleClass('checked');
+											if(check_ele.span4delete.hasClass('checked')) {
+												$('.form')
+													.find($('input, textarea, .media, select')).css({'background-color': 'rgba(147, 0, 0, 0.2)'});
+											} else {
+												$('.form')
+													.find($('input, textarea, .media, select')).css({'background-color': ''});
+											}
+										})
+								)
+							)
+						).append($('<p>').html('<br><br><br>'))
 
 					)
 						.append($('<div>').addClass('form col_large')
 							// line 1: label and check public
 							.append($('<p>')
 								.append($('<input>').attr({'type': 'text', 'name': 'label', 'placeholder': 'Label', 'value': data.label.name}).addClass('field_obj large'))
-								.append(check_ele.label4public = $('<label>').attr({'name': 'check_public'})
-									.append(check_ele.span4public = $('<span>').text('Public note?').addClass('field_obj small ' + publicID)
-										.append(check_ele.input4public = $('<input>').attr({'type': 'checkbox', 'name': 'public', 'checked': publicID }).addClass('field_obj check_public')
-											.on('change', function(){
-												check_ele.span4public.toggleClass('checked');
-											})
-									)
-								)
-							)
-
+									.append($('<input>').attr({'type': 'submit', 'name': 'submit', 'title': 'Save', 'value': 'Save'}).addClass('submit field_obj small'))//.css({float: 'right'}))
 						)
 							// line 2: source, pages and check delete
 							.append($('<p>')
-								.append($('<input>').attr({'type': 'text', 'name': 'source', 'placeholder': 'Connected with [source]', 'value': data.source.title}).addClass('field_obj medium'))
+								.append($('<input>').attr({'type': 'text', 'name': 'source', 'placeholder': 'Connect with [source]', 'value': data.source.title}).addClass('field_obj medium'))
 								.append($('<input>').attr({'type': 'text', 'name': 'pages', 'placeholder': 'Pages', 'value': pages}).addClass('field_obj small'))
-								.append(check_ele.label4delete = $('<label>').attr({'name': 'check_delete'})
-									.append(check_ele.span4delete = $('<span>').text('Delete note?').addClass('field_obj warning small')
-										.append(check_ele.input4delete = $('<input>').attr({'type': 'checkbox', 'name': 'delete'}).addClass('field_obj check_delete')
-											.on('change', function(){
-												check_ele.span4delete.toggleClass('checked');
-												if(check_ele.span4delete.hasClass('checked')) {
-													$('.form')
-														.find($('input, textarea, .media, select')).css({'background-color': 'rgba(147, 0, 0, 0.2)'});
-												} else {
-													$('.form')
-														.find($('input, textarea, .media, select')).css({'background-color': ''});
-												}
-											})
-									)
-								)
-							)
+								.append($('<input>').attr({'type': 'reset', 'name': 'reset', 'title': 'Reset', 'value': 'Reset'}).addClass('submit field_obj small'))//.css({float: 'right'}))
+
 						)
-
-
-							.append($('<p>')
-								.append($('<input>').attr({'type': 'submit', 'name': 'submit', 'placeholder': 'Save'}).addClass('submit small'))
-						)
-
-
-
-
-
 
 					)
 				);
-
-
-
+				$('input[type=file]').css({'top': '-' + media_ele.height() + 'px'});
 			});
-
-
 		},
 
 		form4source = function(ele, localdata) {

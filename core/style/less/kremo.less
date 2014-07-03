@@ -245,8 +245,11 @@ button.toggle_lock {
 label, input[type=submit], input[type=reset], input[type=file] {
   cursor: pointer;
 }
-
-
+input, textarea, select, label, .media.field_obj, label span {
+  .border-radius(@rad);
+  padding: 5px;
+  margin: 5px;
+}
 
 input[type=search] {
   margin: 0;
@@ -261,7 +264,6 @@ input[type=text], input[type=password], input[type=email], input[type=date], inp
   height: 24px;
 }
 
-
 input[type=file], .media.field_obj {
   height: 160px;
   background-color: @bg;
@@ -272,7 +274,17 @@ input.upload.field_obj {
   margin: 0;
   padding: 0;
   position: relative;
-  top: -160px;
+  //  top: -160px;
+}
+
+img.media, video.media, audio.media {
+  max-width: 160px;
+  max-height: 160px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  .border-radius(12px);
+
 }
 
 input[type=checkbox], input[type=radio] {
@@ -280,16 +292,39 @@ input[type=checkbox], input[type=radio] {
   height: 22px;
 }
 
+input[type=checkbox].field_obj {
+  opacity: 0;
+}
+
+input[type=submit], input[type=reset] {
+  border: 1px solid rgba(0, 0, 0, 0);
+//  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  //  text-shadow: 0 -1px 0 #050505;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+input[type=submit].submit {
+  background-color: fade(@pos, 66%);
+  &:hover {
+	background-color: fade(@pos, 88%);
+  }
+}
+
+input[type=reset].reset, input[type=submit].reset {
+  background-color: fade(@neg, 66%);
+  &:hover {
+	background-color: fade(@neg, 88%);
+  }
+}
+
+
 textarea.field_obj {
   height: 380px;
 }
 
-input, textarea, select, label, .media.field_obj, label span {
-  .border-radius(@rad);
-  padding: 5px;
-  margin: 5px;
 
-}
 .field_obj.small {
   width: 160px;
 }
@@ -322,32 +357,8 @@ label span.warning.checked {
   background-color: @neg;
 }
 
-input[type=checkbox].field_obj {
-  opacity: 0;
-}
 
-input[type=submit], input[type=reset] {
-  border: 1px solid rgba(0, 0, 0, 0);
-  font-size: 13px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  text-shadow: 0 -1px 0 #050505;
-  color: #FFFFFF;
-  cursor: pointer;
-}
-input[type=submit].submit {
-  background-color: @pos;
-  &:hover {
-	background-color: fade(@pos, 44%);
-  }
-}
 
-input[type=reset].reset, input[type=submit].reset {
-  background-color: @neg;
-  &:hover {
-	background-color: fade(@neg, 44%);
-  }
-}
 
 .form {
 
@@ -368,24 +379,23 @@ input[type=reset].reset, input[type=submit].reset {
 
 }
 
+
+/*
+
 .form .upload {
 
 
 }
 
-img.media, video.media, audio.media {
-  max-width: 160px;
-  max-height: 160px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  .border-radius(12px);
 
-}
+
+
 
 label.warning {
 
 }
+
+
 
 
 fieldset {
@@ -409,7 +419,7 @@ label {
 }
 
 
-
+*/
 
 input.input, select.select {
   height: 30px;
