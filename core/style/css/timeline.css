@@ -1,0 +1,145 @@
+#container, #containertop {
+	width: 860px;
+	margin: 0 auto;
+}
+
+.borderclass {
+	border: 1px solid #A9B6D2;
+}
+.item {
+	width: 408px;
+	margin: 10px;
+	float: left;
+	background-color:#ffffff;
+	border:solid 1px #B4BBCD;
+	min-height:50px;
+	text-align:justify;
+	word-wrap:break-word;
+}
+.topbox {
+	margin: 10px;
+	background-color: white;
+	border: solid 1px #B4BBCD;
+}
+
+.item div, .topbox div {
+	padding:8px;
+}
+.rightCorner {
+	background-image: url('../img/timeline/right.png');
+	display: block;
+	height: 15px;
+	margin-left: 408px;
+	margin-top: 8px;
+	padding: 0;
+	vertical-align: top;
+	width: 13px;
+	z-index:2;
+
+	position: absolute;
+}
+.leftCorner{
+	background-image: url("../img/timeline/left.png");
+	display: block;
+	height: 15px;
+	width: 13px;
+	margin-left: -13px;
+	margin-top: 8px;
+	position: absolute;
+	z-index:2;
+}
+
+#popup{
+/*
+	display: block;
+*/
+	width: 408px;
+	float: left;
+	background-color: #ffffff;
+	border: solid 1px #A9B6D2;
+	min-height: 60px;
+	display: none;
+	position: absolute;
+	margin: 10px;
+}
+
+.Popup_rightCorner
+{
+	background-image: url("../img/timeline/right.png");
+	display: block;
+	height: 15px;
+	margin-left: 408px;
+	margin-top: 8px;
+	padding: 0;
+	vertical-align: top;
+	width: 13px;
+	z-index:2;
+
+	position: absolute;
+}
+#box
+{
+	padding:8px;
+
+}
+#update
+{
+	width:100%;
+}
+
+.timeline_container{
+	width: 16px;
+	text-align: center;
+	margin: 0 auto;
+	cursor:pointer;
+	display: block;
+}
+.timeline{
+
+	margin: 10px auto;
+	background-color:#e08989;
+	display: block;
+	float: left;
+	height: 100%;
+	left: 428px;
+	position: absolute;
+	width: 4px;
+}
+.timeline:hover{
+	cursor: pointer;
+	margin: 0 auto;
+}
+.timeline div.plus{
+	width: 14px;
+	height: 14px;
+
+	position: relative;
+	left: -6px;
+}
+#update_button {
+	background-color: #cc0000;
+	color: white;
+	font-weight: bold;
+	padding: 5px;
+	border: solid 1px #333;
+	margin-top: 5px;
+	cursor: pointer;
+}
+.shade{
+	box-shadow:0px 0px 18px #000;
+	-moz-box-shadow:0px 0px 18px #000;
+	-webkit-box-shadow:0px 0px 18px #000
+}
+
+.timeline:hover
+{
+	cursor: none;
+}
+.deletebox
+{
+	font-weight:bold;
+	float:right;
+	text-decoration:none;
+	margin:8px 10px 8px 10px;
+	color:#cc0000
+}
