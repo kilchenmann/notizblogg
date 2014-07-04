@@ -40,7 +40,7 @@ class get {
 				// get the project
 				$projectName = getIndex('project', $row->noteProject);			// delete this query
 				// get the labels and link them
-				$labelNames = getIndexMN('note', 'label', $row->noteID, ', ', 'link');
+				$labelNames = getIndexMN('note', 'label', $row->noteID, ', ');
 				condb('close');
 				$source2note = array();
 				// get the source
@@ -113,9 +113,7 @@ class get {
 						'name' => $projectName,
 						'id' => $row->noteProject
 					),
-					'label' => array(
-						'name' => $labelNames
-					),
+					'label' => $labelNames,
 					'media' => $row->noteMedia,
 					'source' => $source2note,
 					'page' => array(
@@ -165,11 +163,11 @@ class get {
 				// get the type
 				$bibTyp = getIndex('bibTyp', $row->sourceTyp);
 				// get the authors and link them
-				$authorNames = getIndexMN('source', 'author', $row->sourceID, ', ', 'link');
+				$authorNames = getIndexMN('source', 'author', $row->sourceID, ', ');
 				// get the locations and do not link them
-				$locationNames = getIndexMN('source', 'location', $row->sourceID, ', ', '');
+				$locationNames = getIndexMN('source', 'location', $row->sourceID, ', ');
 				// get the labels and link them
-				$labelNames = getIndexMN('source', 'label', $row->sourceID, ', ', 'link');
+				$labelNames = getIndexMN('source', 'label', $row->sourceID, ', ');
 			condb('close');
 				$source = array(
 					'type' => 'source',

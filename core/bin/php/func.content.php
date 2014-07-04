@@ -148,24 +148,79 @@ function linkIndex($type, $part, $id) {
 }
 
 
-function getIndexMN($type, $part, $id, $delimiter, $link) {
-	$relTable = "rel_".$type."_".$part;
-	$partID = $part."ID";
-	$mnSql = mysql_query("SELECT ".$part."Name FROM ".$part.", ".$relTable." WHERE ".$part.".".$part."ID = ".$relTable.".".$part."ID AND ".$relTable.".".$type."ID = '".$id."' ORDER BY ".$part."Name");
+function getIndexMN($type, $part, $id, $delimiter)
+{
+	$relTable = "rel_" . $type . "_" . $part;
+	$partID = $part . "ID";
+	$arrayMN = array();
+	$i = 0;
+	$mnSql = mysql_query("SELECT " . $part . "Name FROM " . $part . ", " . $relTable . " WHERE " . $part . "." . $part . "ID = " . $relTable . "." . $part . "ID AND " . $relTable . "." . $type . "ID = '" . $id . "' ORDER BY " . $part . "Name");
 	$countMN = mysql_num_rows($mnSql);
-	if($countMN > 0) {
-		while($row = mysql_fetch_array($mnSql)) {
-			$relIDs[] = $row[$part."Name"];
+	if ($countMN > 0) {
+		while ($row = mysql_fetch_array($mnSql)) {
+			$relIDs[] = $row[$part . "Name"];
 		}
 		asort($relIDs);
-			$relData="";
-			foreach($relIDs as $relName) {
-				$getRelID = mysql_query("SELECT ".$part."ID FROM ".$part." WHERE ".$part."Name = '".$relName."'");
-				while($row = mysql_fetch_object($getRelID)){
-					$relID = $row->$partID;
-					$countSql = mysql_query("SELECT ".$type.".".$type."ID FROM ".$type.", ".$relTable." WHERE ".$part."ID = ".$relID." AND ".$relTable.".".$type."ID = ".$type.".".$type."ID ORDER BY ".$type.".".$type."Title, ".$type.".date DESC");
-					$countResult = mysql_num_rows($countSql);
+		$relData = "";
+		foreach ($relIDs as $relName) {
+			$getRelID = mysql_query("SELECT " . $part . "ID FROM " . $part . " WHERE " . $part . "Name = '" . $relName . "'");
+			while ($row = mysql_fetch_object($getRelID)) {
+				$relID = $row->$partID;
+				$countSql = mysql_query("SELECT " . $type . "." . $type . "ID FROM " . $type . ", " . $relTable . " WHERE " . $part . "ID = " . $relID . " AND " . $relTable . "." . $type . "ID = " . $type . "." . $type . "ID ORDER BY " . $type . "." . $type . "Title, " . $type . ".date DESC");
+				$countResult = mysql_num_rows($countSql);
+
+				array_push($arrayMN, array('id' => $relID, 'name' => $relName));
+			}
+
+
+		}
+	}
+	return $arrayMN;
+
+};
+		/*
+						if(empty ($arrayMN)) {
+							$arrayMN = array(
+								0 => array(
+									'id' => $relID,
+									'name' => $relName
+								)
+							);
+						} else {
+
+						}
+
+		*/
+				/*
+				$i = 0;
+
+				while($i < $countResult){
+
+					$arrayMN = array(
+						$i => array(
+							'id' => $relID,
+							'name' => $relName
+						)
+					);
+//					$arrayMN[$i]['id'] = $relID;
+//					$arrayMN[$i]['name'] = $relName;
+//					$arrayMN = array("id" => $relID, "name" => $relName);
+					$i++;
 				}
+
+				/*
+				for($i = 0; $countResult > $i; i++) {
+
+					$arrayMN[$i] = $relID;
+					$arrayMN[$i] = $relName;
+				}
+				*/
+
+
+
+//				array_push($arrayMN, $relID, $relName);
+/*
+
 				if($link == 'link'){
 					if($relData == ""){
 						$relData="<a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
@@ -181,13 +236,11 @@ function getIndexMN($type, $part, $id, $delimiter, $link) {
 					}
 
 				}
-			}
-	} else {
-		$relData = "";
-	}
-
-	return $relData;
-}
+				*/
+//			}
+//	}
+//print_r($arrayMN);
+//}
 
 function oldgetIndexMN($type, $part, $id){
 	$relTable = "rel_".$type."_".$part;

@@ -281,7 +281,11 @@ class show {
 					}
 
 					if ($this->data['label']['name'] != '') {
-						$this->show_label .= '<p>' . $this->data['label']['name'] . '</p>';
+						$i = 0;
+						while (count($this->data['label']) > $i) {
+							$this->show_label .= '<p>' . $this->data['label'][$i]['name'] . '</p>';
+						$i++;
+						}
 					}
 					$this->show_label .= $this->close;
 
