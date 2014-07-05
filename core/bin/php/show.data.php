@@ -112,7 +112,13 @@ function show($type, $query, $access, $viewer)
 			break;
 
 		case 'collection';
-			echo $type . ": " . $query . PHP_EOL;
+			echo $openViewer;
+			$source = NEW show();
+			$source->id = $query;
+			$source->access = $access;
+			$source->type = 'source';
+			$source->showCollectionWithSources();
+			echo $closeViewer;
 			break;
 
 		case 'search';

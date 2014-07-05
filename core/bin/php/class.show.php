@@ -92,19 +92,51 @@ class show {
 	function showBib() {
 		// two returns: showBibtex and showBiblio
 		if($this->data['bibTyp']['id'] != 0) {
+			$authors = '';
+			$locations = '';
 
 			$showBibtex = '@' . $this->data['bibTyp']['name'] . '{' . $this->data['name'] . ',<br>';
 			$showBiblio = ''; // $this->data['id'];
 
+			// set the authors
+			$i = 0;
+			while ($i < count($this->data['author'])) {
+
+				if($authors == ''){
+					$authors = '<a href=\'' . __MAIN_FILE__ . '?author=' . $this->data['author'][$i]['id'] . '\'>' . $this->data['author'][$i]['name'] . '</a>';
+				} else {
+					$authors .= ', <a href=\'' . __MAIN_FILE__ . '?author=' . $this->data['author'][$i]['id'] . '\'>' . $this->data['author'][$i]['name'] . '</a>';
+				}
+				$i++;
+			}
+			// set the locations
+			$i = 0;
+			while ($i < count($this->data['location'])) {
+
+				if($locations == ''){
+					$locations = $this->data['location'][$i]['name'];
+				} else {
+					$locations .= ', ' . $this->data['location'][$i]['name'];
+				}
+				$i++;
+			}
+
+			//$this->show_text .= '<p class=\'small\'>(' . $authors . ': <a href=\'?source=' . $this->data['id'] . '\'>' . getLastChar($this->data['title']) . '</a> S. ' . $pages . ')</p>';
+
+
 			if($this->data['editor'] == 1){
-				$showBibtex .= 'editor = {' . ($this->data['author']['name']) . '},<br>';
-				$showBiblio .= $this->data['author']['name'] . ' (Hg.):<br>';
+				$showBibtex .= 'editor = {' . $authors . '},<br>';
+				$showBiblio .= $authors . ' (Hg.):<br>';
 			} else {
-				$showBibtex .= 'author = {' . ($this->data['author']['name']) . '},<br>';
-				$showBiblio .= $this->data['author']['name'] . ':<br>';
+				$showBibtex .= 'author = {' . $authors . '},<br>';
+				$showBiblio .= $authors . ':<br>';
 			}
 			$showBibtex .= 'title = {' . ($this->data['title']) . '},<br>';
-			$showBiblio .= '<a href=\'?source=' . $this->data['id'] . '\' >'. getLastChar($this->data['title']) . '</a> ';
+			if($this->data['bibTyp']['name'] == 'collection' || $this->data['bibTyp']['name'] == 'proceedings' || $this->data['bibTyp']['name'] == 'book') {
+				$showBiblio .= '<a href=\'?collection=' . $this->data['id'] . '\' >'. getLastChar($this->data['title']) . '</a> ';
+			} else {
+				$showBiblio .= '<a href=\'?source=' . $this->data['id'] . '\' >'. getLastChar($this->data['title']) . '</a> ';
+			}
 
 			if($this->data['subtitle'] != ''){
 				$showBibtex .= 'subtitle = {' . ($this->data['subtitle']) . '},<br>';
@@ -112,28 +144,52 @@ class show {
 			}
 
 			if(array_key_exists('crossref', $this->data)) {
+				$crossAuthors = '';
+				// set the authors
+				$i = 0;
+				while ($i < count($this->data['crossref']['author'])) {
 
-				$showBibtex .= 'crossref = {<a href=\'?source=' . $this->data['crossref']['id'] . '\'>' . ($this->data['crossref']['name']) . '</a>},<br>';
+					if($crossAuthors == ''){
+						$crossAuthors = '<a href=\'' . __MAIN_FILE__ . '?author=' . $this->data['crossref']['author'][$i]['id'] . '\'>' . $this->data['crossref']['author'][$i]['name'] . '</a>';
+					} else {
+						$crossAuthors .= ', <a href=\'' . __MAIN_FILE__ . '?author=' . $this->data['crossref']['author'][$i]['id'] . '\'>' . $this->data['crossref']['author'][$i]['name'] . '</a>';
+					}
+					$i++;
+				}
+				$crossLocations = '';
+				// set the locations
+				$i = 0;
+				while ($i < count($this->data['crossref']['location'])) {
+
+					if($crossLocations == ''){
+						$crossLocations = $this->data['crossref']['location'][$i]['name'];
+					} else {
+						$crossLocations .= ', ' . $this->data['crossref']['location'][$i]['name'];
+					}
+					$i++;
+				}
+
+				$showBibtex .= 'crossref = {<a href=\'?collection=' . $this->data['crossref']['id'] . '\'>' . ($this->data['crossref']['name']) . '</a>},<br>';
 
 				$showBiblio .= 'In: ';
 				if($this->data['crossref']['editor'] == 1){
-					$showBibtex .= 'editor = {' . ($this->data['crossref']['author']['name']) . '},<br>';
-					$showBiblio .= $this->data['crossref']['author']['name'] . ' (Hg.):<br>';
+					$showBibtex .= 'editor = {' . $crossAuthors . '},<br>';
+					$showBiblio .= $crossAuthors . ' (Hg.):<br>';
 				} else {
-					$showBibtex .= 'author = {' . ($this->data['crossref']['author']['name']) . '},<br>';
-					$showBiblio .= $this->data['crossref']['author']['name'] . ':<br>';
+					$showBibtex .= 'author = {' . $crossAuthors . '},<br>';
+					$showBiblio .= $crossAuthors . ':<br>';
 				}
 				$showBibtex .= 'booktitle = {' . ($this->data['crossref']['title']) . '},<br>';
-				$showBiblio .= '<a href=\'?source=' . $this->data['crossref']['id'] . '\'>' . getLastChar($this->data['crossref']['title']) . ' </a>';
+				$showBiblio .= '<a href=\'?collection=' . $this->data['crossref']['id'] . '\'>' . getLastChar($this->data['crossref']['title']) . ' </a>';
 
 				if($this->data['crossref']['subtitle'] != ''){
 					$showBibtex .= 'booksubtitle = {' . ($this->data['crossref']['subtitle']) . '},<br>';
 					$showBiblio .= getLastChar($this->data['crossref']['subtitle']) . '<br>';
 				}
 
-				if($this->data['crossref']['location']['name'] != ''){
-					$showBibtex .= 'location = {' . ($this->data['crossref']['location']['name']) . '},<br>';
-					$showBiblio .= $this->data['crossref']['location']['name'] . ', ';
+				if(!empty($this->data['crossref']['location'])){
+					$showBibtex .= 'location = {' . $crossLocations . '},<br>';
+					$showBiblio .= $crossLocations . ', ';
 				}
 				if($this->data['year'] != '0000'){
 					$showBibtex .= 'year = {' . $this->data['crossref']['year'] . '},<br>';
@@ -141,9 +197,9 @@ class show {
 				}
 
 			} else {
-				if($this->data['location']['name'] != ''){
-					$showBibtex .= 'location = {' . ($this->data['location']['name']) . '},<br>';
-					$showBiblio .= $this->data['location']['name'] . ', ';
+				if(!empty($this->data['location'])) {
+					$showBibtex .= 'location = {' . $locations . '},<br>';
+					$showBiblio .= $locations . ', ';
 				}
 				if($this->data['year'] != '0000'){
 					$showBibtex .= 'year = {' . $this->data['year'] . '},<br>';
@@ -225,8 +281,10 @@ class show {
 				break;
 
 			case 'note';
+				$authors = '';
+				$labels = '';
 				$this->data = json_decode($show->getNote(), true);
-				if ($this->data['id'] !== 0) {
+				if ($this->data['id'] != 0) {
 					$this->open_note = '<div class=\'note\' id=\'' . $show->id . '\'>';
 					// show media, if exist
 					if(!empty($this->data['media'])) {
@@ -250,7 +308,20 @@ class show {
 									$pages .= '-' . $this->data['page']['end'];
 								}
 							}
-							$this->show_text .= '<p class=\'small\'>(' . $this->data['source']['author']['name'] . ': <a href=\'?source=' . $this->data['source']['id'] . '\'>' . getLastChar($this->data['source']['title']) . '</a> S. ' . $pages . ')</p>';
+
+							$i = 0;
+							while ($i < count($this->data['source']['author'])) {
+
+								if($authors == ''){
+									$authors = '<a href=\'' . __MAIN_FILE__ . '?author=' . $this->data['source']['author'][$i]['id'] . '\'>' . $this->data['source']['author'][$i]['name'] . '</a>';
+								} else {
+									$authors .= ', <a href=\'' . __MAIN_FILE__ . '?author=' . $this->data['source']['author'][$i]['id'] . '\'>' . $this->data['source']['author'][$i]['name'] . '</a>';
+								}
+							$i++;
+							}
+
+							$this->show_text .= '<p class=\'small\'>(' . $authors . ': <a href=\'?source=' . $this->data['source']['id'] . '\'>' . getLastChar($this->data['source']['title']) . '</a> S. ' . $pages . ')</p>';
+
 						}
 					}
 					$this->show_text .= $this->close;
@@ -279,13 +350,18 @@ class show {
 					if($this->data['public'] == 0) {
 						$this->show_label = '<div class=\'label private\'>';
 					}
-
-					if ($this->data['label']['name'] != '') {
+					if (!empty($this->data['label'])) {
 						$i = 0;
-						while (count($this->data['label']) > $i) {
-							$this->show_label .= '<p>' . $this->data['label'][$i]['name'] . '</p>';
-						$i++;
+						while ($i < count($this->data['label'])) {
+
+							if($labels == ''){
+								$labels = '<a href=\'?label=' . $this->data['label'][$i]['id'] . '\' title=\'#notes with this label: ' . $this->data['label'][$i]['number'] . '\'>' . $this->data['label'][$i]['name'] . '</a>';
+							} else {
+								$labels .= ' | <a href=\'?label=' . $this->data['label'][$i]['id'] . '\' title=\'#notes with this label: ' . $this->data['label'][$i]['number'] . '\'>' . $this->data['label'][$i]['name'] . '</a>';
+							}
+							$i++;
 						}
+						$this->show_label .= '<p class=\'small\'>' . $labels . '</p>';
 					}
 					$this->show_label .= $this->close;
 
@@ -293,6 +369,15 @@ class show {
 
 				} else {
 					// no results
+					$this->open_note = '';
+
+					$this->show_media = '';
+					$this->show_text = '';
+					$this->show_latex = '';
+					$this->show_label = '';
+					$this->show_tools = '';
+
+					$this->close = '';
 
 				}
 
@@ -304,7 +389,7 @@ class show {
 
 			default; // source
 				$this->data = json_decode($show->getSource(), true);
-				if ($this->data['id'] !== 0) {
+				if (!empty($this->data)) {
 					$this->open_note = '<div class=\'note topic\' id=\'' . $show->id . '\'>';
 					$biblio = $this->showBib();
 					//$biblio = array('LATEX','BIBLIO');
@@ -318,17 +403,39 @@ class show {
 					// show biblio in latex style
 					$this->show_latex .= $biblio[0] . $this->close;
 					// show labels
-					$this->show_label .= '<p>' . $this->data['label']['name'] . '</p>' . $this->close;
+					if($this->data['public'] == 0) {
+						$this->show_label = '<div class=\'label private\'>';
+					}
+					$this->show_label .= '<p>';
+					if (!empty($this->data['label'])) {
+
+						$i = 0;
+						while ($i < count($this->data['label'])) {
+							$this->show_label .= '<span><a href=\'?label=' . $this->data['label'][$i]['id'] . '\' title=\'#notes with this label: ' . $this->data['label'][$i]['number'] . '\'>' . $this->data['label'][$i]['name'] . '</a></span>';
+							$i++;
+						}
+					}
+					$this->show_label .= '</p>';
+					$this->show_label .= $this->close;
 					// and get the tools
 					$this->show_tools .= $this->showTools();
 				} else {
 					// no results
+					$this->open_note = '';
+
+					$this->show_media = '';
+					$this->show_text = '';
+					$this->show_latex = '';
+					$this->show_label = '';
+					$this->show_tools = '';
+
+					$this->close = '';
 				}
 
 		}
 
 
-		if($this->data['id'] != 0) {
+		if(!empty($this->data)) {
 			echo $this->open_note;
 				echo $this->show_media;
 				echo $this->show_text;
@@ -346,17 +453,38 @@ class show {
 	function showSourceWithNotes() {
 		$this->showData();
 
-		if($this->data['notes'] != '') {
+		if(!empty($this->data)) {
 			$i = 0;
 			$count = count($this->data['notes']);
-			while ($count > 0) {
+			while ($i < $count) {
 				$note = NEW show();
 				$note->id = $this->data['notes'][$i];
 				$note->access = $this->access;
 				$note->type = 'note';
 				$note->showData();
 				$i++;
-				$count--;
+			}
+
+
+		}
+
+
+
+	}
+
+	function showCollectionWithSources() {
+		$this->showData();
+
+		if(!empty($this->data)) {
+			$i = 0;
+			$count = count($this->data['sources']);
+			while ($i < $count) {
+				$source = NEW show();
+				$source->id = $this->data['sources'][$i];
+				$source->access = $this->access;
+				$source->type = 'source';
+				$source->showSourceWithNotes();
+				$i++;
 			}
 
 

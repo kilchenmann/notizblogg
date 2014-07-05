@@ -198,14 +198,19 @@ div.note {
   }
 
   .label, .tools {
-	background: fade(@bg, 22%);
+	background: fade(@bg, 66%);
+	opacity: 0.1;
+	border-top: 1px solid fade(@bg, 44%);
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+
   }
 
   .label {
-	border-top: 1px solid fade(@bg, 25%);
-	min-height: 33px;
+	min-height: 40px;
 	p {
-	  margin: 5px auto;
+	  margin: 5px auto 5px auto;
 	  text-align: center;
 	  display: block;
 	}
@@ -216,11 +221,7 @@ div.note {
   }
 
   .tools {
-	opacity: 0.1;
-	border-top: 1px solid fade(@bg, 33%);
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
+	clear: both;
 	height: 33px;
 
 	.left, .center, .right {

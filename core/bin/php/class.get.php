@@ -17,11 +17,11 @@ class get {
 	}
 
 	function getNote() {
-		if($this->access === 'public' && $this->id === 'all') {
+		if($this->access == 'public' && $this->id == 'all') {
 			$query = 'WHERE notePublic = 1';
-		} else if($this->access === 'public' && $this->id !== 'all') {
+		} else if($this->access == 'public' && $this->id != 'all') {
 			$query = 'WHERE noteID=\'' . $this->id . '\' AND notePublic = 1';
-		} else if($this->access !== 'public' && $this->id !== 'all') {
+		} else if($this->access != 'public' && $this->id != 'all') {
 			$query = 'WHERE noteID=\'' . $this->id . '\'';
 		} else { // ($this->access !== 'public' && $this->id === 'all')
 			$query = '';
@@ -40,7 +40,9 @@ class get {
 				// get the project
 				$projectName = getIndex('project', $row->noteProject);			// delete this query
 				// get the labels and link them
-				$labelNames = getIndexMN('note', 'label', $row->noteID, ', ');
+				$labelNames = getIndexMN('note', 'label', $row->noteID);
+
+//				print_r($labelNames);
 				condb('close');
 				$source2note = array();
 				// get the source
@@ -70,15 +72,9 @@ class get {
 								'id' => $sourceData['project']['id']
 							),
 							'editor' => $sourceData['editor'],
-							'author' => array(
-								'name' => $sourceData['author']['name']
-							),
-							'location' => array(
-								'name' => $sourceData['location']['name']
-							),
-							'label' => array(
-								'name' => $sourceData['label']['name']
-							),
+							'author' => $sourceData['author'],
+							'location' => $sourceData['location'],
+							'label' => $sourceData['label'],
 							'comment' => $sourceData['comment'],
 							'extern' => $row->noteSourceExtern
 						);
@@ -137,13 +133,13 @@ class get {
 	}
 
 	function getSource() {
-		if($this->access === 'public' && $this->id === 'all') {
+		if($this->access == 'public' && $this->id == 'all') {
 			$query = 'WHERE sourcePublic = 1';
-		} else if($this->access === 'public' && $this->id !== 'all') {
+		} else if($this->access == 'public' && $this->id != 'all') {
 			$query = 'WHERE sourceID=\'' . $this->id . '\' AND sourcePublic = 1';
-		} else if($this->access !== 'public' && $this->id !== 'all') {
+		} else if($this->access != 'public' && $this->id != 'all') {
 			$query = 'WHERE sourceID=\'' . $this->id . '\'';
-		} else { // ($this->access !== 'public' && $this->id === 'all')
+		} else { // ($this->access != 'public' && $this->id == 'all')
 			$query = '';
 		}
 
@@ -163,11 +159,11 @@ class get {
 				// get the type
 				$bibTyp = getIndex('bibTyp', $row->sourceTyp);
 				// get the authors and link them
-				$authorNames = getIndexMN('source', 'author', $row->sourceID, ', ');
+				$authorNames = getIndexMN('source', 'author', $row->sourceID);
 				// get the locations and do not link them
-				$locationNames = getIndexMN('source', 'location', $row->sourceID, ', ');
+				$locationNames = getIndexMN('source', 'location', $row->sourceID);
 				// get the labels and link them
-				$labelNames = getIndexMN('source', 'label', $row->sourceID, ', ');
+				$labelNames = getIndexMN('source', 'label', $row->sourceID);
 			condb('close');
 				$source = array(
 					'type' => 'source',
@@ -190,15 +186,9 @@ class get {
 						'id' => $row->sourceProject
 					),
 					'editor' => $row->sourceEditor,
-					'author' => array(
-						'name' => $authorNames
-					),
-					'location' => array(
-						'name' => $locationNames
-					),
-					'label' => array(
-						'name' => $labelNames
-					),
+					'author' => $authorNames,
+					'location' => $locationNames,
+					'label' => $labelNames,
 					'comment' => $row->sourceNote,
 				);
 				condb('open');
@@ -241,15 +231,9 @@ class get {
 											'id' => $sourceData['project']['id']
 										),
 										'editor' => $sourceData['editor'],
-										'author' => array(
-											'name' => $sourceData['author']['name']
-										),
-										'location' => array(
-											'name' => $sourceData['location']['name']
-										),
-										'label' => array(
-											'name' => $sourceData['label']['name']
-										),
+										'author' => $sourceData['author'],
+										'location' => $sourceData['location'],
+										'label' => $sourceData['label'],
 										'comment' => $sourceData['comment']
 									);
 									$source['crossref'] = $crossref;
@@ -298,9 +282,28 @@ class get {
 					}
 				}
 				$source['notes'] = $notes;
+
+				//get also other sourceIDs to this source
+				condb('open');
+				$getBibFieldID = mysql_query("SELECT bibFieldID FROM bibField WHERE bibFieldName = 'crossref'");
+				while ($row = mysql_fetch_object($getBibFieldID)) {
+					$bibFieldID = $row->bibFieldID;			// should be 24
+				}
+
+				$sourceSql = mysql_query("SELECT sourceID FROM sourceDetail WHERE bibFieldID = " . $bibFieldID . " AND sourceDetailName = " . $this->id . " ORDER BY sourceID ASC");
+				condb('close');
+//				echo "SELECT noteID FROM note WHERE noteSource=" . $this->id . " ORDER BY pageStart, noteTitle ASC";
+				$sources = array();
+				$num_results = mysql_num_rows($sourceSql);
+				if ($num_results > 0) {
+					while ($row = mysql_fetch_object($sourceSql)) {
+						array_push($sources, $row->sourceID);
+					}
+				}
+				$source['sources'] = $sources;
 			}
 		} else {
-			$source = array(
+			$sources = array(
 				'id' => 0
 			);
 		}

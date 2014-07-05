@@ -138,6 +138,10 @@ if (!isset ($_SESSION["token"])) {
 					$type = 'author';
 					$query = $_GET['author'];
 				}
+				if(isset($_GET['collection'])){
+					$type = 'collection';
+					$query = $_GET['collection'];
+				}
 				if(isset($_GET['search'])){
 					$type = 'search';
 					$query = $_GET['search'];
@@ -450,8 +454,9 @@ if (!isset ($_SESSION["token"])) {
 
 		.mouseleave(function() {
 			$(this).toggleClass('active');
+			$(this).children('div.label').css({'opacity': '0.1'});
 			$(this).children('div.tools').css({'opacity': '0.1'});
-			$('div.media').css({'opacity': '1'});
+			$('div.media').css({'opacity': '0.8'});
 		})
 		.on('touchend', function(){
 
@@ -471,6 +476,7 @@ if (!isset ($_SESSION["token"])) {
 	var activator = function(element){
 		$('div.media').css({'opacity': '0.5'});
 		element.toggleClass('active');
+		element.children('div.label').css({'opacity': '1'});
 		element.children('div.tools').css({'opacity': '1'});
 		element.children('div.media').css({'opacity': '1'});
 		var type = undefined,

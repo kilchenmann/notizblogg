@@ -12,7 +12,7 @@
  * ===========================================================================
  * ======================================================================== */
 
-(function( $ ){
+(function($){
 	// -----------------------------------------------------------------------
 	// define some functions
 	// -----------------------------------------------------------------------
@@ -44,7 +44,7 @@
 					media_ele = $('<img>').attr({'src': '', 'alt': 'upload a media (picture, video, etc.)'}).addClass('media').css({'width':'160px', 'height': '160px'});
 				}
 				ele
-					.append($('<form>').attr({'action': 'save.php', 'method': 'post', 'accept-charset': 'utf-8' })
+					.append($('<form>').attr({'action': 'core/bin/php/save.data.php', 'method': 'post', 'accept-charset': 'utf-8' })
 						.append($('<div>').addClass('form col_medium left')
 							.append($('<input>').attr({'type': 'text', 'name': 'title', 'placeholder': 'Title', 'value': data.title}).addClass('field_obj large'))
 							.append($('<textarea>').attr({'type': 'text', 'name': 'content', 'placeholder': 'Content', 'required': 'required'}).addClass('field_obj large').html(data.content))
