@@ -43,7 +43,7 @@ function show($type, $query, $access, $viewer)
 				$source->id = $query;
 				$source->access = $access;
 				$source->data = json_decode($source->getSource(), true);
-
+			// get the notes
 			if(!empty($source->data['notes'])) {
 				$i = 0;
 				while ($i < count($source->data['notes'])) {
@@ -147,13 +147,21 @@ function show($type, $query, $access, $viewer)
 			break;
 
 		case 'collection';
-			echo $openViewer;
-			$source = NEW show();
+			show('source', $query, $access, 'desk');
+
+			// get the other sources
+			$source = NEW get();
 			$source->id = $query;
 			$source->access = $access;
-			$source->type = 'source';
-			$source->showCollectionWithSources();
-			echo $close;
+			$source->data = json_decode($source->getSource(), true);
+			// get the sources
+			if(!empty($source->data['sources'])) {
+				$i = 0;
+				while ($i < count($source->data['sources'])) {
+					show('source', $source->data['sources'][$i], $access, 'desk');
+					$i++;
+				}
+			}
 			break;
 
 		case 'search';

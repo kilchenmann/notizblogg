@@ -320,7 +320,12 @@ class show {
 							$i++;
 							}
 
-							$this->show_text .= '<p class=\'small\'>(' . $authors . ': <a href=\'?source=' . $this->data['source']['id'] . '\'>' . getLastChar($this->data['source']['title']) . '</a> S. ' . $pages . ')</p>';
+							if($this->data['source']['bibTyp']['name'] == 'collection' || $this->data['source']['bibTyp']['name'] == 'proceedings' || $this->data['source']['bibTyp']['name'] == 'book') {
+								$this->show_text .= '<p class=\'small\'><a href=\'?collection=' . $this->data['source']['id'] . '\' >'. getLastChar($this->data['source']['title']) . '</a></p>';
+							} else {
+								$this->show_text .= '<p class=\'small\'><a href=\'?source=' . $this->data['source']['id'] . '\' >'. getLastChar($this->data['source']['title']) . '</a></p>';
+							}
+
 
 						}
 					}

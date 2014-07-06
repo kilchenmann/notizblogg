@@ -36,11 +36,11 @@
 
 	}
 	.desk .left_side {
-		left: 0;
+
 	}
 
 	.desk .right_side {
-		left: 360px;
+
 	}
 
 }
@@ -57,8 +57,7 @@
 		width: 300px;
 	}
 	.desk .left_side, .desk .right_side {
-		left: 0;
-		float: left;
+
 	}
 
 
@@ -78,7 +77,6 @@
 		font-size: 0.8em;
 	}
 	.desk .left_side, .desk .right_side {
-		left: 0;
-		float: left;
+
 	}
 }

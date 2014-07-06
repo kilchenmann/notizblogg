@@ -67,8 +67,8 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/nb.css">
 <!--
 	<link rel="stylesheet" type="text/css" href="<?php //echo __SITE_URL__; ?>/core/style/css/timeline.css">
+	<link rel="stylesheet" type="text/css" href="<?php //echo __SITE_URL__; ?>/core/style/css/responsive.css">
 -->
-	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/responsive.css">
 
 	<!--
 	<link rel="stylesheet/less" type="text/css" href="core/style/less/setting.less">
@@ -391,10 +391,37 @@
 		}
 	});
 
+	$(window).load(function() {
+		if($('.wall').length !== 0) {
+			var width = $(window).width();
+			var note_width = $('.wall').find('.note').width() + 20;
+			var num_col = Math.floor(width / note_width);
+			$('.wall').css({
+				'-webkit-column-count': num_col,
+				'-moz-column-count': num_col,
+				'column-count': num_col,
+				'width': num_col * note_width
+			});
+		}
+
+	});
 	$(window).resize(function() {
 		var height = $(window).height() - $('header').height() - $('footer').height();
 		$('div.viewer').css({'height': height});
 		$('.float_obj').center();
+		// set the numbers of wall columns
+		if($('.wall').length !== 0) {
+			var width = $(window).width();
+			var note_width = $('.wall').find('.note').width() + 20;
+			var num_col = Math.floor(width / note_width);
+			$('.wall').css({
+				'-webkit-column-count': num_col,
+				'-moz-column-count': num_col,
+				'column-count': num_col,
+				'width': num_col * note_width
+			});
+		}
+
 	});
 
 	$.getScript(NB.url + '/core/bin/js/jquery.mousewheel.min.js', function() {
