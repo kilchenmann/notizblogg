@@ -45,7 +45,7 @@
 						.attr({
 							'accept-charset': 'utf-8',
 							'name': 'simpleSearch',
-							'action': 'core/bin/php/search.data.php',
+							'action': NB.url + '/core/bin/php/search.data.php',
 							'method': 'get'
 						})
 						.append(localdata.search.filter = $('<button>')

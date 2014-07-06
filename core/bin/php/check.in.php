@@ -19,13 +19,13 @@ if (mysql_num_rows($result) > 0)
 	$_SESSION["token"] = $data["token"] . '-' . $data["uid"];
 	$_SESSION["user"] = $data["name"];
 //  $pathLogin = $_POST['path'];
-	header ('Location: ' . __SITE_URL__ . '/' . __BASE_FOLDER__ . '/index.php');
+	header ('Location: ' . __SITE_URL__ . '/index.php');
 }
 else
 {
 	$_SESSION["token"] = '';
 	$_SESSION["user"] = '';
-	header ('Location: ' . __SITE_URL__ . '/' . __BASE_FOLDER__ . '/index.php?access=denied');
+	header ('Location: ' . __SITE_URL__ . '/index.php?access=denied');
 }
 
 condb('close');

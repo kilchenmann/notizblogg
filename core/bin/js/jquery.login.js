@@ -65,7 +65,7 @@
 				if(localdata.settings.type === 'logout') {
 					// alert('logout');
 					localdata.login.button.css({
-						'background-image': 'url("data/user/' + localdata.settings.user + '.png")',
+						'background-image': 'url("' + NB.url + '/data/user/' + localdata.settings.user + '.png")',
 						'background-repeat': 'no-repeat',
 					//	'background-attachment': 'fixed',
 						'background-position': 'center',

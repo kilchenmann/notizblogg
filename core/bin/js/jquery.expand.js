@@ -20,8 +20,24 @@
 
 	var form4note = function(ele, settings) {
 			var checkID, publicID, pages, check_ele = {}, media_ele;
-			$.getJSON('api/data.php?note=' + settings.noteID, function(data) {
+			var i = 0;
+			var labels = '';
+			$.getJSON('get/note/' + settings.noteID, function(data) {
+				console.log(data);
+				// get label
+	//			console.log((data.label));
+				if(data.label.length !== 0) {
 
+					while(i < data.label.length) {
+						if (labels === '') {
+							labels = data.label[i]['name'];
+						} else {
+							labels += ', ' + data.label[i]['name'];
+						}
+
+					i += 1;
+					}
+				}
 				if (data.setting.checkID === null) {
 					checkID = check_id();
 				} else {
@@ -43,6 +59,7 @@
 				} else {
 					media_ele = $('<img>').attr({'src': '', 'alt': 'upload a media (picture, video, etc.)'}).addClass('media').css({'width':'160px', 'height': '160px'});
 				}
+
 				ele
 					.append($('<form>').attr({'action': 'core/bin/php/save.data.php', 'method': 'post', 'accept-charset': 'utf-8' })
 						.append($('<div>').addClass('form col_medium left')
@@ -73,10 +90,13 @@
 											check_ele.span4delete.toggleClass('checked');
 											if(check_ele.span4delete.hasClass('checked')) {
 												$('.form')
-													.find($('input, textarea, .media, select')).css({'background-color': 'rgba(147, 0, 0, 0.2)'});
+													.find($('input, textarea, .media, select')).css({'background-color': 'rgba(147, 0, 0, 0.1)'});
+												$('input.submit').val('DELETE').css({'background-color': 'rgba(147, 0, 0, 0.8)'});
+
 											} else {
 												$('.form')
 													.find($('input, textarea, .media, select')).css({'background-color': ''});
+												$('input.submit').val('Save').css({'background-color': ''});
 											}
 										})
 								)
@@ -87,14 +107,14 @@
 						.append($('<div>').addClass('form col_large')
 							// line 1: label and check public
 							.append($('<p>')
-								.append($('<input>').attr({'type': 'text', 'name': 'label', 'placeholder': 'Label', 'value': data.label.name}).addClass('field_obj large'))
+								.append($('<input>').attr({'type': 'text', 'name': 'label', 'placeholder': 'Label', 'value': labels}).addClass('field_obj large'))
 									.append($('<input>').attr({'type': 'submit', 'name': 'submit', 'title': 'Save', 'value': 'Save'}).addClass('submit field_obj small'))//.css({float: 'right'}))
 						)
 							// line 2: source, pages and check delete
 							.append($('<p>')
 								.append($('<input>').attr({'type': 'text', 'name': 'source', 'placeholder': 'Connect with [source]', 'value': data.source.title}).addClass('field_obj medium'))
 								.append($('<input>').attr({'type': 'text', 'name': 'pages', 'placeholder': 'Pages', 'value': pages}).addClass('field_obj small'))
-								.append($('<input>').attr({'type': 'reset', 'name': 'reset', 'title': 'Reset', 'value': 'Reset'}).addClass('submit field_obj small'))//.css({float: 'right'}))
+								.append($('<input>').attr({'type': 'reset', 'name': 'reset', 'title': 'Reset', 'value': 'Reset'}).addClass('reset field_obj small'))//.css({float: 'right'}))
 
 						)
 

@@ -285,7 +285,7 @@ class show {
 				$labels = '';
 				$this->data = json_decode($show->getNote(), true);
 				if ($this->data['id'] != 0) {
-					$this->open_note = '<div class=\'note\' id=\'' . $show->id . '\'>';
+					$this->open_note = '<div class=\'note item\' id=\'' . $show->id . '\'>';
 					// show media, if exist
 					if(!empty($this->data['media'])) {
 						$this->show_media .= $this->showMedia() . $this->close;
@@ -338,7 +338,7 @@ class show {
 									$pages .= '-' . $this->data['page']['end'];
 								}
 							}
-							$this->show_latex .= '<p class=\'small\'>\cite[][' . $pages . ']{' . $this->data['source']['name'] . '}</p>';
+							$this->show_latex .= '<p class=\'small\'>\cite[][' . $pages . ']{<a href=\'?source=' . $this->data['source']['id'] . '\' >' . $this->data['source']['name'] . '</a>}</p>';
 						}
 						$this->show_latex .= $this->close;
 					} else {
@@ -390,7 +390,7 @@ class show {
 			default; // source
 				$this->data = json_decode($show->getSource(), true);
 				if (!empty($this->data)) {
-					$this->open_note = '<div class=\'note topic\' id=\'' . $show->id . '\'>';
+					$this->open_note = '<div class=\'note topic item\' id=\'' . $show->id . '\'>';
 					$biblio = $this->showBib();
 					//$biblio = array('LATEX','BIBLIO');
 					if(!empty($this->data['media'])) {

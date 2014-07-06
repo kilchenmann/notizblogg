@@ -1,0 +1,43 @@
+RewriteEngine On
+
+RewriteBase /nb
+
+#RewriteRule ^note/([0-9]+)$ /nb/index.php?note=$1
+#RewriteRule ^source/([0-9]+)$ /nb/index.php?source=$1
+#RewriteRule ^collection/([0-9]+)$ /nb/index.php?collection=$1
+#RewriteRule ^author/([0-9]+)$ /nb/index.php?author=$1
+#RewriteRule ^label/([0-9]+)$ /nb/index.php?label=$1
+#RewriteRule ^q=([a-z]+)$ /nb/index.php?search=$1
+
+#api rules
+RewriteRule ^get/note/([0-9]+)$ /nb/api/get.php?note=$1
+RewriteRule ^get/source/([0-9]+)$ /nb/api/get.php?source=$1
+
+RewriteRule ^post/note/([0-9]+)$ /nb/api/post.php?note=$1
+RewriteRule ^post/source/([0-9]+)$ /nb/api/post.php?source=$1
+
+#unless directory, remove trailing slash
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [R=301,L]
+
+#resolve .php file for extensionless php urls
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+#redirect external .php requests to extensionless url
+RewriteCond %{THE_REQUEST} ^[A-Z]+\ /([^/]+/)*[^.#?\ ]+\.php([#?][^\ ]*)?\ HTTP/
+RewriteRule ^(([^/]+/)*[^.]+)\.php $1 [R=301,L]
+
+
+ErrorDocument 301 /nb/note/0
+ErrorDocument 302 /nb/note/0
+ErrorDocument 400 /nb/note/0
+ErrorDocument 401 /nb/note/0
+ErrorDocument 402 /nb/note/0
+ErrorDocument 403 /nb/note/0
+ErrorDocument 404 /nb/note/0
+ErrorDocument 500 /nb/note/0
+
+
+

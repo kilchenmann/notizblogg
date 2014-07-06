@@ -1,55 +1,84 @@
 /* BIG SCREENS */
 @media screen and (min-width: 1920px)  {
-	.desk {
+	.wall {
 		-webkit-column-count: 4;
 		-moz-column-count: 4;
 		column-count: 4;
 		width: 1664px;
 	}
-	.note {
+	.wall .note {
 		width: 400px;
 	}
+	.desk {
 
+	}
+	.desk .left_side {
+		left: 0;
+	}
+
+	.desk .right_side {
+		left: 360px;
+	}
 }
 /* LARGE SCREENS */
 @media screen and (min-width: 1280px) and (max-width: 1919px) {
-	.desk {
+	.wall {
 		-webkit-column-count: 3;
 		-moz-column-count: 3;
 		column-count: 3;
 		width: 1188px;
 	}
-	.note {
+	.wall .note {
 		width: 380px;
+	}
+
+	.desk {
+
+	}
+	.desk .left_side {
+		left: 0;
+	}
+
+	.desk .right_side {
+		left: 360px;
 	}
 
 }
 /* MEDIUM SCREENS */
 @media screen and (min-width: 641px) and (max-width: 1279px) {
-	.desk {
+	.wall {
 		-webkit-column-count: 2;
 		-moz-column-count: 2;
 		column-count: 2;
 		width: 632px;
 	}
 
-	.note {
+	.wall .note {
 		width: 300px;
 	}
+	.desk .left_side, .desk .right_side {
+		left: 0;
+		float: left;
+	}
+
 
 }
 /* SMALL SCREENS */
 @media screen and (max-width: 640px) {
-	.desk {
+	.wall {
 		-webkit-column-count: 1;
 		-moz-column-count: 1;
 		column-count: 1;
 		width: 296px;
 	}
-	.note {
+	.wall .note {
 		width: 280px;
 	}
-	.note p {
+	.wall .note p {
 		font-size: 0.8em;
+	}
+	.desk .left_side, .desk .right_side {
+		left: 0;
+		float: left;
 	}
 }

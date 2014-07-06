@@ -1,45 +1,45 @@
-<?php
-session_start ();
-$access = 'public';
-$user = '--';
-$uid = '';
-
-require 'core/bin/php/setting.php';
-
-if (!isset ($_SESSION["token"])) {
-	$access = 'public';
-	$user = '--';
-	$uid = '';
-} else {
-	condb('open');
-	$token = (explode("-",$_SESSION["token"]));
-	$sql = mysql_query("SELECT username FROM user WHERE uid = " . $token[1] . " AND token = '" . $token[0] . "';");
-
-	while($row = mysql_fetch_object($sql)){
-		$user = $row->username;
-	}
-	condb('close');
-
-	if($user != '') {
-		$access = 'private';
-		$uid = $token[1];
-	} else {
-		$user = '--';
-	}
-}
-
-?>
-
 <!DOCTYPE html>
 <html>
 
 <head>
 	<meta charset="UTF-8">
-<!--
+
+	<?php
+	session_start ();
+	$access = 'public';
+	$user = '--';
+	$uid = '';
+
+	require 'core/bin/php/setting.php';
+
+	if (!isset ($_SESSION["token"])) {
+		$access = 'public';
+		$user = '--';
+		$uid = '';
+	} else {
+		condb('open');
+		$token = (explode("-",$_SESSION["token"]));
+		$sql = mysql_query("SELECT username FROM user WHERE uid = " . $token[1] . " AND token = '" . $token[0] . "';");
+
+		while($row = mysql_fetch_object($sql)){
+			$user = $row->username;
+		}
+		condb('close');
+
+		if($user != '') {
+			$access = 'private';
+			$uid = $token[1];
+		} else {
+			$user = '--';
+		}
+	}
+
+	?>
+	<!--
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 -->
 	<title>Notizblogg</title>
-	<link rel="shortcut icon" href="core/style/img/favicon.ico">
+	<link rel="shortcut icon" href="<?php echo __SITE_URL__; ?>/core/style/img/favicon.ico">
 
 	<meta name="author" content="André Kilchenmann"/>
 	<meta name="description" content="Notizblogg ist der digitale Zettelkasten von André Kilchenmann. Nebst textuellem Inhalt kann der digitale MeMex, auch Bilder, Video- oder Ton-Dokumente aufnehmen."/>
@@ -47,7 +47,7 @@ if (!isset ($_SESSION["token"])) {
 
 	<meta name="Resource-type" content="Document"/>
 
-	<script type="text/javascript" src="core/lib/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/lib/jquery-1.10.2.min.js"></script>
 
 	<!--
 	<script src="lib/jqueryui/1.9.1/jquery-ui.min.js"></script>
@@ -55,29 +55,26 @@ if (!isset ($_SESSION["token"])) {
 	<!--
 	<script type="text/javascript" src="core/bin/js/jquery.slimscroll.min.js"></script>
 	-->
-	<script type="text/javascript" src="core/bin/js/md5.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.expand.js"></script>
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/md5.js"></script>
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.center.js"></script>
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.warning.js"></script>
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.expand.js"></script>
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
 	-->
 
 
-	<link rel="stylesheet" type="text/css" href="core/style/css/nb.css">
-	<link rel="stylesheet" type="text/css" href="core/style/css/responsive.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/nb.css">
+<!--
+	<link rel="stylesheet" type="text/css" href="<?php //echo __SITE_URL__; ?>/core/style/css/timeline.css">
+-->
+	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/responsive.css">
 
 	<!--
 	<link rel="stylesheet/less" type="text/css" href="core/style/less/setting.less">
 	<script type="text/javascript" src="core/lib/less-1.6.3.min.js"></script>
 	-->
 
-	<!--[if IE]>
-	<script type="text/javascript">
-		var console = { log: function () {
-		} };
-	</script>
-	<![endif]-->
 
 </head>
 <body>
@@ -87,7 +84,7 @@ if (!isset ($_SESSION["token"])) {
 		<a href='http://notizblogg.ch'>Notizblogg</a> |
 		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">der digitale Zettelkasten von André Kilchenmann</a>
 	</h1>
-	<div class="left"><span class="project"><a href='index.php'><h2 class="logo">Notizblogg</h2></a></span></div>
+	<div class="left"><span class="project"><a href='<?php echo __SITE_URL__; ?>/index.php'><h2 class="logo">Notizblogg</h2></a></span></div>
 	<div class="center"><span class="search"></span></div>
 	<div class="right">
 		<span class="add"></span>
@@ -107,7 +104,7 @@ if (!isset ($_SESSION["token"])) {
 		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">André Kilchenmann</a> (content &amp; design) &copy;
 		<span class='year'></span>
 		<a href="http://milchkannen.ch">
-		<img src="core/style/img/akM-logo-small.png" alt="milchkannen | kilchenmann" title="milchkannen | andré kilchenmann"/>
+		<img src="<?php echo __SITE_URL__; ?>/core/style/img/akM-logo-small.png" alt="milchkannen | kilchenmann" title="milchkannen | andré kilchenmann"/>
 		</a>
 	</p>
 </footer>
@@ -119,12 +116,13 @@ if (!isset ($_SESSION["token"])) {
 			// default parameters
 			$type = '';
 			$query = 'all';
-			$viewer = 'desk';
+			$viewer = 'wall';
 			if($_SERVER['QUERY_STRING']){
 				// default values; in case of wrong queries; these variables would be overwritten in the right case
 				if(isset($_GET['source'])){
 					$type = 'source';
 					$query = $_GET['source'];
+					$viewer = 'desk';
 				}
 				if(isset($_GET['note'])){
 					$type = 'note';
@@ -141,10 +139,11 @@ if (!isset ($_SESSION["token"])) {
 				if(isset($_GET['collection'])){
 					$type = 'collection';
 					$query = $_GET['collection'];
+					$viewer = 'desk';
 				}
-				if(isset($_GET['search'])){
+				if(isset($_GET['q'])){
 					$type = 'search';
-					$query = $_GET['search'];
+					$query = $_GET['q'];
 				}
 			} else {
 				?>
@@ -175,26 +174,29 @@ if (!isset ($_SESSION["token"])) {
 			vars.push(hash[0]);
 			vars[hash[0]] = hash[1];
 		}
+		console.log(vars);
 		return vars;
+
 	}
+	var NB = {};
+	NB.url = '<?php echo __SITE_URL__; ?>';
+	NB.user = '<?php echo $user; ?>';
+	NB.access = '<?php echo $access; ?>';
+	NB.uid = '<?php echo $uid; ?>';
 
 
+//	$(document).ready(function () {
 
-	$(document).ready(function () {
 
-		var user = '<?php echo $user; ?>',
-			access = '<?php echo $access; ?>',
-			uid = '<?php echo $uid; ?>';
-
-		$.getScript('core/bin/js/jquery.login.js', function() {
-			if(user !== '--' && access !== 'public' && uid !== '') {
+		$.getScript(NB.url + '/core/bin/js/jquery.login.js', function() {
+			if(NB.user !== '--' && NB.access !== 'public' && NB.uid !== '') {
 				$('.user').login({
 					type: 'logout',
-					user: uid,
+					user: NB.uid,
 					submit: 'Abmelden',
-					action: 'core/bin/php/check.out.php'
+					action: NB.url + '/core/bin/php/check.out.php'
 				});
-				$.getScript('core/bin/js/jquery.finder.js', function() {
+				$.getScript(NB.url + '/core/bin/js/jquery.finder.js', function() {
 					/* integrate the search bar in the header panel */
 					$('.search').finder({
 						search: 'Suche',
@@ -213,7 +215,7 @@ if (!isset ($_SESSION["token"])) {
 							data: undefined,
 							show: 'form'		// booklet || form
 						});
-				$.getScript('core/bin/js/jquery.drawer.js', function() {
+				$.getScript(NB.url + '/core/bin/js/jquery.drawer.js', function() {
 
 					$('.drawer').append(
 						//		$('<button>').addClass('btn grp_none toggle_drawer')
@@ -226,7 +228,7 @@ if (!isset ($_SESSION["token"])) {
 					user: 'Benutzername',
 					key: 'Passwort',
 					submit: 'Anmelden',
-					action: 'core/bin/php/check.in.php'
+					action: NB.url + '/core/bin/php/check.in.php'
 				});
 			}
 		});
@@ -241,7 +243,7 @@ if (!isset ($_SESSION["token"])) {
 				exp_ele,
 				type,
 				divs = $note.contents();
-				access = '<?php echo $access; ?>';
+				NB.access = '<?php echo $access; ?>';
 
 
 			var note_obj = {};
@@ -279,7 +281,7 @@ if (!isset ($_SESSION["token"])) {
 				type = 'note';
 			}
 
-			if(access === 'public') {
+			if(NB.access === 'public') {
 				edit = false;
 				edit_ele = $('<button>').addClass('btn grp_none fake_btn');
 			} else {
@@ -354,7 +356,7 @@ if (!isset ($_SESSION["token"])) {
 		//});
 
 
-
+/*
 		if(getUrlVars()["access"] !== undefined) {
 			$('#fullpage').warning({
 				type: 'access'
@@ -363,16 +365,17 @@ if (!isset ($_SESSION["token"])) {
 				window.location.href = window.location.href.split('?')[0];
 			})
 		}
+		*/
 		if ($('.note').length === 0) {
 			$('#fullpage').warning({
 				type: 'noresults',
 				lang: 'de'
 			});
 			$('body').on('click', function(){
-				window.location.href = window.location.href.split('?')[0];
+				window.location.href = NB.url;
 			})
 		}
-	});
+//	});
 
 	$(document).keyup(function(e) {
 		if(e.keyCode == 27) {
@@ -394,7 +397,7 @@ if (!isset ($_SESSION["token"])) {
 		$('.float_obj').center();
 	});
 
-	$.getScript('core/bin/js/jquery.mousewheel.min.js', function() {
+	$.getScript(NB.url + '/core/bin/js/jquery.mousewheel.min.js', function() {
 		/*
 		$('div.viewer').on('mousewheel', function (e, d) {
 			var viewer = $(this);
@@ -454,9 +457,9 @@ if (!isset ($_SESSION["token"])) {
 
 		.mouseleave(function() {
 			$(this).toggleClass('active');
-			$(this).children('div.label').css({'opacity': '0.1'});
+			$(this).children('div.media').css({'opacity': '0.8'});
+			$(this).children('div.label').css({'opacity': '0.8'});
 			$(this).children('div.tools').css({'opacity': '0.1'});
-			$('div.media').css({'opacity': '0.8'});
 		})
 		.on('touchend', function(){
 
@@ -476,9 +479,9 @@ if (!isset ($_SESSION["token"])) {
 	var activator = function(element){
 		$('div.media').css({'opacity': '0.5'});
 		element.toggleClass('active');
+		element.children('div.media').css({'opacity': '1'});
 		element.children('div.label').css({'opacity': '1'});
 		element.children('div.tools').css({'opacity': '1'});
-		element.children('div.media').css({'opacity': '1'});
 		var type = undefined,
 			typeID = undefined;
 		if(!element.attr('id')) {
@@ -521,6 +524,42 @@ if (!isset ($_SESSION["token"])) {
 
 	};
 
+
+	if($('.desk').length !== 0) {
+		$.getScript(NB.url + '/core/bin/js/jquery.masonry.min.js', function() {
+			$(function(){
+				function Arrow_Points()
+				{
+					var s = $('.right_side').find('.note');
+					$.each(s, function(i, obj) {
+						var posLeft = $(obj).position().left;		//css("left");
+					//	$(obj).addClass('borderclass');
+						if(posLeft === 0)
+						{
+//							html = "<span class='rightCorner'></span>";
+							$(obj).prepend($('<span>').addClass('rightCorner'));
+						}
+						else
+						{
+//							html = "<span class='leftCorner'></span>";
+							$(obj).prepend($('<span>').addClass('leftCorner'));
+						}
+					});
+				}
+
+
+	// Divs
+				$('.right_side').masonry({itemSelector : '.note'});
+				Arrow_Points();
+
+
+
+
+			});
+
+
+	});
+	}
 
 
 	/* copyright date */

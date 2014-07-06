@@ -6,12 +6,10 @@
 .borderclass {
 	border: 1px solid #A9B6D2;
 }
-.item {
+.wall .item {
 	width: 408px;
 	margin: 10px;
 	float: left;
-	background-color:#ffffff;
-	border:solid 1px #B4BBCD;
 	min-height:50px;
 	text-align:justify;
 	word-wrap:break-word;
@@ -23,7 +21,7 @@
 }
 
 .item div, .topbox div {
-	padding:8px;
+/*	padding:8px; */
 }
 .rightCorner {
 	background-image: url('../img/timeline/right.png');

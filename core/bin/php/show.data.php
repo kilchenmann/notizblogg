@@ -12,17 +12,52 @@
 
 function show($type, $query, $access, $viewer)
 {
-	$openViewer = '<div class=\'' . $viewer . '\'>';
-	$closeViewer = '</div>';
+	switch($viewer) {
+		case 'desk';
+			$openViewer = '<div class=\'desk\'>';
+			$openPartLeft = '<div class=\'left_side\'>';
+			$openPartRight = '<div class=\'right_side\'>';
+			break;
+
+		default;		// wall
+			$openViewer = '<div class=\'wall\'>';
+			$openPartLeft = '<div>';
+			$openPartRight = '<div>';
+
+	}
+	$close = '</div>';
+
 	switch ($type) {
 		case 'source';
 			echo $openViewer;
+			echo $openPartLeft;
 				$source = NEW show();
 				$source->id = $query;
 				$source->access = $access;
 				$source->type = $type;
-				$source->showSourceWithNotes();
-			echo $closeViewer;
+				$source->showData();
+			echo $close;
+			echo $openPartRight;
+			echo '<div class=\'timeline_container\'><div class=\'timeline\'><div class=\'plus\'></div></div></div>';
+				$source = NEW get();
+				$source->id = $query;
+				$source->access = $access;
+				$source->data = json_decode($source->getSource(), true);
+
+			if(!empty($source->data['notes'])) {
+				$i = 0;
+				while ($i < count($source->data['notes'])) {
+					$note = NEW show();
+					$note->id = $source->data['notes'][$i];
+					$note->access = $access;
+					$note->type = 'note';
+					$note->showData();
+					$i++;
+				}
+
+			}
+			echo $close; 		// part right
+			echo $close; 		// viewer type
 			break;
 
 		case 'note';
@@ -32,7 +67,7 @@ function show($type, $query, $access, $viewer)
 				$note->access = $access;
 				$note->type = $type;
 				$note->showData();
-			echo $closeViewer;
+			echo $close;
 			break;
 
 		case 'label';
@@ -62,7 +97,7 @@ function show($type, $query, $access, $viewer)
 						$source->showData();
 					}
 				}
-				echo $closeViewer;
+				echo $close;
 
 				echo $openViewer;
 				// 2. get the note to this label
@@ -80,7 +115,7 @@ function show($type, $query, $access, $viewer)
 						$note->showData();
 					}
 				}
-				echo $closeViewer;
+				echo $close;
 			}
 			break;
 
@@ -118,7 +153,7 @@ function show($type, $query, $access, $viewer)
 			$source->access = $access;
 			$source->type = 'source';
 			$source->showCollectionWithSources();
-			echo $closeViewer;
+			echo $close;
 			break;
 
 		case 'search';
@@ -142,7 +177,7 @@ function show($type, $query, $access, $viewer)
 			} else {
 				echo '<div class=\'note\'><h3 id="source">No sources with \'' . $query . '\'</h3></div>';
 			}
-			echo $closeViewer;
+			echo $close;
 
 			// show notes
 			condb('open');
@@ -162,7 +197,7 @@ function show($type, $query, $access, $viewer)
 			} else {
 				echo '<div class=\'note\'><h3 id="note">No notes with \'' . $query . '\'</h3></div>';
 			}
-			echo $closeViewer;
+			echo $close;
 
 			// show authors
 			condb('open');
@@ -178,7 +213,7 @@ function show($type, $query, $access, $viewer)
 			} else {
 				echo '<div class=\'note\'><h3 id="author">No authors with \'' . $query . '\'</h3></div>';
 			}
-			echo $closeViewer;
+			echo $close;
 
 			// show labels
 			condb('open');
@@ -194,7 +229,7 @@ function show($type, $query, $access, $viewer)
 			} else {
 				echo '<div class=\'note\'><h3 id="label">No Labels with \'' . $query . '\'</h3></div>';
 			}
-			echo $closeViewer;
+			echo $close;
 			break;
 
 		default:
@@ -219,7 +254,7 @@ function show($type, $query, $access, $viewer)
 					//$source = NEW source();
 					//$source->showSource($row->sourceID, $access);
 				}
-				echo $closeViewer;
+				echo $close;
 			}
 	}
 

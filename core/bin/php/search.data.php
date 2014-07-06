@@ -9,9 +9,9 @@
 require_once 'setting.php';
 if(isset($_GET['swq']) && $_GET['swq'] !== ''){
 
-	header ('Location: ' . __SITE_URL__ . '/' . __BASE_FOLDER__ . '/index.php?search='.$_GET['swq']);
+	header ('Location: ' . __SITE_URL__ . '/?q='.$_GET['swq']);
 } else {
-	header ('Location: ' . __SITE_URL__ . '/' . __BASE_FOLDER__ . '/index.php');
+	header ('Location: ' . __SITE_URL__ . '/index.php');
 }
 
 
