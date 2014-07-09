@@ -392,17 +392,29 @@
 	});
 
 	$(window).load(function() {
+		var win_width = $(window).width();
 		if($('.wall').length !== 0) {
-			var width = $(window).width();
-			var note_width = $('.wall').find('.note').width() + 20;
-			var num_col = Math.floor(width / note_width);
-			$('.wall').css({
+			var note_width = $('.wall').find('.note').width() + 60;
+			var num_col = Math.floor(win_width / note_width);
+			$(this).css({
 				'-webkit-column-count': num_col,
 				'-moz-column-count': num_col,
 				'column-count': num_col,
 				'width': num_col * note_width
 			});
 		}
+		/*
+		if($('.desk').length !== 0) {
+			var panel_left = $('.left_side');
+			var panel_right = $('.right_side');
+			var margin_left = panel_left.position().left + panel_left.width();
+			if((margin_left + panel_right.width()) >= win_width ) {
+				panel_right.css({left: '44px'});
+			} else {
+				panel_right.css({left: margin_left});
+			}
+		}
+		*/
 
 	});
 	$(window).resize(function() {
@@ -412,7 +424,7 @@
 		// set the numbers of wall columns
 		if($('.wall').length !== 0) {
 			var width = $(window).width();
-			var note_width = $('.wall').find('.note').width() + 20;
+			var note_width = $('.wall').find('.note').width() + 60;
 			var num_col = Math.floor(width / note_width);
 			$('.wall').css({
 				'-webkit-column-count': num_col,
@@ -504,7 +516,7 @@
 
 
 	var activator = function(element){
-		$('div.media').css({'opacity': '0.5'});
+		$('div.media').css({'opacity': '0.8'});
 		element.toggleClass('active');
 		element.children('div.media').css({'opacity': '1'});
 		element.children('div.label').css({'opacity': '1'});

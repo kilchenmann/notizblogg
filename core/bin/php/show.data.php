@@ -71,7 +71,7 @@ function show($type, $query, $access, $viewer)
 			break;
 
 		case 'label';
-			// 1. get the label
+			// 1. get the label name
 			$label = '';
 			condb('open');
 			$sql = mysql_query("SELECT labelName FROM label WHERE labelID=" . $query);
@@ -87,8 +87,12 @@ function show($type, $query, $access, $viewer)
 				$sql = mysql_query("SELECT sourceID FROM rel_source_label WHERE labelID=" . $query);
 				condb('close');
 				$num_results = mysql_num_rows($sql);
-				echo '<div class=\'note\'><h3 id="source">Sources with the label \'' . $label . '\': # ' . $num_results . '</h3></div>';
-				if ($num_results > 0) {
+				if($num_results > 0) {
+					if($num_results > 1) {
+						echo '<div class=\'note\'><h3 id="source">'. $num_results . ' Sources with the label \'' . $label . '\'</h3></div>';
+					} else {
+						echo '<div class=\'note\'><h3 id="source">'. $num_results . ' Source with the label\'' . $label . '\'</h3></div>';
+					}
 					while ($row = mysql_fetch_object($sql)) {
 						$source = NEW show();
 						$source->id = $row->sourceID;
@@ -96,6 +100,8 @@ function show($type, $query, $access, $viewer)
 						$source->type = 'source';
 						$source->showData();
 					}
+				} else {
+					echo '<div class=\'note\'><h3 id="source">No Sources with the label \'' . $label . '\'</h3></div>';
 				}
 				echo $close;
 
@@ -105,8 +111,12 @@ function show($type, $query, $access, $viewer)
 				$sql = mysql_query("SELECT noteID FROM rel_note_label WHERE labelID=" . $query);
 				condb('close');
 				$num_results = mysql_num_rows($sql);
-				echo '<div class=\'note\'><h3 id="note">Notes with the label \'' . $label . '\': # ' . $num_results . '</h3></div>';
-				if ($num_results > 0) {
+				if($num_results > 0) {
+					if($num_results > 1) {
+						echo '<div class=\'note\'><h3 id="note">'. $num_results . ' Notes with the label \'' . $label . '\'</h3></div>';
+					} else {
+						echo '<div class=\'note\'><h3 id="note">'. $num_results . ' Note with the label\'' . $label . '\'</h3></div>';
+					}
 					while ($row = mysql_fetch_object($sql)) {
 						$note = NEW show();
 						$note->id = $row->noteID;
@@ -114,6 +124,8 @@ function show($type, $query, $access, $viewer)
 						$note->type = 'note';
 						$note->showData();
 					}
+				} else {
+					echo '<div class=\'note\'><h3 id="note">No Notes with the label \'' . $label . '\'</h3></div>';
 				}
 				echo $close;
 			}
@@ -172,7 +184,11 @@ function show($type, $query, $access, $viewer)
 			$num_results = mysql_num_rows($sql);
 			echo $openViewer;
 			if($num_results > 0) {
-				echo '<div class=\'note\'><h3 id="source">Sources with \'' . $query . '\': # ' . $num_results . '</h3></div>';
+				if($num_results > 1) {
+					echo '<div class=\'note\'><h3 id="source">'. $num_results . ' Sources with \'' . $query . '\'</h3></div>';
+				} else {
+					echo '<div class=\'note\'><h3 id="source">'. $num_results . ' Source with \'' . $query . '\'</h3></div>';
+				}
 				while ($row = mysql_fetch_object($sql)) {
 					$source = NEW show();
 					$source->id = $row->sourceID;
@@ -194,7 +210,11 @@ function show($type, $query, $access, $viewer)
 			$num_results = mysql_num_rows($sql);
 			echo $openViewer;
 			if($num_results > 0) {
-				echo '<div class=\'note\'><h3 id="note">Notes with \'' . $query . '\': # ' . $num_results . '</h3></div>';
+				if($num_results > 1) {
+					echo '<div class=\'note\'><h3 id="note">'. $num_results . ' Notes with \'' . $query . '\'</h3></div>';
+				} else {
+					echo '<div class=\'note\'><h3 id="note">'. $num_results . ' Note with \'' . $query . '\'</h3></div>';
+				}
 				while ($row = mysql_fetch_object($sql)) {
 					$note = NEW show();
 					$note->id = $row->noteID;
@@ -214,7 +234,11 @@ function show($type, $query, $access, $viewer)
 			$num_results = mysql_num_rows($sql);
 			echo $openViewer;
 			if($num_results > 0) {
-				echo '<div class=\'note\'><h3 id="author">Authors with \'' . $query . '\': # ' . $num_results . '</h3></div>';
+				if($num_results > 1) {
+					echo '<div class=\'note\'><h3 id="author">'. $num_results . ' Authors with \'' . $query . '\'</h3></div>';
+				} else {
+					echo '<div class=\'note\'><h3 id="author">'. $num_results . ' Author with \'' . $query . '\'</h3></div>';
+				}
 				while ($row = mysql_fetch_object($sql)) {
 					echo '<div class=\'note\'><div class=\'text\'><a href=\'?author=' . $row->authorID . '\'>' . $row->authorName . '</a></div></div>';
 				}
@@ -230,7 +254,11 @@ function show($type, $query, $access, $viewer)
 			$num_results = mysql_num_rows($sql);
 			echo $openViewer;
 			if($num_results > 0) {
-				echo '<div class=\'note\'><h3 id="label">Labels with \'' . $query . '\': # ' . $num_results . '</h3></div>';
+				if($num_results > 1) {
+					echo '<div class=\'note\'><h3 id="label">'. $num_results . ' Labels with \'' . $query . '\'</h3></div>';
+				} else {
+					echo '<div class=\'note\'><h3 id="label">'. $num_results . ' Label with \'' . $query . '\'</h3></div>';
+				}
 				while ($row = mysql_fetch_object($sql)) {
 					echo '<div class=\'note\'><div class=\'text\'><a href=\'?label=' . $row->labelID . '\'>' . $row->labelName . '</a></div></div>';
 				}

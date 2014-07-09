@@ -35,7 +35,7 @@ header, footer {
 }
 
 .viewer {
-  margin: 45px auto;
+  margin: 44px;
   overflow-x: hidden;
   overflow-y: scroll;
   margin-right: -15px;
@@ -76,7 +76,7 @@ header, footer {
 
 .desk {
   .left_side, .right_side {
-
+	float: left;
   }
 
   .left_side {
@@ -87,7 +87,7 @@ header, footer {
   .right_side {
 	width: 700px;
 
-	margin: 0 auto;
+//	margin: 0 auto;
 	.note {
 //	float: left;
 
@@ -170,6 +170,7 @@ header, footer {
   .media {
 //	background-color: @bg;
 	opacity: 0.8;
+	.border-radius-custom(@rad, @rad, 0, 0);
 	img {
 	  width: 100%;
 	  .border-radius-custom(@rad, @rad, 0, 0);
@@ -193,7 +194,7 @@ header, footer {
 	  text-align: center;
 	}
   }
-  .media, .text, .latex, .label, .tools {
+  .text, .latex, .label, .tools {
 	background-color: fade(@bg, 0%);
 	margin: 0;
 	padding: 0;
@@ -260,9 +261,11 @@ header, footer {
   background-color: @bg;
 }
 
-.note.topic .text, .note.topic .latex {
+.note.topic .media, .note.topic .text, .note.topic .latex {
   background-color: fade(darken(@bg, 33%), 33%);
+  opacity: 0.8;
 }
-.note.topic.active .text, .note.topic.active .latex{
+.note.topic.active .media, .note.topic.active .text, .note.topic.active .latex{
   background-color: darken(@bg, 33%);
+  opacity: 1;
 }

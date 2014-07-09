@@ -290,7 +290,7 @@ class show {
 					if(!empty($this->data['media'])) {
 						$this->show_media .= $this->showMedia() . $this->close;
 					} else {
-						$this->show_media .= $this->close;
+						$this->show_media .= '&nbsp;' . $this->close;
 					}
 					// show text
 					// set title
@@ -301,17 +301,17 @@ class show {
 					if(!empty($this->data['source'])) {
 						//print_r(json_encode($this->data));
 						if ($this->data['source']['id'] != 0 && $this->data['source']['bibTyp']['name'] != 'project') {
-							$pages = "";
+							$pages = '';
+
 							if ($this->data['page']['start'] != 0) {
-								$pages = $this->data['page']['start'];
+								$pages = ', S. ' . $this->data['page']['start'];
 								if ($this->data['page']['end'] != 0) {
 									$pages .= '-' . $this->data['page']['end'];
 								}
+								$pages .= '.';
 							}
-
 							$i = 0;
 							while ($i < count($this->data['source']['author'])) {
-
 								if($authors == ''){
 									$authors = '<a href=\'' . __MAIN_FILE__ . '?author=' . $this->data['source']['author'][$i]['id'] . '\'>' . $this->data['source']['author'][$i]['name'] . '</a>';
 								} else {
@@ -319,14 +319,24 @@ class show {
 								}
 							$i++;
 							}
-
-							if($this->data['source']['bibTyp']['name'] == 'collection' || $this->data['source']['bibTyp']['name'] == 'proceedings' || $this->data['source']['bibTyp']['name'] == 'book') {
-								$this->show_text .= '<p class=\'small\'><a href=\'?collection=' . $this->data['source']['id'] . '\' >'. getLastChar($this->data['source']['title']) . '</a></p>';
+							if($authors == '' && $this->data['source']['title'] == ''){
+								if($this->data['source']['bibTyp']['name'] == 'collection' || $this->data['source']['bibTyp']['name'] == 'proceedings' || $this->data['source']['bibTyp']['name'] == 'book') {
+									$sourcename = '<a href=\'?collection=' . $this->data['source']['id'] . '\' >'. $this->data['source']['name'] . '</a>';
+								} else {
+									$sourcename = '<a href=\'?source=' . $this->data['source']['id'] . '\' >'. $this->data['source']['name'] . '</a>';
+								}
 							} else {
-								$this->show_text .= '<p class=\'small\'><a href=\'?source=' . $this->data['source']['id'] . '\' >'. getLastChar($this->data['source']['title']) . '</a></p>';
+								if($this->data['source']['bibTyp']['name'] == 'collection' || $this->data['source']['bibTyp']['name'] == 'proceedings' || $this->data['source']['bibTyp']['name'] == 'book') {
+									$sourcename = '<a href=\'?collection=' . $this->data['source']['id'] . '\' >'. $this->data['source']['title'] . '</a>';
+								} else {
+									$sourcename = '<a href=\'?source=' . $this->data['source']['id'] . '\' >'. $this->data['source']['title'] . '</a>';
+								}
 							}
-
-
+							if($authors != '') {
+								$this->show_text .= '<p class=\'small\'>' . $authors . ': ' . $sourcename . $pages . '</a></p>';
+							} else {
+								$this->show_text .= '<p class=\'small\'>' . $sourcename . $pages . '</a></p>';
+							}
 						}
 					}
 					$this->show_text .= $this->close;
@@ -401,7 +411,7 @@ class show {
 					if(!empty($this->data['media'])) {
 						$this->show_media .= $this->showMedia() . $this->close;
 					} else {
-						$this->show_media .= $this->close;
+						$this->show_media .= '&nbsp;' . $this->close;
 					}
 					// show biblio
 					$this->show_text .= $biblio[1] . $this->close;
