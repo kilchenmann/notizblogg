@@ -23,7 +23,7 @@
 			var i = 0;
 			var labels = '';
 			$.getJSON('get/note/' + settings.noteID, function(data) {
-				console.log(data);
+				//console.log(data);
 				// get label
 	//			console.log((data.label));
 				if(data.label.length !== 0) {
@@ -128,7 +128,43 @@
 
 		},
 
-		form4new = function(){
+		form4new = function(ele, localdata){
+			var selectSource = '<option></option>';
+			$.getJSON('get/source/all', function(data) {
+
+//				alert('json');
+				//selectSource = data.allsources.name;
+//				selectSource = '<option>' + data.allsources.length + '</option>';
+				var i = 0;
+				while(i < data.allSources.length) {
+						selectSource += '<option value=\'' + data.allSources[i].id + '\'>' + data.allSources[i].name + '</option>';
+					i += 1;
+				}
+		//		console.log(selectSource);
+
+				ele
+					.append($('<form>').attr({'action': 'core/bin/php/save.data.php', 'method': 'post', 'accept-charset': 'utf-8' })
+						.append($('<div>').addClass('form col_medium left')
+							.append(localdata.form.select_source = $('<select>').attr({'name': 'select_source'}).append(selectSource))
+					)
+
+				)
+					.append(localdata.form.selected_source = $('<div>')
+				);
+
+				localdata.form.select_source.on('change', function() {
+console.log($(this).val());
+					// show the selected source on the right side
+					localdata.form.selected_source.shownote({
+						type: 'source',
+						id: $(this).val()
+					})
+
+				});
+			});
+
+
+
 
 		};
 	// -------------------------------------------------------------------------
@@ -144,6 +180,7 @@
 					localdata = {};
 
 				localdata.expand = {};
+				localdata.form = {};
 
 				localdata.settings = {
 					type: 'source',		// source || note
@@ -175,20 +212,32 @@
 							localdata.expand.edit_ele = $('<button>').addClass('btn grp_none fake_btn');
 						} else {
 							if(localdata.settings.show === 'form') {
-								localdata.expand.edit_ele = $('<button>').addClass('btn grp_none toggle_lock');
+//								localdata.expand.edit_ele = $('<button>').addClass('btn grp_none toggle_lock');
+								//
 								if(localdata.settings.noteID === 'new' && localdata.settings.sourceID === 'new' && localdata.settings.data === undefined) {
-									// in this case we have to show the edit form for new notes
-									localdata.expand.content = $('<div>').addClass('form part select_source')
-										.append($('<h3>').html('You want to add a NEW note'))
-										.append($('<h4>').html('First you have to choose a source or create a new one'))
+// new element
+									localdata.expand.content = $('<div>').addClass('panel top')
+										.append($('<div>').addClass('left expand_title')
+											.append($('<h3>').html('You want to add a new note. First you have the choose or add a new source'))
+									)
+										.append($('<div>').addClass('right collapse_close')
+											.append(localdata.expand.col_ele = $('<button>').addClass('btn grp_none toggle_collapse'))
+									);
+
+									localdata.expand.form = $('<div>').addClass('form part select_source');
+
+									// get the note data from api/data.php
+									form4new(localdata.expand.form, localdata);
+
+
+
 								} else {
 									if(localdata.settings.sourceID === localdata.settings.noteID) {
-
+// edit the source
 										// get the source data from api/data.php
 										$.getJSON('api/data.php?source=' + localdata.settings.sourceID, function(data) {
 
 										});
-
 
 										// the note is a source ;)
 										var checkID = check_id();
@@ -202,6 +251,7 @@
 										)
 
 									} else {
+// edit the note
 										localdata.expand.content = $('<div>').addClass('panel top')
 											.append($('<div>').addClass('left expand_title')
 												.append($('<h3>').html('You want to edit the existing note ' + localdata.settings.noteID))
@@ -213,7 +263,6 @@
 										localdata.expand.form = $('<div>').addClass('form entire edit_note');
 
 										// get the note data from api/data.php
-
 											form4note(localdata.expand.form, localdata.settings);
 
 

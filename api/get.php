@@ -40,10 +40,36 @@ if (!isset ($_SESSION["token"])) {
 	// default values; in case of wrong queries; these variables would be overwritten in the right case
 	if (isset($_GET['source'])) {
 		$source = NEW get();
-		$source->id = $_GET['source'];
 		$source->access = $access;
 
-		echo $source->getSource();
+		if($_GET['source'] == 'all') {
+
+			condb('open');
+			$sql = mysql_query('SELECT sourceID, sourceName, sourcePublic FROM source ORDER BY sourceName');
+			condb('close');
+			$allSources = array('allSources' => array());
+			$i = 0;
+			while($row = mysql_fetch_object($sql)){
+				$source = array(
+						'type' => 'source',
+						'public' => $row->sourcePublic,
+						'id' => $row->sourceID,
+						'name' => $row->sourceName
+				);
+
+				array_push($allSources['allSources'], $source);
+
+			$i++;
+			}
+			echo json_encode($allSources);
+		} else {
+
+			$source->id = $_GET['source'];
+
+			echo $source->getSource();
+
+		}
+
 
 	}
 	if (isset($_GET['note'])) {

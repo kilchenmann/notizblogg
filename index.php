@@ -58,6 +58,8 @@
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/md5.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.center.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.warning.js"></script>
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.shownote.js"></script>
+
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.expand.js"></script>
 	<!--
 	<script type="text/javascript" src="core/bin/js/examples.js"></script>
@@ -394,14 +396,18 @@
 	$(window).load(function() {
 		var win_width = $(window).width();
 		if($('.wall').length !== 0) {
-			var note_width = $('.wall').find('.note').width() + 60;
+			var wall = $('.wall');
+
+			var note_width = wall.find('.note').width() + 60;
+	//		console.log('note: ' + note_width + ' window: ' + win_width)
 			var num_col = Math.floor(win_width / note_width);
-			$(this).css({
+			wall.css({
 				'-webkit-column-count': num_col,
 				'-moz-column-count': num_col,
 				'column-count': num_col,
 				'width': num_col * note_width
 			});
+	//		console.log(num_col);
 		}
 		/*
 		if($('.desk').length !== 0) {
@@ -581,7 +587,7 @@
 						else
 						{
 //							html = "<span class='leftCorner'></span>";
-							$(obj).prepend($('<span>').addClass('leftCorner'));
+							$(obj).css({'text-align': 'right'}).prepend($('<span>').addClass('leftCorner'));
 						}
 					});
 				}

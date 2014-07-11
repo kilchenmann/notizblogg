@@ -12,6 +12,7 @@ RewriteBase /nb
 #api rules
 RewriteRule ^get/note/([0-9]+)$ /nb/api/get.php?note=$1
 RewriteRule ^get/source/([0-9]+)$ /nb/api/get.php?source=$1
+RewriteRule ^get/source/all /nb/api/get.php?source=all
 
 RewriteRule ^post/note/([0-9]+)$ /nb/api/post.php?note=$1
 RewriteRule ^post/source/([0-9]+)$ /nb/api/post.php?source=$1
