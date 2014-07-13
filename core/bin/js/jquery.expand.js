@@ -153,7 +153,7 @@
 				);
 
 				localdata.form.select_source.on('change', function() {
-console.log($(this).val());
+//console.log($(this).val());
 					// show the selected source on the right side
 					localdata.form.selected_source.shownote({
 						type: 'source',
