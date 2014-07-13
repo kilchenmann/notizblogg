@@ -143,13 +143,14 @@
 		//		console.log(selectSource);
 
 				ele
-					.append($('<form>').attr({'action': 'core/bin/php/save.data.php', 'method': 'post', 'accept-charset': 'utf-8' })
-						.append($('<div>').addClass('form col_medium left')
-							.append(localdata.form.select_source = $('<select>').attr({'name': 'select_source'}).append(selectSource))
+					.append($('<div>').addClass('left').text('First you have the choose or add a new source')
+						.append($('<form>').attr({'action': 'core/bin/php/save.data.php', 'method': 'post', 'accept-charset': 'utf-8' })
+							.append($('<div>').addClass('form col_medium left')
+								.append(localdata.form.select_source = $('<select>').attr({'name': 'select_source'}).append(selectSource))
+						)
 					)
-
 				)
-					.append(localdata.form.selected_source = $('<div>')
+					.append(localdata.form.selected_source = $('<div>').addClass('right')
 				);
 
 				localdata.form.select_source.on('change', function() {
@@ -218,7 +219,7 @@
 // new element
 									localdata.expand.content = $('<div>').addClass('panel top')
 										.append($('<div>').addClass('left expand_title')
-											.append($('<h3>').html('You want to add a new note. First you have the choose or add a new source'))
+											.append($('<h3>').html('You want to add new notes.'))
 									)
 										.append($('<div>').addClass('right collapse_close')
 											.append(localdata.expand.col_ele = $('<button>').addClass('btn grp_none toggle_collapse'))

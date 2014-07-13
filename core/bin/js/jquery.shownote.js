@@ -30,7 +30,7 @@
 		showBib = function(data) {
 			var authors, locations, bibtex, biblio, i;
 
-			if (data.bibTyp.id !== 0) {
+			if (data.bibTyp.id !== '0') {
 				authors = '';
 				locations = '';
 				bibtex = '@' + data.bibTyp.name + '{' + data.name;
@@ -129,7 +129,7 @@
 					}
 
 				} else {
-					if (data.location !== '') {
+					if (locations !== '') {
 						bibtex += 'location = {' + locations + '},';
 						biblio += locations + ', ';
 					}
@@ -141,57 +141,55 @@
 
 				if('detail' in data) {
 
+					var detailKey, countDetail = Object.keys(data.detail).length;
+					i = 0;
+					while (i < countDetail) {
+						detailKey = Object.keys(data.detail)[i];
+						switch (detailKey) {
+							case 'url':
+								bibtex += 'url = {<a target=\'_blank\' href=\'' + data.detail.url + '\' >' + data.detail.url + '</a>},';
+								biblio += ', URL: <a target=\'_blank\' href=\'' + data.detail.url + '\'>' + data.detail.url + '</a> ';
+								break;
 
+							case 'urldate':
+								bibtex += 'urldate = {' + data.detail.urldate + '},';
+								biblio += '(Stand: ' + data.detail.urldate + ')';
+								break;
+
+							case 'pages':
+								bibtex +=  'pages = {' + data.detail.pages + '},';
+								biblio +=  ', S. ' + data.detail.pages;
+								break;
+
+							default:
+								bibtex += detailKey + ' = {' + data.detail.detailKey + '},';
+								biblio += data.detail.detailKey;
+						}
+						i += 1;
+					}
 				}
-
+				bibtex += 'note = {' + data.comment + '}}';
 				biblio += '.';
-
+			} else {
+				bibtex = 'The data are not yet ready to use in laTex.';
+				biblio = '<a href=\'?source=' + data.id + '\' >' + data.comment + '</a>';
 			}
 
-
-			return(biblio);
+			return({
+				'biblio': biblio,
+				'bibtex': bibtex
+			});
 
 		};
 
 
 // php to js
-		/*
-{
+
+/*
 		 if(array_key_exists('detail', data)) {
-		 $countDetail = count(array_keys(data['detail']));
-		 $i = 0;
-		 while ($countDetail > 0) {
-		 $detail = array_keys(data['detail']);
-		 switch ($detail[$i]) {
-		 case 'url';
-		 bibtex += $detail[$i] + ' = {<a target=\'_blank\' href=\'' + data['detail'][$detail[$i]] + '\' >' + data['detail'][$detail[$i]] + '</a>},<br>';
-		 biblio += ', URL: <a target=\'_blank\' href=\'' + data['detail'][$detail[$i]] + '\'>' + data['detail'][$detail[$i]] + '</a> ';
-		 break;
-
-		 case 'urldate';
-		 biblio +=  '(Stand: ' + data['detail'][$detail[$i]] + ').';
-		 break;
-
-		 case 'pages';
-		 biblio +=  ', S. ' + data['detail'][$detail[$i]];
-
-		 break;
-
-		 default;
-		 bibtex += $detail[$i] + ' = {' + data['detail'][$detail[$i]] + '},<br>';
-		 biblio += data['detail'][$detail[$i]];
-		 }
-		 $countDetail--;
-		 $i++;
 
 		 }
-		 }
-		 bibtex += 'note = {' + data['comment'] + '}}';
-		 biblio += '.';
-		 } else {
-		 bibtex = 'The data are not yet ready to use in laTex.';
-		 biblio = '<a href=\'?source=' + data['id'] + '\' >'. data['comment'] + '</a>';
-		 }
+
 
 		 return array(bibtex,biblio);
 
@@ -228,7 +226,7 @@
 				// 1. get the data
 					$.getJSON('get/' + localdata.settings.type + '/' + localdata.settings.id, function(data) {
 						$this.empty();
-						$this.append((showBib(data)))
+						$this.append((showBib(data).biblio))
 
 
 
