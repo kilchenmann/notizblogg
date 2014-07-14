@@ -33,7 +33,7 @@
 			if (data.bibTyp.id !== '0') {
 				authors = '';
 				locations = '';
-				bibtex = '@' + data.bibTyp.name + '{' + data.name;
+				bibtex = '@' + data.bibTyp.name + '{' + data.name + '<br>';
 				biblio = '';
 
 				i = 0;
@@ -56,14 +56,14 @@
 					i += 1;
 				}
 				if (data.editor === 1) {
-					bibtex += 'editor = {' + authors + '},';
+					bibtex += 'editor = {' + authors + '},<br>';
 					biblio += authors + '(Hg.): ';
 				} else {
-					bibtex += 'author = {' + authors + '},';
+					bibtex += 'author = {' + authors + '},<br>';
 					biblio += authors + ': ';
 				}
 
-				bibtex += 'title = {' + data.title + '},';
+				bibtex += 'title = {' + data.title + '},<br>';
 
 				if (data.bibTyp.name === 'collection' || data.bibTyp.name === 'proceedings' || data.bibTyp.name === 'book') {
 					biblio += '<a href=\'?collection=' + data.id + '\' >' + getLastChar(data.title) + '</a> ';
@@ -71,7 +71,7 @@
 					biblio += '<a href=\'?source=' + data.id + '\' >' + getLastChar(data.title) + '</a> ';
 				}
 				if (data.subtitle !== '') {
-					bibtex += 'subtitle = {' + data.subtitle + '}';
+					bibtex += 'subtitle = {' + data.subtitle + '},<br>';
 					biblio += getLastChar(data.subtitle);
 				}
 
@@ -101,40 +101,40 @@
 						i += 1;
 					}
 
-					bibtex += 'crossref = {<a href=\'?collection=' + data.crossref.id + '\'>' + data.crossref.name + '</a>},';
+					bibtex += 'crossref = {<a href=\'?collection=' + data.crossref.id + '\'>' + data.crossref.name + '</a>},<br>';
 
 					biblio += 'In: ';
 					if (data.crossref.editor === 1) {
-						bibtex += 'editor = {' + crossAuthors + '},';
+						bibtex += 'editor = {' + crossAuthors + '},<br>';
 						biblio += crossAuthors + ' (Hg.): ';
 					} else {
-						bibtex += 'author = {' + crossAuthors + '},';
+						bibtex += 'author = {' + crossAuthors + '},<br>';
 						biblio += crossAuthors + ': ';
 					}
-					bibtex += 'booktitle = {' + (data.crossref.title) + '},';
+					bibtex += 'booktitle = {' + (data.crossref.title) + '},<br>';
 					biblio += '<a href=\'?collection=' + data.crossref.id + '\'>' + getLastChar(data.crossref.title) + ' </a>';
 
 					if (data.crossref.subtitle != '') {
-						bibtex += 'booksubtitle = {' + (data.crossref.subtitle) + '},';
+						bibtex += 'booksubtitle = {' + (data.crossref.subtitle) + '},<br>';
 						biblio += getLastChar(data.crossref.subtitle);
 					}
 
 					if ('location' in data.crossref) {
-						bibtex += 'location = {' + crossLocations + '},';
+						bibtex += 'location = {' + crossLocations + '},<br>';
 						biblio += crossLocations + ', ';
 					}
 					if (data.crossref.year != '0000') {
-						bibtex += 'year = {' + data.crossref.year + '},';
+						bibtex += 'year = {' + data.crossref.year + '},<br>';
 						biblio += data.crossref.year;
 					}
 
 				} else {
 					if (locations !== '') {
-						bibtex += 'location = {' + locations + '},';
+						bibtex += 'location = {' + locations + '},<br>';
 						biblio += locations + ', ';
 					}
 					if (data.year !== '0000') {
-						bibtex += 'year = {' + data.year + '},';
+						bibtex += 'year = {' + data.year + '},<br>';
 						biblio += data.year;
 					}
 				}
@@ -147,22 +147,22 @@
 						detailKey = Object.keys(data.detail)[i];
 						switch (detailKey) {
 							case 'url':
-								bibtex += 'url = {<a target=\'_blank\' href=\'' + data.detail.url + '\' >' + data.detail.url + '</a>},';
+								bibtex += 'url = {<a target=\'_blank\' href=\'' + data.detail.url + '\' >' + data.detail.url + '</a>},<br>';
 								biblio += ', URL: <a target=\'_blank\' href=\'' + data.detail.url + '\'>' + data.detail.url + '</a> ';
 								break;
 
 							case 'urldate':
-								bibtex += 'urldate = {' + data.detail.urldate + '},';
+								bibtex += 'urldate = {' + data.detail.urldate + '},<br>';
 								biblio += '(Stand: ' + data.detail.urldate + ')';
 								break;
 
 							case 'pages':
-								bibtex +=  'pages = {' + data.detail.pages + '},';
+								bibtex +=  'pages = {' + data.detail.pages + '},<br>';
 								biblio +=  ', S. ' + data.detail.pages;
 								break;
 
 							default:
-								bibtex += detailKey + ' = {' + data.detail.detailKey + '},';
+								bibtex += detailKey + ' = {' + data.detail.detailKey + '},<br>';
 								biblio += data.detail.detailKey;
 						}
 						i += 1;
@@ -224,15 +224,22 @@
 				$this.data('localdata', localdata);
 
 				// 1. get the data
+				if(localdata.settings.type === 'source'){
 					$.getJSON('get/' + localdata.settings.type + '/' + localdata.settings.id, function(data) {
 						$this.empty();
-						$this.append((showBib(data).biblio))
-
-
-
-
-
+						$this.append(
+							$('<div>').addClass('text')
+								.append((showBib(data).biblio))
+						)
+							.append(
+							$('<div>').addClass('latex')
+								.append((showBib(data).bibtex))
+						)
 					})
+
+				} else {
+
+				}
 
 			});											// end "return this.each"
 		},												// end "init"

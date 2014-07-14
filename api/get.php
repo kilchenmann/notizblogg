@@ -49,19 +49,40 @@ if (!isset ($_SESSION["token"])) {
 			condb('close');
 			$allSources = array('allSources' => array());
 			$i = 0;
-			while($row = mysql_fetch_object($sql)){
+			while ($row = mysql_fetch_object($sql)) {
 				$source = array(
-						'type' => 'source',
-						'public' => $row->sourcePublic,
-						'id' => $row->sourceID,
-						'name' => $row->sourceName
+					'type' => 'source',
+					'public' => $row->sourcePublic,
+					'id' => $row->sourceID,
+					'name' => $row->sourceName
 				);
 
 				array_push($allSources['allSources'], $source);
 
-			$i++;
+				$i++;
 			}
 			echo json_encode($allSources);
+
+		} else if ($_GET['source'] == 'last') {
+			condb('open');
+			$sql = mysql_query('SELECT sourceID, sourceName, sourcePublic FROM source ORDER BY date DESC LIMIT 0, 1');
+			condb('close');
+			$lastSources = array('lastSource' => array());
+			$i = 0;
+			while ($row = mysql_fetch_object($sql)) {
+				$source = array(
+					'type' => 'source',
+					'public' => $row->sourcePublic,
+					'id' => $row->sourceID,
+					'name' => $row->sourceName
+				);
+				array_push($lastSources['lastSource'], $source);
+
+				$i++;
+			}
+			echo json_encode($lastSources);
+
+
 		} else {
 
 			$source->id = $_GET['source'];

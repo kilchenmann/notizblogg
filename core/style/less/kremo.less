@@ -16,9 +16,9 @@
   color: @ink;
 }
 
-input, select, button, textarea .card {
+input, select, button, textarea, .fake_area, .card {
   color: @ink;
-  background-color: lighten(@bg, 98%);
+  background-color: fade(@bg, 22%);
   border-top: 1px solid darken(@bg, 8%);
   border-left: 1px solid lighten(@bg, 8%);
   border-right: 1px solid lighten(@bg, 8%);
@@ -245,7 +245,7 @@ button.toggle_lock {
 label, input[type=submit], input[type=reset], input[type=file] {
   cursor: pointer;
 }
-input, textarea, select, label, .media.field_obj, label span {
+input, textarea, .fake_area, select, label, .media.field_obj, label span {
   .border-radius(@rad);
   padding: 5px;
   margin: 5px;
@@ -256,14 +256,14 @@ input[type=search] {
   padding: 0;
 }
 
-input[type=text], input[type=password], input[type=email], input[type=date], input[type=file], textarea, select, .media.field_obj, label span {
-  border-top: 1px solid fade(@link, 44%);
+input[type=text], input[type=password], input[type=email], input[type=date], input[type=file], textarea, .fake_area, select, .media.field_obj, label span {
+  border-top: 1px solid fade(@link, 11%);
   border-right: none;
-  border-bottom: 1px solid fade(@link, 44%);
+  border-bottom: 1px solid fade(@link, 11%);
   border-left: none;
   height: 24px;
   &:focus {
-	background-color: fade(@card, 44%);
+	background-color: fade(@card, 11%);
   }
 }
 
@@ -327,7 +327,7 @@ input[type=reset].reset, input[type=submit].reset {
 }
 
 
-textarea.field_obj {
+textarea.field_obj, .fake_area {
   height: 380px;
 }
 
@@ -432,9 +432,6 @@ label {
 
 input.input, select.select {
   height: 30px;
-  padding-left: 3px;
-  width: 150px;
-  font-size: 13px;
 }
 
 select.select {

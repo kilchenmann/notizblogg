@@ -5,7 +5,8 @@ $pathInfo = pathinfo($_SERVER['SCRIPT_FILENAME']);
 $mainFile = $pathInfo['filename'].".".$pathInfo['extension'];
 $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
-define ('__MAIN_FILE__', $pathInfo['filename'].".".$pathInfo['extension']);
+//define ('__MAIN_FILE__', $pathInfo['filename'].".".$pathInfo['extension']);
+define ('__MAIN_FILE__', '');
 // index.php
 // echo "MAIN_FILE: ".__MAIN_FILE__."<br>";
 

@@ -18,7 +18,19 @@
 	// -----------------------------------------------------------------------
 	//
 
-	var form4note = function(ele, settings) {
+	var setPanel = function(ele, title) {
+			var close;
+			ele.addClass('panel top')
+				.append($('<div>').addClass('left expand_title')
+					.append($('<h3>').html(title))
+			)
+				.append($('<div>').addClass('right collapse_close')
+					.append(close = $('<button>').addClass('btn grp_none toggle_collapse'))
+			);
+			return(close);
+		},
+
+		form4note = function(ele, settings) {
 			var checkID, publicID, pages, check_ele = {}, media_ele;
 			var i = 0;
 			var labels = '';
@@ -129,38 +141,43 @@
 		},
 
 		form4new = function(ele, localdata){
-			var selectSource = '<option></option>';
+			var selectSource = '<option></option>',
+				selectedOne;
+			// the last source is always the selected one
+			$.getJSON('get/source/last', function(data) {
+				var i = 0;
+				while (i < data.lastSource.length) {
+					selectedOne = data.lastSource[i].id;
+					i += 1;
+				}
+			});
+			// all sources to choose from
 			$.getJSON('get/source/all', function(data) {
-
-//				alert('json');
-				//selectSource = data.allsources.name;
-//				selectSource = '<option>' + data.allsources.length + '</option>';
 				var i = 0;
 				while(i < data.allSources.length) {
 						selectSource += '<option value=\'' + data.allSources[i].id + '\'>' + data.allSources[i].name + '</option>';
 					i += 1;
 				}
-		//		console.log(selectSource);
-
 				ele
-					.append($('<div>').addClass('left').text('First you have the choose or add a new source')
-						.append($('<form>').attr({'action': 'core/bin/php/save.data.php', 'method': 'post', 'accept-charset': 'utf-8' })
-							.append($('<div>').addClass('form col_medium left')
-								.append(localdata.form.select_source = $('<select>').attr({'name': 'select_source'}).append(selectSource))
+					.append($('<form>').attr({'action': 'core/bin/php/save.data.php', 'method': 'post', 'accept-charset': 'utf-8' })
+						.append($('<div>').addClass('form col_medium left')
+							.append($('<p>').text('You have to choose a source or add a new one'))
+							.append(localdata.form.select_source = $('<select>').attr({'name': 'select_source'}).addClass('field_obj large select').append(selectSource))
+							.append(localdata.form.selected_source = $('<div>').addClass('field_obj large fake_area').shownote({
+								type: 'source',
+								id: selectedOne
+							})
 						)
 					)
-				)
-					.append(localdata.form.selected_source = $('<div>').addClass('right')
+						.append($('<div>').addClass('form col_small right'))
 				);
 
 				localdata.form.select_source.on('change', function() {
-//console.log($(this).val());
 					// show the selected source on the right side
 					localdata.form.selected_source.shownote({
 						type: 'source',
 						id: $(this).val()
 					})
-
 				});
 			});
 
@@ -217,13 +234,8 @@
 								//
 								if(localdata.settings.noteID === 'new' && localdata.settings.sourceID === 'new' && localdata.settings.data === undefined) {
 // new element
-									localdata.expand.content = $('<div>').addClass('panel top')
-										.append($('<div>').addClass('left expand_title')
-											.append($('<h3>').html('You want to add new notes.'))
-									)
-										.append($('<div>').addClass('right collapse_close')
-											.append(localdata.expand.col_ele = $('<button>').addClass('btn grp_none toggle_collapse'))
-									);
+									localdata.expand.content = $('<div>');
+									localdata.expand.col_ele = setPanel(localdata.expand.content, 'You want to add new notes');
 
 									localdata.expand.form = $('<div>').addClass('form part select_source');
 
@@ -253,13 +265,9 @@
 
 									} else {
 // edit the note
-										localdata.expand.content = $('<div>').addClass('panel top')
-											.append($('<div>').addClass('left expand_title')
-												.append($('<h3>').html('You want to edit the existing note ' + localdata.settings.noteID))
-										)
-											.append($('<div>').addClass('right collapse_close')
-												.append(localdata.expand.col_ele = $('<button>').addClass('btn grp_none toggle_collapse'))
-										);
+										localdata.expand.content = $('<div>');
+										localdata.expand.col_ele = setPanel(localdata.expand.content, 'You want to edit the existing note ' + localdata.settings.noteID);
+
 
 										localdata.expand.form = $('<div>').addClass('form entire edit_note');
 

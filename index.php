@@ -86,7 +86,7 @@
 		<a href='http://notizblogg.ch'>Notizblogg</a> |
 		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">der digitale Zettelkasten von André Kilchenmann</a>
 	</h1>
-	<div class="left"><span class="project"><a href='<?php echo __SITE_URL__; ?>/index.php'><h2 class="logo">Notizblogg</h2></a></span></div>
+	<div class="left"><span class="project"><a href='<?php echo __SITE_URL__; ?>/'><h2 class="logo">Notizblogg</h2></a></span></div>
 	<div class="center"><span class="search"></span></div>
 	<div class="right">
 		<span class="add"></span>
