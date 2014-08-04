@@ -86,12 +86,17 @@
 								.append(media_ele)
 								.append($('<input>').attr({'type': 'file', 'name': 'upload', 'placeholder': 'Upload new file'}).addClass('upload field_obj small'))
 						).append($('<p>').html('<br><br><br>'))
-							.append(check_ele.label4public = $('<label>').attr({'name': 'check_public'}).addClass('field_obj small')
-								.append(check_ele.span4public = $('<span>').text('Public note?').addClass('field_obj small ' + publicID)
+							.append(check_ele.label4public = $('<label>').attr({'name': 'check_public'}).addClass('field_obj small').text('Public note?')
+								.append(check_ele.span4public = $('<span>').addClass('field_obj small ' + publicID).attr({'id': 'checked'})
 									.append(check_ele.input4public = $('<input>').attr({'type': 'checkbox', 'name': 'public', 'checked': publicID }).addClass('field_obj check_public')
 										.on('change', function(){
 											check_ele.span4public.toggleClass('checked');
 										})
+								)
+									.append(
+									//echo "<label class='check' for='delete'></label>";
+									$('<label>').addClass('check').attr({'for': 'public'})
+
 								)
 							)
 						).append($('<p>').html('<br><br>'))
@@ -180,6 +185,8 @@
 					})
 				});
 			});
+
+
 
 
 
@@ -377,6 +384,16 @@
 
 			});											// end "return this.each"
 		},												// end "init"
+
+		newNote: function() {
+			return this.each(function(){
+				var $this = $(this);
+				var localdata = $this.data('localdata');
+			});
+
+
+
+		},
 
 		anotherMethod: function() {
 			return this.each(function(){
