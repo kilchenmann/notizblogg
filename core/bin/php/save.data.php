@@ -1,5 +1,6 @@
 <?php
 require_once 'setting.php';
+condb('open');
 if($_POST['content'] != ""){
 	//0. collect Post-Data
 	$checkID = $_POST['checkID'];
@@ -71,17 +72,16 @@ if($_POST['content'] != ""){
 				$mediaType = split("/", $_FILES['uploadFile']['type']);
 				switch($mediaType[0]){
 					case 'image';
-						$mediaTypeFolder = '/html/nb/media/pictures';
+						$mediaTypeFolder = __MEDIA_URL__ . '/pictures';
 						break;
 
 					case 'video';
-						$mediaTypeFolder = '/html/nb/media/movies';
+						$mediaTypeFolder = __MEDIA_URL__ . '/movies';
 						break;
 
 					case 'application'; // in case of pdf?!
-						$mediaTypeFolder = '/html/nb/media/documents';
+						$mediaTypeFolder = __MEDIA_URL__ . '/documents';
 						break;
-
 
 				}
 				echo "Folder: " . $mediaTypeFolder . "<br>";
@@ -238,4 +238,4 @@ if($_POST['content'] != ""){
 		}
 	}
 }
-?>
+condb('close');

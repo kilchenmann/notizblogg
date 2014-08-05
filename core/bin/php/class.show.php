@@ -421,16 +421,16 @@ class show {
 					if($this->data['public'] == 0) {
 						$this->show_label = '<div class=\'label private\'>';
 					}
-					$this->show_label .= '<p>';
 					if (!empty($this->data['label'])) {
+						$this->show_label .= '<p>';
 
 						$i = 0;
 						while ($i < count($this->data['label'])) {
 							$this->show_label .= '<span><a href=\'?label=' . $this->data['label'][$i]['id'] . '\' title=\'#notes with this label: ' . $this->data['label'][$i]['number'] . '\'>' . $this->data['label'][$i]['name'] . '</a></span>';
 							$i++;
 						}
+						$this->show_label .= '</p>';
 					}
-					$this->show_label .= '</p>';
 					$this->show_label .= $this->close;
 					// and get the tools
 					$this->show_tools .= $this->showTools();
