@@ -107,23 +107,36 @@ function makeurl($text)
 }
 
 function getIndex($part, $id) {
+	$array = array();
 
 	if ($id == 0) {
-		return '';
+		$array = array(
+			'id' => '0',
+			'name' => ''
+		);
 	} else {
 		$partName = $part.'Name';
 		$partID = $part.'ID';
-		$query = 'SELECT ' . $partName . ' FROM ' . $part . ' WHERE `' . $partID . '` = ' . $id . ';';
-
-		$sql = mysql_query($query);
+		$sql = mysql_query('SELECT ' . $partName . ' FROM ' . $part . ' WHERE `' . $partID . '` = ' . $id . ';');
+//		echo 'SELECT ' . $partName . ' FROM ' . $part . ' WHERE `' . $partID . '` = ' . $id . ';';
 
 		$countIndex = mysql_num_rows($sql);
 		if($countIndex > 0) {
 			while($row = mysql_fetch_object($sql)){
-				return $row->$partName;
+				$array = array(
+					'id' => $id,
+					'name' => $row->$partName
+				);
 			}
+		} else {
+			$array = array(
+				'id' => '0',
+				'name' => ''
+			);
 		}
 	}
+
+	return $array;
 }
 
 
@@ -154,19 +167,19 @@ function getIndexMN($type, $part, $id)
 	$partID = $part . "ID";
 	$arrayMN = array();
 	$i = 0;
-	$mnSql = mysql_query("SELECT " . $part . "Name FROM " . $part . ", " . $relTable . " WHERE " . $part . "." . $part . "ID = " . $relTable . "." . $part . "ID AND " . $relTable . "." . $type . "ID = '" . $id . "' ORDER BY " . $part . "Name");
+	$mnSql = mysql_query("SELECT " . $part . "Val FROM " . $part . ", " . $relTable . " WHERE " . $part . "." . $part . "ID = " . $relTable . "." . $part . "ID AND " . $relTable . "." . $type . "ID = '" . $id . "' ORDER BY " . $part . "Val");
 	$countMN = mysql_num_rows($mnSql);
 	if ($countMN > 0) {
 		while ($row = mysql_fetch_array($mnSql)) {
-			$relIDs[] = $row[$part . "Name"];
+			$relIDs[] = $row[$part . "Val"];
 		}
 		asort($relIDs);
 		$relData = "";
 		foreach ($relIDs as $relName) {
-			$getRelID = mysql_query("SELECT " . $part . "ID FROM " . $part . " WHERE " . $part . "Name = '" . $relName . "'");
+			$getRelID = mysql_query("SELECT " . $part . "ID FROM " . $part . " WHERE " . $part . "Val = '" . $relName . "'");
 			while ($row = mysql_fetch_object($getRelID)) {
 				$relID = $row->$partID;
-				$countSql = mysql_query("SELECT " . $type . "." . $type . "ID FROM " . $type . ", " . $relTable . " WHERE " . $part . "ID = " . $relID . " AND " . $relTable . "." . $type . "ID = " . $type . "." . $type . "ID ORDER BY " . $type . "." . $type . "Title, " . $type . ".date DESC");
+				$countSql = mysql_query("SELECT " . $type . "." . $type . "ID FROM " . $type . ", " . $relTable . " WHERE " . $part . "ID = " . $relID . " AND " . $relTable . "." . $type . "ID = " . $type . "." . $type . "ID ORDER BY " . $type . "." . $type . "Title, " . $type . ".dateCreated DESC");
 				$countResult = mysql_num_rows($countSql);
 
 				array_push($arrayMN, array('id' => $relID, 'name' => $relName, 'number' => $countResult));

@@ -10,6 +10,9 @@ RewriteBase /nb
 #RewriteRule ^q=([a-z]+)$ /nb/index.php?search=$1
 
 #api rules
+RewriteRule ^get/([0-9]+)$ /nb/api/get.php?id=$1
+
+# in the future we will only need get.php?id=123 — there will be no difference between note and source
 RewriteRule ^get/note/([0-9]+)$ /nb/api/get.php?note=$1
 RewriteRule ^get/source/([0-9]+)$ /nb/api/get.php?source=$1
 RewriteRule ^get/source/all /nb/api/get.php?source=all

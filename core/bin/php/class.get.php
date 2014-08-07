@@ -9,10 +9,103 @@
 class get {
 	var $id;	// id number
 	var $access;	// do you have the rights to see notes and sources?
-	var $data;
+	var $type;
+	var $json;
 
 	function get() {
 
+
+	}
+
+	function getData()
+	{
+		// 1. which kind of access?
+		if ($this->access == 'public' && $this->id == 'all') {
+			$query = 'WHERE notePublic = 1';
+		} else if ($this->access == 'public' && $this->id != 'all') {
+			$query = 'WHERE noteID=\'' . $this->id . '\' AND notePublic = 1';
+		} else if ($this->access != 'public' && $this->id != 'all') {
+			$query = 'WHERE noteID=\'' . $this->id . '\'';
+		} else { // ($this->access !== 'public' && $this->id === 'all')
+			$query = '';
+		}
+
+		$setting = array();
+		$type = '';
+
+		// 2. get the data from the database
+		condb('open');
+		$sql = mysql_query('SELECT * FROM note ' . $query . ';');
+		condb('close');
+
+		$num_results = mysql_num_rows($sql);
+		// 3. Does the note with this ID exist?
+		if($num_results > 0) {
+			while ($row = mysql_fetch_object($sql)) {
+				condb('open');
+				// get the labels and set a link to other notes with the same label
+				$labelNames = getIndexMN('note', 'label', $row->noteID);
+				// get the user info
+				$userInfo = getIndex('user', $row->userID);
+				$source2note = getIndex('bib', $row->bibID);
+				condb('close');
+
+				// 4. note or source?
+				if ($row->bibID != NULL) {
+					// 4a The note is a note ;)
+					$type = 'note';
+
+
+
+
+				} else {
+					// 4b The note is a source
+					$type = 'source';
+
+				}
+
+				$data = array(
+					'type' => $type,
+					'id' => $row->noteID,
+					'checkID' => $row->checkID,
+					'title' => $row->noteTitle,
+					'subtitle' => $row->noteSubtitle,
+					'comment' => $row->noteComment,
+					'link' => $row->noteLink,
+					'label' => $labelNames,
+					'media' => $row->noteMedia,
+					'source' => $source2note,
+					'page' => array(
+						'start' => $row->pageStart,
+						'end' => $row->pageEnd
+					),
+					'date' => array(
+						'year' => $row->dateYear,
+						'created' => $row->dateCreated,
+						'modified' => $row->dateModified
+					),
+					'user' => $userInfo,
+					'public' => $row->notePublic
+				);
+
+			}
+			// 3a YES
+
+		// 3b NO
+		} else {
+			$data = array(
+				'id' => 0
+			);
+
+			die('ERROR #' . __LINE__ . ' (class: get)');
+
+		}
+
+
+
+		$this->json = json_encode($data);
+
+		return $this->json;
 
 	}
 

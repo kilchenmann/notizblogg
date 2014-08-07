@@ -12,4 +12,4 @@ if(!defined('IN_PHP')){
 $myhost = 'localhost';
 $myuser = 'root';
 $mypass = 'hclik11';
-$mydb = 'notizblogg';
+$mydb = 'nb';

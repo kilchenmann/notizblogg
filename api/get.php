@@ -13,8 +13,6 @@ $uid = '';
 $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 require '../core/bin/php/setting.php';
 
-
-
 if (!isset ($_SESSION["token"])) {
 	$access = 'public';
 	$user = '--';
@@ -23,7 +21,6 @@ if (!isset ($_SESSION["token"])) {
 	condb('open');
 	$token = (explode("-",$_SESSION["token"]));
 	$sql = mysql_query("SELECT username FROM user WHERE uid = " . $token[1] . " AND token = '" . $token[0] . "';");
-
 	while($row = mysql_fetch_object($sql)){
 		$user = $row->username;
 	}
@@ -36,6 +33,25 @@ if (!isset ($_SESSION["token"])) {
 		$user = '--';
 	}
 }
+
+if (isset($_GET['id'])) {
+	//echo 'The ID is: ' . $_GET['id'];
+	$note = NEW get();
+	$note->id = $_GET['id'];
+	$note->access = 'private';
+	$note->type = 'note';
+	echo $note->getData();
+}
+
+
+
+
+// /*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*//*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+// /*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*//*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+// /*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*//*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+// /*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*//*/*/*/*/*/*/*/*/*/*/*/*/*/*/
+
+
 
 	// default values; in case of wrong queries; these variables would be overwritten in the right case
 	if (isset($_GET['source'])) {
@@ -97,8 +113,8 @@ if (!isset ($_SESSION["token"])) {
 		$note = NEW get();
 		$note->id = $_GET['note'];
 		$note->access = $access;
-
-		echo $note->getNote();
+		$note->type = 'note';
+		echo $note->getData();
 	}
 	/*
 	if (isset($_GET['label'])) {
