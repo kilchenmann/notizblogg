@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.5
+-- version 4.0.3
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 06, 2014 at 02:50 PM
--- Server version: 5.6.20
--- PHP Version: 5.5.9
+-- Generation Time: Aug 07, 2014 at 08:41 AM
+-- Server version: 5.5.27
+-- PHP Version: 5.4.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,8 +17,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `notizblogg`
+-- Database: `nb`
 --
+-- CREATE DATABASE IF NOT EXISTS `nb` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+-- USE `nb`;
 
 -- --------------------------------------------------------
 
@@ -28,9 +30,27 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `author` (
   `authorID` int(11) NOT NULL AUTO_INCREMENT,
-  `authorName` varchar(155) NOT NULL,
+  `authorVal` varchar(155) NOT NULL,
   PRIMARY KEY (`authorID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=122 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bibDetail`
+--
+
+CREATE TABLE IF NOT EXISTS `bibDetail` (
+  `bibDetailID` int(11) NOT NULL AUTO_INCREMENT,
+  `bibName` varchar(44) NOT NULL,
+  `noteID` int(11) NOT NULL,
+  `bibEditor` int(2) NOT NULL,
+  `bibFieldID` int(11) NOT NULL,
+  `bibDetailVal` varchar(255) NOT NULL,
+  PRIMARY KEY (`bibDetailID`),
+  UNIQUE KEY `sourceID` (`noteID`,`bibFieldID`),
+  UNIQUE KEY `bibName` (`bibName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -40,9 +60,41 @@ CREATE TABLE IF NOT EXISTS `author` (
 
 CREATE TABLE IF NOT EXISTS `bibField` (
   `bibFieldID` int(11) NOT NULL AUTO_INCREMENT,
-  `bibFieldName` varchar(20) NOT NULL,
-  PRIMARY KEY (`bibFieldID`)
+  `bibFieldVal` varchar(20) NOT NULL,
+  PRIMARY KEY (`bibFieldID`),
+  UNIQUE KEY `bibFieldVal` (`bibFieldVal`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+
+--
+-- Dumping data for table `bibField`
+--
+
+INSERT INTO `bibField` (`bibFieldID`, `bibFieldVal`) VALUES
+(24, 'crossref'),
+(1, 'date'),
+(2, 'day'),
+(3, 'doi'),
+(4, 'edition'),
+(5, 'eventtitle'),
+(6, 'institution'),
+(7, 'journalsubtitle'),
+(8, 'journaltitle'),
+(22, 'mainsubtitle'),
+(21, 'maintitle'),
+(9, 'month'),
+(10, 'number'),
+(11, 'organization'),
+(12, 'pages'),
+(13, 'publisher'),
+(14, 'series'),
+(23, 'type'),
+(15, 'url'),
+(16, 'urldate'),
+(17, 'venue'),
+(18, 'version'),
+(19, 'volume'),
+(20, 'volumes'),
+(25, 'year');
 
 -- --------------------------------------------------------
 
@@ -52,9 +104,32 @@ CREATE TABLE IF NOT EXISTS `bibField` (
 
 CREATE TABLE IF NOT EXISTS `bibTyp` (
   `bibTypID` int(11) NOT NULL AUTO_INCREMENT,
-  `bibTypName` varchar(20) NOT NULL,
-  PRIMARY KEY (`bibTypID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+  `bibTypVal` varchar(20) NOT NULL,
+  PRIMARY KEY (`bibTypID`),
+  UNIQUE KEY `bibTypVal` (`bibTypVal`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+
+--
+-- Dumping data for table `bibTyp`
+--
+
+INSERT INTO `bibTyp` (`bibTypID`, `bibTypVal`) VALUES
+(1, 'article'),
+(2, 'book'),
+(4, 'booklet'),
+(5, 'collection'),
+(3, 'inbook'),
+(6, 'incollection'),
+(12, 'inproceedings'),
+(7, 'manual'),
+(8, 'misc'),
+(9, 'online'),
+(10, 'periodical'),
+(11, 'proceedings'),
+(16, 'project'),
+(13, 'report'),
+(14, 'thesis'),
+(15, 'unpublished');
 
 -- --------------------------------------------------------
 
@@ -64,10 +139,10 @@ CREATE TABLE IF NOT EXISTS `bibTyp` (
 
 CREATE TABLE IF NOT EXISTS `label` (
   `labelID` int(11) NOT NULL AUTO_INCREMENT,
-  `labelName` varchar(33) NOT NULL,
+  `labelVal` varchar(33) NOT NULL,
   PRIMARY KEY (`labelID`),
-  UNIQUE KEY `tagName` (`labelName`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=666 ;
+  UNIQUE KEY `tagName` (`labelVal`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -77,23 +152,10 @@ CREATE TABLE IF NOT EXISTS `label` (
 
 CREATE TABLE IF NOT EXISTS `location` (
   `locationID` int(11) NOT NULL AUTO_INCREMENT,
-  `locationName` varchar(155) NOT NULL,
-  PRIMARY KEY (`locationID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `media`
---
-
-CREATE TABLE IF NOT EXISTS `media` (
-  `mediaID` int(11) NOT NULL AUTO_INCREMENT,
-  `mediaType` varchar(11) NOT NULL,
-  `mediaFile` varchar(55) NOT NULL,
-  PRIMARY KEY (`mediaID`),
-  UNIQUE KEY `noteID` (`mediaType`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=367 ;
+  `locationVal` varchar(155) NOT NULL,
+  PRIMARY KEY (`locationID`),
+  UNIQUE KEY `locationVal` (`locationVal`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -104,21 +166,35 @@ CREATE TABLE IF NOT EXISTS `media` (
 CREATE TABLE IF NOT EXISTS `note` (
   `noteID` int(11) NOT NULL AUTO_INCREMENT,
   `noteTitle` varchar(255) NOT NULL,
+  `noteSubtitle` varchar(255) NOT NULL,
   `noteComment` text NOT NULL,
-  `sourceExtern` varchar(255) NOT NULL,
-  `sourceID` int(11) NOT NULL,
+  `noteLink` varchar(255) NOT NULL,
+  `bibID` int(11) NOT NULL,
   `bibTyp` int(11) DEFAULT NULL,
   `pageStart` int(11) NOT NULL,
   `pageEnd` int(11) NOT NULL,
   `noteMedia` varchar(55) NOT NULL,
   `notePublic` int(11) NOT NULL,
-  `dateCreate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dateYear` int(4) NOT NULL,
+  `dateCreated` datetime NOT NULL,
   `dateModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `userID` int(11) NOT NULL,
   `checkID` varchar(33) DEFAULT NULL,
   PRIMARY KEY (`noteID`),
   UNIQUE KEY `checkID` (`checkID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1362 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rel_note_author`
+--
+
+CREATE TABLE IF NOT EXISTS `rel_note_author` (
+  `authorID` int(11) NOT NULL,
+  `noteID` int(11) NOT NULL,
+  PRIMARY KEY (`authorID`,`noteID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -135,59 +211,14 @@ CREATE TABLE IF NOT EXISTS `rel_note_label` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rel_source_author`
+-- Table structure for table `rel_note_location`
 --
 
-CREATE TABLE IF NOT EXISTS `rel_source_author` (
-  `authorID` int(11) NOT NULL,
-  `sourceID` int(11) NOT NULL,
-  PRIMARY KEY (`authorID`,`sourceID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `rel_source_location`
---
-
-CREATE TABLE IF NOT EXISTS `rel_source_location` (
+CREATE TABLE IF NOT EXISTS `rel_note_location` (
   `locationID` int(11) NOT NULL,
-  `sourceID` int(11) NOT NULL,
-  PRIMARY KEY (`locationID`,`sourceID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `source`
---
-
-CREATE TABLE IF NOT EXISTS `source` (
-  `sourceID` int(11) NOT NULL AUTO_INCREMENT,
-  `sourceName` varchar(255) NOT NULL,
-  `sourceSubtitle` varchar(255) NOT NULL,
-  `sourceYear` year(4) NOT NULL,
-  `sourceTyp` int(11) NOT NULL,
-  `sourceEditor` int(11) NOT NULL,
   `noteID` int(11) NOT NULL,
-  PRIMARY KEY (`sourceID`),
-  UNIQUE KEY `sourceRef` (`sourceName`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=302 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sourceDetail`
---
-
-CREATE TABLE IF NOT EXISTS `sourceDetail` (
-  `sourceDetailID` int(11) NOT NULL AUTO_INCREMENT,
-  `sourceID` int(11) NOT NULL,
-  `bibFieldID` int(11) NOT NULL,
-  `sourceDetailName` varchar(255) NOT NULL,
-  PRIMARY KEY (`sourceDetailID`),
-  UNIQUE KEY `sourceID` (`sourceID`,`bibFieldID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=534 ;
+  PRIMARY KEY (`locationID`,`noteID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -204,9 +235,16 @@ CREATE TABLE IF NOT EXISTS `user` (
   `token` varchar(33) DEFAULT NULL,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `username` (`username`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`uid`, `name`, `username`, `pass`, `email`, `token`) VALUES
+(1, 'ak', 'andr&eacute;', '24e033b1aea2d53db0e51ea20c4a5afe', '', 'a208aee0dd642c7a28b302f0d84bcab7');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
