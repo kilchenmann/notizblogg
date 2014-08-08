@@ -5,19 +5,18 @@
  * Date: 01.07.14
  * Time: 23:23
  */
+
+ // access public: true = 1
+ // access !public = private = 0
 session_start ();
-$access = 'public';
-$user = '--';
+$access = 1;		// public access is true
+$user = 'guest';
 $uid = '';
 
 $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 require '../core/bin/php/setting.php';
 
-if (!isset ($_SESSION["token"])) {
-	$access = 'public';
-	$user = '--';
-	$uid = '';
-} else {
+if (isset ($_SESSION["token"])) {
 	condb('open');
 	$token = (explode("-",$_SESSION["token"]));
 	$sql = mysql_query("SELECT username FROM user WHERE uid = " . $token[1] . " AND token = '" . $token[0] . "';");
@@ -25,12 +24,9 @@ if (!isset ($_SESSION["token"])) {
 		$user = $row->username;
 	}
 	condb('close');
-
 	if($user != '') {
-		$access = 'private';
+		$access = 0;		// public access is false -> private access
 		$uid = $token[1];
-	} else {
-		$user = '--';
 	}
 }
 
@@ -38,8 +34,7 @@ if (isset($_GET['id'])) {
 	//echo 'The ID is: ' . $_GET['id'];
 	$note = NEW get();
 	$note->id = $_GET['id'];
-	$note->access = 'private';
-	$note->type = 'note';
+	$note->access = $access;
 	echo $note->getData();
 }
 
