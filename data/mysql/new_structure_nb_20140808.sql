@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 07, 2014 at 03:54 PM
+-- Generation Time: Aug 08, 2014 at 01:00 PM
 -- Server version: 5.6.20
 -- PHP Version: 5.5.9
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `author` (
   `authorID` int(11) NOT NULL AUTO_INCREMENT,
-  `authorVal` varchar(155) NOT NULL,
+  `author` varchar(155) NOT NULL,
   PRIMARY KEY (`authorID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=122 ;
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `author` (
 -- Dumping data for table `author`
 --
 
-INSERT INTO `author` (`authorID`, `authorVal`) VALUES
+INSERT INTO `author` (`authorID`, `author`) VALUES
 (21, 'Kraus, Uwe'),
 (22, 'Kofler, Michael'),
 (23, '&Ouml;ggl, Bernd'),
@@ -147,20 +147,20 @@ INSERT INTO `author` (`authorID`, `authorVal`) VALUES
 
 CREATE TABLE IF NOT EXISTS `bib` (
   `bibID` int(11) NOT NULL AUTO_INCREMENT,
-  `bibName` varchar(66) NOT NULL,
+  `bib` varchar(66) NOT NULL,
   `bibEditor` int(2) NOT NULL,
   `bibTyp` int(11) NOT NULL,
   `noteID` int(11) NOT NULL,
   PRIMARY KEY (`bibID`),
   UNIQUE KEY `noteID` (`noteID`),
-  UNIQUE KEY `bibName` (`bibName`)
+  UNIQUE KEY `bibName` (`bib`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=302 ;
 
 --
 -- Dumping data for table `bib`
 --
 
-INSERT INTO `bib` (`bibID`, `bibName`, `bibEditor`, `bibTyp`, `noteID`) VALUES
+INSERT INTO `bib` (`bibID`, `bib`, `bibEditor`, `bibTyp`, `noteID`) VALUES
 (1, 'Kofler:php-mysql', 0, 2, 1400),
 (2, 'Berghaus:luhmann', 0, 0, 1401),
 (3, 'Kantel:web2', 0, 0, 1402),
@@ -447,7 +447,7 @@ CREATE TABLE IF NOT EXISTS `bibDetail` (
   `bibDetailID` int(11) NOT NULL AUTO_INCREMENT,
   `bibID` int(11) NOT NULL,
   `bibFieldID` int(11) NOT NULL,
-  `bibDetailVal` varchar(255) NOT NULL,
+  `bibDetail` varchar(255) NOT NULL,
   PRIMARY KEY (`bibDetailID`),
   UNIQUE KEY `sourceID` (`bibID`,`bibFieldID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=534 ;
@@ -456,7 +456,7 @@ CREATE TABLE IF NOT EXISTS `bibDetail` (
 -- Dumping data for table `bibDetail`
 --
 
-INSERT INTO `bibDetail` (`bibDetailID`, `bibID`, `bibFieldID`, `bibDetailVal`) VALUES
+INSERT INTO `bibDetail` (`bibDetailID`, `bibID`, `bibFieldID`, `bibDetail`) VALUES
 (217, 214, 15, 'http://www.alleyways.de/abgeschminkt/kino-wissen/garbo-talks/'),
 (218, 214, 16, '2011-12-19'),
 (234, 104, 15, 'http://doktorsblog.de/2009/06/15/craig-shields-dunkelbunt/'),
@@ -554,16 +554,16 @@ INSERT INTO `bibDetail` (`bibDetailID`, `bibID`, `bibFieldID`, `bibDetailVal`) V
 
 CREATE TABLE IF NOT EXISTS `bibField` (
   `bibFieldID` int(11) NOT NULL AUTO_INCREMENT,
-  `bibFieldVal` varchar(20) NOT NULL,
+  `bibField` varchar(20) NOT NULL,
   PRIMARY KEY (`bibFieldID`),
-  UNIQUE KEY `bibFieldVal` (`bibFieldVal`)
+  UNIQUE KEY `bibFieldVal` (`bibField`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
 
 --
 -- Dumping data for table `bibField`
 --
 
-INSERT INTO `bibField` (`bibFieldID`, `bibFieldVal`) VALUES
+INSERT INTO `bibField` (`bibFieldID`, `bibField`) VALUES
 (24, 'crossref'),
 (1, 'date'),
 (2, 'day'),
@@ -598,16 +598,16 @@ INSERT INTO `bibField` (`bibFieldID`, `bibFieldVal`) VALUES
 
 CREATE TABLE IF NOT EXISTS `bibTyp` (
   `bibTypID` int(11) NOT NULL AUTO_INCREMENT,
-  `bibTypVal` varchar(20) NOT NULL,
+  `bibTyp` varchar(20) NOT NULL,
   PRIMARY KEY (`bibTypID`),
-  UNIQUE KEY `bibTypVal` (`bibTypVal`)
+  UNIQUE KEY `bibTypVal` (`bibTyp`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `bibTyp`
 --
 
-INSERT INTO `bibTyp` (`bibTypID`, `bibTypVal`) VALUES
+INSERT INTO `bibTyp` (`bibTypID`, `bibTyp`) VALUES
 (1, 'article'),
 (2, 'book'),
 (4, 'booklet'),
@@ -633,16 +633,16 @@ INSERT INTO `bibTyp` (`bibTypID`, `bibTypVal`) VALUES
 
 CREATE TABLE IF NOT EXISTS `label` (
   `labelID` int(11) NOT NULL AUTO_INCREMENT,
-  `labelVal` varchar(33) NOT NULL,
+  `label` varchar(33) NOT NULL,
   PRIMARY KEY (`labelID`),
-  UNIQUE KEY `tagName` (`labelVal`)
+  UNIQUE KEY `tagName` (`label`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=666 ;
 
 --
 -- Dumping data for table `label`
 --
 
-INSERT INTO `label` (`labelID`, `labelVal`) VALUES
+INSERT INTO `label` (`labelID`, `label`) VALUES
 (275, '&ouml;ffentlich'),
 (302, '&ouml;konomie'),
 (233, '&uuml;berwachung'),
@@ -1290,16 +1290,16 @@ INSERT INTO `label` (`labelID`, `labelVal`) VALUES
 
 CREATE TABLE IF NOT EXISTS `location` (
   `locationID` int(11) NOT NULL AUTO_INCREMENT,
-  `locationVal` varchar(155) NOT NULL,
+  `location` varchar(155) NOT NULL,
   PRIMARY KEY (`locationID`),
-  UNIQUE KEY `locationVal` (`locationVal`)
+  UNIQUE KEY `locationVal` (`location`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
 
 --
 -- Dumping data for table `location`
 --
 
-INSERT INTO `location` (`locationID`, `locationVal`) VALUES
+INSERT INTO `location` (`locationID`, `location`) VALUES
 (27, 'Alfeld'),
 (30, 'Amsterdam'),
 (21, 'Berlin'),
@@ -1341,7 +1341,7 @@ CREATE TABLE IF NOT EXISTS `note` (
   `pageStart` int(11) NOT NULL DEFAULT '0',
   `pageEnd` int(11) DEFAULT '0',
   `noteMedia` varchar(55) DEFAULT NULL,
-  `notePublic` int(11) NOT NULL DEFAULT '0',
+  `notePublic` tinyint(4) NOT NULL DEFAULT '0',
   `dateYear` int(4) DEFAULT '0',
   `dateCreated` datetime NOT NULL,
   `dateModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -4876,13 +4876,13 @@ INSERT INTO `rel_note_label` (`labelID`, `noteID`) VALUES
 CREATE TABLE IF NOT EXISTS `user` (
   `userID` int(2) NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL,
-  `userName` varchar(80) NOT NULL,
+  `user` varchar(80) NOT NULL,
   `pass` char(32) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `token` varchar(33) DEFAULT NULL,
   PRIMARY KEY (`userID`),
   UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `username` (`userName`),
+  UNIQUE KEY `username` (`user`),
   UNIQUE KEY `token` (`token`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
@@ -4890,7 +4890,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`userID`, `name`, `userName`, `pass`, `email`, `token`) VALUES
+INSERT INTO `user` (`userID`, `name`, `user`, `pass`, `email`, `token`) VALUES
 (1, 'André Kilchenmann', 'milchkannen', '24e033b1aea2d53db0e51ea20c4a5afe', 'ak@milchkannen.ch', 'a208aee0dd642c7a28b302f0d84bcab7');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
