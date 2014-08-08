@@ -9,7 +9,7 @@
 class get {
 	var $id;	// id number
 	var $access;	// do you have the rights to see notes and sources?
-	var $type;
+//	var $type;
 	var $json;
 
 	function get() {
@@ -19,23 +19,20 @@ class get {
 
 	function getData()
 	{
-		// 1. which kind of access?
-		if ($this->access == 'public' && $this->id == 'all') {
-			$query = 'WHERE notePublic = 1';
-		} else if ($this->access == 'public' && $this->id != 'all') {
-			$query = 'WHERE noteID=\'' . $this->id . '\' AND notePublic = 1';
-		} else if ($this->access != 'public' && $this->id != 'all') {
-			$query = 'WHERE noteID=\'' . $this->id . '\'';
-		} else { // ($this->access !== 'public' && $this->id === 'all')
-			$query = '';
-		}
+		/* -!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!- */
+		/* BAD HACK !! BAD HACK !! BAD HACK !! BAD HACK !! BAD HACK !! BAD HACK !! */
+		/* -!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!- */
+		$this->access = 0;
+		/* -!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!- */
+		/* -!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!- */
 
-		$setting = array();
-		$type = '';
+		$bibInfo = NULL;
+		$type = 'note';
+		$sn_name = 'source2note';
 
 		// 2. get the data from the database
 		condb('open');
-		$sql = mysql_query('SELECT * FROM note ' . $query . ';');
+		$sql = mysql_query('SELECT * FROM note WHERE noteID = ' . $this->id . ' AND notePublic >= ' . $this->access . ';');
 		condb('close');
 
 		$num_results = mysql_num_rows($sql);
@@ -47,34 +44,186 @@ class get {
 				$labelNames = getIndexMN('note', 'label', $row->noteID);
 				// get the user info
 				$userInfo = getIndex('user', $row->userID);
-				$source2note = getIndex('bib', $row->bibID);
+				$sn_value = getIndex('bib', $row->bibID);
 				condb('close');
+/* ------------------------------------------------------------------------- */
+				/* differences between note and bib (source) */
+				// 4. the note is a source if bibID = NULL; get the bibInfo!
+				if ($row->bibID == NULL) {
+					$type = 'source';
+					$sn_name = 'note2source';
+					$source2note = NULL;
+					condb('open');
+					$bibq = mysql_query('SELECT * FROM bib WHERE noteID =  ' . $this->id . ';');
+					condb('close');
+					$num_results = mysql_num_rows($bibq);
+					// 5 The source is a source if there are some results from table 'bib'
+					if($num_results > 0) {
+						while ($bibr = mysql_fetch_object($bibq)) {
+							$bibID = $bibr->bibID;
+							condb('open');
+							// bibTyp
+							$bibTyp = getIndex('bibTyp', $bibr->bibTyp);
+							// bibName
+							$bibName = getIndex('bib', $bibID);
+							// author
+							$authorNames = getIndexMN('bib', 'author', $bibID);
+							// location
+							$locationNames = getIndexMN('bib', 'location', $bibID);
+							// get more details
+							$dsql = mysql_query('SELECT bibFieldID, bibDetail FROM bibDetail WHERE bibID = ' . $bibID . ';');
+							condb('close');
 
-				// 4. note or source?
-				if ($row->bibID != NULL) {
-					// 4a The note is a note ;)
-					$type = 'note';
+							$bibInfo = array(
+								'id' => $bibID,
+								'name' => $bibName,
+								'bibTyp' => $bibTyp,
+								'author' => $authorNames,
+								'editor' => $bibr->bibEditor,
+								'location' => $locationNames
+							);
 
 
+							$num_details = mysql_num_rows($dsql);
+							if($num_details > 0) {
+								while ($detail = mysql_fetch_object($dsql)) {
+									// get the bibField value
+									condb('open');
+									$fsql = mysql_query('SELECT bibField FROM bibField WHERE bibFieldID = ' . $detail->bibFieldID . ';');
+									condb('close');
+									while ($field = mysql_fetch_object($fsql)) {
+										$bibDetail = $detail->bibDetail;
+										if($field->bibField == 'crossref') {
+											condb('open');
+											$bibDetail = getIndex('bib', $detail->bibDetail);
+											condb('close');
+										}
+										$bibInfo[$field->bibField] = $bibDetail;
+									}
+								}
+							}
+
+							condb('open');
+							$nsql = mysql_query('SELECT noteID FROM note WHERE bibID = ' . $bibID);
+							condb('close');
+							$sn_value = array();
+							while($nrow = mysql_fetch_object($nsql)){
+								array_push($sn_value, $nrow->noteID);
+							}
+						}
+					}
+
+					/* _+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+
+
+				condb('open');
+				$selectDetail = mysql_query('SELECT * FROM sourceDetail WHERE sourceID = ' . $this->id . ';');
+				condb('close');
+				$num_results = mysql_num_rows($selectDetail);
+				if ($num_results > 0) {
+					while ($row = mysql_fetch_object($selectDetail)) {
+						$bibFieldID = $row->bibFieldID;
+						$sourceDetailName = $row->sourceDetailName;
+						condb('open');
+						$selectField = mysql_query('SELECT bibFieldName FROM bibField WHERE bibFieldID = ' . $bibFieldID . ';');
+						condb('close');
+
+						while ($row = mysql_fetch_object($selectField)) {
+							$bibFieldName = $row->bibFieldName;
+							if ($bibFieldName == 'crossref') {
+								$inSource = NEW get();
+								$inSource->id = $sourceDetailName;
+								$sourceData = json_decode($inSource->getSource(), true);
+
+								if ($sourceData['bibTyp']['id'] != '') {
+									$crossref = array(
+										'id' => $sourceDetailName,
+										'name' => $sourceData['name'],
+										'title' => $sourceData['title'],
+										'subtitle' => $sourceData['subtitle'],
+										'year' => $sourceData['year'],
+
+										'bibTyp' => array(
+											'name' => $sourceData['bibTyp']['name'],
+											'id' => $sourceData['bibTyp']['id']
+										),
+										'category' => array(
+											'name' => $sourceData['category']['name'],
+											'id' => $sourceData['category']['id']
+										),
+										'project' => array(
+											'name' => $sourceData['project']['name'],
+											'id' => $sourceData['project']['id']
+										),
+										'editor' => $sourceData['editor'],
+										'author' => $sourceData['author'],
+										'location' => $sourceData['location'],
+										'label' => $sourceData['label'],
+										'comment' => $sourceData['comment']
+									);
+									$source['crossref'] = $crossref;
+								}
 
 
 				} else {
-					// 4b The note is a source
-					$type = 'source';
+					if (!isset($source['detail'][$bibFieldName])) {
+						$source['detail'][$bibFieldName] = $sourceDetailName;
+					} else {
+						$source['detail'][$bibFieldName] = $sourceDetailName;
+					}
+				}
+			}
+		}
+	}
+	//get also the noteIDs to this source
+condb('open');
+$noteSql = mysql_query("SELECT noteID FROM note WHERE noteSource=" . $this->id . " ORDER BY pageStart, pageEnd, noteTitle ASC");
+condb('close');
+//				echo "SELECT noteID FROM note WHERE noteSource=" . $this->id . " ORDER BY pageStart, noteTitle ASC";
+$notes = array();
+$num_results = mysql_num_rows($noteSql);
+if ($num_results > 0) {
+while ($row = mysql_fetch_object($noteSql)) {
+array_push($notes, $row->noteID);
+}
+}
+$source['notes'] = $notes;
+
+//get also other sourceIDs to this source
+condb('open');
+$getBibFieldID = mysql_query("SELECT bibFieldID FROM bibField WHERE bibFieldName = 'crossref'");
+while ($row = mysql_fetch_object($getBibFieldID)) {
+	$bibFieldID = $row->bibFieldID;			// should be 24
+}
+
+$sourceSql = mysql_query("SELECT sourceID FROM sourceDetail WHERE bibFieldID = " . $bibFieldID . " AND sourceDetailName = " . $this->id . " ORDER BY sourceID ASC");
+condb('close');
+//				echo "SELECT noteID FROM note WHERE noteSource=" . $this->id . " ORDER BY pageStart, noteTitle ASC";
+$sources = array();
+$num_results = mysql_num_rows($sourceSql);
+if ($num_results > 0) {
+	while ($row = mysql_fetch_object($sourceSql)) {
+		array_push($sources, $row->sourceID);
+	}
+}
+$source['sources'] = $sources;
+
+					/* _+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+ */
 
 				}
 
+/* ------------------------------------------------------------------------- */
 				$data = array(
 					'type' => $type,
 					'id' => $row->noteID,
 					'checkID' => $row->checkID,
 					'title' => $row->noteTitle,
 					'subtitle' => $row->noteSubtitle,
+					'biblio' => $bibInfo,
 					'comment' => $row->noteComment,
 					'link' => $row->noteLink,
 					'label' => $labelNames,
 					'media' => $row->noteMedia,
-					'source' => $source2note,
+					$sn_name => $sn_value,
 					'page' => array(
 						'start' => $row->pageStart,
 						'end' => $row->pageEnd
@@ -87,6 +236,7 @@ class get {
 					'user' => $userInfo,
 					'public' => $row->notePublic
 				);
+
 
 			}
 			// 3a YES

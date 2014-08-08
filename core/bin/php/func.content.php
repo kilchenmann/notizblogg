@@ -106,40 +106,88 @@ function makeurl($text)
 	return $text;
 }
 
-function getIndex($part, $id) {
-	$array = array();
-
-	if ($id == 0) {
-		$array = array(
-			'id' => '0',
-			'name' => ''
-		);
-	} else {
-		$partName = $part.'Name';
-		$partID = $part.'ID';
-		$sql = mysql_query('SELECT ' . $partName . ' FROM ' . $part . ' WHERE `' . $partID . '` = ' . $id . ';');
-//		echo 'SELECT ' . $partName . ' FROM ' . $part . ' WHERE `' . $partID . '` = ' . $id . ';';
-
-		$countIndex = mysql_num_rows($sql);
-		if($countIndex > 0) {
-			while($row = mysql_fetch_object($sql)){
+function getIndex($part, $id)
+{
+	$array = array(
+		'id' => '0',
+		'name' => ''
+	);
+	if ($id > 0) {
+		$partID = $part . 'ID';
+		$sql = mysql_query('SELECT ' . $part . ' FROM ' . $part . ' WHERE `' . $partID . '` = \'' . $id . '\';');
+		// echo 'SELECT ' . $part . ' FROM ' . $part . ' WHERE `' . $partID . '` = \'' . $id . '\';';
+		$num_results = mysql_num_rows($sql);
+		if ($num_results > 0) {
+			while ($row = mysql_fetch_object($sql)) {
 				$array = array(
 					'id' => $id,
-					'name' => $row->$partName
+					'name' => $row->$part
 				);
 			}
-		} else {
-			$array = array(
-				'id' => '0',
-				'name' => ''
-			);
 		}
 	}
-
 	return $array;
-}
+};
+
+function getIndexMN($type, $part, $id)
+{
+	$array = array();
+	$relTable = "rel_" . $type . "_" . $part;
+	$partID = $part . "ID";
+
+	$sql = mysql_query('SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $part);
+	//echo '<br>getIndexMN: SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $part . '<br>';
+
+	$num_labels = mysql_num_rows($sql);
+	if ($num_labels > 0) {
+		while ($row = mysql_fetch_object($sql)) {
+			// get number of notes with this value
+			$num_results = mysql_num_rows(mysql_query('SELECT * FROM ' . $relTable . ' WHERE ' . $partID . ' = \'' . $row->$partID . '\';'));
+			array_push($array, array('id' => $row->$partID, 'name' => $row->$part, 'num' => $num_results));
+		}
+	}
+	return $array;
+};
+
+/*
+
+	die();
 
 
+
+//	$arrayMN = array();
+
+	$mnSql = mysql_query("SELECT " . $partVal . " FROM " . $part . ", " . $relTable . " WHERE " . $part . "." . $partID . " = " . $relTable . "." . $partID . " AND " . $relTable . "." . $type . "ID = '" . $id . "' ORDER BY " . $partVal);
+	//echo ("mnSql (" . $type . " " . $part . "): SELECT " . $partVal . " FROM " . $part . ", " . $relTable . " WHERE " . $part . "." . $partID . " = " . $relTable . "." . $partID . " AND " . $relTable . "." . $type . "ID = '" . $id . "' ORDER BY " . $partVal . "<br>");
+
+	$countMN = mysql_num_rows($mnSql);
+	if ($countMN > 0) {
+		while ($row = mysql_fetch_object($mnSql)) {
+			$relIDs[] = $row[$partVal];
+		}
+		asort($relIDs);
+		$relData = "";
+		foreach ($relIDs as $relName) {
+			$getRelID = mysql_query("SELECT " . $partID . " FROM " . $part . " WHERE " . $partVal . " = '" . $relName . "'");
+			while ($row = mysql_fetch_object($getRelID)) {
+				$relID = $row->$partID;
+				$countSql = mysql_query("SELECT " . $type . "." . $type . "ID FROM " . $type . ", " . $relTable . " WHERE " . $part . "ID = " . $relID . " AND " . $relTable . "." . $type . "ID = " . $type . "." . $type . "ID");
+
+				//echo "countSql (" . $type . " " . $part . "): SELECT " . $type . "." . $type . "ID FROM " . $type . ", " . $relTable . " WHERE " . $part . "ID = " . $relID . " AND " . $relTable . "." . $type . "ID = " . $type . "." . $type . "ID ORDER BY " . $type . ".dateCreated DESC<br>";
+
+				$countResult = mysql_num_rows($countSql);
+
+				array_push($arrayMN, array('id' => $relID, 'name' => $relName, 'number' => $countResult));
+			}
+
+
+		}
+	}
+	return $arrayMN;
+
+};
+
+*/
 
 function linkIndex($type, $part, $id) {
 	return $type . ' + ' . $part . ' + ' . $id;
@@ -161,36 +209,7 @@ function linkIndex($type, $part, $id) {
 }
 
 
-function getIndexMN($type, $part, $id)
-{
-	$relTable = "rel_" . $type . "_" . $part;
-	$partID = $part . "ID";
-	$arrayMN = array();
-	$i = 0;
-	$mnSql = mysql_query("SELECT " . $part . "Val FROM " . $part . ", " . $relTable . " WHERE " . $part . "." . $part . "ID = " . $relTable . "." . $part . "ID AND " . $relTable . "." . $type . "ID = '" . $id . "' ORDER BY " . $part . "Val");
-	$countMN = mysql_num_rows($mnSql);
-	if ($countMN > 0) {
-		while ($row = mysql_fetch_array($mnSql)) {
-			$relIDs[] = $row[$part . "Val"];
-		}
-		asort($relIDs);
-		$relData = "";
-		foreach ($relIDs as $relName) {
-			$getRelID = mysql_query("SELECT " . $part . "ID FROM " . $part . " WHERE " . $part . "Val = '" . $relName . "'");
-			while ($row = mysql_fetch_object($getRelID)) {
-				$relID = $row->$partID;
-				$countSql = mysql_query("SELECT " . $type . "." . $type . "ID FROM " . $type . ", " . $relTable . " WHERE " . $part . "ID = " . $relID . " AND " . $relTable . "." . $type . "ID = " . $type . "." . $type . "ID ORDER BY " . $type . "." . $type . "Title, " . $type . ".dateCreated DESC");
-				$countResult = mysql_num_rows($countSql);
 
-				array_push($arrayMN, array('id' => $relID, 'name' => $relName, 'number' => $countResult));
-			}
-
-
-		}
-	}
-	return $arrayMN;
-
-};
 		/*
 						if(empty ($arrayMN)) {
 							$arrayMN = array(
