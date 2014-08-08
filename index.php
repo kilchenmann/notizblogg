@@ -12,6 +12,8 @@
 
 	require 'core/bin/php/setting.php';
 
+	/*
+	 * // the access is regulated in the api get and edit
 	if (!isset ($_SESSION["token"])) {
 		$access = 'public';
 		$user = '--';
@@ -33,6 +35,7 @@
 			$user = '--';
 		}
 	}
+	*/
 
 	?>
 	<!--
