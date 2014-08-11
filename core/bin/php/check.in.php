@@ -3,8 +3,8 @@
 require_once 'setting.php';
 condb('open');
 
-$sql = "SELECT uid, name, token FROM user WHERE ".
-    "(name like '".$_REQUEST["usr"]."') AND ".
+$sql = "SELECT userID, name, user, token FROM user WHERE ".
+    "(user like '".$_REQUEST["usr"]."') AND ".
     "(pass = '".md5 ($_REQUEST["key"])."')";
 $result = mysql_query($sql);
 
@@ -16,8 +16,8 @@ if (mysql_num_rows($result) > 0)
 	session_start ();
 
 	// Sessionvariablen erstellen und registrieren
-	$_SESSION["token"] = $data["token"] . '-' . $data["uid"];
-	$_SESSION["user"] = $data["name"];
+	$_SESSION["token"] = $data["token"] . '-' . $data["userID"];
+	$_SESSION["user"] = $data["user"];
 //  $pathLogin = $_POST['path'];
 	header ('Location: ' . __SITE_URL__ . '/');
 }
