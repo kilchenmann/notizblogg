@@ -11,6 +11,19 @@ RewriteBase /nb
 
 #api rules
 RewriteRule ^get/([0-9]+)$ /nb/api/get.php?id=$1
+RewriteRule ^post/([0-9]+)$ /nb/api/post.php?id=$1
+
+# -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+# activate it later?
+# -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+#RewriteRule ^note/([0-9]+)$ /nb/index.php?note=$1
+#RewriteRule ^source/([0-9]+)$ /nb/index.php?source=$1
+#RewriteRule ^label/([0-9]+)$ /nb/index.php?label=$1
+#RewriteRule ^author/([0-9]+)$ /nb/index.php?author=$1
+# -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+# -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+
 
 # in the future we will only need get.php?id=123 — there will be no difference between note and source
 RewriteRule ^get/note/([0-9]+)$ /nb/api/get.php?note=$1
