@@ -42,7 +42,7 @@ function show($type, $query, $access, $viewer)
 				$source = NEW get();
 				$source->id = $query;
 				$source->access = $access;
-				$source->data = json_decode($source->getSource(), true);
+				$source->data = json_decode($source->getData(), true);
 			// get the notes
 			if(!empty($source->data['notes'])) {
 				$i = 0;
@@ -271,22 +271,27 @@ function show($type, $query, $access, $viewer)
 		default:
 
 			if($access == 'public') {
-				$query = 'WHERE sourcePublic = 1';
+				$query = 'AND note.notePublic = 1';
 			} else { // ($access !== 'public' && $id === 'all')
 				$query = '';
 			}
 			condb('open');
-			$sql = mysql_query("SELECT sourceID FROM source " . $query . ";");
+			$sql = mysql_query("SELECT bib.bibID, note.noteID FROM bib, note WHERE bib.noteID = note.noteID " . $query . ";");
+
+			//echo "SELECT bib.bibID, note.noteID FROM bib, note WHERE bib.noteID = note.noteID " . $query . ";";
 			condb('close');
 			$num_results = mysql_num_rows($sql);
 			if($num_results > 0) {
 				echo $openViewer;
 				while ($row = mysql_fetch_object($sql)) {
+
+
 					$source = NEW show();
-					$source->id = $row->sourceID;
+					$source->id = $row->noteID;
 					$source->access = $access;
 					$source->type = 'source';
 					$source->showData();
+
 					//$source = NEW source();
 					//$source->showSource($row->sourceID, $access);
 				}

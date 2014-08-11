@@ -6,36 +6,29 @@
 
 	<?php
 	session_start ();
-	$access = 'public';
-	$user = '--';
+	$access = '1';
+	$user = 'guest';
 	$uid = '';
 
 	require 'core/bin/php/setting.php';
 
-	/*
-	 * // the access is regulated in the api get and edit
-	if (!isset ($_SESSION["token"])) {
-		$access = 'public';
-		$user = '--';
-		$uid = '';
-	} else {
+	  // the access is regulated in the api get and edit
+	if (isset ($_SESSION["token"])) {
+		// check if the access is true and correct
+		$token = (explode("-", $_SESSION["token"]));
 		condb('open');
-		$token = (explode("-",$_SESSION["token"]));
-		$sql = mysql_query("SELECT username FROM user WHERE uid = " . $token[1] . " AND token = '" . $token[0] . "';");
-
-		while($row = mysql_fetch_object($sql)){
-			$user = $row->username;
-		}
+		$sql = mysql_query("SELECT user, userID FROM user WHERE userID = " . $token[1] . " AND token = '" . $token[0] . "';");
 		condb('close');
-
-		if($user != '') {
-			$access = 'private';
-			$uid = $token[1];
-		} else {
-			$user = '--';
+		$num_results = mysql_num_rows($sql);
+		if ($num_results > 0) {
+			while ($row = mysql_fetch_object($sql)) {
+				$user = $row->user;
+				$access = '0';
+				$uid = $row->userID;
+			}
 		}
 	}
-	*/
+
 
 	?>
 	<!--
@@ -119,6 +112,7 @@
 
 			<?php
 			// default parameters
+
 			$type = '';
 			$query = 'all';
 			$viewer = 'wall';
@@ -179,22 +173,28 @@
 			vars.push(hash[0]);
 			vars[hash[0]] = hash[1];
 		}
-		console.log(vars);
 		return vars;
-
 	}
+
 	var NB = {};
 	NB.url = '<?php echo __SITE_URL__; ?>';
 	NB.user = '<?php echo $user; ?>';
 	NB.access = '<?php echo $access; ?>';
 	NB.uid = '<?php echo $uid; ?>';
+	NB.showID = getUrlVars();
+
+	console.log(NB.url);
+	console.log(NB.user);
+	console.log(NB.access);
+	console.log(NB.showID);
+
 
 
 //	$(document).ready(function () {
 
 
 		$.getScript(NB.url + '/core/bin/js/jquery.login.js', function() {
-			if(NB.user !== '--' && NB.access !== 'public' && NB.uid !== '') {
+			if(NB.user !== 'guest' && NB.access !== '1' && NB.uid !== '') {
 				$('.user').login({
 					type: 'logout',
 					user: NB.uid,
@@ -397,6 +397,7 @@
 	});
 
 	$(window).load(function() {
+		getUrlVars();
 		var win_width = $(window).width();
 		if($('.wall').length !== 0) {
 			var wall = $('.wall');

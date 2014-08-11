@@ -13,7 +13,6 @@ class show {
 	var $data;
 
 	var $open_note = '<div class=\'note\'>';
-
 	var $show_media = '<div class=\'media\'>';
 	var $show_text = '<div class=\'text\'>';
 	var $show_latex = '<div class=\'latex\'>';
@@ -91,32 +90,32 @@ class show {
 	}
 	function showBib() {
 		// two returns: showBibtex and showBiblio
-		if($this->data['bibTyp']['id'] != 0) {
+		if($this->data['biblio']['bibTyp']['id'] != 0) {
 			$authors = '';
 			$locations = '';
 
-			$showBibtex = '@' . $this->data['bibTyp']['name'] . '{' . $this->data['name'] . ',<br>';
+			$showBibtex = '@' . $this->data['biblio']['bibTyp']['name'] . '{' . $this->data['biblio']['name']['name'] . ',<br>';
 			$showBiblio = ''; // $this->data['id'];
 
 			// set the authors
 			$i = 0;
-			while ($i < count($this->data['author'])) {
+			while ($i < count($this->data['biblio']['author'])) {
 
 				if($authors == ''){
-					$authors = '<a href=\'' . __MAIN_FILE__ . '?author=' . $this->data['author'][$i]['id'] . '\'>' . $this->data['author'][$i]['name'] . '</a>';
+					$authors = '<a href=\'' . __MAIN_FILE__ . '?author=' . $this->data['biblio']['author'][$i]['id'] . '\'>' . $this->data['biblio']['author'][$i]['name'] . '</a>';
 				} else {
-					$authors .= ', <a href=\'' . __MAIN_FILE__ . '?author=' . $this->data['author'][$i]['id'] . '\'>' . $this->data['author'][$i]['name'] . '</a>';
+					$authors .= ', <a href=\'' . __MAIN_FILE__ . '?author=' . $this->data['biblio']['author'][$i]['id'] . '\'>' . $this->data['biblio']['author'][$i]['name'] . '</a>';
 				}
 				$i++;
 			}
 			// set the locations
 			$i = 0;
-			while ($i < count($this->data['location'])) {
+			while ($i < count($this->data['biblio']['location'])) {
 
 				if($locations == ''){
-					$locations = $this->data['location'][$i]['name'];
+					$locations = $this->data['biblio']['location'][$i]['name'];
 				} else {
-					$locations .= ', ' . $this->data['location'][$i]['name'];
+					$locations .= ', ' . $this->data['biblio']['location'][$i]['name'];
 				}
 				$i++;
 			}
@@ -124,7 +123,7 @@ class show {
 			//$this->show_text .= '<p class=\'small\'>(' . $authors . ': <a href=\'?source=' . $this->data['id'] . '\'>' . getLastChar($this->data['title']) . '</a> S. ' . $pages . ')</p>';
 
 
-			if($this->data['editor'] == 1){
+			if($this->data['biblio']['editor'] == 1){
 				$showBibtex .= 'editor = {' . $authors . '},<br>';
 				$showBiblio .= $authors . ' (Hg.):<br>';
 			} else {
@@ -132,7 +131,7 @@ class show {
 				$showBiblio .= $authors . ':<br>';
 			}
 			$showBibtex .= 'title = {' . ($this->data['title']) . '},<br>';
-			if($this->data['bibTyp']['name'] == 'collection' || $this->data['bibTyp']['name'] == 'proceedings' || $this->data['bibTyp']['name'] == 'book') {
+			if($this->data['biblio']['bibTyp']['name'] == 'collection' || $this->data['biblio']['bibTyp']['name'] == 'proceedings' || $this->data['biblio']['bibTyp']['name'] == 'book') {
 				$showBiblio .= '<a href=\'?collection=' . $this->data['id'] . '\' >'. getLastChar($this->data['title']) . '</a> ';
 			} else {
 				$showBiblio .= '<a href=\'?source=' . $this->data['id'] . '\' >'. getLastChar($this->data['title']) . '</a> ';
@@ -197,13 +196,13 @@ class show {
 				}
 
 			} else {
-				if(!empty($this->data['location'])) {
+				if(!empty($this->data['biblio']['location'])) {
 					$showBibtex .= 'location = {' . $locations . '},<br>';
 					$showBiblio .= $locations . ', ';
 				}
-				if($this->data['year'] != '0000'){
-					$showBibtex .= 'year = {' . $this->data['year'] . '},<br>';
-					$showBiblio .= $this->data['year'] . '';
+				if($this->data['date']['year'] != '0000'){
+					$showBibtex .= 'year = {' . $this->data['date']['year'] . '},<br>';
+					$showBiblio .= $this->data['date']['year'] . '';
 				}
 			}
 			if(array_key_exists('detail', $this->data)) {
@@ -283,7 +282,7 @@ class show {
 			case 'note';
 				$authors = '';
 				$labels = '';
-				$this->data = json_decode($show->getNote(), true);
+				$this->data = json_decode($show->getData(), true);
 				if ($this->data['id'] != 0) {
 					$this->open_note = '<div class=\'note item\' id=\'' . $show->id . '\'>';
 					// show media, if exist
@@ -296,7 +295,7 @@ class show {
 					// set title
 					$this->show_text .= '<h3>' . $this->data['title'] . '</h3>';
 					// set content
-					$this->show_text .= '<p>' . makeurl($this->data['content']) . '</p>';
+					$this->show_text .= '<p>' . makeurl($this->data['comment']) . '</p>';
 					// set source, if exists
 					if(!empty($this->data['source'])) {
 						//print_r(json_encode($this->data));
@@ -403,7 +402,7 @@ class show {
 		//		break;
 
 			default; // source
-				$this->data = json_decode($show->getSource(), true);
+				$this->data = json_decode($show->getData(), true);
 				if (!empty($this->data)) {
 					$this->open_note = '<div class=\'note topic item\' id=\'' . $show->id . '\'>';
 					$biblio = $this->showBib();

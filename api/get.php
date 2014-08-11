@@ -16,6 +16,7 @@ $uid = '';
 $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 require '../core/bin/php/setting.php';
 
+// check the access
 if (isset ($_SESSION["token"])) {
 	condb('open');
 	$token = (explode("-",$_SESSION["token"]));
@@ -48,6 +49,8 @@ if (isset($_GET['id'])) {
 
 
 
+/*
+ * get.php old version
 	// default values; in case of wrong queries; these variables would be overwritten in the right case
 	if (isset($_GET['source'])) {
 		$source = NEW get();
@@ -111,6 +114,8 @@ if (isset($_GET['id'])) {
 		$note->type = 'note';
 		echo $note->getData();
 	}
+*/
+
 	/*
 	if (isset($_GET['label'])) {
 		$type = 'label';
