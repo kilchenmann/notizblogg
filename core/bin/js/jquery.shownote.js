@@ -26,32 +26,94 @@
 		}
 		return(string + ' ');
 	},
+		getTypeID = function(query) {
+			alert(query);
+		},
 
-		showBib = function(data) {
+		dispNote = function(ele, data, localdata) {
+			var media, latex, classNote, classLabel, label;
+			if(data.id !== 0) {
+				if (data.biblio !== null) {
+					latex = '``' + data.comment + '\'\'';
+				} else {
+					latex = '';
+				}
+				if (data.type === 'source') {
+					classNote = 'note topic';
+				} else {
+					classNote = 'note item';
+				}
+
+				if (data.public === '1') {
+					classLabel = 'label private'
+				} else {
+					classLabel = 'label'
+				}
+
+				ele.append(
+					$('<div>').addClass(classNote).attr({'id': data.id})
+						.append(
+						$('<div>').addClass('media')
+					)
+						.append(
+						$('<div>').addClass('text')
+							.append($('<h3>').html(data.title))
+							.append($('<p>').html(data.comment))
+					)
+						.append(
+						$('<div>').addClass('latex')
+							.append($('<h3>').html(data.title))
+							.append($('<p>').html(latex))
+					)
+						.append(
+						label = $('<div>').addClass(classLabel)
+					)
+						.append(
+						$('<div>').addClass('tool')
+					)
+				);
+
+				$.each(data.label, function (i, noteLabel) {
+					label.append(
+						$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name}).html(' ' + noteLabel.name)
+					)
+				})
+			} else {
+				$('#fullpage').warning({
+					type: 'noresults',
+					lang: 'de'
+				});
+				$('body').on('click', function(){
+					window.location.href = localdata.settings.url;
+				})
+			}
+		},
+
+		dispBib = function(ele, data, localdata) {
 			var authors, locations, bibtex, biblio, i;
 
-			if (data.bibTyp.id !== '0') {
+			if (data.biblio.bibTyp.id !== '0') {
 				authors = '';
 				locations = '';
-				bibtex = '@' + data.bibTyp.name + '{' + data.name + '<br>';
+				bibtex = '@' + data.biblio.bibTyp.name + '{' + data.biblio.name + '<br>';
 				biblio = '';
 
 				i = 0;
-				while (i < data.author.length) {
+				while (i < data.biblio.author.length) {
 					if (authors === '') {
-						authors = '<a href=\'?author=' + data.author[i].id + '\'>' + data.author[i].name + '</a>';
+						authors = '<a href=\'?author=' + data.biblio.author[i].id + '\'>' + data.biblio.author[i].name + '</a>';
 					} else {
-						authors += ', <a href=\'?author=' + data.author[i].id + '\'>' + data.author[i].name + '</a>';
+						authors += ', <a href=\'?author=' + data.biblio.author[i].id + '\'>' + data.biblio.author[i].name + '</a>';
 					}
 					i += 1;
 				}
 
 				i = 0;
-				while (i < data.location.length) {
+				while (i < data.biblio.location.length) {
 					if (locations === '') {
-						locations = data.location[i].name;
+						locations = data.biblio.location[i].name;
 					} else {
-						locations += ', ' + data.location[i].name;
+						locations += ', ' + data.biblio.location[i].name;
 					}
 					i += 1;
 				}
@@ -65,10 +127,10 @@
 
 				bibtex += 'title = {' + data.title + '},<br>';
 
-				if (data.bibTyp.name === 'collection' || data.bibTyp.name === 'proceedings' || data.bibTyp.name === 'book') {
-					biblio += '<a href=\'?collection=' + data.id + '\' >' + getLastChar(data.title) + '</a> ';
+				if (data.biblio.bibTyp.name === 'collection' || data.biblio.bibTyp.name === 'proceedings' || data.biblio.bibTyp.name === 'book') {
+					biblio += '<a href=\'?collection=' + data.biblio.id + '\' >' + getLastChar(data.title) + '</a> ';
 				} else {
-					biblio += '<a href=\'?source=' + data.id + '\' >' + getLastChar(data.title) + '</a> ';
+					biblio += '<a href=\'?source=' + data.biblio.id + '\' >' + getLastChar(data.title) + '</a> ';
 				}
 				if (data.subtitle !== '') {
 					bibtex += 'subtitle = {' + data.subtitle + '},<br>';
@@ -211,11 +273,21 @@
 		init: function(options) {
 			return this.each(function() {
 				var $this = $(this),
-					localdata = {};
-
+					localdata = {},
+					url;
+				localdata.view = {};
 				localdata.settings = {
-					type: 'source',		// source || note
-					id: undefined
+					access: 1,
+					url: 'https://www.notizblogg.ch',
+					uri: undefined,
+					user: {
+						id: undefined,
+						name: undefined
+					},
+					query: {
+						id: undefined,
+						type: undefined
+					}
 				};
 
 
@@ -223,7 +295,114 @@
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
 
-				// 1. get the data
+				$this.append(
+					localdata.view.wall = $('<div>').addClass('wall')
+				);
+
+				// which data do we need?
+				// 'api/get/[id]' brings all notes and sources with the [id]
+				// 'api/list/label/[id]' brings a list of noteIDs with the label [id]
+				// 'api/list/author([id]' brings a list of noteIDs with the author [id]
+
+
+				switch(localdata.settings.query.type) {
+					case 'note':
+						url= localdata.settings.url + '/get/' + localdata.settings.query.id;
+						$.getJSON(url, function(data) {
+//							$.each(data,function(i,note){
+								dispNote(localdata.view.wall, data, localdata);
+
+//							})
+
+						});
+						break;
+					case 'source':
+						url= localdata.settings.url + '/get/' + localdata.settings.query.id;
+						$.getJSON(url, function(data) {
+//							$.each(data,function(i,note){
+							localdata.view.source = dispBib(localdata.view.wall, data, localdata);
+							localdata.view.wall.append(localdata.view.source.biblio);
+
+//							})
+
+						});
+						break;
+
+					case 'label':
+						url= localdata.settings.url + '/list/' + localdata.settings.query.type + '/' + localdata.settings.query.id;
+						$.getJSON(url, function(list) {
+							$.each(list.notes,function(i,noteID){
+								url= localdata.settings.url + '/get/' + noteID;
+								$.getJSON(url, function(data) {
+//									$.each(data, function (i, note) {
+										dispNote(localdata.view.wall, data, localdata);
+
+//									})
+								})
+
+							})
+
+						});
+						break;
+
+					case 'author':
+						url= localdata.settings.url + '/list/' + localdata.settings.query.type + '/' + localdata.settings.query.id;
+						$.getJSON(url, function(list) {
+							$.each(list.notes,function(i,noteID){
+								url= localdata.settings.url + '/get/' + noteID;
+								$.getJSON(url, function(data) {
+//									$.each(data, function (i, note) {
+										localdata.view.source = dispBib(localdata.view.wall, data, localdata);
+									localdata.view.wall.append(localdata.view.source.biblio);
+//									})
+								})
+
+							});
+
+
+						});
+						break;
+
+					case 'collection':
+
+						break;
+
+					default:
+
+				}
+
+
+						/*
+						 $(".note")//.html($('<div>').addClass('note')
+						 .append($('<h3>').html(note.title))
+						 .append($('<p>').html(note.content))
+						 .append($('<p>')
+						 .append($('<a>').attr({href: '?type=note&part=category&id=' + note.category.id }).html(note.category.name))
+						 .append($('<span>').html(' | '))
+						 .append($('<a>').attr({href: '?type=note&part=project&id=' + note.project.id }).html(note.project.name))
+						 );
+						 //);
+						 */
+
+
+
+
+
+// warning if no note exist
+/*
+				if ($('.note').length === 0) {
+					$('#fullpage').warning({
+						type: 'noresults',
+						lang: 'de'
+					});
+					$('body').on('click', function(){
+						window.location.href = localdata.settings.url;
+					})
+				}
+*/
+
+
+
 				if(localdata.settings.type === 'source'){
 					$.getJSON('get/' + localdata.settings.type + '/' + localdata.settings.id, function(data) {
 						$this.empty();
@@ -243,6 +422,30 @@
 
 			});											// end "return this.each"
 		},												// end "init"
+
+
+
+		setNote2Wall: function() {
+			return this.each(function(){
+				var $this = $(this);
+				var localdata = $this.data('localdata');
+				var win_width = $(window).width();
+			//	if($('.wall').length !== 0) {
+					var wall = $(this);
+					var note_width = wall.find('.note').width() + 60;
+					//		console.log('note: ' + note_width + ' window: ' + win_width)
+					var num_col = Math.floor(win_width / note_width);
+					wall.css({
+						'-webkit-column-count': num_col,
+						'-moz-column-count': num_col,
+						'column-count': num_col,
+						'width': num_col * note_width
+					});
+							console.log(num_col);
+			//	}
+
+			});
+		},
 
 		anotherMethod: function() {
 			return this.each(function(){

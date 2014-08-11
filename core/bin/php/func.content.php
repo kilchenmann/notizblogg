@@ -149,6 +149,52 @@ function getIndexMN($type, $part, $id)
 	return $array;
 };
 
+
+function getNote2Author($id) {
+	condb('open');
+	$bsql = mysql_query('SELECT bibID FROM rel_bib_author WHERE authorID = ' . $id . ';');
+	condb('close');
+	$num_results = mysql_num_rows($bsql);
+	$notes = array();
+	if($num_results > 0) {
+		while($brow = mysql_fetch_object($bsql)) {
+			condb('open');
+			$sql = mysql_query('SELECT noteID FROM bib WHERE bibID = ' . $brow->bibID . ';');
+			condb('close');
+			while($row = mysql_fetch_object($sql)){
+				array_push($notes, $row->noteID);
+			}
+		}
+	}
+	return $notes;
+}
+
+
+function getNote2Label($id) {
+	condb('open');
+	$sql = mysql_query('SELECT noteID FROM rel_note_label WHERE labelID = ' . $id . ';');
+	condb('close');
+	$num_results = mysql_num_rows($sql);
+	$notes = array();
+	if($num_results > 0) {
+		while($row = mysql_fetch_object($sql)) {
+			array_push($notes, $row->noteID);
+		}
+	}
+	return $notes;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 
 	die();

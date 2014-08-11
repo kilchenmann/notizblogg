@@ -9,7 +9,7 @@
 class get {
 	var $id;	// id number
 	var $access;	// do you have the rights to see notes and sources?
-//	var $type;
+	var $type;
 	var $json;
 
 	function get() {
@@ -29,6 +29,7 @@ class get {
 		$bibInfo = NULL;
 		$type = 'note';
 		$sn_name = 'source2note';
+		$data = array();
 
 		// 2. get the data from the database
 		condb('open');
@@ -75,13 +76,13 @@ class get {
 							condb('close');
 
 							$bibInfo = array(
-								'id' => $bibID,
-								'name' => $bibName,
 								'bibTyp' => $bibTyp,
 								'author' => $authorNames,
 								'editor' => $bibr->bibEditor,
 								'location' => $locationNames
 							);
+							$bibInfo['id'] = $bibName['id'];
+							$bibInfo['name'] = $bibName['name'];
 
 
 							$num_details = mysql_num_rows($dsql);
@@ -259,6 +260,66 @@ $source['sources'] = $sources;
 
 	}
 
+	function listData() {
+		$typeName = '';
+		// get the name of the author, the label or etc.
+		switch($this->type) {
+			case 'label';
+				condb('open');
+				$sql = mysql_query('SELECT label FROM label WHERE labelID=' . $this->id . ';');
+				condb('close');
+				while($row = mysql_fetch_object($sql)) {
+					$typeName = $row->label;
+				}
+				$notes = getNote2Label($this->id);
+				break;
+			case 'author';
+				condb('open');
+				$sql = mysql_query('SELECT author FROM author WHERE authorID=' . $this->id . ';');
+				condb('close');
+				while($row = mysql_fetch_object($sql)) {
+					$typeName = $row->author;
+				}
+				$notes = getNote2Author($this->id);
+				break;
+
+			default;
+				condb('open');
+				$sql = mysql_query('SELECT label FROM label WHERE labelID=' . $this->id . ';');
+				condb('close');
+				while($row = mysql_fetch_object($sql)) {
+					$typeName = $row->label;
+				}
+				$notes = getNote2Label($this->id);
+				break;
+		}
+
+		if($typeName != '') {
+
+			$list = array(
+				'type' => $this->type,
+				'id' => $this->id,
+				'name' => $typeName,
+				'notes' => $notes
+			);
+		} else {
+			$list = array(
+				'id' => 0
+			);
+		}
+
+		$this->json = json_encode($list);
+
+		return $this->json;
+
+	}
+
+
+
+
+
+
+	/*
 	function getNote() {
 		if($this->access == 'public' && $this->id == 'all') {
 			$query = 'WHERE notePublic = 1';
@@ -482,7 +543,7 @@ $source['sources'] = $sources;
 									$source['crossref'] = $crossref;
 								}
 
-
+*/
 								/*
 								$inSource = NEW get();
 								$inSource->id = $sourceDetailName;
@@ -502,6 +563,8 @@ $source['sources'] = $sources;
 									// $locationNames = linkIndexMN('source', 'location', $sourceDetailName, ',');
 								}
 								*/
+
+	/*
 							} else {
 								if (!isset($source['detail'][$bibFieldName])) {
 									$source['detail'][$bibFieldName] = $sourceDetailName;
@@ -560,4 +623,5 @@ $source['sources'] = $sources;
 //		print_r($this->data);
 		return $this->data;
 	}
+	*/
 }

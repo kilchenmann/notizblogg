@@ -20,9 +20,9 @@ require '../core/bin/php/setting.php';
 if (isset ($_SESSION["token"])) {
 	condb('open');
 	$token = (explode("-",$_SESSION["token"]));
-	$sql = mysql_query("SELECT username FROM user WHERE uid = " . $token[1] . " AND token = '" . $token[0] . "';");
+	$sql = mysql_query("SELECT user FROM user WHERE userID = " . $token[1] . " AND token = '" . $token[0] . "';");
 	while($row = mysql_fetch_object($sql)){
-		$user = $row->username;
+		$user = $row->user;
 	}
 	condb('close');
 	if($user != '') {

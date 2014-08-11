@@ -45,34 +45,14 @@
 
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/lib/jquery-1.10.2.min.js"></script>
 
-	<!--
-	<script src="lib/jqueryui/1.9.1/jquery-ui.min.js"></script>
-	-->
-	<!--
-	<script type="text/javascript" src="core/bin/js/jquery.slimscroll.min.js"></script>
-	-->
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/md5.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.center.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.warning.js"></script>
+
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.shownote.js"></script>
-
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.expand.js"></script>
-	<!--
-	<script type="text/javascript" src="core/bin/js/examples.js"></script>
-	-->
-
 
 	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/nb.css">
-<!--
-	<link rel="stylesheet" type="text/css" href="<?php //echo __SITE_URL__; ?>/core/style/css/timeline.css">
-	<link rel="stylesheet" type="text/css" href="<?php //echo __SITE_URL__; ?>/core/style/css/responsive.css">
--->
-
-	<!--
-	<link rel="stylesheet/less" type="text/css" href="core/style/less/setting.less">
-	<script type="text/javascript" src="core/lib/less-1.6.3.min.js"></script>
-	-->
-
 
 </head>
 <body>
@@ -88,18 +68,15 @@
 		<span class="add"></span>
 		<span class="user"></span>
 		<span class="drawer"></span>
-		<!--
-		<span class="menu"></span>
-		-->
+	<!-- <span class="menu"></span> -->
 	</div>
 </header>
 <div class="float_obj medium warning"></div>
 <div class="float_obj large pamphlet"></div>
 <footer>
 	<p class="small">
-		<a href="http://notizblogg.ch">Notizblogg</a>
-		is a <a href="http://milchkannen.ch">milchkannen</a> project created by
-		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">André Kilchenmann</a> (content &amp; design) &copy;
+		<a href="http://notizblogg.ch">Notizblogg</a> | Idea, Concept and Design &copy;
+		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">André Kilchenmann</a> |
 		<span class='year'></span>
 		<a href="http://milchkannen.ch">
 		<img src="<?php echo __SITE_URL__; ?>/core/style/img/akM-logo-small.png" alt="milchkannen | kilchenmann" title="milchkannen | andré kilchenmann"/>
@@ -110,12 +87,14 @@
 <div id="fullpage">
 		<div class="viewer">
 
+
 			<?php
 			// default parameters
 
 			$type = '';
 			$query = 'all';
 			$viewer = 'wall';
+
 			if($_SERVER['QUERY_STRING']){
 				// default values; in case of wrong queries; these variables would be overwritten in the right case
 				if(isset($_GET['source'])){
@@ -144,7 +123,9 @@
 					$type = 'search';
 					$query = $_GET['q'];
 				}
-			} else {
+			}
+			/*
+			else {
 				?>
 				<script type="text/javascript">
 					$('#fullpage').css({'background-image': 'url(core/style/img/bg-notizblogg.jpg)'});
@@ -153,7 +134,7 @@
 			}
 
 			show($type, $query, $access, $viewer);
-
+*/
 			?>
 
 		</div>
@@ -162,42 +143,63 @@
 
 
 <script type="text/javascript">
-	// Read a page's GET URL variables and return them as an associative array.
-	function getUrlVars()
+// Read a page's GET URL variables and return them as an associative array.
+function getUrlVars()
+{
+	var vars = [], hash;
+	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	for(var i = 0; i < hashes.length; i++)
 	{
-		var vars = [], hash;
-		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-		for(var i = 0; i < hashes.length; i++)
-		{
-			hash = hashes[i].split('=');
-			vars.push(hash[0]);
-			vars[hash[0]] = hash[1];
-		}
-		return vars;
+		hash = hashes[i].split('=');
+		vars.push(hash[0]);
+		vars[hash[0]] = hash[1];
 	}
+	return vars;
+}
 
-	var NB = {};
-	NB.url = '<?php echo __SITE_URL__; ?>';
-	NB.user = '<?php echo $user; ?>';
-	NB.access = '<?php echo $access; ?>';
-	NB.uid = '<?php echo $uid; ?>';
-	NB.showID = getUrlVars();
 
-	console.log(NB.url);
-	console.log(NB.user);
-	console.log(NB.access);
-	console.log(NB.showID);
+var NB = {};
+NB.access = '<?php echo $access; ?>';
+NB.user = {
+	id:  '<?php echo $uid; ?>',
+	name: '<?php echo $user; ?>'
+};
+NB.url = '<?php echo __SITE_URL__; ?>';
+NB.uri = NB.url + '/' +(location.search).substr(1);
+
+NB.query = {
+	type: '<?php echo $type; ?>',
+	id: '<?php echo $query; ?>'
+};
+
+
+
+
+//NB.query = getUrlVars();
+
+
+//console.log(NB);
+//console.log('uri: ' + NB.uri);
+//console.log('user: ' + NB.user);
+//console.log('uid: ' + NB.uid);
+//console.log('access: ' + NB.access);
+//console.log(NB.query);
+
+//console.log((location.search).substr(1));
+
+
+
 
 
 
 //	$(document).ready(function () {
 
-
+// set the panel icons if you're logged in
 		$.getScript(NB.url + '/core/bin/js/jquery.login.js', function() {
-			if(NB.user !== 'guest' && NB.access !== '1' && NB.uid !== '') {
+			if(NB.user.name !== 'guest' && NB.access !== '1' && NB.user.id !== '') {
 				$('.user').login({
 					type: 'logout',
-					user: NB.uid,
+					user: NB.user.id,
 					submit: 'Abmelden',
 					action: NB.url + '/core/bin/php/check.out.php'
 				});
@@ -250,7 +252,6 @@
 				divs = $note.contents();
 				NB.access = '<?php echo $access; ?>';
 
-
 			var note_obj = {};
 			for (var i = 0; i < divs.filter("div").length; i++) {
 				var ele;
@@ -277,16 +278,13 @@
 			}
 
 
-
-
-
 			if($note.hasClass('topic') && nID === sID) {
 				type = 'source';
 			} else {
 				type = 'note';
 			}
 
-			if(NB.access === 'public') {
+			if(NB.access === '1') {
 				edit = false;
 				edit_ele = $('<button>').addClass('btn grp_none fake_btn');
 			} else {
@@ -371,25 +369,17 @@
 			})
 		}
 		*/
-		if ($('.note').length === 0) {
-			$('#fullpage').warning({
-				type: 'noresults',
-				lang: 'de'
-			});
-			$('body').on('click', function(){
-				window.location.href = NB.url;
-			})
-		}
+
 //	});
 
 	$(document).keyup(function(e) {
 		if(e.keyCode == 27) {
 				if($('.float_obj').is(':visible')) {
-					$('.float_obj').hide();
+					$(this).hide();
 					$('.viewer').css({'opacity': '1'});
 
 					if($('button.toggle_add').hasClass('toggle_delete')) {
-						$('button.toggle_add').toggleClass('toggle_delete');
+						$(this).toggleClass('toggle_delete');
 					}
 
 				}
@@ -397,22 +387,14 @@
 	});
 
 	$(window).load(function() {
-		getUrlVars();
-		var win_width = $(window).width();
-		if($('.wall').length !== 0) {
-			var wall = $('.wall');
+	//	getUrlVars();
 
-			var note_width = wall.find('.note').width() + 60;
-	//		console.log('note: ' + note_width + ' window: ' + win_width)
-			var num_col = Math.floor(win_width / note_width);
-			wall.css({
-				'-webkit-column-count': num_col,
-				'-moz-column-count': num_col,
-				'column-count': num_col,
-				'width': num_col * note_width
-			});
-	//		console.log(num_col);
-		}
+	//	console.log('window load: ' + NB.query);
+		$('.viewer').shownote(NB);
+
+
+
+
 		/*
 		if($('.desk').length !== 0) {
 			var panel_left = $('.left_side');
@@ -434,9 +416,9 @@
 		// set the numbers of wall columns
 		if($('.wall').length !== 0) {
 			var width = $(window).width();
-			var note_width = $('.wall').find('.note').width() + 60;
+			var note_width = $(this).find('.note').width() + 60;
 			var num_col = Math.floor(width / note_width);
-			$('.wall').css({
+			$(this).css({
 				'-webkit-column-count': num_col,
 				'-moz-column-count': num_col,
 				'column-count': num_col,
@@ -446,7 +428,7 @@
 
 	});
 
-	$.getScript(NB.url + '/core/bin/js/jquery.mousewheel.min.js', function() {
+	//$.getScript(NB.url + '/core/bin/js/jquery.mousewheel.min.js', function() {
 		/*
 		$('div.viewer').on('mousewheel', function (e, d) {
 			var viewer = $(this);
@@ -455,24 +437,8 @@
 			}
 		})
 		*/
-	});
-	/*
-	var url="http://localhost/nb/core/bin/php/get.note.php?id=3";
-	$.getJSON(url,function(json){
-// loop through the members here
-		$.each(json.notes,function(i,note){
-			$(".note")//.html($('<div>').addClass('note')
-				.append($('<h3>').html(note.title))
-				.append($('<p>').html(note.content))
-				.append($('<p>')
-					.append($('<a>').attr({href: '?type=note&part=category&id=' + note.category.id }).html(note.category.name))
-					.append($('<span>').html(' | '))
-					.append($('<a>').attr({href: '?type=note&part=project&id=' + note.project.id }).html(note.project.name))
-				);
-			//);
-		});
-	});
-	*/
+	//});
+
 
 
 	$('div.desk')
