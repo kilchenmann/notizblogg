@@ -26,12 +26,102 @@
 		}
 		return(string + ' ');
 	},
-		getTypeID = function(query) {
-			alert(query);
+		fileExists = function(media) {
+			var response = jQuery.ajax({
+				url: media,
+				type: 'HEAD',
+				async: false
+
+			}).status;
+
+			//return (response != "200") ? false : true;
+			return (response == "200");
+
+
+		},
+
+		dispMedia = function(localdata, media, title) {
+			if(media !== null && media !== '') {
+				var mediaFile = media.split('.');
+				console.log(media + ': ' + mediaFile);
+				var fileName = mediaFile[0];
+				var fileExt = mediaFile[1];
+				var path = undefined;
+				var show = undefined;
+				var exist = undefined;
+
+				switch(fileExt) {
+					case 'jpg':
+					case 'png':
+					case 'gif':
+					case 'jpeg':
+					case 'tif':
+					case 'tiff':
+						path = localdata.settings.media + '/pictures/';
+						if(fileExists(path + media)) {
+							show = '<img class=\'staticMedia\' src=\'' + path + media + '\' alt=\'' + fileName + '\' title=\'' + title + '\' />';
+						}
+						break;
+
+					case 'pdf':
+						path = localdata.settings.media + '/documents/';
+						if(fileExists(path + media)) {
+							show = '<p class=\'download\'>' + media + ' <a href=\'' + path + media + '\' title=\'Download \"' + title + '\" as pdf\'>Open</a></p>';
+						}
+						break;
+
+					case 'mp4':
+					case 'webm':
+						show = '<p class=\'warning\' >[The media type \'video\' is not implemented yet.]</p>';
+
+						break;
+
+
+					case 'mp3':
+					case 'wav':
+						show = '<p class=\'warning\' >[The media type \'audio\' is not implemented yet.]</p>';
+
+						break;
+
+					default:
+						show = '<p class=\'warning\' >[The media file with the extension \'' + fileExt + '\' is not supported in notizblogg!?</p>';
+				}
+
+			} else {
+				show = ''
+			}
+			return show;
+		},
+		activator = function(element){
+			$('div.media').css({'opacity': '0.8'});
+			element.toggleClass('active');
+			element.children('div.media').css({'opacity': '1'});
+			element.children('div.label').css({'opacity': '1'});
+			element.children('div.tools').css({'opacity': '1'});
+			var type = undefined,
+				typeID = undefined;
+			if(!element.attr('id')) {
+				// title element
+				type = 'title';
+				typeID = 0;
+			} else {
+				if(element.hasClass('topic')) {
+					type = 'source';
+				} else {
+					type = 'note';
+				}
+				typeID = element.attr('id');
+			}
+			//var activeNote = $('.active .tools button').attr('id');
+			var activeNote = {
+				type: type,
+				id: typeID
+			};
+			return(activeNote);
 		},
 
 		dispNote = function(ele, data, localdata) {
-			var media, latex, classNote, classLabel, label;
+			var note, media, text, latex, label, tools, classNote, classLabel;
 			if(data.id !== 0) {
 				if (data.biblio !== null) {
 					latex = '``' + data.comment + '\'\'';
@@ -45,23 +135,24 @@
 				}
 
 				if (data.public === '1') {
-					classLabel = 'label private'
-				} else {
 					classLabel = 'label'
+				} else {
+					classLabel = 'label private'
 				}
 
 				ele.append(
-					$('<div>').addClass(classNote).attr({'id': data.id})
+					note = $('<div>').addClass(classNote).attr({'id': data.id})
 						.append(
-						$('<div>').addClass('media')
+						media = $('<div>').addClass('media')
 					)
 						.append(
-						$('<div>').addClass('text')
+						text = $('<div>').addClass('text')
 							.append($('<h3>').html(data.title))
+							.append($('<h5>').html(data.subtitle))
 							.append($('<p>').html(data.comment))
 					)
 						.append(
-						$('<div>').addClass('latex')
+						latex = $('<div>').addClass('latex')
 							.append($('<h3>').html(data.title))
 							.append($('<p>').html(latex))
 					)
@@ -69,15 +160,145 @@
 						label = $('<div>').addClass(classLabel)
 					)
 						.append(
-						$('<div>').addClass('tool')
+						tools = $('<div>').addClass('tools')
 					)
 				);
+				// media ele
+				media.html(dispMedia(localdata, data.media, data.title));
 
+				// label ele
 				$.each(data.label, function (i, noteLabel) {
 					label.append(
 						$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name}).html(' ' + noteLabel.name)
 					)
-				})
+				});
+				tools.each(function() {
+					var $tools = $(this),
+						$note = $tools.parent($('.note')),
+						nID = $note.attr('id'),
+						sID = $tools.attr('id'),
+						edit_ele,
+						tex_ele,
+						exp_ele,
+						type,
+						divs = $note.contents(),
+						edit;
+					localdata.settings.access = '<?php echo $access; ?>';
+
+					var note_obj = {};
+					for (var i = 0; i < divs.filter("div").length; i++) {
+						var ele;
+						switch(i) {
+							case 0:
+								ele = 'media';
+								break;
+							case 1:
+								ele = 'text';
+								break;
+							case 2:
+								ele = 'latex';
+								break;
+							case 3:
+								ele = 'label';
+								break;
+							case 4:
+								ele = 'tools';
+								break;
+							default:
+								ele = 'empty';
+						}
+						note_obj[ele] = divs[i].innerHTML;
+					}
+
+
+					if(note.hasClass('topic') && nID === sID) {
+						type = 'source';
+					} else {
+						type = 'note';
+					}
+
+					if(localdata.settings.access === '1') {
+						edit = false;
+						edit_ele = $('<button>').addClass('btn grp_none fake_btn');
+					} else {
+						edit = true;
+						edit_ele = $('<button>').addClass('btn grp_none toggle_edit').expand({
+							type: type,
+							noteID: nID,
+							sourceID: sID,
+							edit: edit,
+							data: note_obj,
+							show: 'form'
+						});
+
+					}
+
+					if($note.children('.latex').length > 0) {
+						tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function() {
+							$(this).toggleClass('toggle_comment');
+							$note.children('.text').toggle();
+							$note.children('.latex').toggle();
+						});
+						exp_ele = $('<button>').addClass('btn grp_none toggle_expand').expand({
+							type: type,
+							noteID: nID,
+							sourceID: sID,
+							edit: edit,
+							data: note_obj,
+							show: 'booklet'
+						});
+					} else {
+						tex_ele = $('<button>').addClass('btn grp_none fake_btn');
+						exp_ele = $('<button>').addClass('btn grp_none fake_btn');
+					}
+
+					$tools
+						.append(
+						$('<div>').addClass('left').append(edit_ele).click(function() {
+							if(jQuery.inArray('text', divs)) {
+								//console.log(note_obj);
+
+							}
+						})
+					)
+						.append(
+						$('<div>').addClass('center').append(tex_ele)
+					)
+						.append(
+						$('<div>').addClass('right').append(exp_ele)
+					);
+
+					//		console.log(note_obj);
+
+				});
+
+				var active = {};
+				$('div.note')
+					.mouseenter(function () {
+						active = activator($(this));
+					})
+					.on('touchstart', function(){
+						active = activator($(this));
+					})
+
+					.hover(function() {
+						/*
+						 if($(this).hasClass('active')) {
+
+						 }
+						 */
+					})
+
+					.mouseleave(function() {
+						$(this).toggleClass('active');
+						$(this).children('div.media').css({'opacity': '0.8'});
+						$(this).children('div.label').css({'opacity': '0.8'});
+						$(this).children('div.tools').css({'opacity': '0.1'});
+					})
+					.on('touchend', function(){
+
+					});
+
 			} else {
 				$('#fullpage').warning({
 					type: 'noresults',
@@ -280,6 +501,7 @@
 					access: 1,
 					url: 'https://www.notizblogg.ch',
 					uri: undefined,
+					media: undefined,
 					user: {
 						id: undefined,
 						name: undefined
@@ -419,6 +641,10 @@
 				} else {
 
 				}
+
+
+
+
 
 			});											// end "return this.each"
 		},												// end "init"

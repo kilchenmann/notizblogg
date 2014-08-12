@@ -166,14 +166,12 @@ NB.user = {
 };
 NB.url = '<?php echo __SITE_URL__; ?>';
 NB.uri = NB.url + '/' +(location.search).substr(1);
+NB.media = '<?php echo __MEDIA_URL__; ?>';
 
 NB.query = {
 	type: '<?php echo $type; ?>',
 	id: '<?php echo $query; ?>'
 };
-
-
-
 
 //NB.query = getUrlVars();
 
@@ -186,11 +184,6 @@ NB.query = {
 //console.log(NB.query);
 
 //console.log((location.search).substr(1));
-
-
-
-
-
 
 //	$(document).ready(function () {
 
@@ -240,107 +233,6 @@ NB.query = {
 			}
 		});
 
-		$('.note .tools').each(function() {
-			var $tools = $(this),
-				$note = $tools.parent($('.note')),
-				nID = $note.attr('id'),
-				sID = $tools.attr('id'),
-				edit_ele,
-				tex_ele,
-				exp_ele,
-				type,
-				divs = $note.contents();
-				NB.access = '<?php echo $access; ?>';
-
-			var note_obj = {};
-			for (var i = 0; i < divs.filter("div").length; i++) {
-				var ele;
-				switch(i) {
-					case 0:
-						ele = 'media';
-						break;
-					case 1:
-						ele = 'text';
-						break;
-					case 2:
-						ele = 'latex';
-						break;
-					case 3:
-						ele = 'label';
-						break;
-					case 4:
-						ele = 'tools';
-						break;
-					default:
-						ele = 'empty';
-				}
-				note_obj[ele] = divs[i].innerHTML;
-			}
-
-
-			if($note.hasClass('topic') && nID === sID) {
-				type = 'source';
-			} else {
-				type = 'note';
-			}
-
-			if(NB.access === '1') {
-				edit = false;
-				edit_ele = $('<button>').addClass('btn grp_none fake_btn');
-			} else {
-				edit = true;
-				edit_ele = $('<button>').addClass('btn grp_none toggle_edit').expand({
-					type: type,
-					noteID: nID,
-					sourceID: sID,
-					edit: edit,
-					data: note_obj,
-					show: 'form'
-				});
-
-			}
-
-			if($note.children('.latex').length > 0) {
-				tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function() {
-					$(this).toggleClass('toggle_comment');
-					$note.children('.text').toggle();
-					$note.children('.latex').toggle();
-				});
-				exp_ele = $('<button>').addClass('btn grp_none toggle_expand').expand({
-					type: type,
-					noteID: nID,
-					sourceID: sID,
-					edit: edit,
-					data: note_obj,
-					show: 'booklet'
-				});
-			} else {
-				tex_ele = $('<button>').addClass('btn grp_none fake_btn');
-				exp_ele = $('<button>').addClass('btn grp_none fake_btn');
-			}
-
-			$tools
-				.append(
-				$('<div>').addClass('left').append(edit_ele).click(function() {
-					if(jQuery.inArray('text', divs)) {
-						//console.log(note_obj);
-
-					}
-				})
-			)
-				.append(
-				$('<div>').addClass('center').append(tex_ele)
-			)
-				.append(
-				$('<div>').addClass('right').append(exp_ele)
-			);
-
-	//		console.log(note_obj);
-
-		});
-
-
-
 		var height = $(window).height() - $('header').height() - $('footer').height();
 		$('div.viewer').css({'height': height});
 		$('.float_obj').center();
@@ -387,13 +279,7 @@ NB.query = {
 	});
 
 	$(window).load(function() {
-	//	getUrlVars();
-
-	//	console.log('window load: ' + NB.query);
 		$('.viewer').shownote(NB);
-
-
-
 
 		/*
 		if($('.desk').length !== 0) {
@@ -407,7 +293,6 @@ NB.query = {
 			}
 		}
 		*/
-
 	});
 	$(window).resize(function() {
 		var height = $(window).height() - $('header').height() - $('footer').height();
@@ -453,32 +338,7 @@ NB.query = {
 //			$('.note').toggleClass('active');
 //			$('.note').children('div').css({'background-color': ''});
 	});
-	var active = {};
-	$('div.note')
-		.mouseenter(function () {
-			active = activator($(this));
-		})
-		.on('touchstart', function(){
-			active = activator($(this));
-		})
 
-		.hover(function() {
-/*
-			if($(this).hasClass('active')) {
-
-			}
-*/
-		})
-
-		.mouseleave(function() {
-			$(this).toggleClass('active');
-			$(this).children('div.media').css({'opacity': '0.8'});
-			$(this).children('div.label').css({'opacity': '0.8'});
-			$(this).children('div.tools').css({'opacity': '0.1'});
-		})
-		.on('touchend', function(){
-
-		});
 /*
 	$('div.tools button').hover(function(){
 			// first function is for the mouseover/mouseenter events
@@ -491,53 +351,7 @@ NB.query = {
 */
 
 
-	var activator = function(element){
-		$('div.media').css({'opacity': '0.8'});
-		element.toggleClass('active');
-		element.children('div.media').css({'opacity': '1'});
-		element.children('div.label').css({'opacity': '1'});
-		element.children('div.tools').css({'opacity': '1'});
-		var type = undefined,
-			typeID = undefined;
-		if(!element.attr('id')) {
-			// title element
-			type = 'title';
-			typeID = 0;
-		} else {
-			if(element.hasClass('topic')) {
-				type = 'source';
-			} else {
-				type = 'note';
-			}
-			typeID = element.attr('id');
-		}
-		//var activeNote = $('.active .tools button').attr('id');
-		var activeNote = {
-			type: type,
-			id: typeID
-		};
 
-		var edit_btn;
-/*
-		if ($('div.tools').find('button.toggle_edit').length) {
-			$('button.toggle_edit').click( function() {
-				$('header').expand('form', activeNote.type, activeNote.id, $('#fullpage'));
-			});
-		} else {
-			edit_btn = false;
-		}
-*/
-
-/*
-
-		$('button.toggle_expand').click( function() {
-			var source = $(this).attr('id');
-			$('header').expand('booklet', activeNote.type, activeNote.id, source, $('#fullpage'), edit_btn);
-		});
-*/
-		return(activeNote);
-
-	};
 
 
 	if($('.desk').length !== 0) {
