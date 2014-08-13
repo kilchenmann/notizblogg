@@ -18,26 +18,21 @@
 	// -----------------------------------------------------------------------
 
 	var getLastChar = function(string){
-
 		var lastChar = string.substr(string.length - 1);
-
 		if((lastChar !== '?') && (lastChar !== '!')) {
 			string +=  '.';
 		}
 		return(string + ' ');
 	},
+
 		fileExists = function(media) {
 			var response = jQuery.ajax({
 				url: media,
 				type: 'HEAD',
 				async: false
-
 			}).status;
-
 			//return (response != "200") ? false : true;
 			return (response == "200");
-
-
 		},
 
 		dispMedia = function(localdata, media, title) {
@@ -73,20 +68,16 @@
 					case 'mp4':
 					case 'webm':
 						show = '<p class=\'warning\' >[The media type \'video\' is not implemented yet.]</p>';
-
 						break;
-
 
 					case 'mp3':
 					case 'wav':
 						show = '<p class=\'warning\' >[The media type \'audio\' is not implemented yet.]</p>';
-
 						break;
 
 					default:
 						show = '<p class=\'warning\' >[The media file with the extension \'' + fileExt + '\' is not supported in notizblogg!?</p>';
 				}
-
 			} else {
 				show = ''
 			}
@@ -357,7 +348,6 @@
 					bibtex += 'subtitle = {' + data.subtitle + '},<br>';
 					biblio += getLastChar(data.subtitle);
 				}
-
 
 				if ('crossref' in data) {
 					var crossAuthors = '';
