@@ -16,7 +16,6 @@
 	// -----------------------------------------------------------------------
 	// define some functions
 	// -----------------------------------------------------------------------
-
 	var getLastChar = function(string){
 		var lastChar = string.substr(string.length - 1);
 		if((lastChar !== '?') && (lastChar !== '!')) {
@@ -24,7 +23,6 @@
 		}
 		return(string + ' ');
 	},
-
 		fileExists = function(media) {
 			var response = jQuery.ajax({
 				url: media,
@@ -34,11 +32,10 @@
 			//return (response != "200") ? false : true;
 			return (response == "200");
 		},
-
 		dispMedia = function(localdata, media, title) {
 			if(media !== null && media !== '') {
 				var mediaFile = media.split('.');
-				console.log(media + ': ' + mediaFile);
+			//	console.log(media + ': ' + mediaFile);
 				var fileName = mediaFile[0];
 				var fileExt = mediaFile[1];
 				var path = undefined;
@@ -121,8 +118,10 @@
 				}
 				if (data.type === 'source') {
 					classNote = 'note topic';
+
 				} else {
 					classNote = 'note item';
+					latex = '``' + data.comment + '\'\'';
 				}
 
 				if (data.public === '1') {
@@ -568,10 +567,7 @@
 									localdata.view.wall.append(localdata.view.source.biblio);
 //									})
 								})
-
 							});
-
-
 						});
 						break;
 
@@ -580,7 +576,18 @@
 						break;
 
 					default:
-
+						url= localdata.settings.url + '/list/new/25';
+						$.getJSON(url, function(list) {
+							$.each(list.notes,function(i,noteID){
+								url= localdata.settings.url + '/get/' + noteID;
+								$.getJSON(url, function(data) {
+//									$.each(data, function (i, note) {
+									localdata.view.note = dispNote(localdata.view.wall, data, localdata);
+									localdata.view.wall.append(localdata.view.source.biblio);
+//									})
+								})
+							});
+						});
 				}
 
 
@@ -657,7 +664,7 @@
 						'column-count': num_col,
 						'width': num_col * note_width
 					});
-							console.log(num_col);
+					//		console.log(num_col);
 			//	}
 
 			});

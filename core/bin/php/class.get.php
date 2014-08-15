@@ -19,13 +19,6 @@ class get {
 
 	function getData()
 	{
-		/* -!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!- */
-		/* BAD HACK !! BAD HACK !! BAD HACK !! BAD HACK !! BAD HACK !! BAD HACK !! */
-		/* -!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!- */
-		//$this->access = 0;
-		/* -!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!- */
-		/* -!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!-!- */
-
 		$bibInfo = NULL;
 		$type = 'note';
 		$sn_name = 'source2note';
@@ -260,6 +253,8 @@ $source['sources'] = $sources;
 
 	}
 
+	// for search query: search in e.g. author and list the author data with the listData and the ids from the sql request
+
 	function listData() {
 		$typeName = '';
 		// get the name of the author, the label or etc.
@@ -281,6 +276,16 @@ $source['sources'] = $sources;
 					$typeName = $row->author;
 				}
 				$notes = getNote2Author($this->id);
+				break;
+			case 'new';
+				condb('open');
+				$sql = mysql_query('SELECT noteID FROM note ORDER BY dateCreated DESC LIMIT 0, ' . $this->id . ';');
+				condb('close');
+				$notes = array();
+				$typeName = 'newest';
+				while($row = mysql_fetch_object($sql)) {
+					array_push($notes, $row->noteID);
+				}
 				break;
 
 			default;

@@ -5,6 +5,7 @@
  * Date: 01.07.14
  * Time: 23:23
  */
+header('Content-Type: application/json');
 
  // access public: true = 1
  // access !public = private = 0
@@ -18,21 +19,18 @@ require '../core/bin/php/setting.php';
 
 // check the access
 if (isset ($_SESSION["token"])) {
-	condb('open');
 	$token = (explode("-",$_SESSION["token"]));
+	condb('open');
 	$sql = mysql_query("SELECT user FROM user WHERE userID = " . $token[1] . " AND token = '" . $token[0] . "';");
-	while($row = mysql_fetch_object($sql)){
-		$user = $row->user;
-	}
 	condb('close');
-	if($user != '') {
+	$num_results = mysql_num_rows($sql);
+	if($num_results == 1) {
 		$access = 0;		// public access is false -> private access
 		$uid = $token[1];
 	}
 }
 
 if (isset($_GET['id'])) {
-	//echo 'The ID is: ' . $_GET['id'];
 	$note = NEW get();
 	$note->id = $_GET['id'];
 	$note->access = $access;

@@ -15,6 +15,7 @@ RewriteRule ^post/([0-9]+)$ /nb/api/post.php?id=$1
 
 RewriteRule ^list/label/([0-9]+)$ /nb/api/list.php?label=$1
 RewriteRule ^list/author/([0-9]+)$ /nb/api/list.php?author=$1
+RewriteRule ^list/new/([0-9]+)$ /nb/api/list.php?new=$1
 
 
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --

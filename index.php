@@ -62,14 +62,18 @@
 		<a href='http://notizblogg.ch'>Notizblogg</a> |
 		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">der digitale Zettelkasten von André Kilchenmann</a>
 	</h1>
-	<div class="left"><span class="project"><a href='<?php echo __SITE_URL__; ?>/'><h2 class="logo">Notizblogg</h2></a></span></div>
-	<div class="center"><span class="search"></span></div>
+	<div class="left">
+		<span class="project"></span>
+	</div>
+	<div class="center">
+		<span class="search"></span>
+	</div>
 	<div class="right">
 		<span class="add"></span>
 		<span class="user"></span>
-		<span class="drawer"></span>
-	<!-- <span class="menu"></span> -->
 	</div>
+	<!-- <span class="drawer"></span> -->
+	<!-- <span class="menu"></span> -->
 </header>
 <div class="float_obj medium warning"></div>
 <div class="float_obj large pamphlet"></div>
@@ -198,6 +202,10 @@ NB.query = {
 				});
 				$.getScript(NB.url + '/core/bin/js/jquery.finder.js', function() {
 					/* integrate the search bar in the header panel */
+					$('.project').append($('<a>').attr({href: NB.url}).append($('<h2>').text('Notizblogg')).addClass('logo'));
+
+
+
 					$('.search').finder({
 						search: 'Suche',
 						filter: 'Erweiterte Suche',
