@@ -10,6 +10,8 @@ class get {
 	var $id;	// id number
 	var $access;	// do you have the rights to see notes and sources?
 	var $type;
+	var $part;
+	var $query;
 	var $json;
 
 	function get() {
@@ -320,6 +322,17 @@ $source['sources'] = $sources;
 	}
 
 
+	function searchData()
+	{
+		$query = array(
+			'query' => $this->query,
+			'filter' => $this->part
+		);
+
+		$this->json = json_encode($query);
+
+		return $this->json;
+	}
 
 
 

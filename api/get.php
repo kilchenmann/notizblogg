@@ -30,11 +30,72 @@ if (isset ($_SESSION["token"])) {
 	}
 }
 
+
+foreach ($_GET as $key => $value){
+	switch ($key) {
+		/* change the first two ones */
+		case 'note';
+			$note = NEW get();
+			$note->id = $_GET['note'];
+			$note->access = $access;
+			echo $note->getData();
+			break;
+
+		case 'source';
+			$note = NEW get();
+			$note->id = $_GET['source'];
+			$note->access = $access;
+			echo $note->getData();
+			break;
+		/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
+
+		case 'label';
+			$note = NEW get();
+			$note->id = $_GET['label'];
+			$note->type = 'label';
+			echo $note->listData();
+			break;
+
+		case 'author';
+			$note = NEW get();
+			$note->id = $_GET['author'];
+			$note->type = 'author';
+			echo $note->listData();
+			break;
+
+		case 'new';
+			$note = NEW get();
+			$note->id = $_GET['new'];
+			$note->type = 'new';
+			echo $note->listData();
+			break;
+
+		case 'q';
+			$part = '';
+			if (isset($_GET['part'])) {
+				$part = $_GET['part'];
+			}
+			$note = NEW get();
+			$note->query = $_GET['q'];
+			$note->part = $part;
+			echo $note->searchData();
+			break;
+
+		case 'id';
+			$note = NEW get();
+			$note->id = $_GET['id'];
+			$note->access = $access;
+			echo $note->getData();
+			break;
+
+		default;
+
+	}
+}
+
+
 if (isset($_GET['id'])) {
-	$note = NEW get();
-	$note->id = $_GET['id'];
-	$note->access = $access;
-	echo $note->getData();
+
 }
 
 
