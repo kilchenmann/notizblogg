@@ -64,6 +64,9 @@ foreach ($_GET as $key => $value){
 			break;
 
 		case 'new';
+			// the number behind the query 'new' is to limit to numbers of notes
+			// on the public site: get just the sources, order by dateCreated
+			// on the private site: get all newest notes
 			$note = NEW get();
 			$note->id = $_GET['new'];
 			$note->type = 'new';

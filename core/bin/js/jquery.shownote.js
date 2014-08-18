@@ -12,18 +12,45 @@
  * ===========================================================================
  * ======================================================================== */
 
-(function( $ ){
+(function ($) {
 	// -----------------------------------------------------------------------
 	// define some functions
 	// -----------------------------------------------------------------------
-	var getLastChar = function(string){
-		var lastChar = string.substr(string.length - 1);
-		if((lastChar !== '?') && (lastChar !== '!')) {
-			string +=  '.';
-		}
-		return(string + ' ');
-	},
-		fileExists = function(media) {
+	var getLastChar = function (string) {
+			var lastChar = string.substr(string.length - 1);
+			if ((lastChar !== '?') && (lastChar !== '!')) {
+				string += '.';
+			}
+			return(string + ' ');
+		},
+		activator = function (element) {
+			$('div.media').css({'opacity': '0.8'});
+			element.toggleClass('active');
+			element.children('div.media').css({'opacity': '1'});
+			element.children('div.label').css({'opacity': '1'});
+			element.children('div.tools').css({'opacity': '1'});
+			var type = undefined,
+				typeID = undefined;
+			if (!element.attr('id')) {
+				// title element
+				type = 'title';
+				typeID = 0;
+			} else {
+				if (element.hasClass('topic')) {
+					type = 'source';
+				} else {
+					type = 'note';
+				}
+				typeID = element.attr('id');
+			}
+			//var activeNote = $('.active .tools button').attr('id');
+			var activeNote = {
+				type: type,
+				id: typeID
+			};
+			return(activeNote);
+		},
+		fileExists = function (media) {
 			var response = jQuery.ajax({
 				url: media,
 				type: 'HEAD',
@@ -32,17 +59,17 @@
 			//return (response != "200") ? false : true;
 			return (response == "200");
 		},
-		dispMedia = function(localdata, media, title) {
-			if(media !== null && media !== '') {
+		dispMedia = function (localdata, media, title) {
+			if (media !== null && media !== '') {
 				var mediaFile = media.split('.');
-			//	console.log(media + ': ' + mediaFile);
+				//	console.log(media + ': ' + mediaFile);
 				var fileName = mediaFile[0];
 				var fileExt = mediaFile[1];
 				var path = undefined;
 				var show = undefined;
 				var exist = undefined;
 
-				switch(fileExt) {
+				switch (fileExt) {
 					case 'jpg':
 					case 'png':
 					case 'gif':
@@ -50,14 +77,14 @@
 					case 'tif':
 					case 'tiff':
 						path = localdata.settings.media + '/pictures/';
-						if(fileExists(path + media)) {
+						if (fileExists(path + media)) {
 							show = '<img class=\'staticMedia\' src=\'' + path + media + '\' alt=\'' + fileName + '\' title=\'' + title + '\' />';
 						}
 						break;
 
 					case 'pdf':
 						path = localdata.settings.media + '/documents/';
-						if(fileExists(path + media)) {
+						if (fileExists(path + media)) {
 							show = '<p class=\'download\'>' + media + ' <a href=\'' + path + media + '\' title=\'Download \"' + title + '\" as pdf\'>Open</a></p>';
 						}
 						break;
@@ -80,37 +107,9 @@
 			}
 			return show;
 		},
-		activator = function(element){
-			$('div.media').css({'opacity': '0.8'});
-			element.toggleClass('active');
-			element.children('div.media').css({'opacity': '1'});
-			element.children('div.label').css({'opacity': '1'});
-			element.children('div.tools').css({'opacity': '1'});
-			var type = undefined,
-				typeID = undefined;
-			if(!element.attr('id')) {
-				// title element
-				type = 'title';
-				typeID = 0;
-			} else {
-				if(element.hasClass('topic')) {
-					type = 'source';
-				} else {
-					type = 'note';
-				}
-				typeID = element.attr('id');
-			}
-			//var activeNote = $('.active .tools button').attr('id');
-			var activeNote = {
-				type: type,
-				id: typeID
-			};
-			return(activeNote);
-		},
-
-		dispNote = function(ele, data, localdata) {
+		dispNote = function (ele, data, localdata) {
 			var note, media, text, latex, label, tools, classNote, classLabel;
-			if(data.id !== 0) {
+			if (data.id !== 0) {
 				if (data.biblio !== null) {
 					latex = '``' + data.comment + '\'\'';
 				} else {
@@ -147,7 +146,10 @@
 							.append($('<p>').html(latex))
 					)
 						.append(
-						label = $('<div>').addClass(classLabel)
+						$('<div>').addClass(classLabel)
+							.append(
+							label = $('<p>')
+						)
 					)
 						.append(
 						tools = $('<div>').addClass('tools')
@@ -162,7 +164,7 @@
 						$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name}).html(' ' + noteLabel.name)
 					)
 				});
-				tools.each(function() {
+				tools.each(function () {
 					var $tools = $(this),
 						$note = $tools.parent($('.note')),
 						nID = $note.attr('id'),
@@ -178,7 +180,7 @@
 					var note_obj = {};
 					for (var i = 0; i < divs.filter("div").length; i++) {
 						var ele;
-						switch(i) {
+						switch (i) {
 							case 0:
 								ele = 'media';
 								break;
@@ -201,13 +203,13 @@
 					}
 
 
-					if(note.hasClass('topic') && nID === sID) {
+					if (note.hasClass('topic') && nID === sID) {
 						type = 'source';
 					} else {
 						type = 'note';
 					}
 
-					if(localdata.settings.access === '1') {
+					if (localdata.settings.access === '1') {
 						edit = false;
 						edit_ele = $('<button>').addClass('btn grp_none fake_btn');
 					} else {
@@ -223,8 +225,8 @@
 
 					}
 
-					if($note.children('.latex').length > 0) {
-						tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function() {
+					if ($note.children('.latex').length > 0) {
+						tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function () {
 							$(this).toggleClass('toggle_comment');
 							$note.children('.text').toggle();
 							$note.children('.latex').toggle();
@@ -244,8 +246,8 @@
 
 					$tools
 						.append(
-						$('<div>').addClass('left').append(edit_ele).click(function() {
-							if(jQuery.inArray('text', divs)) {
+						$('<div>').addClass('left').append(edit_ele).click(function () {
+							if (jQuery.inArray('text', divs)) {
 								//console.log(note_obj);
 
 							}
@@ -267,11 +269,11 @@
 					.mouseenter(function () {
 						active = activator($(this));
 					})
-					.on('touchstart', function(){
+					.on('touchstart', function () {
 						active = activator($(this));
 					})
 
-					.hover(function() {
+					.hover(function () {
 						/*
 						 if($(this).hasClass('active')) {
 
@@ -279,13 +281,13 @@
 						 */
 					})
 
-					.mouseleave(function() {
+					.mouseleave(function () {
 						$(this).toggleClass('active');
 						$(this).children('div.media').css({'opacity': '0.8'});
 						$(this).children('div.label').css({'opacity': '0.8'});
 						$(this).children('div.tools').css({'opacity': '0.1'});
 					})
-					.on('touchend', function(){
+					.on('touchend', function () {
 
 					});
 
@@ -294,13 +296,13 @@
 					type: 'noresults',
 					lang: 'de'
 				});
-				$('body').on('click', function(){
+				$('body').on('click', function () {
 					window.location.href = localdata.settings.url;
 				})
 			}
 		},
 
-		dispBib = function(ele, data, localdata) {
+		dispBib = function (ele, data, localdata) {
 			var authors, locations, bibtex, biblio, i;
 
 			if (data.biblio.bibTyp.id !== '0') {
@@ -411,7 +413,7 @@
 					}
 				}
 
-				if('detail' in data) {
+				if ('detail' in data) {
 
 					var detailKey, countDetail = Object.keys(data.detail).length;
 					i = 0;
@@ -429,8 +431,8 @@
 								break;
 
 							case 'pages':
-								bibtex +=  'pages = {' + data.detail.pages + '},<br>';
-								biblio +=  ', S. ' + data.detail.pages;
+								bibtex += 'pages = {' + data.detail.pages + '},<br>';
+								biblio += ', S. ' + data.detail.pages;
 								break;
 
 							default:
@@ -457,21 +459,18 @@
 
 // php to js
 
-/*
-		 if(array_key_exists('detail', data)) {
+	/*
+	 if(array_key_exists('detail', data)) {
 
-		 }
-
-
-		 return array(bibtex,biblio);
+	 }
 
 
-
-
-		 */
+	 return array(bibtex,biblio);
 
 
 
+
+	 */
 
 
 	// -----------------------------------------------------------------------
@@ -479,9 +478,9 @@
 	// -----------------------------------------------------------------------
 
 	var methods = {
-	/*====================================================================== */
-		init: function(options) {
-			return this.each(function() {
+		/*====================================================================== */
+		init: function (options) {
+			return this.each(function () {
 				var $this = $(this),
 					localdata = {},
 					url;
@@ -512,24 +511,24 @@
 
 				// which data do we need?
 				// 'api/get/[id]' brings all notes and sources with the [id]
-				// 'api/list/label/[id]' brings a list of noteIDs with the label [id]
-				// 'api/list/author([id]' brings a list of noteIDs with the author [id]
+				// 'api/get/label/[id]' brings a list of noteIDs with the label [id]
+				// 'api/get/author([id]' brings a list of noteIDs with the author [id]
 
 
-				switch(localdata.settings.query.type) {
+				switch (localdata.settings.query.type) {
 					case 'note':
-						url= localdata.settings.url + '/get/' + localdata.settings.query.id;
-						$.getJSON(url, function(data) {
+						url = localdata.settings.url + '/get/' + localdata.settings.query.id;
+						$.getJSON(url, function (data) {
 //							$.each(data,function(i,note){
-								dispNote(localdata.view.wall, data, localdata);
+							dispNote(localdata.view.wall, data, localdata);
 
 //							})
 
 						});
 						break;
 					case 'source':
-						url= localdata.settings.url + '/get/' + localdata.settings.query.id;
-						$.getJSON(url, function(data) {
+						url = localdata.settings.url + '/get/' + localdata.settings.query.id;
+						$.getJSON(url, function (data) {
 //							$.each(data,function(i,note){
 							localdata.view.source = dispBib(localdata.view.wall, data, localdata);
 							localdata.view.wall.append(localdata.view.source.biblio);
@@ -540,13 +539,13 @@
 						break;
 
 					case 'label':
-						url= localdata.settings.url + '/list/' + localdata.settings.query.type + '/' + localdata.settings.query.id;
-						$.getJSON(url, function(list) {
-							$.each(list.notes,function(i,noteID){
-								url= localdata.settings.url + '/get/' + noteID;
-								$.getJSON(url, function(data) {
+						url = localdata.settings.url + '/get/' + localdata.settings.query.type + '/' + localdata.settings.query.id;
+						$.getJSON(url, function (list) {
+							$.each(list.notes, function (i, noteID) {
+								url = localdata.settings.url + '/get/' + noteID;
+								$.getJSON(url, function (data) {
 //									$.each(data, function (i, note) {
-										dispNote(localdata.view.wall, data, localdata);
+									dispNote(localdata.view.wall, data, localdata);
 
 //									})
 								})
@@ -557,13 +556,13 @@
 						break;
 
 					case 'author':
-						url= localdata.settings.url + '/list/' + localdata.settings.query.type + '/' + localdata.settings.query.id;
-						$.getJSON(url, function(list) {
-							$.each(list.notes,function(i,noteID){
-								url= localdata.settings.url + '/get/' + noteID;
-								$.getJSON(url, function(data) {
+						url = localdata.settings.url + '/get/' + localdata.settings.query.type + '/' + localdata.settings.query.id;
+						$.getJSON(url, function (list) {
+							$.each(list.source, function (i, bibID) {
+								url = localdata.settings.url + '/get/source/' + bibID;
+								$.getJSON(url, function (data) {
 //									$.each(data, function (i, note) {
-										localdata.view.source = dispBib(localdata.view.wall, data, localdata);
+									localdata.view.source = dispBib(localdata.view.wall, data, localdata);
 									localdata.view.wall.append(localdata.view.source.biblio);
 //									})
 								})
@@ -576,11 +575,11 @@
 						break;
 
 					default:
-						url= localdata.settings.url + '/list/new/25';
-						$.getJSON(url, function(list) {
-							$.each(list.notes,function(i,noteID){
-								url= localdata.settings.url + '/get/' + noteID;
-								$.getJSON(url, function(data) {
+						url = localdata.settings.url + '/get/new/25';
+						$.getJSON(url, function (list) {
+							$.each(list.notes, function (i, noteID) {
+								url = localdata.settings.url + '/get/' + noteID;
+								$.getJSON(url, function (data) {
 //									$.each(data, function (i, note) {
 									localdata.view.note = dispNote(localdata.view.wall, data, localdata);
 									localdata.view.wall.append(localdata.view.source.biblio);
@@ -591,39 +590,35 @@
 				}
 
 
-						/*
-						 $(".note")//.html($('<div>').addClass('note')
-						 .append($('<h3>').html(note.title))
-						 .append($('<p>').html(note.content))
-						 .append($('<p>')
-						 .append($('<a>').attr({href: '?type=note&part=category&id=' + note.category.id }).html(note.category.name))
-						 .append($('<span>').html(' | '))
-						 .append($('<a>').attr({href: '?type=note&part=project&id=' + note.project.id }).html(note.project.name))
-						 );
-						 //);
-						 */
-
-
-
+				/*
+				 $(".note")//.html($('<div>').addClass('note')
+				 .append($('<h3>').html(note.title))
+				 .append($('<p>').html(note.content))
+				 .append($('<p>')
+				 .append($('<a>').attr({href: '?type=note&part=category&id=' + note.category.id }).html(note.category.name))
+				 .append($('<span>').html(' | '))
+				 .append($('<a>').attr({href: '?type=note&part=project&id=' + note.project.id }).html(note.project.name))
+				 );
+				 //);
+				 */
 
 
 // warning if no note exist
-/*
-				if ($('.note').length === 0) {
-					$('#fullpage').warning({
-						type: 'noresults',
-						lang: 'de'
-					});
-					$('body').on('click', function(){
-						window.location.href = localdata.settings.url;
-					})
-				}
-*/
+				/*
+				 if ($('.note').length === 0) {
+				 $('#fullpage').warning({
+				 type: 'noresults',
+				 lang: 'de'
+				 });
+				 $('body').on('click', function(){
+				 window.location.href = localdata.settings.url;
+				 })
+				 }
+				 */
 
 
-
-				if(localdata.settings.type === 'source'){
-					$.getJSON('get/' + localdata.settings.type + '/' + localdata.settings.id, function(data) {
+				if (localdata.settings.type === 'source') {
+					$.getJSON('get/' + localdata.settings.type + '/' + localdata.settings.id, function (data) {
 						$this.empty();
 						$this.append(
 							$('<div>').addClass('text')
@@ -640,38 +635,34 @@
 				}
 
 
-
-
-
 			});											// end "return this.each"
 		},												// end "init"
 
 
-
-		setNote2Wall: function() {
-			return this.each(function(){
+		setNote2Wall: function () {
+			return this.each(function () {
 				var $this = $(this);
 				var localdata = $this.data('localdata');
 				var win_width = $(window).width();
-			//	if($('.wall').length !== 0) {
-					var wall = $(this);
-					var note_width = wall.find('.note').width() + 60;
-					//		console.log('note: ' + note_width + ' window: ' + win_width)
-					var num_col = Math.floor(win_width / note_width);
-					wall.css({
-						'-webkit-column-count': num_col,
-						'-moz-column-count': num_col,
-						'column-count': num_col,
-						'width': num_col * note_width
-					});
-					//		console.log(num_col);
-			//	}
+				//	if($('.wall').length !== 0) {
+				var wall = $(this);
+				var note_width = wall.find('.note').width() + 60;
+				//		console.log('note: ' + note_width + ' window: ' + win_width)
+				var num_col = Math.floor(win_width / note_width);
+				wall.css({
+					'-webkit-column-count': num_col,
+					'-moz-column-count': num_col,
+					'column-count': num_col,
+					'width': num_col * note_width
+				});
+				//		console.log(num_col);
+				//	}
 
 			});
 		},
 
-		anotherMethod: function() {
-			return this.each(function(){
+		anotherMethod: function () {
+			return this.each(function () {
 				var $this = $(this);
 				var localdata = $this.data('localdata');
 			});
@@ -680,15 +671,14 @@
 	};
 
 
-
-	$.fn.shownote = function(method) {
+	$.fn.shownote = function (method) {
 		// Method calling logic
-		if ( methods[method] ) {
-			return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-		} else if ( typeof method === 'object' || ! method ) {
-			return methods.init.apply( this, arguments );
+		if (methods[method]) {
+			return methods[ method ].apply(this, Array.prototype.slice.call(arguments, 1));
+		} else if (typeof method === 'object' || !method) {
+			return methods.init.apply(this, arguments);
 		} else {
 			throw 'Method ' + method + ' does not exist on jQuery.tooltip';
 		}
 	};
-})( jQuery );
+})(jQuery);
