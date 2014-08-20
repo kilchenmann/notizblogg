@@ -109,6 +109,31 @@
 		},
 		dispNote = function (ele, data, localdata) {
 			var note, media, text, latex, label, tools, classNote, classLabel;
+
+			$.each( data.note, function( key, value ) {
+				if(data.note.id !== null) {
+					if(data.note.source.id !== null) {
+
+					}
+
+
+
+				} else {
+					$('#fullpage').warning({
+						type: 'noresults',
+						lang: 'de'
+					});
+					$('body').on('click', function () {
+						window.location.href = localdata.settings.url;
+					})
+				}
+
+
+
+
+			});
+
+
 			if (data.id !== 0) {
 				if (data.biblio !== null) {
 					latex = '``' + data.comment + '\'\'';
@@ -517,7 +542,7 @@
 
 				switch (localdata.settings.query.type) {
 					case 'note':
-						url = localdata.settings.url + '/get/' + localdata.settings.query.id;
+						url = localdata.settings.url + '/get/note/' + localdata.settings.query.id;
 						$.getJSON(url, function (data) {
 //							$.each(data,function(i,note){
 							dispNote(localdata.view.wall, data, localdata);
@@ -527,7 +552,7 @@
 						});
 						break;
 					case 'source':
-						url = localdata.settings.url + '/get/' + localdata.settings.query.id;
+						url = localdata.settings.url + '/get/source/' + localdata.settings.query.id;
 						$.getJSON(url, function (data) {
 //							$.each(data,function(i,note){
 							localdata.view.source = dispBib(localdata.view.wall, data, localdata);

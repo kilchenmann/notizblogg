@@ -37,15 +37,17 @@ foreach ($_GET as $key => $value){
 		case 'note';
 			$note = NEW get();
 			$note->id = $_GET['note'];
+			$note->type = 'note';
 			$note->access = $access;
-			echo $note->getData();
+			echo $note->getNote();
 			break;
 
 		case 'source';
 			$note = NEW get();
 			$note->id = $_GET['source'];
+			$note->type = 'source';
 			$note->access = $access;
-			echo $note->getData();
+			echo $note->getSource();
 			break;
 		/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
 
