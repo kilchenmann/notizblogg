@@ -13,19 +13,15 @@
  * ======================================================================== */
 
 (function( $ ){
-	// -----------------------------------------------------------------------
-	// define some functions
-	// -----------------------------------------------------------------------
-
 	var getLastChar = function(string){
 
-		var lastChar = string.substr(string.length - 1);
+			var lastChar = string.substr(string.length - 1);
 
-		if((lastChar !== '?') && (lastChar !== '!')) {
-			string +=  '.';
-		}
-		return(string + ' ');
-	},
+			if((lastChar !== '?') && (lastChar !== '!')) {
+				string +=  '.';
+			}
+			return(string + ' ');
+		},
 		fileExists = function(media) {
 			var response = jQuery.ajax({
 				url: media,
@@ -464,6 +460,10 @@
 			});
 
 		};
+
+	// -----------------------------------------------------------------------
+	// define some functions
+	// -----------------------------------------------------------------------
 
 
 // php to js
