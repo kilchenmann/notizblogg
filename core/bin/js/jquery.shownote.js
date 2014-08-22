@@ -50,71 +50,21 @@
 			};
 			return(activeNote);
 		},
-		fileExists = function (media) {
-			var response = jQuery.ajax({
-				url: media,
-				type: 'HEAD',
-				async: false
-			}).status;
-			//return (response != "200") ? false : true;
-			return (response == "200");
-		},
-		dispMedia = function (localdata, media, title) {
-			if (media !== null && media !== '') {
-				var mediaFile = media.split('.');
-				//	console.log(media + ': ' + mediaFile);
-				var fileName = mediaFile[0];
-				var fileExt = mediaFile[1];
-				var path = undefined;
-				var show = undefined;
-				var exist = undefined;
 
-				switch (fileExt) {
-					case 'jpg':
-					case 'png':
-					case 'gif':
-					case 'jpeg':
-					case 'tif':
-					case 'tiff':
-						path = localdata.settings.media + '/pictures/';
-						if (fileExists(path + media)) {
-							show = '<img class=\'staticMedia\' src=\'' + path + media + '\' alt=\'' + fileName + '\' title=\'' + title + '\' />';
-						}
-						break;
-
-					case 'pdf':
-						path = localdata.settings.media + '/documents/';
-						if (fileExists(path + media)) {
-							show = '<p class=\'download\'>' + media + ' <a href=\'' + path + media + '\' title=\'Download \"' + title + '\" as pdf\'>Open</a></p>';
-						}
-						break;
-
-					case 'mp4':
-					case 'webm':
-						show = '<p class=\'warning\' >[The media type \'video\' is not implemented yet.]</p>';
-						break;
-
-					case 'mp3':
-					case 'wav':
-						show = '<p class=\'warning\' >[The media type \'audio\' is not implemented yet.]</p>';
-						break;
-
-					default:
-						show = '<p class=\'warning\' >[The media file with the extension \'' + fileExt + '\' is not supported in notizblogg!?</p>';
-				}
-			} else {
-				show = ''
-			}
-			return show;
-		},
 		dispNote = function (ele, data, localdata) {
-			var note, media, text, latex, label, tools, classNote, classLabel;
+			var note, media, text, latex, source, bibtex, label, tools, classNote, classLabel;
 
 			$.each( data.note, function( key, value ) {
+				console.log(key + ': ' + value);
 				if(data.note.id !== null) {
-					if(data.note.source.id !== null) {
+			//		console.log(data.note.comment);
 
-					}
+
+
+
+
+
+
 
 
 
@@ -134,9 +84,11 @@
 			});
 
 
-			if (data.id !== 0) {
-				if (data.biblio !== null) {
-					latex = '``' + data.comment + '\'\'';
+
+			if (data.note.id !== 0) {
+
+				if (data.note.biblio !== null) {
+					latex = data.note.comment4tex;
 				} else {
 					latex = '';
 				}
@@ -148,27 +100,28 @@
 					latex = '``' + data.comment + '\'\'';
 				}
 
-				if (data.public === '1') {
+				if (data.note.public === '1') {
 					classLabel = 'label'
 				} else {
 					classLabel = 'label private'
 				}
 
 				ele.append(
-					note = $('<div>').addClass(classNote).attr({'id': data.id})
+					note = $('<div>').addClass(classNote).attr({'id': data.note.id})
 						.append(
 						media = $('<div>').addClass('media')
 					)
 						.append(
 						text = $('<div>').addClass('text')
-							.append($('<h3>').html(data.title))
-							.append($('<h5>').html(data.subtitle))
-							.append($('<p>').html(data.comment))
+							.append($('<h3>').html(data.note.title))
+							.append($('<h5>').html(data.note.subtitle))
+							.append($('<p>').html(data.note.comment))
 					)
 						.append(
 						latex = $('<div>').addClass('latex')
-							.append($('<h3>').html(data.title))
-							.append($('<p>').html(latex))
+							.append($('<h3>').html(data.note.title))
+							.append($('<h5>').html(data.note.subtitle))
+							.append($('<p>').html(data.note.comment4tex))
 					)
 						.append(
 						$('<div>').addClass(classLabel)
@@ -181,14 +134,16 @@
 					)
 				);
 				// media ele
-				media.html(dispMedia(localdata, data.media, data.title));
+				//console.log(data.note.media);
+				media.html(data.note.media);
 
 				// label ele
-				$.each(data.label, function (i, noteLabel) {
+				$.each(data.note.label, function (i, noteLabel) {
 					label.append(
 						$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name}).html(' ' + noteLabel.name)
 					)
 				});
+
 				tools.each(function () {
 					var $tools = $(this),
 						$note = $tools.parent($('.note')),
@@ -291,7 +246,7 @@
 
 				var active = {};
 				$('div.note')
-					.mouseenter(function () {
+					.mouseenter(function (e) {
 						active = activator($(this));
 					})
 					.on('touchstart', function () {
@@ -306,7 +261,7 @@
 						 */
 					})
 
-					.mouseleave(function () {
+					.mouseleave(function (e) {
 						$(this).toggleClass('active');
 						$(this).children('div.media').css({'opacity': '0.8'});
 						$(this).children('div.label').css({'opacity': '0.8'});

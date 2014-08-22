@@ -68,13 +68,41 @@ function changeUmlaut4Tex($string){
   return strtr($string, $upas);
 }
 
-function change4Tex($string){
-  $upas = array(" \""=>" ``", "\" "=>"'' ", " '"=>" `", " - "=>" -- ", " — "=>" -- ", "_"=>"\_", "§"=>"\§", "$"=>"\$", " & "=>" \& ", "#"=>"\#", "{"=>"\{", "}"=>"\}", "%"=>"\%", "~"=>"\textasciitilde", "€"=>"\texteuro");
+function change4Tex($text){
+	$text = preg_replace
+	("!&amp;lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&amp;gt;!i", "\\4", $text);
+	$text = preg_replace
+	("!&amp;lt;(mailto:)([^ >\n\t]+)&amp;gt;!i", "\\2", $text);
+	$text = preg_replace
+	("!&amp;lt;(wiki:)([^ >\n\t]+)&amp;gt;!i", "\\2", $text);
+	$text = preg_replace
+	("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "\\2", $text);
+
+	$text = preg_replace
+	("!&lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&gt;!i", "\\4", $text);
+	$text = preg_replace
+	("!&lt;(mailto:)([^ >\n\t]+)&gt;!i", "\\2", $text);
+	$text = preg_replace
+	("!&lt;(wiki:)([^ >\n\t]+)&gt;!i", "\\2", $text);
+	$text = preg_replace
+	("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "\\2", $text);
+
+	$text = preg_replace
+	("!<(link:)([^ >\n\t]+)(:)([^ >\n\t]+)>!i", "\\4", $text);
+	$text = preg_replace
+	("!<(mailto:)([^ >\n\t]+)>!i", "\\2", $text);
+	$text = preg_replace
+	("!<(wiki:)([^ >\n\t]+)>!i", "\\2", $text);
+	$text = preg_replace
+	("!<(nb:)([^ >\n\t]+)>!i", "\\2", $text);
+
+
+	$upas = array(" &quot;"=>" ``", "&quot; "=>"'' ", "&quot;, "=>"'', ", "&quot;. "=>"''. ", " &#039;"=>" `", "&#039; "=>"' ", "&#039;, "=>"', ", "&#039;. "=>"'. ", " - "=>" -- ", " — "=>" -- ", "_"=>"\_", "§"=>"\§", "$"=>"\$", " & "=>" \& ", "#"=>"\#", "{"=>"\{", "}"=>"\}", "%"=>"\%", "~"=>"\textasciitilde", "€"=>"\texteuro");
   /*foreach($upas as $umlaut=>$replace){
 	return (str_replace($umlaut, $replace, $string));
   }
   */
-  return strtr($string, $upas);
+  return '``' . strtr($text, $upas) . '\'\'';
 }
 
 function getLastChar($string){
@@ -87,12 +115,13 @@ function getLastChar($string){
 }
 
 function save4Tex($string){
-  $upas = array(" \""=>" ``", "\" "=>"'' ", " '"=>" `", " - "=>" -- " );
+
+//  $upas = array(" \""=>" ``", "\" "=>"'' ", " '"=>" `", " - "=>" -- " );
   /*foreach($upas as $umlaut=>$replace){
 	return (str_replace($umlaut, $replace, $string));
   }
   */
-  return strtr($string, $upas);
+//  return strtr($string, $upas);
 }
 
 /**
@@ -107,31 +136,31 @@ function save4Tex($string){
 function makeurl($text)
 {
 	$text = preg_replace
-		("!&amp;lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&amp;gt;!i", "<a href=\"http://\\2\" target=\"_blank\">\\4</a>", $text);
+		("!&amp;lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&amp;gt;!i", "<a href='http://\\2' target='_blank'>\\4</a>", $text);
 	$text = preg_replace
-		("!&amp;lt;(mailto:)([^ >\n\t]+)&amp;gt;!i", "<a href=\"\\1\\2\">\\2</a>", $text);
+		("!&amp;lt;(mailto:)([^ >\n\t]+)&amp;gt;!i", "<a href='\\1\\2'>\\2</a>", $text);
 	$text = preg_replace
-		("!&amp;lt;(wiki:)([^ >\n\t]+)&amp;gt;!i", "<a href=\"http://de.wikipedia.org/wiki/\\2\" target=\"_blank\" title=\"Look for <\\2> in wikipedia\">\\2</a>", $text);
+		("!&amp;lt;(wiki:)([^ >\n\t]+)&amp;gt;!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
-		("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "<a href=\"".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
+		("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "<a href='".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2' title='Search here <\\2>'>\\2</a>", $text);
 		
 	$text = preg_replace
-		("!&lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&gt;!i", "<a href=\"http://\\2\" target=\"_blank\">\\4</a>", $text);
+		("!&lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&gt;!i", "<a href='http://\\2' target='_blank'>\\4</a>", $text);
 	$text = preg_replace
-		("!&lt;(mailto:)([^ >\n\t]+)&gt;!i", "<a href=\"\\1\\2\">\\2</a>", $text);
+		("!&lt;(mailto:)([^ >\n\t]+)&gt;!i", "<a href='\\1\\2'>\\2</a>", $text);
 	$text = preg_replace
-		("!&lt;(wiki:)([^ >\n\t]+)&gt;!i", "<a href=\"http://de.wikipedia.org/wiki/\\2\" target=\"_blank\" title=\"Look for <\\2> in wikipedia\">\\2</a>", $text);
+		("!&lt;(wiki:)([^ >\n\t]+)&gt;!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
-		("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "<a href=\"".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
+		("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "<a href='".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2' title='Search here <\\2>'>\\2</a>", $text);
 		
 	$text = preg_replace
-		("!<(link:)([^ >\n\t]+)(:)([^ >\n\t]+)>!i", "<a href=\"http://\\2\" target=\"_blank\">\\4</a>", $text);
+		("!<(link:)([^ >\n\t]+)(:)([^ >\n\t]+)>!i", "<a href='http://\\2' target='_blank'>\\4</a>", $text);
 	$text = preg_replace
-		("!<(mailto:)([^ >\n\t]+)>!i", "<a href=\"\\1\\2\">\\2</a>", $text);
+		("!<(mailto:)([^ >\n\t]+)>!i", "<a href='\\1\\2'>\\2</a>", $text);
 	$text = preg_replace
-		("!<(wiki:)([^ >\n\t]+)>!i", "<a href=\"http://de.wikipedia.org/wiki/\\2\" target=\"_blank\" title=\"Look for <\\2> in wikipedia\">\\2</a>", $text);
+		("!<(wiki:)([^ >\n\t]+)>!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
-		("!<(nb:)([^ >\n\t]+)>!i", "<a href=\"".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2\" title=\"Search here <\\2>\">\\2</a>", $text);
+		("!<(nb:)([^ >\n\t]+)>!i", "<a href='".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2' title='Search here <\\2>'>\\2</a>", $text);
 	return $text;
 }
 
@@ -167,17 +196,17 @@ function getIndexMN($type, $part, $id)
 	$partID = $part . "ID";
 	$mysqli = condb('open');
 	$sql = $mysqli->query('SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $part);
-	condb('close');
 	//echo '<br>getIndexMN: SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $part . '<br>';
 
 	$num_labels = mysqli_num_rows($sql);
 	if ($num_labels > 0) {
 		while ($row = mysqli_fetch_object($sql)) {
 			// get number of notes with this value
-			$num_results = mysqli_num_rows(mysqli_query('SELECT * FROM ' . $relTable . ' WHERE ' . $partID . ' = \'' . $row->$partID . '\';'));
+			$num_results = mysqli_num_rows($mysqli->query('SELECT * FROM ' . $relTable . ' WHERE ' . $partID . ' = \'' . $row->$partID . '\';'));
 			array_push($array, array('id' => $row->$partID, 'name' => $row->$part, 'num' => $num_results));
 		}
 	}
+	condb('close');
 	return $array;
 };
 
@@ -220,7 +249,96 @@ function getNoteID($id) {
 
 }
 
+function getMedia($media) {
+	$media = explode('.', $media.'.');
+	$name = $media[0];
+	$ext = $media[1];
 
+	$media_tag = '<span class=\'warning invisible\'>[The media file is missing OR \'' . $ext . '\' is not supported]</span>';
+
+	switch($ext){
+		case "jpg";
+		case "png";
+		case "gif";
+		case "jpeg";
+		case "tif";
+		{
+			$media_path = __MEDIA_URL__."/pictures/".$name;
+
+			if (@fopen($media_path,"r")==true){
+
+				//if (file_exists($media)){
+				//$size = ceil(filesize($media	)/1024);
+				//$name = $media_path['filename'];
+				$size = getimagesize($media_path);
+				// ergibt mit $infoSize[0] für breite und $infoSize[1] für höhe
+				$media_tag = "<img class='staticMedia' src='".$media_path."' alt='".$name."' title='".$name."' />";
+			}
+			break;
+		}
+
+		case "pdf";
+		{
+			$media_path = __MEDIA_URL__."/documents/".$media;
+			if (@fopen($media_path,"r")==true){
+				$media_tag = "<p class='download'>".$media." (".$size."kb) <a href='".$media_path."' title='Download ".$media." (".$size."kb)' >Open</a></p><br>";
+			}
+			break;
+		}
+
+		case "mp4";
+		case "webm";
+		{
+			$media_path = __MEDIA_URL__."/movies/".$name;
+			if (@fopen($media_path,"r")==true){
+
+				$media_tag = "<video>not yet implemented</video>";
+				/*
+				echo "<video class='dynamicMedia' controls preload='auto' poster='".$media_path."png'>";
+				echo "<source src='".__MEDIA_URL__."/movies/".$fileName.".mp4' >";
+				//type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'
+				echo "<source src='".__MEDIA_URL__."/movies/".$fileName.".webm' >";
+				//type='video/webm; codecs=\"vp8, vorbis\"'
+				echo "</video>";
+				*/
+			}
+			break;
+		}
+
+		case "mp3";
+		case "wav";
+		{
+			$media_path = __MEDIA_URL__."/sound/".$media;
+			if (@fopen($media_path,"r")==true){
+
+				$media_tag = "<audio>not yet implemented</audio>";
+				/*
+				echo "<video class='dynamicMedia' controls preload='auto' poster='".$media_path."png'>";
+				echo "<source src='".__MEDIA_URL__."/movies/".$fileName.".mp4' >";
+				//type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'
+				echo "<source src='".__MEDIA_URL__."/movies/".$fileName.".webm' >";
+				//type='video/webm; codecs=\"vp8, vorbis\"'
+				echo "</video>";
+				*/
+				/*
+				echo "<audio class='dynamicMedia' controls preload='auto'>";
+				echo "<source src='".__MEDIA_URL__."/sound/".$fileName.".mp3' type='audio/mpeg; codecs=mp3'>";
+				echo "<source src='".__MEDIA_URL__."/sound/".$fileName.".wav' type='audio/wav; codecs=1'>";
+				echo "</audio>";
+				*/
+			}
+			break;
+		}
+
+		default; {
+		$media_tag = "";
+					 // <p class='warning invisible'>[".$ext."] is not supported in notizblogg!?</p>
+		}
+
+	}
+
+	return $media_tag;
+}
 
 
 
