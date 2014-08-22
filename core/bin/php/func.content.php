@@ -184,6 +184,10 @@ function getNote2Label($id) {
 	return $notes;
 }
 
+function getNoteID($id) {
+
+}
+
 
 
 

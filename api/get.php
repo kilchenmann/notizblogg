@@ -5,6 +5,7 @@
  * Date: 01.07.14
  * Time: 23:23
  */
+header('Content-Type: application/json');
 
  // access public: true = 1
  // access !public = private = 0
@@ -18,25 +19,88 @@ require '../core/bin/php/setting.php';
 
 // check the access
 if (isset ($_SESSION["token"])) {
-	condb('open');
 	$token = (explode("-",$_SESSION["token"]));
+	condb('open');
 	$sql = mysql_query("SELECT user FROM user WHERE userID = " . $token[1] . " AND token = '" . $token[0] . "';");
-	while($row = mysql_fetch_object($sql)){
-		$user = $row->user;
-	}
 	condb('close');
-	if($user != '') {
+	$num_results = mysql_num_rows($sql);
+	if($num_results == 1) {
 		$access = 0;		// public access is false -> private access
 		$uid = $token[1];
 	}
 }
 
+
+foreach ($_GET as $key => $value){
+	switch ($key) {
+		/* change the first two ones */
+		case 'note';
+			$note = NEW get();
+			$note->id = $_GET['note'];
+			$note->type = 'note';
+			$note->access = $access;
+			echo $note->getNote();
+			break;
+
+		case 'source';
+			$note = NEW get();
+			$note->id = $_GET['source'];
+			$note->type = 'source';
+			$note->access = $access;
+			echo $note->getSource();
+			break;
+		/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
+
+		case 'label';
+			$note = NEW get();
+			$note->id = $_GET['label'];
+			$note->type = 'label';
+			echo $note->listData();
+			break;
+
+		case 'author';
+			$note = NEW get();
+			$note->id = $_GET['author'];
+			$note->type = 'author';
+			echo $note->listData();
+			break;
+
+		case 'new';
+			// the number behind the query 'new' is to limit to numbers of notes
+			// on the public site: get just the sources, order by dateCreated
+			// on the private site: get all newest notes
+			$note = NEW get();
+			$note->id = $_GET['new'];
+			$note->type = 'new';
+			echo $note->listData();
+			break;
+
+		case 'q';
+			$part = '';
+			if (isset($_GET['part'])) {
+				$part = $_GET['part'];
+			}
+			$note = NEW get();
+			$note->query = $_GET['q'];
+			$note->part = $part;
+			echo $note->searchData();
+			break;
+
+		case 'id';
+			$note = NEW get();
+			$note->id = $_GET['id'];
+			$note->access = $access;
+			echo $note->getData();
+			break;
+
+		default;
+
+	}
+}
+
+
 if (isset($_GET['id'])) {
-	//echo 'The ID is: ' . $_GET['id'];
-	$note = NEW get();
-	$note->id = $_GET['id'];
-	$note->access = $access;
-	echo $note->getData();
+
 }
 
 

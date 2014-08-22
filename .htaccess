@@ -13,8 +13,11 @@ RewriteBase /nb
 RewriteRule ^get/([0-9]+)$ /nb/api/get.php?id=$1
 RewriteRule ^post/([0-9]+)$ /nb/api/post.php?id=$1
 
-RewriteRule ^list/label/([0-9]+)$ /nb/api/list.php?label=$1
-RewriteRule ^list/author/([0-9]+)$ /nb/api/list.php?author=$1
+RewriteRule ^get/label/([0-9]+)$ /nb/api/get.php?label=$1
+RewriteRule ^get/author/([0-9]+)$ /nb/api/get.php?author=$1
+RewriteRule ^get/new/([0-9]+)$ /nb/api/get.php?new=$1
+RewriteRule ^get/q=([a-z]+)$ /nb/api/get.php?q=$1
+RewriteRule ^get/q=([a-z]+)&part=([a-z]+)$ /nb/api/get.php?q=$1&part=$2
 
 
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
