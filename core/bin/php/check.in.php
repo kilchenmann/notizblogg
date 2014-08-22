@@ -1,20 +1,18 @@
 <?php
 // Session starten
 require_once 'setting.php';
-condb('open');
+$mysqli = condb('open');
 
-$sql = "SELECT userID, name, user, token FROM user WHERE ".
-    "(user like '".$_REQUEST["usr"]."') AND ".
-    "(pass = '".md5 ($_REQUEST["key"])."')";
-$result = mysql_query($sql);
+$sql = $mysqli->query('SELECT userID, name, user, token FROM user WHERE ' .
+    '(user like \'' . $_REQUEST['usr'] . '\') AND ' .
+    '(pass = \'' . md5($_REQUEST['key']) . '\')');
 
-if (mysql_num_rows($result) > 0)
+
+if (mysqli_num_rows($sql) > 0)
 {
 	// Benutzerdaten in ein Array auslesen.
-	$data = mysql_fetch_array($result);
-
+	$data = mysqli_fetch_array($sql);
 	session_start ();
-
 	// Sessionvariablen erstellen und registrieren
 	$_SESSION["token"] = $data["token"] . '-' . $data["userID"];
 	$_SESSION["user"] = $data["user"];

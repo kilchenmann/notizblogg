@@ -15,15 +15,16 @@ $user = 'guest';
 $uid = '';
 
 $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-require '../core/bin/php/setting.php';
+require '../core/bin/php/setting.php'; require '../core/bin/php/class.get.php';
 
 // check the access
 if (isset ($_SESSION["token"])) {
 	$token = (explode("-",$_SESSION["token"]));
-	condb('open');
-	$sql = mysql_query("SELECT user FROM user WHERE userID = " . $token[1] . " AND token = '" . $token[0] . "';");
+
+	$mysqli = condb('open');
+	$sql = $mysqli->query("SELECT user FROM user WHERE userID = " . $token[1] . " AND token = '" . $token[0] . "';");
 	condb('close');
-	$num_results = mysql_num_rows($sql);
+	$num_results = mysqli_num_rows($sql);
 	if($num_results == 1) {
 		$access = 0;		// public access is false -> private access
 		$uid = $token[1];

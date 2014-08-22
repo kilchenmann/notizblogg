@@ -17,6 +17,15 @@
 	// define some functions
 	// -----------------------------------------------------------------------
 	//
+	var fileExists = function (media) {
+		var response = jQuery.ajax({
+			url: media,
+			type: 'HEAD',
+			async: false
+		}).status;
+		//return (response != "200") ? false : true;
+		return (response == "200");
+	};
 	// -------------------------------------------------------------------------
 	// define the methods
 	// -------------------------------------------------------------------------
@@ -27,14 +36,14 @@
 			return this.each(function() {
 				var $this = $(this),
 					localdata = {},
-					login;
+					login,
+					avatar_url;
 
 
 				localdata.login = {};
 
 				localdata.settings = {
 					type: 'login', // or logout
-					user: 'user',
 					key: 'password',
 					submit: 'login',
 					action: 'index.php'
@@ -62,10 +71,11 @@
 				);
 
 
+
 				if(localdata.settings.type === 'logout') {
 					// alert('logout');
 					localdata.login.button.css({
-						'background-image': 'url("' + NB.url + '/data/user/' + localdata.settings.user + '.png")',
+						'background-image': 'url("' + NB.user.avatar + '")',
 						'background-repeat': 'no-repeat',
 					//	'background-attachment': 'fixed',
 						'background-position': 'center',
@@ -96,8 +106,8 @@
 								.attr({
 									'type': 'text',
 									'name': 'usr',
-									'title': localdata.settings.user,
-									'placeholder': localdata.settings.user
+									'title': NB.user.id,
+									'placeholder': NB.user.id
 								})
 								.addClass('field_obj small')
 						)

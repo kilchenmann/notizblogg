@@ -3,16 +3,45 @@
 
 function condb($conart) {
 	include ('.conf/db.php');
-	$connect = mysql_connect($myhost, $myuser, $mypass);
-	if (!$connect){
-		die('MySQL-Access denied:' . mysql_error());
-	} else {
-		if ($conart == 'open') {
-			mysql_select_db($mydb, $connect) or die ("The database $mydb doesn't exists.");
-		} else {
-			mysql_close($connect);
+	$mysqli = new mysqli($myhost, $myuser, $mypass, $mydb);
+	if ($mysqli->connect_errno) {
+		die('Connect Error: ' . $mysqli->connect_errno);
+	}
+	if($conart == 'close') {
+		mysqli_close($mysqli);
+		$mysqli = null;
+	}
+	return $mysqli;
+}
+
+function conuser($token) {
+	$user = array(
+		'access' => 1,
+		'name' => 'guest',
+		'id' => '',
+		'avatar' => ''
+	);
+	// check if the access is true and correct
+	$token = (explode('-', $token . '-'));
+	$mysqli = condb('open');
+	$sql = $mysqli->query("SELECT user, userID, email FROM user WHERE userID = " . $token[1] . " AND token = '" . $token[0] . "';");
+	condb('close');
+	$num_results = mysqli_num_rows($sql);
+	if ($num_results > 0) {
+		while ($row = mysqli_fetch_object($sql)) {
+			$avatar = __SITE_URL__ . '/data/user/' . $row->userID;
+			if (@fopen($avatar, "r") == false) {
+				$avatar = 'http://www.gravatar.com/avatar/' . md5($row->email);
+			}
+			$user = array(
+				'access' => 0,
+				'name' => $row->user,
+				'id' => $row->userID,
+				'avatar' => $avatar
+			);
 		}
 	}
+	return ($user);
 }
 
 /* ************************************************************** 
@@ -114,11 +143,13 @@ function getIndex($part, $id)
 	);
 	if ($id > 0) {
 		$partID = $part . 'ID';
-		$sql = mysql_query('SELECT ' . $part . ' FROM ' . $part . ' WHERE `' . $partID . '` = \'' . $id . '\';');
+		$mysqli = condb('open');
+		$sql = $mysqli->query('SELECT ' . $part . ' FROM ' . $part . ' WHERE `' . $partID . '` = \'' . $id . '\';');
+		condb('close');
 		// echo 'SELECT ' . $part . ' FROM ' . $part . ' WHERE `' . $partID . '` = \'' . $id . '\';';
-		$num_results = mysql_num_rows($sql);
+		$num_results = mysqli_num_rows($sql);
 		if ($num_results > 0) {
-			while ($row = mysql_fetch_object($sql)) {
+			while ($row = mysqli_fetch_object($sql)) {
 				$array = array(
 					'id' => $id,
 					'name' => $row->$part
@@ -134,15 +165,16 @@ function getIndexMN($type, $part, $id)
 	$array = array();
 	$relTable = "rel_" . $type . "_" . $part;
 	$partID = $part . "ID";
-
-	$sql = mysql_query('SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $part);
+	$mysqli = condb('open');
+	$sql = $mysqli->query('SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $part);
+	condb('close');
 	//echo '<br>getIndexMN: SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $part . '<br>';
 
-	$num_labels = mysql_num_rows($sql);
+	$num_labels = mysqli_num_rows($sql);
 	if ($num_labels > 0) {
-		while ($row = mysql_fetch_object($sql)) {
+		while ($row = mysqli_fetch_object($sql)) {
 			// get number of notes with this value
-			$num_results = mysql_num_rows(mysql_query('SELECT * FROM ' . $relTable . ' WHERE ' . $partID . ' = \'' . $row->$partID . '\';'));
+			$num_results = mysqli_num_rows(mysqli_query('SELECT * FROM ' . $relTable . ' WHERE ' . $partID . ' = \'' . $row->$partID . '\';'));
 			array_push($array, array('id' => $row->$partID, 'name' => $row->$part, 'num' => $num_results));
 		}
 	}
@@ -151,17 +183,17 @@ function getIndexMN($type, $part, $id)
 
 
 function getNote2Author($id) {
-	condb('open');
-	$bsql = mysql_query('SELECT bibID FROM rel_bib_author WHERE authorID = ' . $id . ';');
+	$mysqli = condb('open');
+	$bsql = $mysqli->query('SELECT bibID FROM rel_bib_author WHERE authorID = ' . $id . ';');
 	condb('close');
-	$num_results = mysql_num_rows($bsql);
+	$num_results = mysqli_num_rows($bsql);
 	$notes = array();
 	if($num_results > 0) {
-		while($brow = mysql_fetch_object($bsql)) {
-			condb('open');
-			$sql = mysql_query('SELECT noteID FROM bib WHERE bibID = ' . $brow->bibID . ';');
+		while($brow = mysqli_fetch_object($bsql)) {
+			$mysqli = condb('open');
+			$sql = $mysqli->query('SELECT noteID FROM bib WHERE bibID = ' . $brow->bibID . ';');
 			condb('close');
-			while($row = mysql_fetch_object($sql)){
+			while($row = mysqli_fetch_object($sql)){
 				array_push($notes, $row->noteID);
 			}
 		}
@@ -171,13 +203,13 @@ function getNote2Author($id) {
 
 
 function getNote2Label($id) {
-	condb('open');
-	$sql = mysql_query('SELECT noteID FROM rel_note_label WHERE labelID = ' . $id . ';');
+	$mysqli = condb('open');
+	$sql = $mysqli->query('SELECT noteID FROM rel_note_label WHERE labelID = ' . $id . ';');
 	condb('close');
-	$num_results = mysql_num_rows($sql);
+	$num_results = mysqli_num_rows($sql);
 	$notes = array();
 	if($num_results > 0) {
-		while($row = mysql_fetch_object($sql)) {
+		while($row = mysqli_fetch_object($sql)) {
 			array_push($notes, $row->noteID);
 		}
 	}
