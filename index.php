@@ -6,29 +6,16 @@
 
 	<?php
 	session_start ();
-	$access = '1';
-	$user = 'guest';
-	$uid = '';
-
 	require 'core/bin/php/setting.php';
-
-	  // the access is regulated in the api get and edit
+	$user = array(
+		'access' => 1,
+		'name' => 'guest',
+		'id' => '',
+		'avatar' => ''
+	);
 	if (isset ($_SESSION["token"])) {
-		// check if the access is true and correct
-		$token = (explode("-", $_SESSION["token"]));
-		condb('open');
-		$sql = mysql_query("SELECT user, userID FROM user WHERE userID = " . $token[1] . " AND token = '" . $token[0] . "';");
-		condb('close');
-		$num_results = mysql_num_rows($sql);
-		if ($num_results > 0) {
-			while ($row = mysql_fetch_object($sql)) {
-				$user = $row->user;
-				$access = '0';
-				$uid = $row->userID;
-			}
-		}
+		$user = conuser($_SESSION['token']);
 	}
-
 
 	?>
 	<!--
@@ -163,10 +150,11 @@ function getUrlVars()
 
 
 var NB = {};
-NB.access = '<?php echo $access; ?>';
+NB.access = '<?php echo $user['access']; ?>';
 NB.user = {
-	id:  '<?php echo $uid; ?>',
-	name: '<?php echo $user; ?>'
+	id:  '<?php echo  $user['id']; ?>',
+	name: '<?php echo  $user['name']; ?>',
+	avatar: '<?php echo  $user['avatar']; ?>'
 };
 NB.url = '<?php echo __SITE_URL__; ?>';
 NB.uri = NB.url + '/' +(location.search).substr(1);
@@ -196,7 +184,7 @@ NB.query = {
 			if(NB.user.name !== 'guest' && NB.access !== '1' && NB.user.id !== '') {
 				$('.user').login({
 					type: 'logout',
-					user: NB.user.id,
+		//			user: NB.user,
 					submit: 'Abmelden',
 					action: NB.url + '/core/bin/php/check.out.php'
 				});

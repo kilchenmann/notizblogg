@@ -26,15 +26,14 @@ class get {
 		$data = array();
 
 		// 2 get the data from db
-		condb('open');
-		$sql = mysql_query('SELECT * FROM note WHERE noteID = ' . $this->id . ' AND notePublic >= ' . $this->access . ';');
+		$mysqli = condb('open');
+		$sql = $mysqli->query('SELECT * FROM note WHERE noteID = ' . $this->id . ' AND notePublic >= ' . $this->access . ';');
 		condb('close');
 
 		// 3 prepare the result
-		$num_results = mysql_num_rows($sql);
+		$num_results = mysqli_num_rows($sql);
 		if($num_results > 0) {
-			while ($row = mysql_fetch_object($sql)) {
-				condb('open');
+			while ($row = mysqli_fetch_object($sql)) {
 				// get the labels and set a link to other notes with the same label
 				$label = getIndexMN('note', 'label', $row->noteID);
 				// get the user info
@@ -50,8 +49,6 @@ class get {
 						'name' => ''
 					);
 				}
-				condb('close');
-
 
 				//$source = array_push($source, array('link' => $row->noteLink));
 
@@ -61,7 +58,8 @@ class get {
 						'checkID' => $row->checkID,
 						'title' => $row->noteTitle,
 						'subtitle' => $row->noteSubtitle,
-						'comment' => $row->noteComment,
+						'comment' => makeurl($row->noteComment),
+						'comment4tex' => $row->noteComment,
 						'label' => $label,
 						'media' => $row->noteMedia,
 						'href' => $row->noteLink,
