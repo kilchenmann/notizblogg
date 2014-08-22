@@ -42,13 +42,9 @@ class get {
 				//$biblio = getIndex('bib', $row->bibID);
 				if($row->bibID != NULL) {
 					$source = getIndex('bib', $row->bibID);
-
 				} else {
 					// the note is a source
-					$source = array(
-						'id' => '0',
-						'name' => ''
-					);
+					$source = NULL;
 				}
 				condb('close');
 
@@ -65,7 +61,7 @@ class get {
 						'label' => $label,
 						'media' => $row->noteMedia,
 						'href' => $row->noteLink,
-						'source' => $source,
+						'source' => null,
 						'page' => array(
 							'start' => $row->pageStart,
 							'end' => $row->pageEnd
@@ -79,6 +75,11 @@ class get {
 						'public' => $row->notePublic
 					)
 				);
+
+				if($source != NULL) {
+					$data['note']['source'] = $source;
+//					array_push($data['source'], $source);
+				}
 			}
 
 		} else {
@@ -96,37 +97,41 @@ class get {
 		// 1 set some variables and arrays
 		$data = array();
 
-		// 2 get the data from db
-		condb('open');
-		$sql = mysql_query('SELECT * FROM bib WHERE bibID = ' . $this->id . ';');
-		condb('close');
 
-		// 3 prepare the result
-		$num_results = mysql_num_rows($sql);
+		// bib (bib, detail), data (from note), notes
+
+		// 2 get the data from bib
+		condb('open');
+		// bibName
+		$bibName = getIndex('bib', $this->id);
+		// author
+		$author = getIndexMN('bib', 'author', $this->id);
+		// location
+		$location = getIndexMN('bib', 'location', $this->id);
+		// biblio
+		$bib_sql = mysql_query('SELECT * FROM bib WHERE bibID = ' . $this->id . ';');
+		condb('close');
+		$num_results = mysql_num_rows($bib_sql);
 		if($num_results > 0) {
-			while ($row = mysql_fetch_object($sql)) {
+			while ($bib_row = mysql_fetch_object($bib_sql)) {
 				condb('open');
 				// bibTyp
-				$bibTyp = getIndex('bibTyp', $row->bibTyp);
-				// bibName
-				$bibName = getIndex('bib', $this->id);
-				// author
-				$author = getIndexMN('bib', 'author', $this->id);
-				// location
-				$location = getIndexMN('bib', 'location', $this->id);
-				// get more details --> 4
+				$bibTyp = getIndex('bibTyp', $bib_row->bibTyp);
+				// get more details: from bibDetail / from note
+				// --> 4
 				$detail_sql = mysql_query('SELECT bibFieldID, bibDetail FROM bibDetail WHERE bibID = ' . $this->id . ';');
-				$source_sql = mysql_query('SELECT * FROM note WHERE noteID = ' . $row->noteID . ';');
+				// --> 5
+				$source_sql = mysql_query('SELECT * FROM note WHERE noteID = ' . $bib_row->noteID . ';');
 				condb('close');
-				$bibInfo = array(
+				$biblio = array(
 					'id' => $bibName['id'],
 					'name' => $bibName['name'],
 					'bibTyp' => $bibTyp,
-					'editor' => $row->bibEditor,
+					'editor' => $bib_row->bibEditor,
 					'author' => $author,
-					'location' => $location,
-					'notes' => array()
+					'location' => $location
 				);
+
 				// 4 get the details from table bibDetail
 				$num_details = mysql_num_rows($detail_sql);
 				if($num_details > 0) {
@@ -147,12 +152,72 @@ class get {
 					}
 				}
 				// 5 get more details from table note
-				while ($row = mysql_fetch_object($source_sql)) {
-					$source = NEW get();
+				while ($source_row = mysql_fetch_object($source_sql)) {
+					/* ?+?+?+?+?+??+?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+? */
+					/* ?+?+?+?+?+??+?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+? */
+
+							condb('open');
+							// get the labels and set a link to other notes with the same label
+							$label = getIndexMN('note', 'label', $source_row->noteID);
+							// get the user info
+							$user = getIndex('user', $source_row->userID);
+							//$biblio = getIndex('bib', $row->bibID);
+							if($source_row->bibID != NULL) {
+								$source = getIndex('bib', $source_row->bibID);
+							} else {
+								// the note is a source
+								$source = NULL;
+							}
+							condb('close');
+
+
+							//$source = array_push($source, array('link' => $row->noteLink));
+
+							$data = array(
+								$this->type => array(
+									'id' => $bibName['id'],
+									'name' => $bibName['name'],
+									'bibTyp' => $bibTyp,
+									'editor' => $brow->bibEditor,
+									'author' => $author,
+									'location' => $location,
+									'checkID' => $row->checkID,
+									'title' => $row->noteTitle,
+									'subtitle' => $row->noteSubtitle,
+									'comment' => $row->noteComment,
+									'label' => $label,
+									'media' => $row->noteMedia,
+									'href' => $row->noteLink,
+									'source' => null,
+									'page' => array(
+										'start' => $row->pageStart,
+										'end' => $row->pageEnd
+									),
+									'date' => array(
+										'year' => $row->dateYear,
+										'created' => $row->dateCreated,
+										'modified' => $row->dateModified
+									),
+									'user' => $user,
+									'public' => $row->notePublic,
+									$bibInfo
+								)
+							);
+
+
+							/* ?+?+?+?+?+??+?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+? */
+							/* ?+?+?+?+?+??+?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+? */
+
+
+
+/*
+							$source = NEW get();
 					$source->id = $row->noteID;
 					$source->type = 'source';
 					$source->access = $this->access;
-					$source = json_decode($source->getNote());
+					$data = json_decode($source->getNote());
+*/
+	//				print_r($source);
 
 /*
 					$source = array(
@@ -178,11 +243,16 @@ class get {
 
 					);
 */
+
+					// get the notes to this source
 					condb('open');
 					$notes_sql = mysql_query('SELECT noteID FROM note WHERE bibID = ' . $this->id);
 					condb('close');
+					$notes = array();
 					while($note = mysql_fetch_object($notes_sql)){
-						array_push($bibInfo['notes'], $note->noteID);
+						array_push($notes, $note->noteID);
+//						$data['source']['notes'] = $note->noteID;
+//						array_push($data, array('notes' => array($note->noteID)));
 					}
 /*
 					print_r($source);
@@ -192,10 +262,12 @@ class get {
 */
 					//print_r($source);
 
-					$data = $source;
+				//	$data = $source;
 
-					array_push($data, array('source' => $bibInfo));
-
+//					array_push($data, array('source' => $bibInfo));
+//$data = $bib;
+//array_push($data['source'], array('info'=>$bib));
+//$data['source']['notes'] = $notes;
 
 
 				}
