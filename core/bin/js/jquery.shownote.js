@@ -52,52 +52,25 @@
 		},
 
 		dispNote = function (ele, data, localdata) {
-			var note, media, text, latex, source, bibtex, label, tools, classNote, classLabel;
+			var note, media, text, latex, source, label, tools;
 
-			$.each( data.note, function( key, value ) {
-				console.log(key + ': ' + value);
-				if(data.note.id !== null) {
-			//		console.log(data.note.comment);
-
-
-
-
-
-
-
-
-
-
-				} else {
-					$('#fullpage').warning({
-						type: 'noresults',
-						lang: 'de'
-					});
-					$('body').on('click', function () {
-						window.location.href = localdata.settings.url;
-					})
-				}
-
-
-
-
-			});
-
-
-
+			var classNote, classLabel;
 			if (data.note.id !== 0) {
-
 				if (data.note.biblio !== null) {
 					latex = data.note.comment4tex;
+					tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function () {
+						$(this).toggleClass('toggle_comment');
+						$note.children('.text').toggle();
+						$note.children('.latex').toggle();
+					});
 				} else {
 					latex = '';
+					tex_ele = $('<button>').addClass('btn grp_none fake_btn');
 				}
 				if (data.type === 'source') {
 					classNote = 'note topic';
-
 				} else {
 					classNote = 'note item';
-					latex = '``' + data.comment + '\'\'';
 				}
 
 				if (data.note.public === '1') {
@@ -280,33 +253,35 @@
 					window.location.href = localdata.settings.url;
 				})
 			}
+
+			return (media, text, latex, label, tools);
 		},
 
 		dispBib = function (ele, data, localdata) {
 			var authors, locations, bibtex, biblio, i;
 
-			if (data.biblio.bibTyp.id !== '0') {
+			if (data.source.id !== '0') {
 				authors = '';
 				locations = '';
-				bibtex = '@' + data.biblio.bibTyp.name + '{' + data.biblio.name + '<br>';
+				bibtex = '@' + data.source.bibTyp.name + '{' + data.source.name + '<br>';
 				biblio = '';
 
 				i = 0;
-				while (i < data.biblio.author.length) {
+				while (i < data.source.author.length) {
 					if (authors === '') {
-						authors = '<a href=\'?author=' + data.biblio.author[i].id + '\'>' + data.biblio.author[i].name + '</a>';
+						authors = '<a href=\'?author=' + data.source.author[i].id + '\'>' + data.source.author[i].name + '</a>';
 					} else {
-						authors += ', <a href=\'?author=' + data.biblio.author[i].id + '\'>' + data.biblio.author[i].name + '</a>';
+						authors += ', <a href=\'?author=' + data.source.author[i].id + '\'>' + data.source.author[i].name + '</a>';
 					}
 					i += 1;
 				}
 
 				i = 0;
-				while (i < data.biblio.location.length) {
+				while (i < data.source.location.length) {
 					if (locations === '') {
-						locations = data.biblio.location[i].name;
+						locations = data.source.location[i].name;
 					} else {
-						locations += ', ' + data.biblio.location[i].name;
+						locations += ', ' + data.source.location[i].name;
 					}
 					i += 1;
 				}
@@ -320,16 +295,16 @@
 
 				bibtex += 'title = {' + data.title + '},<br>';
 
-				if (data.biblio.bibTyp.name === 'collection' || data.biblio.bibTyp.name === 'proceedings' || data.biblio.bibTyp.name === 'book') {
-					biblio += '<a href=\'?collection=' + data.biblio.id + '\' >' + getLastChar(data.title) + '</a> ';
+				if (data.source.bibTyp.name === 'collection' || data.source.bibTyp.name === 'proceedings' || data.source.bibTyp.name === 'book') {
+					biblio += '<a href=\'?collection=' + data.source.id + '\' >' + getLastChar(data.source.title) + '</a> ';
 				} else {
-					biblio += '<a href=\'?source=' + data.biblio.id + '\' >' + getLastChar(data.title) + '</a> ';
+					biblio += '<a href=\'?source=' + data.source.id + '\' >' + getLastChar(data.source.title) + '</a> ';
 				}
 				if (data.subtitle !== '') {
 					bibtex += 'subtitle = {' + data.subtitle + '},<br>';
-					biblio += getLastChar(data.subtitle);
+					biblio += getLastChar(data.source.subtitle);
 				}
-
+/*
 				if ('crossref' in data) {
 					var crossAuthors = '';
 					// set the authors
@@ -392,7 +367,7 @@
 						biblio += data.year;
 					}
 				}
-
+*/
 				if ('detail' in data) {
 
 					var detailKey, countDetail = Object.keys(data.detail).length;

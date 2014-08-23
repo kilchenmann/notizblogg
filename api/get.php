@@ -57,7 +57,15 @@ foreach ($_GET as $key => $value){
 			$note->id = $_GET['note'];
 			$note->type = 'note';
 			$note->access = $user['access'];
-			echo $note->getNote();
+			$source = $note->checkNote();
+			if($source != false) {
+				$note->id = $source;
+				$note->type = 'source';
+				echo $note->getsource();
+				// or redirect to the right request
+			} else {
+				echo $note->getNote();
+			}
 			break;
 
 		case 'source';

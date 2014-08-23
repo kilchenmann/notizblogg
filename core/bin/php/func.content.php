@@ -32,6 +32,9 @@ function conuser($token) {
 			$avatar = __SITE_URL__ . '/data/user/' . $row->userID;
 			if (@fopen($avatar, "r") == false) {
 				$avatar = 'http://www.gravatar.com/avatar/' . md5($row->email);
+				if (@fopen($avatar, "r") == false) {
+					$avatar = __SITE_URL__ . '/data/user/' . $row->userID;
+				}
 			}
 			$user = array(
 				'access' => 0,

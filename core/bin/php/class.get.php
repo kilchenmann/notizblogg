@@ -18,8 +18,18 @@ class get {
 
 
 	}
-
-
+	function checkNote() {
+		$source = false;
+		$mysqli = condb('open');
+		$sql = $mysqli->query('SELECT bibID FROM bib WHERE noteID = ' . $this->id .';');
+		if(mysqli_num_rows($sql) > 0) {
+			// note is a source
+			while($row = mysqli_fetch_object($sql)) {
+				$source = $row->bibID;
+			}
+		}
+		return $source;
+	}
 
 	function getNote() {
 		// 1 set some variables and arrays
@@ -57,7 +67,6 @@ class get {
 						'comment4tex' => change4Tex($row->noteComment),
 						'label' => $label,
 						'media' => $media,
-				//		'href' => $row->noteLink,
 						'source' => $source,
 						'page' => array(
 							'start' => $row->pageStart,
@@ -104,18 +113,7 @@ class get {
 				// get more details --> 4
 				$detail_sql = $mysqli->query('SELECT bibFieldID, bibDetail FROM bibDetail WHERE bibID = ' . $this->id . ';');
 				$source_sql = $mysqli->query('SELECT * FROM note WHERE noteID = ' . $row->noteID . ';');
-
-
-
-				$bibInfo = array(
-					'id' => $bibName['id'],
-					'name' => $bibName['name'],
-					'bibTyp' => $bibTyp,
-					'editor' => $row->bibEditor,
-					'author' => $author,
-					'location' => $location,
-					'notes' => array()
-				);
+				$bibInfo = array();
 				// 4 get the details from table bibDetail
 				$num_details = mysqli_num_rows($detail_sql);
 				if($num_details > 0) {
@@ -132,64 +130,49 @@ class get {
 					}
 				}
 				// 5 get more details from table note
-				while ($row = mysqli_fetch_object($source_sql)) {
-					$source = NEW get();
-					$source->id = $row->noteID;
-					$source->type = 'source';
-					$source->access = $this->access;
-					$source = json_decode($source->getNote());
-
-/*
-					$source = array(
-						'checkID' => $row->checkID,
-						'title' => $row->noteTitle,
-						'subtitle' => $row->noteSubtitle,
-						'comment' => $row->noteComment,
-						'label' => $label,
-						'media' => $row->noteMedia,
-						'href' => $row->noteLink,
-						'source' => $source,
-						'page' => array(
-							'start' => $row->pageStart,
-							'end' => $row->pageEnd
+				while ($note = mysqli_fetch_object($source_sql)) {
+					// get the labels and set a link to other notes with the same label
+					$label = getIndexMN('note', 'label', $note->noteID);
+					// get the user info
+					$user = getIndex('user', $note->userID);
+					$media = getMedia($note->noteMedia);
+					$data = array(
+						$this->type => array(
+							'id' => $row->bibID,
+							'checkID' => $note->checkID,
+							'noteID' => $row->noteID,
+							'bibTyp' => $bibTyp,
+							'name' => $bibName['name'],
+							'title' => $note->noteTitle,
+							'subtitle' => $note->noteSubtitle,
+							'editor' => $row->bibEditor,
+							'author' => $author,
+							'location' => $location,
+							'comment' => makeurl($note->noteComment),
+							'href' => $note->noteLink,
+							'label' => $label,
+							'media' => $media,
+							'page' => array(
+								'start' => $note->pageStart,
+								'end' => $note->pageEnd
+							),
+							'date' => array(
+								'year' => $note->dateYear,
+								'created' => $note->dateCreated,
+								'modified' => $note->dateModified
+							),
+							'user' => $user,
+							'public' => $note->notePublic,
+							'detail' => $bibInfo,
+							'notes' => array()
 						),
-						'date' => array(
-							'year' => $row->dateYear,
-							'created' => $row->dateCreated,
-							'modified' => $row->dateModified
-						),
-						'user' => $user,
-						'public' => $row->notePublic
-
 					);
-*/
 					$notes_sql = $mysqli->query('SELECT noteID FROM note WHERE bibID = ' . $this->id);
-					while($note = mysqli_fetch_object($notes_sql)){
-						array_push($bibInfo['notes'], $note->noteID);
+					while($notes = mysqli_fetch_object($notes_sql)){
+						array_push($data['source']['notes'], $notes->noteID);
 					}
-/*
-					print_r($source);
-					print_r($bibInfo);
-
-					array_push($source, $bibInfo);
-*/
-					//print_r($source);
-
-					$data = $source;
-
-				//	array_push($data, array('source' => $bibInfo));
-
-
-
 				}
-
-
-
-
 			}
-
-
-
 		} else {
 			$data = array(
 				'source' => array(
@@ -197,9 +180,7 @@ class get {
 				)
 			);
 		}
-
 		return json_encode($data);
-
 	}
 
 	function getLabel() {
