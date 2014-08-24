@@ -434,42 +434,35 @@ $source['sources'] = $sources;
 
 	function listData() {
 		$typeName = '';
+		$mysqli = condb('open');
 		// get the name of the author, the label or etc.
 		switch($this->type) {
 			case 'label';
-				condb('open');
-				$sql = mysql_query('SELECT label FROM label WHERE labelID=' . $this->id . ';');
-				condb('close');
-				while($row = mysql_fetch_object($sql)) {
+				$sql = $mysqli->query('SELECT label FROM label WHERE labelID=' . $this->id . ';');
+				while($row = mysqli_fetch_object($sql)) {
 					$typeName = $row->label;
 				}
 				$notes = getNote2Label($this->id);
 				break;
 			case 'author';
-				condb('open');
-				$sql = mysql_query('SELECT author FROM author WHERE authorID=' . $this->id . ';');
-				condb('close');
-				while($row = mysql_fetch_object($sql)) {
+				$sql = $mysqli->query('SELECT author FROM author WHERE authorID=' . $this->id . ';');
+				while($row = mysqli_fetch_object($sql)) {
 					$typeName = $row->author;
 				}
 				$notes = getNote2Author($this->id);
 				break;
 			case 'new';
-				condb('open');
-				$sql = mysql_query('SELECT noteID FROM note ORDER BY dateCreated DESC LIMIT 0, ' . $this->id . ';');
-				condb('close');
+				$sql = $mysqli->query('SELECT noteID FROM note ORDER BY dateCreated DESC LIMIT 0, ' . $this->id . ';');
 				$notes = array();
 				$typeName = 'newest';
-				while($row = mysql_fetch_object($sql)) {
+				while($row = mysqli_fetch_object($sql)) {
 					array_push($notes, $row->noteID);
 				}
 				break;
 
 			default;
-				condb('open');
-				$sql = mysql_query('SELECT label FROM label WHERE labelID=' . $this->id . ';');
-				condb('close');
-				while($row = mysql_fetch_object($sql)) {
+				$sql = $mysqli->query('SELECT label FROM label WHERE labelID=' . $this->id . ';');
+				while($row = mysqli_fetch_object($sql)) {
 					$typeName = $row->label;
 				}
 				$notes = getNote2Label($this->id);
