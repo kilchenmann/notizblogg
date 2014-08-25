@@ -50,9 +50,188 @@
 			};
 			return(activeNote);
 		},
+		getSource = function(id, localdata) {
+			var i, authors, locations, biblio, bibtex;
+			// return source.biblio, source.bibtex;
+			var url = localdata.settings.url + '/get/source/' + id;
+			$.getJSON(url, function (data) {
+				source = data.source;
+				bibtex = '@' + source.bibTyp.name + '{' + source.name + '<br>';
+				biblio = '';
+				// authors
+				i = 0;
+				while (i < source.author.length) {
+					if (authors === undefined) {
+						authors = '<a href=\'?author=' + source.author[i].id + '\'>' + source.author[i].name + '</a>';
+					} else {
+						authors += ', <a href=\'?author=' + source.author[i].id + '\'>' + source.author[i].name + '</a>';
+					}
+					i += 1;
+				}
+				// authors
+				if (data.editor === 1) {
+					bibtex += 'editor = {' + authors + '},<br>';
+					biblio += authors + '(Hg.): ';
+				} else {
+					bibtex += 'author = {' + authors + '},<br>';
+					biblio += authors + ': ';
+				}
+				// title
+					bibtex += 'title = {' + source.title + '},<br>';
+				if (source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book') {
+					biblio += '<a href=\'?collection=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
+				} else {
+					biblio += '<a href=\'?source=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
+				}
+				if (source.subtitle !== '') {
+					bibtex += 'subtitle = {' + source.subtitle + '},<br>';
+					biblio += getLastChar(source.subtitle);
+				}
+				// locations
+				i = 0;
+				while (i < source.location.length) {
+					if (locations === undefined) {
+						locations = source.location[i].name;
+					} else {
+						locations += ', ' + source.location[i].name;
+					}
+					i += 1;
+				}
+
+
+				if ('detail' in data.source) {
+					var detailKey, countDetail = Object.keys(source.detail).length;
+					var crossref = {};
+					var pages;
+					i = 0;
+					while (i < countDetail) {
+						detailKey = Object.keys(source.detail)[i];
+						switch (detailKey) {
+							case 'url':
+								bibtex += 'url = {<a target=\'_blank\' href=\'' + source.detail.url + '\' >' + source.detail.url + '</a>},<br>';
+								biblio += ', URL: <a target=\'_blank\' href=\'' + source.detail.url + '\'>' + source.detail.url + '</a> ';
+								break;
+
+							case 'urldate':
+								bibtex += 'urldate = {' + source.detail.urldate + '},<br>';
+								biblio += '(Stand: ' + source.detail.urldate + ')';
+								break;
+
+							case 'pages':
+								bibtex += 'pages = {' + source.detail.pages + '},<br>';
+								pages = ', S. ' + source.detail.pages;
+								break;
+
+							default:
+								bibtex += detailKey + ' = {' + source.detail.detailKey + '},<br>';
+								biblio += source.detail.detailKey;
+						}
+						i += 1;
+					}
+
+				}
+				if ('crossref' in source.detail || crossref === undefined) {
+					bibtex += 'crossref = {' + source.detail.crossref.name + '},<br>';
+					//crossref = getSource(source.detail.crossref.id, localdata);
+					biblio += 'In: ' + getSource(source.detail.crossref.id, localdata) + ', ';
+				} else {
+					if (locations !== undefined) {
+						bibtex += 'location = {' + locations + '},<br>';
+						biblio += locations + ', ';
+					}
+					if (source.date.year !== '0000') {
+						bibtex += 'year = {' + source.date.year + '},<br>';
+						biblio += source.date.year;
+					}
+				}
+
+				bibtex += 'note = {' + source.comment + '}}';
+				biblio += '.';
+/*
+				var source = {
+					biblio: biblio,
+					bibtex: bibtex
+				};
+				*/
+//				console.log(source.biblio);
+//				source.shortBib = bib.source.name;
+
+
+
+				console.log(biblio);
+
+
+				return (biblio);
+			});
+		},
 
 		dispNote = function (ele, data, localdata) {
-			var note, media, text, latex, source, label, tools;
+			var note = data.note.id,
+				media = data.note.media,
+				title = data.note.title,
+				subtitle = data.note.subtitle,
+				text = data.note.comment,
+				latex = data.note.comment4tex,
+				sourceID = data.note.source.id,
+				source = {},
+				label,
+				tools;
+
+			if(note !== 0) {
+				ele.append(
+					note = $('<div>').addClass('note item').attr({'id': note})
+						.append(
+						media = $('<div>').addClass('media').html(media)
+					)
+						.append(
+						text = $('<div>').addClass('text')
+							.append($('<h3>').html(title))
+							.append($('<h4>').html(subtitle))
+							.append($('<p>').html(text))
+					)
+						.append(
+						latex = $('<div>').addClass('latex')
+							.append($('<h3>').html(title))
+							.append($('<h4>').html(subtitle))
+							.append($('<p>').html(latex))
+					)
+						.append(
+						$('<div>').addClass('label')
+							.append(
+							label = $('<p>')
+						)
+					)
+						.append(
+						tools = $('<div>').addClass('tools')
+					)
+				);
+				if(data.note.public === 0) {
+					label.addClass('private');
+				}
+				if(sourceID !== 0){
+					source = getSource(sourceID, localdata);
+					console.log(source);
+
+					//text.append(source.biblio);
+					latex.append(data.note.source.name);
+				}
+
+
+
+			} else {
+				$('#fullpage').warning({
+					type: 'noresults',
+					lang: 'de'
+				});
+				$('body').on('click', function () {
+					window.location.href = localdata.settings.url;
+				})
+			}
+
+
+
+
+
 			var classNote, classLabel;
 			if (data.note.id !== 0) {
 				if (data.note.biblio !== null) {
@@ -72,39 +251,8 @@
 					classNote = 'note item';
 				}
 
-				if (data.note.public === '1') {
-					classLabel = 'label'
-				} else {
-					classLabel = 'label private'
-				}
 
-				ele.append(
-					note = $('<div>').addClass(classNote).attr({'id': data.note.id})
-						.append(
-						media = $('<div>').addClass('media').html(data.note.media)
-					)
-						.append(
-						text = $('<div>').addClass('text')
-							.append($('<h3>').html(data.note.title))
-							.append($('<h5>').html(data.note.subtitle))
-							.append($('<p>').html(data.note.comment))
-					)
-						.append(
-						latex = $('<div>').addClass('latex')
-							.append($('<h3>').html(data.note.title))
-							.append($('<h5>').html(data.note.subtitle))
-							.append($('<p>').html(data.note.comment4tex))
-					)
-						.append(
-						$('<div>').addClass(classLabel)
-							.append(
-							label = $('<p>')
-						)
-					)
-						.append(
-						tools = $('<div>').addClass('tools')
-					)
-				);
+
 
 				// label ele
 				$.each(data.note.label, function (i, noteLabel) {
@@ -241,13 +389,7 @@
 					});
 
 			} else {
-				$('#fullpage').warning({
-					type: 'noresults',
-					lang: 'de'
-				});
-				$('body').on('click', function () {
-					window.location.href = localdata.settings.url;
-				})
+
 			}
 
 			return (media, text, latex, label, tools);
@@ -300,118 +442,6 @@
 					bibtex += 'author = {' + authors + '},<br>';
 					biblio += authors + ': ';
 				}
-
-				bibtex += 'title = {' + data.source.title + '},<br>';
-
-				if (data.source.bibTyp.name === 'collection' || data.source.bibTyp.name === 'proceedings' || data.source.bibTyp.name === 'book') {
-					biblio += '<a href=\'?collection=' + data.source.id + '\' >' + getLastChar(data.source.title) + '</a> ';
-				} else {
-					biblio += '<a href=\'?source=' + data.source.id + '\' >' + getLastChar(data.source.title) + '</a> ';
-				}
-				if (data.source.subtitle !== '') {
-					bibtex += 'subtitle = {' + data.source.subtitle + '},<br>';
-					biblio += getLastChar(data.source.subtitle);
-				}
-
-				if ('crossref' in data.source.detail) {
-					/*
-					var crossAuthors = '';
-					// set the authors
-					i = 0;
-					while (i < data.source.detail.crossref.author.length) {
-
-						if (crossAuthors == '') {
-							crossAuthors = '<a href=\'?author=' + data.crossref.author[i].id + '\'>' + data.crossref.author[i].name + '</a>';
-						} else {
-							crossAuthors += ', <a href=\'?author=' + data.crossref.author[i].id + '\'>' + data.crossref.author[i].name + '</a>';
-						}
-						i += 1;
-					}
-					var crossLocations = '';
-					// set the locations
-					i = 0;
-					while (i < data.crossref.location.length) {
-						if (crossLocations === '') {
-							crossLocations = data.crossref.location[i].name;
-						} else {
-							crossLocations += ', ' + data.crossref.location[i].name;
-						}
-						i += 1;
-					}
-					*/
-
-					bibtex += 'crossref = {<a href=\'?collection=' + data.source.detail.crossref.id + '\'>' + data.source.detail.crossref.name + '</a>},<br>';
-/*
-					biblio += 'In: ';
-					if (data.crossref.editor === 1) {
-						bibtex += 'editor = {' + crossAuthors + '},<br>';
-						biblio += crossAuthors + ' (Hg.): ';
-					} else {
-						bibtex += 'author = {' + crossAuthors + '},<br>';
-						biblio += crossAuthors + ': ';
-					}
-					bibtex += 'booktitle = {' + (data.crossref.title) + '},<br>';
-					biblio += '<a href=\'?collection=' + data.crossref.id + '\'>' + getLastChar(data.crossref.title) + ' </a>';
-
-					if (data.crossref.subtitle != '') {
-						bibtex += 'booksubtitle = {' + (data.crossref.subtitle) + '},<br>';
-						biblio += getLastChar(data.crossref.subtitle);
-					}
-
-					if ('location' in data.crossref) {
-						bibtex += 'location = {' + crossLocations + '},<br>';
-						biblio += crossLocations + ', ';
-					}
-					if (data.crossref.year != '0000') {
-						bibtex += 'year = {' + data.crossref.year + '},<br>';
-						biblio += data.crossref.year;
-					}
-*/
-				} else {
-					if (data.source.locations !== '') {
-						bibtex += 'location = {' + data.source.locations + '},<br>';
-						biblio += data.source.locations + ', ';
-					}
-					if (data.year !== '0000') {
-						bibtex += 'year = {' + data.source.date.year + '},<br>';
-						biblio += data.source.date.year;
-					}
-				}
-
-
-
-
-				if ('detail' in data.source) {
-
-					var detailKey, countDetail = Object.keys(data.source.detail).length;
-					i = 0;
-					while (i < countDetail) {
-						detailKey = Object.keys(data.source.detail)[i];
-						switch (detailKey) {
-							case 'url':
-								bibtex += 'url = {<a target=\'_blank\' href=\'' + data.source.detail.url + '\' >' + data.source.detail.url + '</a>},<br>';
-								biblio += ', URL: <a target=\'_blank\' href=\'' + data.source.detail.url + '\'>' + data.source.detail.url + '</a> ';
-								break;
-
-							case 'urldate':
-								bibtex += 'urldate = {' + data.source.detail.urldate + '},<br>';
-								biblio += '(Stand: ' + data.source.detail.urldate + ')';
-								break;
-
-							case 'pages':
-								bibtex += 'pages = {' + data.source.detail.pages + '},<br>';
-								biblio += ', S. ' + data.source.detail.pages;
-								break;
-
-							default:
-								bibtex += detailKey + ' = {' + data.source.detail.detailKey + '},<br>';
-								biblio += data.source.detail.detailKey;
-						}
-						i += 1;
-					}
-				}
-				bibtex += 'note = {' + data.source.comment + '}}';
-				biblio += '.';
 
 
 			ele.append(
