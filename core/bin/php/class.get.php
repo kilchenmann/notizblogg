@@ -123,9 +123,18 @@ class get {
 						while ($field = mysqli_fetch_object($bibfield_sql)) {
 							$bibDetail = $detail->bibDetail;
 							if($field->bibField == 'crossref') {
-								$bibDetail = getIndex('bib', $detail->bibDetail);
+								$bib = NEW get();
+								$bib->id = $detail->bibDetail;
+								$bib->type = 'source';
+								$bib->access = $this->access;
+								$bibDetail = json_decode($bib->getSource());
+//								$bibDetail = getIndex('bib', $detail->bibDetail);
+//								$bibDetail['author'] = getIndexMN('bib', 'author', $detail->bibDetail);
+//								$bibDetail['location'] = getIndexMN('bib', 'location', $detail->bibDetail);
 							}
+							$bibInfo['crossref'] = $bibDetail;
 							$bibInfo[$field->bibField] = $bibDetail;
+							//print_r($bibInfo);
 						}
 					}
 				}

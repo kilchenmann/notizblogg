@@ -50,24 +50,54 @@
 			};
 			return(activeNote);
 		},
+
+		getAuthors = function(author) {
+			// authors
+			var i = 0, authors = undefined;
+			if(author.length > 4) {
+				authors = '<a href=\'?author=' + author[i].id + '\'>' + author[i].name + '</a> et al.';
+			} else {
+				while (i < author.length) {
+					if (authors === undefined) {
+						authors = '<a href=\'?author=' + author[i].id + '\'>' + author[i].name + '</a>';
+					} else {
+						authors += ', <a href=\'?author=' + author[i].id + '\'>' + author[i].name + '</a>';
+					}
+					i += 1;
+				}
+			}
+			return authors;
+		},
+
+		getLocations = function(location) {
+			// locations
+			var i = 0, locations = undefined;
+			if(location.length > 4) {
+				locations = location[i].name + ' et al.';
+			} else {
+				while (i < location.length) {
+					if (locations === undefined) {
+						locations = location[i].name;
+					} else {
+						locations += ', ' + location[i].name;
+					}
+					i += 1;
+				}
+			}
+			return locations;
+		},
+
 		getSource = function(id, localdata) {
-			var i, authors, locations, biblio, bibtex;
+			var i, authors, locations, biblio, bibtex, source;
 			// return source.biblio, source.bibtex;
 			var url = localdata.settings.url + '/get/source/' + id;
 			$.getJSON(url, function (data) {
 				source = data.source;
 				bibtex = '@' + source.bibTyp.name + '{' + source.name + '<br>';
 				biblio = '';
-				// authors
-				i = 0;
-				while (i < source.author.length) {
-					if (authors === undefined) {
-						authors = '<a href=\'?author=' + source.author[i].id + '\'>' + source.author[i].name + '</a>';
-					} else {
-						authors += ', <a href=\'?author=' + source.author[i].id + '\'>' + source.author[i].name + '</a>';
-					}
-					i += 1;
-				}
+				authors = getAuthors(source.author);
+				locations = getAuthors(source.location);
+
 				// authors
 				if (data.editor === 1) {
 					bibtex += 'editor = {' + authors + '},<br>';
@@ -87,21 +117,11 @@
 					bibtex += 'subtitle = {' + source.subtitle + '},<br>';
 					biblio += getLastChar(source.subtitle);
 				}
-				// locations
-				i = 0;
-				while (i < source.location.length) {
-					if (locations === undefined) {
-						locations = source.location[i].name;
-					} else {
-						locations += ', ' + source.location[i].name;
-					}
-					i += 1;
-				}
 
 
 				if ('detail' in data.source) {
 					var detailKey, countDetail = Object.keys(source.detail).length;
-					var crossref = {};
+					//var crossref = [];
 					var pages;
 					i = 0;
 					while (i < countDetail) {
@@ -117,9 +137,26 @@
 								biblio += '(Stand: ' + source.detail.urldate + ')';
 								break;
 
+							case 'crossref':
+								bibtex += 'crossref = {' + source.detail.crossref.name + '},<br>';
+								var crossref = source.detail.crossref.source, crossTitle = '', crossAuthors, crossLocations;
+								//console.log(crossref.author);
+								crossAuthors = getAuthors(crossref.author);
+								crossLocations = getLocations(crossref.location);
+								if (crossref.bibTyp.name === 'collection' || crossref.bibTyp.name === 'proceedings' || crossref.bibTyp.name === 'book') {
+									crossTitle = '<a href=\'?collection=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
+								} else {
+									crossTitle += '<a href=\'?source=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
+								}
+								if (crossref.subtitle !== '') {
+									crossTitle += getLastChar(crossref.subtitle);
+								}
+								biblio += 'In: ' + crossAuthors + ': ' + crossTitle + ' ' + crossLocations + ', ' + crossref.date.year;
+								break;
+
 							case 'pages':
 								bibtex += 'pages = {' + source.detail.pages + '},<br>';
-								pages = ', S. ' + source.detail.pages;
+								biblio += ', S. ' + source.detail.pages;
 								break;
 
 							default:
@@ -130,11 +167,7 @@
 					}
 
 				}
-				if ('crossref' in source.detail || crossref === undefined) {
-					bibtex += 'crossref = {' + source.detail.crossref.name + '},<br>';
-					//crossref = getSource(source.detail.crossref.id, localdata);
-					biblio += 'In: ' + getSource(source.detail.crossref.id, localdata) + ', ';
-				} else {
+				if(crossref === undefined) {
 					if (locations !== undefined) {
 						bibtex += 'location = {' + locations + '},<br>';
 						biblio += locations + ', ';
@@ -144,24 +177,74 @@
 						biblio += source.date.year;
 					}
 				}
-
 				bibtex += 'note = {' + source.comment + '}}';
 				biblio += '.';
-/*
-				var source = {
-					biblio: biblio,
-					bibtex: bibtex
+
+				var bib = {
+					'biblio': biblio,
+					'bibtex': bibtex
 				};
-				*/
-//				console.log(source.biblio);
+							console.log(bib.biblio);
 //				source.shortBib = bib.source.name;
 
 
 
-				console.log(biblio);
+			//	console.log(source);
 
 
-				return (biblio);
+				return bib;
+			});
+		},
+
+		getCrossref = function (id, localdata) {
+			var i, authors, locations, biblio, bibtex, source;
+			// return source.biblio, source.bibtex;
+			var url = localdata.settings.url + '/get/source/' + id;
+			$.getJSON(url, function (data) {
+				source = data.source;
+				biblio = '';
+				// authors
+				i = 0;
+				while (i < source.author.length) {
+					if (authors === undefined) {
+						authors = '<a href=\'?author=' + source.author[i].id + '\'>' + source.author[i].name + '</a>';
+					} else {
+						authors += ', <a href=\'?author=' + source.author[i].id + '\'>' + source.author[i].name + '</a>';
+					}
+					i += 1;
+				}
+				// authors
+				if (data.editor === 1) {
+					biblio += authors + '(Hg.): ';
+				} else {
+					biblio += authors + ': ';
+				}
+				// title
+				if (source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book') {
+					biblio += '<a href=\'?collection=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
+				} else {
+					biblio += '<a href=\'?source=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
+				}
+				if (source.subtitle !== '') {
+					biblio += getLastChar(source.subtitle);
+				}
+				// locations
+				i = 0;
+				while (i < source.location.length) {
+					if (locations === undefined) {
+						locations = source.location[i].name;
+					} else {
+						locations += ', ' + source.location[i].name;
+					}
+					i += 1;
+				}
+				if (locations !== undefined) {
+					biblio += locations + ', ';
+				}
+				if (source.date.year !== '0000') {
+					biblio += source.date.year;
+				}
+				return biblio;
 			});
 		},
 
@@ -174,6 +257,7 @@
 				latex = data.note.comment4tex,
 				sourceID = data.note.source.id,
 				source = {},
+				content,
 				label,
 				tools;
 
@@ -184,7 +268,7 @@
 						media = $('<div>').addClass('media').html(media)
 					)
 						.append(
-						text = $('<div>').addClass('text')
+						content = $('<div>').addClass('text')
 							.append($('<h3>').html(title))
 							.append($('<h4>').html(subtitle))
 							.append($('<p>').html(text))
@@ -209,10 +293,10 @@
 					label.addClass('private');
 				}
 				if(sourceID !== 0){
-					source = getSource(sourceID, localdata);
-					console.log(source);
+					var bib = getSource(sourceID, localdata);
+					console.log(bib);
 
-					//text.append(source.biblio);
+					content.append(bib.biblio);
 					latex.append(data.note.source.name);
 				}
 
