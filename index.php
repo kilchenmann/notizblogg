@@ -38,6 +38,7 @@
 
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.shownote.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.expand.js"></script>
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.masonry.min.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/nb.css">
 
@@ -70,65 +71,65 @@
 		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">André Kilchenmann</a> |
 		<span class='year'></span>
 		<a href="http://milchkannen.ch">
-		<img src="<?php echo __SITE_URL__; ?>/core/style/img/akM-logo-small.png" alt="milchkannen | kilchenmann" title="milchkannen | andré kilchenmann"/>
+			<img src="<?php echo __SITE_URL__; ?>/core/style/img/akM-logo-small.png" alt="milchkannen | kilchenmann" title="milchkannen | andré kilchenmann"/>
 		</a>
 	</p>
 </footer>
-
+<div class="modal"><!-- Place at bottom of page --></div>
 <div id="fullpage">
-		<div class="viewer">
+	<div class="viewer">
 
 
-			<?php
-			// default parameters
+		<?php
+		// default parameters
 
-			$type = '';
-			$query = 'all';
-			$viewer = 'wall';
+		$type = '';
+		$query = 'all';
+		$viewer = 'wall';
 
-			if($_SERVER['QUERY_STRING']){
-				// default values; in case of wrong queries; these variables would be overwritten in the right case
-				if(isset($_GET['source'])){
-					$type = 'source';
-					$query = $_GET['source'];
-					$viewer = 'desk';
-				}
-				if(isset($_GET['note'])){
-					$type = 'note';
-					$query = $_GET['note'];
-				}
-				if(isset($_GET['label'])){
-					$type = 'label';
-					$query = $_GET['label'];
-				}
-				if(isset($_GET['author'])){
-					$type = 'author';
-					$query = $_GET['author'];
-				}
-				if(isset($_GET['collection'])){
-					$type = 'collection';
-					$query = $_GET['collection'];
-					$viewer = 'desk';
-				}
-				if(isset($_GET['q'])){
-					$type = 'search';
-					$query = $_GET['q'];
-				}
+		if($_SERVER['QUERY_STRING']){
+			// default values; in case of wrong queries; these variables would be overwritten in the right case
+			if(isset($_GET['source'])){
+				$type = 'source';
+				$query = $_GET['source'];
+				$viewer = 'desk';
 			}
-			/*
-			else {
-				?>
-				<script type="text/javascript">
-					$('#fullpage').css({'background-image': 'url(core/style/img/bg-notizblogg.jpg)'});
-				</script>
-			<?php
+			if(isset($_GET['note'])){
+				$type = 'note';
+				$query = $_GET['note'];
 			}
-
-			show($type, $query, $access, $viewer);
-*/
+			if(isset($_GET['label'])){
+				$type = 'label';
+				$query = $_GET['label'];
+			}
+			if(isset($_GET['author'])){
+				$type = 'author';
+				$query = $_GET['author'];
+			}
+			if(isset($_GET['collection'])){
+				$type = 'collection';
+				$query = $_GET['collection'];
+				$viewer = 'desk';
+			}
+			if(isset($_GET['q'])){
+				$type = 'search';
+				$query = $_GET['q'];
+			}
+		}
+		/*
+		else {
 			?>
+			<script type="text/javascript">
+				$('#fullpage').css({'background-image': 'url(core/style/img/bg-notizblogg.jpg)'});
+			</script>
+		<?php
+		}
 
-		</div>
+		show($type, $query, $access, $viewer);
+*/
+		?>
+
+	</div>
 
 </div>
 
@@ -165,6 +166,207 @@ NB.query = {
 	id: '<?php echo $query; ?>'
 };
 
+$(window).load(function() {
+// set the search bar and the notizblogg logo
+	$.getScript(NB.url + '/core/bin/js/jquery.finder.js', function() {
+		/* integrate the search bar in the header panel */
+		$('.project').append($('<a>').attr({href: NB.url}).append($('<h2>').text('Notizblogg')).addClass('logo'));
+		$('.search').finder({
+			search: 'Suche',
+			filter: 'Erweiterte Suche',
+			database: ''
+		});
+	});
+// set the panel icons if you're logged in
+	$.getScript(NB.url + '/core/bin/js/jquery.login.js', function() {
+		if(NB.user.name !== 'guest' && NB.access !== '1' && NB.user.id !== '') {
+			$('.user').login({
+				type: 'logout',
+				//			user: NB.user,
+				submit: 'Abmelden',
+				action: NB.url + '/core/bin/php/check.out.php'
+			});
+			/* integrate the add button */
+			$('.add')
+				.append($('<button>').addClass('btn grp_none toggle_add'))
+				.expand({
+					type: 'source',		// source || note
+					sourceID: 'new',
+					noteID: 'new',
+					edit: true,		// true || false
+					data: undefined,
+					show: 'form'		// booklet || form
+				});
+			$.getScript(NB.url + '/core/bin/js/jquery.drawer.js', function() {
+
+				$('.drawer').append(
+					//		$('<button>').addClass('btn grp_none toggle_drawer')
+				);
+			});
+
+		} else {
+			$('.user').login({
+				type: 'login',
+				user: 'Benutzername',
+				key: 'Passwort',
+				submit: 'Anmelden',
+				action: NB.url + '/core/bin/php/check.in.php'
+			});
+		}
+	});
+});
+
+$(window).load(function() {
+	$('.viewer').shownote(NB);
+});
+
+var height = $(window).height() - $('header').height() - $('footer').height();
+$('div.viewer').css({'height': height});
+$('.float_obj').center();
+
+
+$(document).keyup(function(event) {
+	if(event.keyCode == 27) {
+		if($('.float_obj').is(':visible')) {
+			$(this).hide();
+			$('.viewer').css({'opacity': '1'});
+
+			if($('button.toggle_add').hasClass('toggle_delete')) {
+				$(this).toggleClass('toggle_delete');
+			}
+
+		}
+	}
+});
+
+$(window).resize(function() {
+	var height = $(window).height() - $('header').height() - $('footer').height();
+	$('div.viewer').css({'height': height});
+	$('.float_obj').center();
+	// set the numbers of wall columns
+	if($('.wall').length !== 0) {
+		var width = $(window).width();
+		var note_width = $(this).find('.note').width() + 60;
+		var num_col = Math.floor(width / note_width);
+		$(this).css({
+			'-webkit-column-count': num_col,
+			'-moz-column-count': num_col,
+			'column-count': num_col,
+			'width': num_col * note_width
+		});
+	}
+});
+
+
+var activator = function (element) {
+		element.toggleClass('active');
+		element.children('div.media').css({'opacity': '1'});
+		element.children('div.label').css({'opacity': '1'});
+		element.children('div.tools').css({'opacity': '1'});
+		var type = undefined,
+			typeID = undefined;
+		if (!element.attr('id')) {
+			// title element
+			type = 'title';
+			typeID = 0;
+		} else {
+			if (element.hasClass('topic')) {
+				type = 'source';
+			} else {
+				type = 'note';
+			}
+			typeID = element.attr('id');
+		}
+		//var activeNote = $('.active .tools button').attr('id');
+		var activeNote = {
+			type: type,
+			id: typeID
+		};
+		return(activeNote);
+	};
+
+$body = $("body");
+
+$(document).on({
+	ajaxStart: function() { $body.addClass("loading");    },
+	ajaxStop: function() {
+		$body.removeClass("loading");
+		//var page = 'ready';
+
+		var active = {};
+		$('div.note')
+			.mouseenter(function (event) {
+				active = activator($(this));
+			})
+			.on('touchstart', function () {
+				active = activator($(this));
+			})
+
+			.hover(function () {
+				/*
+				 if($(this).hasClass('active')) {
+
+				 }
+				 */
+			})
+
+			.mouseleave(function (event) {
+				$(this).toggleClass('active');
+				$(this).children('div.media').css({'opacity': '0.8'});
+				$(this).children('div.label').css({'opacity': '0.8'});
+				$(this).children('div.tools').css({'opacity': '0.1'});
+			})
+			.on('touchend', function () {
+
+			});
+
+
+		if($('.desk').length > 0) {
+
+				$(function () {
+					function Arrow_Points() {
+						var s = $('.right_side').find('.note');
+						$.each(s, function (i, obj) {
+							var posLeft = $(obj).position().left;		//css("left");
+							//	$(obj).addClass('borderclass');
+							if (posLeft === 0) {
+//							html = "<span class='rightCorner'></span>";
+								$(obj).prepend($('<span>').addClass('rightCorner'));
+							}
+							else {
+//							html = "<span class='leftCorner'></span>";
+								$(obj).css({'text-align': 'right'}).prepend($('<span>').addClass('leftCorner'));
+							}
+						});
+					}
+
+
+					// Divs
+					$('.right_side').masonry({itemSelector: '.note'});
+					Arrow_Points();
+
+
+				});
+			}
+
+	}
+
+});
+
+
+$(window).bind("load", function() {
+	// code here
+	//alert('website is ready!?');
+//	alert($('div.note').length);
+
+});
+
+
+
+
+
+
+
 //NB.query = getUrlVars();
 
 
@@ -179,218 +381,89 @@ NB.query = {
 
 //	$(document).ready(function () {
 
-// set the panel icons if you're logged in
-		$.getScript(NB.url + '/core/bin/js/jquery.login.js', function() {
-			if(NB.user.name !== 'guest' && NB.access !== '1' && NB.user.id !== '') {
-				$('.user').login({
-					type: 'logout',
-		//			user: NB.user,
-					submit: 'Abmelden',
-					action: NB.url + '/core/bin/php/check.out.php'
-				});
-				$.getScript(NB.url + '/core/bin/js/jquery.finder.js', function() {
-					/* integrate the search bar in the header panel */
-					$('.project').append($('<a>').attr({href: NB.url}).append($('<h2>').text('Notizblogg')).addClass('logo'));
 
 
 
-					$('.search').finder({
-						search: 'Suche',
-						filter: 'Erweiterte Suche',
-						database: ''
-					});
-				});
-					/* integrate the add button */
-					$('.add')
-						.append($('<button>').addClass('btn grp_none toggle_add'))
-						.expand({
-							type: 'source',		// source || note
-							sourceID: 'new',
-							noteID: 'new',
-							edit: true,		// true || false
-							data: undefined,
-							show: 'form'		// booklet || form
-						});
-				$.getScript(NB.url + '/core/bin/js/jquery.drawer.js', function() {
-
-					$('.drawer').append(
-						//		$('<button>').addClass('btn grp_none toggle_drawer')
-					);
-				});
-
-			} else {
-				$('.user').login({
-					type: 'login',
-					user: 'Benutzername',
-					key: 'Passwort',
-					submit: 'Anmelden',
-					action: NB.url + '/core/bin/php/check.in.php'
-				});
-			}
-		});
-
-		var height = $(window).height() - $('header').height() - $('footer').height();
-		$('div.viewer').css({'height': height});
-		$('.float_obj').center();
 
 
-		//$.getScript('core/bin/js/jquery.fullpage.min.js', function() {
-			/*
-			$('#fullpage').fullpage({
-				//	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
-				anchors: ['start'],
-				//	slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
-				slidesColor: ['#1A1A1A'],
-				css3: true
-			});
-			*/
-		//});
+
+
+//$.getScript('core/bin/js/jquery.fullpage.min.js', function() {
+/*
+ $('#fullpage').fullpage({
+ //	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
+ anchors: ['start'],
+ //	slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
+ slidesColor: ['#1A1A1A'],
+ css3: true
+ });
+ */
+//});
 
 
 /*
-		if(getUrlVars()["access"] !== undefined) {
-			$('#fullpage').warning({
-				type: 'access'
-			});
-			$('body').on('click', function(){
-				window.location.href = window.location.href.split('?')[0];
-			})
-		}
-		*/
+ if(getUrlVars()["access"] !== undefined) {
+ $('#fullpage').warning({
+ type: 'access'
+ });
+ $('body').on('click', function(){
+ window.location.href = window.location.href.split('?')[0];
+ })
+ }
+ */
 
 //	});
 
-	$(document).keyup(function(e) {
-		if(e.keyCode == 27) {
-				if($('.float_obj').is(':visible')) {
-					$(this).hide();
-					$('.viewer').css({'opacity': '1'});
 
-					if($('button.toggle_add').hasClass('toggle_delete')) {
-						$(this).toggleClass('toggle_delete');
-					}
 
-				}
-		}
-	});
-
-	$(window).load(function() {
-		$('.viewer').shownote(NB);
-
-		/*
-		if($('.desk').length !== 0) {
-			var panel_left = $('.left_side');
-			var panel_right = $('.right_side');
-			var margin_left = panel_left.position().left + panel_left.width();
-			if((margin_left + panel_right.width()) >= win_width ) {
-				panel_right.css({left: '44px'});
-			} else {
-				panel_right.css({left: margin_left});
-			}
-		}
-		*/
-	});
-	$(window).resize(function() {
-		var height = $(window).height() - $('header').height() - $('footer').height();
-		$('div.viewer').css({'height': height});
-		$('.float_obj').center();
-		// set the numbers of wall columns
-		if($('.wall').length !== 0) {
-			var width = $(window).width();
-			var note_width = $(this).find('.note').width() + 60;
-			var num_col = Math.floor(width / note_width);
-			$(this).css({
-				'-webkit-column-count': num_col,
-				'-moz-column-count': num_col,
-				'column-count': num_col,
-				'width': num_col * note_width
-			});
-		}
-
-	});
-
-	//$.getScript(NB.url + '/core/bin/js/jquery.mousewheel.min.js', function() {
-		/*
-		$('div.viewer').on('mousewheel', function (e, d) {
-			var viewer = $(this);
-			if ((this.scrollTop === (viewer[0].scrollHeight - viewer.height()) && d < 0) || (this.scrollTop === 0 && d > 0)) {
-				e.preventDefault();
-			}
-		})
-		*/
-	//});
+//$.getScript(NB.url + '/core/bin/js/jquery.mousewheel.min.js', function() {
+/*
+ $('div.viewer').on('mousewheel', function (e, d) {
+ var viewer = $(this);
+ if ((this.scrollTop === (viewer[0].scrollHeight - viewer.height()) && d < 0) || (this.scrollTop === 0 && d > 0)) {
+ e.preventDefault();
+ }
+ })
+ */
+//});
 
 
 
-	$('div.desk')
-		.mouseenter(function() {
+$('div.desk')
+	.mouseenter(function() {
 //			$('.note').toggleClass('active');
 //			$('.note').children('div').css({'background-color': 'rgba(251, 251, 251, 0.3)'});
-		})
-		.hover(function() {
+	})
+	.hover(function() {
 //			$('.note').children('div').css({'background-color': 'rgba(251, 251, 251, 0.3)'});
-		})
-		.mouseleave(function() {
+	})
+	.mouseleave(function() {
 //			$('.note').toggleClass('active');
 //			$('.note').children('div').css({'background-color': ''});
 	});
 
 /*
-	$('div.tools button').hover(function(){
-			// first function is for the mouseover/mouseenter events
-			console.log($(this).attr('id'));
-		},
-		function(){
-			// second function is for mouseleave/mouseout events
-			$(this).find('button').show();
-		});
-*/
+ $('div.tools button').hover(function(){
+ // first function is for the mouseover/mouseenter events
+ console.log($(this).attr('id'));
+ },
+ function(){
+ // second function is for mouseleave/mouseout events
+ $(this).find('button').show();
+ });
+ */
 
 
 
 
 
-	if($('.desk').length !== 0) {
-		$.getScript(NB.url + '/core/bin/js/jquery.masonry.min.js', function() {
-			$(function(){
-				function Arrow_Points()
-				{
-					var s = $('.right_side').find('.note');
-					$.each(s, function(i, obj) {
-						var posLeft = $(obj).position().left;		//css("left");
-					//	$(obj).addClass('borderclass');
-						if(posLeft === 0)
-						{
-//							html = "<span class='rightCorner'></span>";
-							$(obj).prepend($('<span>').addClass('rightCorner'));
-						}
-						else
-						{
-//							html = "<span class='leftCorner'></span>";
-							$(obj).css({'text-align': 'right'}).prepend($('<span>').addClass('leftCorner'));
-						}
-					});
-				}
-
-
-	// Divs
-				$('.right_side').masonry({itemSelector : '.note'});
-				Arrow_Points();
 
 
 
-
-			});
-
-
-	});
-	}
-
-
-	/* copyright date */
-	var curDate = new Date(),
-		curYear = curDate.getFullYear();
-	$('span.year').text('2006-' + curYear);
+/* copyright date */
+var curDate = new Date(),
+	curYear = curDate.getFullYear();
+$('span.year').text('2006-' + curYear);
 
 
 </script>

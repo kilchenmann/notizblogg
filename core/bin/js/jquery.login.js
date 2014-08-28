@@ -143,14 +143,21 @@
 				// set position of float_obj
 				localdata.login.button.on('mouseover', function() {
 					localdata.login.frame.css({
+						position: 'absolute',
 						top: $('header').position().top + 44 +'px',
-						left: $(this).position().left - localdata.login.size + 'px'
+						//right: 22 + 'px'
+						left: $(this).position().left - localdata.login.size - 22 + 'px'
 					})
 
 				});
 
 				localdata.login.button.on('click', function() {
-					localdata.login.frame.toggle();
+					if(localdata.login.frame.is(':visible')) {
+						localdata.login.frame.slideUp();
+					} else {
+						localdata.login.frame.slideDown();
+
+					}
 					if(localdata.login.frame.is(':visible') && localdata.settings.type === 'login') {
 						localdata.login.name.focus();
 					}

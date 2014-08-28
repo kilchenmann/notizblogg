@@ -85,7 +85,7 @@ class get {
 		} else {
 			$data = array(
 				'note' => array(
-					'id' => NULL
+					'id' => 0
 				)
 			);
 		}
@@ -176,7 +176,7 @@ class get {
 							'notes' => array()
 						),
 					);
-					$notes_sql = $mysqli->query('SELECT noteID FROM note WHERE bibID = ' . $this->id);
+					$notes_sql = $mysqli->query('SELECT noteID FROM note WHERE bibID = ' . $this->id . ' ORDER BY pageStart, pageEnd, noteID');
 					while($notes = mysqli_fetch_object($notes_sql)){
 						array_push($data['source']['notes'], $notes->noteID);
 					}
@@ -185,7 +185,7 @@ class get {
 		} else {
 			$data = array(
 				'source' => array(
-					'id' => NULL
+					'id' => 0
 				)
 			);
 		}
@@ -467,6 +467,11 @@ $source['sources'] = $sources;
 				while($row = mysqli_fetch_object($sql)) {
 					array_push($notes, $row->noteID);
 				}
+				break;
+
+			case 'notes';
+
+
 				break;
 
 			default;
