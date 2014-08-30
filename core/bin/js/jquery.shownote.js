@@ -69,7 +69,7 @@
 				bibtex = '@' + source.bibTyp.name + '{' + source.name + '<br>';
 				biblio = '';
 				authors = getAuthors(source.author);
-				locations = getAuthors(source.location);
+				locations = getLocations(source.location);
 
 				// authors
 				if (data.editor === 1) {
@@ -688,23 +688,31 @@
 						break;
 					case 'collection':
 						// desk
-						localdata.view.container.addClass('desk');
+						localdata.view.container.addClass('desk')
+							.append(localdata.view.left = $('<div>').addClass('left_side'))
+							.append(localdata.view.right = $('<div>').addClass('right_side'));
 						url = localdata.settings.url + '/get/source/' + localdata.settings.query.id;
 						$.getJSON(url, function (data) {
-							dispBib(localdata.view.container, data, localdata);
+							localdata.view.left.append(
+								localdata.view.collection = $('<div>').addClass('note')
+							);
+							dispBib(localdata.view.collection, data, localdata);
 						});
 						break;
 					case 'note':
 						// booklet
 						url = localdata.settings.url + '/get/note/' + localdata.settings.query.id;
 						$.getJSON(url, function (data) {
+							localdata.view.container.append(
+								localdata.view.note = $('<div>').addClass('note').attr({'id': localdata.settings.query.id})
+							);
 							for (var key in data) {
 								if (key === 'source') {
 									localdata.view.container.addClass('desk');
-									dispBib(localdata.view.container, data, localdata);
+									dispBib(localdata.view.note, data, localdata);
 								} else {
 									localdata.view.container.addClass('booklet');
-									dispNote(localdata.view.container, data, localdata);
+									dispNote(localdata.view.note, data, localdata);
 								}
 							}
 						});

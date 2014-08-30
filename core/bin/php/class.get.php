@@ -138,6 +138,15 @@ class get {
 						}
 					}
 				}
+
+				if($bibTyp['name'] == 'collection' || $bibTyp['name'] == 'book' || $bibTyp['name'] == 'proceedings') {
+					// get the inbooks, incollections and in proceedings
+					// id of crossref in bibField
+
+					// id of sources in sourceDetail
+
+
+				}
 				// 5 get more details from table note
 				while ($note = mysqli_fetch_object($source_sql)) {
 					// get the labels and set a link to other notes with the same label
