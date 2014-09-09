@@ -239,7 +239,13 @@
 							}
 							var pageHere = ' S. ' + page + '.';
 						}
-						content.append($('<p>').addClass('footnote biblio').html(foot.footnote + pageHere));
+						if(foot.footnote !== undefined) {
+							content.append($('<p>').addClass('footnote biblio').append($('<a>').attr({href: '?source=' + data.note.source.id}).html(foot.footnote)).append(pageHere));
+							//	.html(foot.footnote + pageHere));
+						} else {
+							content.append($('<p>').addClass('footnote biblio').append($('<a>').attr({href: '?source=' + data.note.source.id}).html(data.note.source.name)).append(', ' + pageHere));
+
+						}
 						content4tex.append($('<p>').addClass('footnote bibtex').html('\\footcite[' + page + ']{<a href=\'?source=' + data.note.source.id + '\'>' + data.note.source.name + '</a>}'));
 					});
 				}
