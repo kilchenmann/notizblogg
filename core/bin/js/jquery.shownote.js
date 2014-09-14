@@ -723,6 +723,35 @@
 							}
 						});
 						break;
+					case 'search':
+						var url2;
+						url = localdata.settings.url + '/get/q=' + localdata.settings.query.id;
+						$.getJSON(url, function (search) {
+							$.each(search.notes, function (i, noteID) {
+								url2 = localdata.settings.url + '/get/note/' + noteID;
+								$.getJSON(url2, function (data) {
+									localdata.view.container.append(
+										localdata.view.note = $('<div>').addClass('note').attr({'id': noteID})
+									);
+									for (var key in data) {
+										if (key === 'source') {
+											localdata.view.container.addClass('wall');
+											dispBib(localdata.view.note, data, localdata);
+										} else {
+											localdata.view.container.addClass('wall');
+											dispNote(localdata.view.note, data, localdata);
+										}
+									}
+								});
+							});
+
+
+
+
+
+
+						});
+						break;
 					default:
 						localdata.view.container.addClass('wall');
 				}

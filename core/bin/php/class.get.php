@@ -131,8 +131,9 @@ class get {
 //								$bibDetail = getIndex('bib', $detail->bibDetail);
 //								$bibDetail['author'] = getIndexMN('bib', 'author', $detail->bibDetail);
 //								$bibDetail['location'] = getIndexMN('bib', 'location', $detail->bibDetail);
+								$bibInfo['crossref'] = $bibDetail;
 							}
-							$bibInfo['crossref'] = $bibDetail;
+
 							$bibInfo[$field->bibField] = $bibDetail;
 							//print_r($bibInfo);
 						}
@@ -515,12 +516,75 @@ $source['sources'] = $sources;
 
 	function searchData()
 	{
-		$query = array(
-			'query' => $this->query,
-			'filter' => $this->part
+		$q = $this->query;
+		$f = $this->part;		// filter
+
+		$qs = array();
+
+		// search parameters:
+		// one word e.g.			: luhmann						result:
+		// more than one word e.g.	: luhmann zettelkasten			result: find one or the other or both
+		// one sentence e.g.		: 'luhmann zettelkasten'		result: exactly this somwhere in the content
+		//
+
+		$typeName = 'note';
+		$results = array();
+
+
+		$mysqli = condb('open');
+		switch($f){
+			case 'note';
+				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
+				while($row = mysqli_fetch_object($sql)) {
+					$results[] = $row->noteID;
+				}
+				break;
+
+			case 'source';
+				$sql = $mysqli->query('SELECT * FROM note, bib WHERE notePublic >= ' . $this->access . ' AND note.noteID = bib.noteID AND MATCH(noteTitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
+				while($row = mysqli_fetch_object($sql)) {
+					$results[] = $row->noteID;
+				}
+				break;
+
+			case 'author';
+				$asql = $mysqli->query('SELECT author.authorID, rel_bib_author.bibID FROM author, rel_bib_author WHERE author.author LIKE \'%'.$q.'%\' AND author.authorID = rel_bib_author.authorID');
+				while($arow = mysqli_fetch_object($asql)) {
+					$sql = $mysqli->query('SELECT note.noteID FROM bib, note WHERE bib.bibID = ' . $arow->bibID . ' AND bib.noteID = note.noteID AND note.notePublic >= ' . $this->access . ';' );
+					while($row = mysqli_fetch_object($sql)) {
+						$results[] = $row->noteID;
+					}
+				}
+				$f = 'source';
+				break;
+
+			case 'label';
+				$asql = $mysqli->query('SELECT label.labelID, rel_note_label.bibID FROM label, rel_note_label WHERE label.label LIKE \'%'.$q.'%\' AND label.labelID = rel_note_label.labelID');
+				while($arow = mysqli_fetch_object($asql)) {
+					$sql = $mysqli->query('SELECT note.noteID FROM bib, note WHERE bib.bibID = ' . $arow->bibID . ' AND bib.noteID = note.noteID AND note.notePublic >= ' . $this->access . ';' );
+					while($row = mysqli_fetch_object($sql)) {
+						$results[] = $row->noteID;
+					}
+				}
+				$f = 'note';
+				break;
+
+			default;		// search everywhere
+				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
+				while($row = mysqli_fetch_object($sql)) {
+					$results[] = $row->noteID;
+				}
+				$f = 'note';
+
+		}
+		$list = array(
+			'type' => $f,
+			//'id' => $this->id,
+			'query' => $q,
+			'notes' => $results
 		);
 
-		$this->json = json_encode($query);
+		$this->json = json_encode($list);
 
 		return $this->json;
 	}

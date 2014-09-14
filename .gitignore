@@ -1,3 +1,6 @@
+test/
+data/images/
+data/mysql/
 conf/settings.php
 pinterest-6126c.html
 .idea/

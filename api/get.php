@@ -103,12 +103,13 @@ foreach ($_GET as $key => $value){
 
 		case 'q';
 			$part = '';
-			if (isset($_GET['part'])) {
-				$part = $_GET['part'];
+			if (isset($_GET['filter'])) {
+				$part = $_GET['filter'];
 			}
 			$note = NEW get();
 			$note->query = $_GET['q'];
 			$note->part = $part;
+			$note->access = $user['access'];
 			echo $note->searchData();
 			break;
 

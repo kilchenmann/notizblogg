@@ -3,7 +3,9 @@
 
 <head>
 	<meta charset="UTF-8">
-
+	<!--
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	-->
 	<?php
 	session_start ();
 	require 'core/bin/php/setting.php';
@@ -18,9 +20,7 @@
 	}
 
 	?>
-	<!--
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
--->
+
 	<title>Notizblogg</title>
 	<link rel="shortcut icon" href="<?php echo __SITE_URL__; ?>/core/style/img/favicon.ico">
 
@@ -39,6 +39,11 @@
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.shownote.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.expand.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.masonry.min.js"></script>
+
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.finder.js"></script>
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.login.js"></script>
+
+
 
 	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/nb.css">
 
@@ -167,64 +172,56 @@ NB.query = {
 };
 
 $(window).load(function() {
-// set the search bar and the notizblogg logo
-	$.getScript(NB.url + '/core/bin/js/jquery.finder.js', function() {
-		/* integrate the search bar in the header panel */
-		$('.project').append($('<a>').attr({href: NB.url}).append($('<h2>').text('Notizblogg')).addClass('logo'));
-		$('.search').finder({
-			search: 'Suche',
-			filter: 'Erweiterte Suche',
-			database: ''
+	/* set the correct window size and the dimension of some elements */
+	var height = $(window).height() - $('header').height() - $('footer').height();
+	$('div.viewer').css({'height': height});
+	$('.float_obj').center();
+
+	/* enable the project logo */
+	$('.project').append($('<a>').attr({href: NB.url}).append($('<h2>').text('Notizblogg')).addClass('logo'));
+	/* integrate the search bar in the header panel */
+	$('.search').finder({
+		search: 'Suche',
+		filter: 'Erweiterte Suche',
+		database: ''
+	});
+	/* add button, user / login tools */
+	if(NB.user.name !== 'guest' && NB.access !== '1' && NB.user.id !== '') {
+		$('.user').login({
+			type: 'logout',
+			submit: 'Abmelden',
+			action: NB.url + '/core/bin/php/check.out.php'
 		});
-	});
-// set the panel icons if you're logged in
-	$.getScript(NB.url + '/core/bin/js/jquery.login.js', function() {
-		if(NB.user.name !== 'guest' && NB.access !== '1' && NB.user.id !== '') {
-			$('.user').login({
-				type: 'logout',
-				//			user: NB.user,
-				submit: 'Abmelden',
-				action: NB.url + '/core/bin/php/check.out.php'
-			});
-			/* integrate the add button */
-			$('.add')
-				.append($('<button>').addClass('btn grp_none toggle_add'))
-				.expand({
-					type: 'source',		// source || note
-					sourceID: 'new',
-					noteID: 'new',
-					edit: true,		// true || false
-					data: undefined,
-					show: 'form'		// booklet || form
-				});
-			$.getScript(NB.url + '/core/bin/js/jquery.drawer.js', function() {
-
-				$('.drawer').append(
-					//		$('<button>').addClass('btn grp_none toggle_drawer')
-				);
+		/* integrate the add button */
+		$('.add')
+			.append($('<button>').addClass('btn grp_none toggle_add'))
+			.expand({
+				type: 'source',		// source || note
+				sourceID: 'new',
+				noteID: 'new',
+				edit: true,		// true || false
+				data: undefined,
+				show: 'form'		// booklet || form
 			});
 
-		} else {
-			$('.user').login({
-				type: 'login',
-				user: 'Benutzername',
-				key: 'Passwort',
-				submit: 'Anmelden',
-				action: NB.url + '/core/bin/php/check.in.php'
-			});
-		}
-	});
-});
+		$('.drawer').append(
+		//		$('<button>').addClass('btn grp_none toggle_drawer')
+		);
 
-$(window).load(function() {
+	} else {
+		$('.user').login({
+			type: 'login',
+			user: 'Benutzername',
+			key: 'Passwort',
+			submit: 'Anmelden',
+			action: NB.url + '/core/bin/php/check.in.php'
+		});
+	}
+	/* show some content */
 	$('.viewer').shownote(NB);
 });
 
-var height = $(window).height() - $('header').height() - $('footer').height();
-$('div.viewer').css({'height': height});
-$('.float_obj').center();
-
-
+/* remove the floating elements on clicking the esc-key */
 $(document).keyup(function(event) {
 	if(event.keyCode == 27) {
 		if($('.float_obj').is(':visible')) {
