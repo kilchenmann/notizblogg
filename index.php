@@ -164,6 +164,7 @@ NB.user = {
 };
 NB.url = '<?php echo __SITE_URL__; ?>';
 NB.uri = NB.url + '/' +(location.search).substr(1);
+NB.api = '<?php echo __SITE_API__; ?>';
 NB.media = '<?php echo __MEDIA_URL__; ?>';
 
 NB.query = {

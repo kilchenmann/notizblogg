@@ -6,11 +6,10 @@ if(!defined('IN_PHP')){
 */
 
 $GLOBALS['nb'] = array(
-	'domain' => 'localhost',
-	'path' => '/',
+	'path' => '/nb',				// domain + path = url
 	'host' => 'localhost',
 	'user' => 'db-user',
 	'pass' => 'db-pass',
-	'db' => 'db-name',
+	'db' => 'db-name'
 );
 

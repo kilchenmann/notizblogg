@@ -15,23 +15,25 @@ define ('__MAIN_FILE__', '');
 // echo "MAIN_FILE: ".__MAIN_FILE__."<br>";
 
 define ('__BASE_FOLDER__', $GLOBALS['nb']['path']);
-// notizblogg
+// /nb
 // echo "BASE_FOLDER: ".__BASE_FOLDER__."<br>";
 
 define ('__SITE_PATH__', $pathInfo['dirname']);
-// /Library/WebServer/Documents/notizblogg
+// /Library/WebServer/Documents/nb
 // echo "SITE_PATH: ".__SITE_PATH__."<br>";
 
 define ('__SITE_URL__', $protocol.$_SERVER['HTTP_HOST'] . __BASE_FOLDER__);
-// http://iml-pluto.iml.unibas.ch
+// http://notizblogg.ch
 // echo "SITE_URL: ".__SITE_URL__."<br>";
 
-define ("__MEDIA_URL__", $protocol.$_SERVER['HTTP_HOST'] . "/media");
+define ("__MEDIA_URL__", $protocol.$_SERVER['HTTP_HOST'] . "/data/media");
 // http://somewhere.com/MEDIA/NOTIZBLOGG
 // echo "MEDIA_URL: ".__MEDIA_URL__."<br>";
 
-define ('__DOWNLOAD_URL__', $protocol.$_SERVER['HTTP_HOST'] . "/export");
+define ('__DOWNLOAD_URL__', $protocol.$_SERVER['HTTP_HOST'] . "/data/export");
 // echo "DOWNLOAD_URL: ".__DOWNLOAD_URL__."<br>";
+
+define ('__SITE_API__', $protocol.$_SERVER['HTTP_HOST'] . "/nb/api");
 
 
 /* include all my classes and other php files ------------------------------ */

@@ -228,7 +228,7 @@
 					label.addClass('private');
 				}
 				if (sourceID > 0) {
-					var url = localdata.settings.url + '/get/source/' + sourceID;
+					var url = NB.api + '/get.php?source=' + sourceID;
 					$.getJSON(url, function (sourcedata) {
 						var foot = getSource(sourcedata);
 						if (data.note.page.start !== 0) {
@@ -400,7 +400,7 @@
 					lang: 'de'
 				});
 				$('body').on('click', function () {
-					window.location.href = localdata.settings.url;
+					window.location.href = NB.url;
 				})
 			}
 
@@ -418,7 +418,7 @@
 				}
 
 
-				var url = localdata.settings.url + '/get/source/' + source.id;
+				var url = NB.api + '/get.php?source=' + source.id;
 				$.getJSON(url, function (sourcedata) {
 					var showsource = getSource(sourcedata);
 					biblio = showsource.biblio + '.';
@@ -573,7 +573,7 @@
 					lang: 'de'
 				});
 				$('body').on('click', function () {
-					window.location.href = localdata.settings.url;
+					window.location.href = NB.url;
 				})
 			}
 
@@ -616,7 +616,6 @@
 				localdata.view = {};
 				localdata.settings = {
 					access: 1,
-					url: 'https://www.notizblogg.ch',
 					uri: undefined,
 					user: {
 						id: undefined,
@@ -629,9 +628,11 @@
 				};
 
 
+
 				$.extend(localdata.settings, options);
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
+
 
 				$this.append(
 					localdata.view.container = $('<div>')
@@ -641,11 +642,11 @@
 					case 'author':
 						// wall
 						localdata.view.container.addClass('wall');
-						url = localdata.settings.url + '/get/' + localdata.settings.query.type + '/' + localdata.settings.query.id;
+						url = NB.api + '/get.php?' + localdata.settings.query.type + '=' + localdata.settings.query.id;
 						$.getJSON(url, function (list) {
 							$('input.search_field').attr({value: list.name}).html(list.name);
 							$.each(list.notes, function (i, noteID) {
-								url = localdata.settings.url + '/get/' + noteID;
+								url = NB.api + '/get.php?id=' + noteID;
 								$.getJSON(url, function (data) {
 									localdata.view.container.append(
 										localdata.view.note = $('<div>').addClass('note')
@@ -666,7 +667,7 @@
 						localdata.view.container.addClass('desk')
 							.append(localdata.view.left = $('<div>').addClass('left_side'))
 							.append(localdata.view.right = $('<div>').addClass('right_side'));
-						url = localdata.settings.url + '/get/source/' + localdata.settings.query.id;
+						url = NB.api + '/get.php?source=' + localdata.settings.query.id;
 						$.getJSON(url, function (data) {
 							localdata.view.left.append(
 								localdata.view.source = $('<div>').addClass('note')
@@ -676,7 +677,7 @@
 								localdata.view.right.append(
 									$('<div>').addClass('note').attr({'id': noteID})
 								);
-								url = localdata.settings.url + '/get/note/' + noteID;
+								url = NB.api + '/get.php?note=' + noteID;
 								$.getJSON(url, function (data) {
 									for (var key in data) {
 										localdata.view.note = $('#' + noteID);
@@ -697,7 +698,7 @@
 						localdata.view.container.addClass('desk')
 							.append(localdata.view.left = $('<div>').addClass('left_side'))
 							.append(localdata.view.right = $('<div>').addClass('right_side'));
-						url = localdata.settings.url + '/get/source/' + localdata.settings.query.id;
+						url = NB.api + '/get.php?source=' + localdata.settings.query.id;
 						$.getJSON(url, function (data) {
 							localdata.view.left.append(
 								localdata.view.collection = $('<div>').addClass('note')
@@ -707,7 +708,7 @@
 						break;
 					case 'note':
 						// booklet
-						url = localdata.settings.url + '/get/note/' + localdata.settings.query.id;
+						url = NB.api + '/get.php?note=' + localdata.settings.query.id;
 						$.getJSON(url, function (data) {
 							localdata.view.container.append(
 								localdata.view.note = $('<div>').addClass('note').attr({'id': localdata.settings.query.id})
@@ -725,10 +726,10 @@
 						break;
 					case 'search':
 						var url2;
-						url = localdata.settings.url + '/get/q=' + localdata.settings.query.id;
+						url = NB.api + '/get.php?q=' + localdata.settings.query.id;
 						$.getJSON(url, function (search) {
 							$.each(search.notes, function (i, noteID) {
-								url2 = localdata.settings.url + '/get/note/' + noteID;
+								url2 = NB.api + '/get.php?note=' + noteID;
 								$.getJSON(url2, function (data) {
 									localdata.view.container.append(
 										localdata.view.note = $('<div>').addClass('note').attr({'id': noteID})
@@ -754,6 +755,24 @@
 						break;
 					default:
 						localdata.view.container.addClass('wall');
+						url = NB.api + '/get.php?new=25';
+						$.getJSON(url, function (list) {
+							$.each(list.notes, function (i, noteID) {
+								url = NB.api + '/get.php?id=' + noteID;
+								$.getJSON(url, function (data) {
+									localdata.view.container.append(
+										localdata.view.note = $('<div>').addClass('note')
+									);
+									for (var key in data) {
+										if (key === 'source') {
+											dispBib(localdata.view.note, data, localdata);
+										} else {
+											dispNote(localdata.view.note, data, localdata);
+										}
+									}
+								})
+							})
+						});
 				}
 
 
@@ -866,7 +885,7 @@
 				});
 
 				if (localdata.settings.type === 'source') {
-					$.getJSON('get/' + localdata.settings.type + '/' + localdata.settings.id, function (data) {
+					$.getJSON(NB.api + '/get.php?' + localdata.settings.type + '=' + localdata.settings.id, function (data) {
 						$this.empty();
 						$this.append(
 							$('<div>').addClass('text')
