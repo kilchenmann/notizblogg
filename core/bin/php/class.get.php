@@ -128,9 +128,6 @@ class get {
 								$bib->type = 'source';
 								$bib->access = $this->access;
 								$bibDetail = json_decode($bib->getSource());
-//								$bibDetail = getIndex('bib', $detail->bibDetail);
-//								$bibDetail['author'] = getIndexMN('bib', 'author', $detail->bibDetail);
-//								$bibDetail['location'] = getIndexMN('bib', 'location', $detail->bibDetail);
 								$bibInfo['crossref'] = $bibDetail;
 							}
 
@@ -201,17 +198,6 @@ class get {
 		}
 		return json_encode($data);
 	}
-
-	function getLabel() {
-
-
-	}
-
-	function getAuthor() {
-
-
-	}
-
 
 	function getData() {
 		// one time, we can merge the getSource and the getNote function into this one here getData
@@ -341,7 +327,7 @@ class get {
 				break;
 
 			default;		// search everywhere
-				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
+				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');
 				while($row = mysqli_fetch_object($sql)) {
 					$results[] = $row->noteID;
 				}

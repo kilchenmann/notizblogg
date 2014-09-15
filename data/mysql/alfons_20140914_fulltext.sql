@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `author` (
   `authorID` int(11) NOT NULL AUTO_INCREMENT,
   `author` varchar(155) NOT NULL,
   PRIMARY KEY (`authorID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=122 ;
+) ENGINE=MYISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=122 ;
 
 --
 -- Dumping data for table `author`
@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `bib` (
   PRIMARY KEY (`bibID`),
   UNIQUE KEY `noteID` (`noteID`),
   UNIQUE KEY `bibName` (`bib`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=302 ;
+) ENGINE=MYISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=302 ;
 
 --
 -- Dumping data for table `bib`
@@ -452,7 +452,7 @@ CREATE TABLE IF NOT EXISTS `bibDetail` (
   `bibDetail` varchar(255) NOT NULL,
   PRIMARY KEY (`bibDetailID`),
   UNIQUE KEY `sourceID` (`bibID`,`bibFieldID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=534 ;
+) ENGINE=MYISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=534 ;
 
 --
 -- Dumping data for table `bibDetail`
@@ -559,7 +559,7 @@ CREATE TABLE IF NOT EXISTS `bibField` (
   `bibField` varchar(20) NOT NULL,
   PRIMARY KEY (`bibFieldID`),
   UNIQUE KEY `bibFieldVal` (`bibField`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+) ENGINE=MYISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
 
 --
 -- Dumping data for table `bibField`
@@ -603,7 +603,7 @@ CREATE TABLE IF NOT EXISTS `bibTyp` (
   `bibTyp` varchar(20) NOT NULL,
   PRIMARY KEY (`bibTypID`),
   UNIQUE KEY `bibTypVal` (`bibTyp`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+) ENGINE=MYISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `bibTyp`
@@ -638,7 +638,7 @@ CREATE TABLE IF NOT EXISTS `label` (
   `label` varchar(33) NOT NULL,
   PRIMARY KEY (`labelID`),
   UNIQUE KEY `tagName` (`label`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=666 ;
+) ENGINE=MYISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=666 ;
 
 --
 -- Dumping data for table `label`
@@ -1295,7 +1295,7 @@ CREATE TABLE IF NOT EXISTS `location` (
   `location` varchar(155) NOT NULL,
   PRIMARY KEY (`locationID`),
   UNIQUE KEY `locationVal` (`location`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
+) ENGINE=MYISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=43 ;
 
 --
 -- Dumping data for table `location`
@@ -1354,7 +1354,7 @@ CREATE TABLE IF NOT EXISTS `note` (
   PRIMARY KEY (`noteID`),
   UNIQUE KEY `checkID` (`checkID`),
   FULLTEXT KEY `noteComment` (`noteComment`,`noteTitle`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1675 ;
+) ENGINE=MYISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1675 ;
 
 --
 -- Dumping data for table `note`
@@ -2734,7 +2734,7 @@ CREATE TABLE IF NOT EXISTS `rel_bib_author` (
   `authorID` int(11) NOT NULL,
   `bibID` int(11) NOT NULL,
   PRIMARY KEY (`authorID`,`bibID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MYISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `rel_bib_author`
@@ -2861,7 +2861,7 @@ CREATE TABLE IF NOT EXISTS `rel_bib_location` (
   `locationID` int(11) NOT NULL,
   `bibID` int(11) NOT NULL,
   PRIMARY KEY (`locationID`,`bibID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MYISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `rel_bib_location`
@@ -2924,7 +2924,7 @@ CREATE TABLE IF NOT EXISTS `rel_note_label` (
   `labelID` int(11) NOT NULL,
   `noteID` int(11) NOT NULL,
   PRIMARY KEY (`labelID`,`noteID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MYISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `rel_note_label`
@@ -4887,7 +4887,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `username` (`user`),
   UNIQUE KEY `token` (`token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MYISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `user`

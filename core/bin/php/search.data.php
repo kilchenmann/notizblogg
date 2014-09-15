@@ -6,10 +6,10 @@
  * Time: 01:28
  */
 
-require_once 'setting.php';
-if(isset($_GET['swq']) && $_GET['swq'] !== ''){
+require_once 'settings.php';
+if(isset($_GET['q']) && $_GET['q'] !== ''){
 
-	header ('Location: ' . __SITE_URL__ . '/?q='.$_GET['swq']);
+	header ('Location: ' . __SITE_URL__ . '/?q='.$_GET['q']);
 } else {
 	header ('Location: ' . __SITE_URL__ . '/');
 }

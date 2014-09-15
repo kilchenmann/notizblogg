@@ -13,7 +13,7 @@ session_start ();
 
 $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
-require '../core/bin/php/setting.php'; require '../core/bin/php/class.get.php';
+require '../core/bin/php/settings.php'; require '../core/bin/php/class.get.php';
 
 $user = array(
 	'access' => 1,

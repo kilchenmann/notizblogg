@@ -6,7 +6,7 @@ session_start ();
 session_unset ();
 session_destroy ();
 
-require_once 'setting.php';
+require_once 'settings.php';
 header ('Location: ' . __SITE_URL__ . '/');
 
 ob_end_flush ();

@@ -1,6 +1,6 @@
 <?php
 // Session starten
-require_once 'setting.php';
+require_once 'settings.php';
 $mysqli = condb('open');
 
 $sql = $mysqli->query('SELECT userID, name, user, token FROM user WHERE ' .

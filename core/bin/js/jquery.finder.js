@@ -60,7 +60,7 @@
 								'type': 'search',
 								'title': localdata.settings.search,
 								'placeholder': localdata.settings.search,
-								'name': 'swq'
+								'name': 'q'
 							})
 							.addClass('input grp_middle search_field')
 							.focus(function () {

@@ -8,7 +8,7 @@
 	-->
 	<?php
 	session_start ();
-	require 'core/bin/php/setting.php';
+	require 'core/bin/php/settings.php';
 	$user = array(
 		'access' => 1,
 		'name' => 'guest',
