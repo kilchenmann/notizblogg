@@ -126,7 +126,7 @@
 						.append($('<p>')
 							.append($('<input>')
 								.attr({
-									'type': 'text',
+									'type': 'hidden',
 									'name': 'uri',
 									'value': NB.uri
 								})

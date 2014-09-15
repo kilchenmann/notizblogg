@@ -3,12 +3,13 @@
 require_once 'settings.php';
 $mysqli = condb('open');
 $sql = $mysqli->query('SELECT userID, name, user, token FROM user WHERE ' .
-    '(user like \'' . $_REQUEST['usr'] . '\') AND ' .
-    '(pass = \'' . md5($_REQUEST['key']) . '\')');
+    '(user like \'' . $_POST['usr'] . '\') AND ' .
+    '(pass = \'' . md5($_POST['key']) . '\')');
 
 
 if (mysqli_num_rows($sql) > 0)
 {
+	header ('Location: ' . $_POST['uri'] . '');
 	// write the user data in an array...
 	$data = mysqli_fetch_array($sql);
 	session_start ();
@@ -16,7 +17,7 @@ if (mysqli_num_rows($sql) > 0)
 	$_SESSION["token"] = $data["token"] . '-' . $data["userID"];
 	$_SESSION["user"] = $data["user"];
 //  $pathLogin = $_POST['path'];
-	header ('Location: ' . __SITE_URL__ . '/');
+
 }
 else
 {
