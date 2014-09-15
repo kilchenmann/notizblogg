@@ -20,7 +20,9 @@ header, footer {
 }
 
 #fullpage {
-  background-image: url(../img/bg-empty.jpg);
+  background-color: fade(@btn, 55%);
+  .quick-gradient(top, 0.2);
+//  background-image: url(../img/bg-empty.jpg);
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -235,7 +237,8 @@ header, footer {
   }
   .tools {
 	opacity: 0.1;
-	border-top: 1px solid fade(@bg, 22%);
+	border-bottom: 1px solid fade(@bg, 22%);
+	.border-radius(@rad);
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -263,15 +266,18 @@ header, footer {
 
 .note.active .media, .note.active .text, .note.active .latex {
   background-color: @bg;
+  .border-radius(@rad);
 }
 
 .note.topic .media, .note.topic .text, .note.topic .latex {
   background-color: fade(darken(@bg, 33%), 33%);
   opacity: 0.8;
+  .border-radius(@rad);
 }
 .note.topic.active .media, .note.topic.active .text, .note.topic.active .latex{
   background-color: darken(@bg, 33%);
   opacity: 1;
+  .border-radius(@rad);
 }
 
 .latex {
