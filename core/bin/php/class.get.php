@@ -137,14 +137,6 @@ class get {
 					}
 				}
 
-				if($bibTyp['name'] == 'collection' || $bibTyp['name'] == 'book' || $bibTyp['name'] == 'proceedings') {
-					// get the inbooks, incollections and in proceedings
-					// id of crossref in bibField
-
-					// id of sources in sourceDetail
-
-
-				}
 				// 5 get more details from table note
 				while ($note = mysqli_fetch_object($source_sql)) {
 					// get the labels and set a link to other notes with the same label
@@ -180,9 +172,27 @@ class get {
 							'user' => $user,
 							'public' => $note->notePublic,
 							'detail' => $bibInfo,
-							'notes' => array()
+							'notes' => array(),
+							'insource' => array()
 						),
 					);
+
+					if($bibTyp['name'] == 'collection' || $bibTyp['name'] == 'book' || $bibTyp['name'] == 'proceedings') {
+						// get the inbooks, incollections and in proceedings
+						// id of crossref in bibField
+						$bibf = $mysqli->query('SELECT bibFieldID FROM bibField WHERE bibField = \'crossref\';');
+						while ($bibfid = mysqli_fetch_object($bibf)) {
+			//				echo 'SELECT bibID FROM bibDetail WHERE bibFieldID = '.$bibfid->bibFieldID.' AND bibDetail = '.$this->id.';';
+							$sql = $mysqli->query('SELECT bibID FROM bibDetail WHERE bibFieldID = '.$bibfid->bibFieldID.' AND bibDetail = '.$this->id.';');
+							while ($row = mysqli_fetch_object($sql)) {
+								array_push($data['source']['insource'], $row->bibID);
+							}
+						}
+						// id of sources in sourceDetail
+
+
+					}
+
 					$notes_sql = $mysqli->query('SELECT noteID FROM note WHERE bibID = ' . $this->id . ' ORDER BY pageStart, pageEnd, noteID');
 					while($notes = mysqli_fetch_object($notes_sql)){
 						array_push($data['source']['notes'], $notes->noteID);

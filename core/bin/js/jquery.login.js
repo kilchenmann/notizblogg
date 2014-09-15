@@ -126,6 +126,16 @@
 						.append($('<p>')
 							.append($('<input>')
 								.attr({
+									'type': 'text',
+									'name': 'uri',
+									'value': NB.uri
+								})
+								.addClass('field_obj small')
+						)
+					)
+						.append($('<p>')
+							.append($('<input>')
+								.attr({
 									'type': 'submit',
 									'title': localdata.settings.submit,
 									'value': localdata.settings.submit

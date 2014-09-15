@@ -65,8 +65,12 @@
 			// return source.biblio, source.bibtex;
 			source = data.source;
 			if(source.id !== 0) {
-
-				bibtex = '@' + source.bibTyp.name + '{' + source.name + '<br>';
+				bibtex = '@' + source.bibTyp.name + '{';
+				if (source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book') {
+					bibtex += '<a href=\'?collection=' + source.id + '\' >' + source.name + '</a><br>';
+				} else {
+					bibtex += '<a href=\'?source=' + source.id + '\' >' + source.name + '</a><br>';
+				}
 				biblio = '';
 				authors = getAuthors(source.author);
 				locations = getLocations(source.location);
@@ -395,13 +399,15 @@
 				 });
 				 */
 			} else {
-				$('#fullpage').warning({
-					type: 'noresults',
-					lang: 'de'
-				});
-				$('body').on('click', function () {
-					window.location.href = NB.url;
-				})
+				if ($('div.note').length === 0) {
+					$('#fullpage').warning({
+						type: 'noresults',
+						lang: 'de'
+					});
+					$('body').on('click', function () {
+						window.location.href = NB.url;
+					})
+				}
 			}
 
 
@@ -410,13 +416,8 @@
 
 		dispBib = function (ele, data, localdata) {
 			var note, media, content, content4tex, biblio, bibtex, label, tools, source = data.source;
-			if (source.id !== 0) {
-				if (source.public === '1') {
-					classLabel = 'label'
-				} else {
-					classLabel = 'label private'
-				}
 
+			if (source.id !== 0) {
 
 				var url = NB.api + '/get.php?source=' + source.id;
 				$.getJSON(url, function (sourcedata) {
@@ -438,7 +439,7 @@
 						content4tex = $('<div>').addClass('latex').html(bibtex)
 					)
 						.append(
-						$('<div>').addClass(classLabel)
+						$('<div>').addClass('label')
 							.append(
 							label = $('<p>')
 						)
@@ -447,7 +448,9 @@
 						tools = $('<div>').addClass('tools')
 					);
 
-
+					if (data.source.public === 0) {
+						label.addClass('private');
+					}
 
 					// label ele
 					$.each(data.source.label, function (i, noteLabel) {
@@ -568,13 +571,16 @@
 			} else {
 				//		bibtex = 'The data are not yet ready to use in laTex.';
 				//		biblio = '<a href=\'?source=' + data.source.id + '\' >' + data.source.comment + '</a>';
-				$('#fullpage').warning({
-					type: 'noresults',
-					lang: 'de'
-				});
-				$('body').on('click', function () {
-					window.location.href = NB.url;
-				})
+				if($('div.note').length === 0) {
+					$('#fullpage').warning({
+						type: 'noresults',
+						lang: 'de'
+					});
+					$('body').on('click', function () {
+						window.location.href = NB.url;
+					})
+				}
+
 			}
 
 
@@ -704,6 +710,30 @@
 								localdata.view.collection = $('<div>').addClass('note')
 							);
 							dispBib(localdata.view.collection, data, localdata);
+
+							// find "insources" with the reference to this collection
+
+
+
+
+							$.each(data.source.insource, function (i, bibID) {
+								localdata.view.right.append(
+									$('<div>').addClass('note topic').attr({'id': bibID})
+								);
+								url = NB.api + '/get.php?source=' + bibID;
+								$.getJSON(url, function (data) {
+									for (var key in data) {
+										localdata.view.note = $('#' + bibID);
+										if (key === 'source') {
+											//localdata.view.container.addClass('desk');
+											dispBib(localdata.view.note, data, localdata);
+										} else {
+											//localdata.view.container.addClass('booklet');
+											dispNote(localdata.view.note, data, localdata);
+										}
+									}
+								});
+							});
 						});
 						break;
 					case 'note':
@@ -900,7 +930,6 @@
 				} else {
 
 				}
-
 
 			});											// end "return this.each"
 		},												// end "init"

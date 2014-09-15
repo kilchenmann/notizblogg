@@ -59,6 +59,13 @@ foreach ($_GET as $key => $value){
 			$note->access = $user['access'];
 			echo $note->getSource();
 			break;
+
+		case 'collection';
+			$note->id = $_GET['source'];
+			$note->type = 'collection';
+			$note->access = $user['access'];
+			echo $note->getSource();
+			break;
 		/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
 
 		case 'label';

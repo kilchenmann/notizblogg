@@ -20,13 +20,15 @@ header, footer {
 }
 
 #fullpage {
-  background-color: fade(@btn, 55%);
-  .quick-gradient(top, 0.2);
-//  background-image: url(../img/bg-empty.jpg);
+  background-color: fade(@btn, 22%);
+  .quick-gradient(top, 0.1);
+/*
+  background-image: url(../img/bg-empty.jpg);
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+*/
   position: fixed;
   top: 0;
   left: 0;
@@ -59,6 +61,8 @@ header, footer {
   display: block;
   margin-left: auto;
   margin-right: auto;
+
+  width: 91%;
 
   border-bottom: 1px solid fade(@bg, 25%);
 
@@ -134,7 +138,7 @@ header, footer {
 	}
 	.timeline{
 	  margin: 10px auto;
-	  background-color:#e08989;
+	  background-color:#e6ebf2;
 	  display: block;
 	  float: left;
 	  height: 100%;
@@ -227,7 +231,7 @@ header, footer {
 	opacity: 0.8;
 	p {
 	  text-align: center;
-	  //font-size: small;
+	  font-size: medium;
 
 	  //display: block;
 	}
@@ -264,22 +268,43 @@ header, footer {
 
 
 
-.note.active .media, .note.active .text, .note.active .latex {
-  background-color: @bg;
-  .border-radius-custom(@rad, @rad, 0, 0);
+.note.active {
+  .media, .text, .latex {
+	.border-radius-custom(@rad, @rad, 0, 0);
+	background-color: @bg;
+  }
+  .label, .tools {
+	background-color: fade(@bg, 50%);
+  }
+  .tools {
+	.border-radius-custom(0, 0, @rad, @rad);
+  }
 }
 
-.note.topic .media, .note.topic .text, .note.topic .latex {
-  background-color: fade(darken(@bg, 33%), 33%);
+.note.topic {
   opacity: 0.8;
-  .border-radius-custom(@rad, @rad, 0, 0);
+  .media, .text, .latex {
+	.border-radius-custom(@rad, @rad, 0, 0);
+	background-color: darken(@bg, 11%);
+  }
+  .tools {
+	.border-radius-custom(0, 0, @rad, @rad);
+  }
 }
-.note.topic.active .media, .note.topic.active .text, .note.topic.active .latex{
-  background-color: darken(@bg, 33%);
+.note.topic.active {
   opacity: 1;
-  .border-radius-custom(@rad, @rad, 0, 0);
+  .media, .text, .latex {
+	.border-radius-custom(@rad, @rad, 0, 0);
+	background-color: darken(@bg, 22%);
+  }
+  .label, .tools {
+	background-color: fade(darken(@bg, 22%), 50%);
+  }
+  .tools {
+	.border-radius-custom(0, 0, @rad, @rad);
+  }
 }
 
-.latex {
-  display: none;
-}
+  .latex {
+	display: none;
+  }

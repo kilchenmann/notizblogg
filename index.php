@@ -30,6 +30,9 @@
 
 	<meta name="Resource-type" content="Document"/>
 
+	<meta name="viewport" content="width=480, user-scalable=yes">
+	<meta name="viewport" content="initial-scale=0.6, maximum-scale=0.8">
+
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/lib/jquery-1.10.2.min.js"></script>
 
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/md5.js"></script>
@@ -224,17 +227,6 @@ $(window).load(function() {
 	/* show some content */
 	$('.viewer').shownote(NB);
 
-	if($('.wall').length !== 0) {
-		var width = $(window).width();
-		var note_width = $(this).find('.note').width() + 60;
-		var num_col = Math.floor(width / note_width);
-		$(this).css({
-			'-webkit-column-count': num_col,
-			'-moz-column-count': num_col,
-			'column-count': num_col,
-			'width': num_col * note_width
-		});
-	}
 });
 
 /* remove the floating elements on clicking the esc-key */
@@ -257,15 +249,20 @@ $(window).resize(function() {
 	$('div.viewer').css({'height': height});
 	$('.float_obj').center();
 	// set the numbers of wall columns
-	if($('.wall').length !== 0) {
+	if ($('.wall').length !== 0) {
 		var width = $(window).width();
-		var note_width = $(this).find('.note').width() + 60;
+		var note_width = 350;		// normally 320px
 		var num_col = Math.floor(width / note_width);
-		$(this).css({
+		$('.wall').css({
 			'-webkit-column-count': num_col,
+			'-webkit-column-fill': num_col,
+
 			'-moz-column-count': num_col,
+			'-moz-column-fill': num_col,
+
 			'column-count': num_col,
-			'width': num_col * note_width
+			'column-fill': num_col
+
 		});
 	}
 });
@@ -303,7 +300,59 @@ $body = $("body");
 $(document).on({
 	ajaxStart: function() {$body.addClass("loading");},
 	ajaxStop: function() {
+
+
+		if ($('.desk').length > 0) {
+
+			$(function () {
+				function Arrow_Points() {
+					var s = $('.right_side').find('.note');
+					$.each(s, function (i, obj) {
+						var posLeft = $(obj).position().left;		//css("left");
+						//	$(obj).addClass('borderclass');
+						if (posLeft === 0) {
+//							html = "<span class='rightCorner'></span>";
+							$(obj).prepend($('<span>').addClass('rightCorner'));
+						}
+						else {
+//							html = "<span class='leftCorner'></span>";
+							$(obj).css({'text-align': 'right'}).prepend($('<span>').addClass('leftCorner'));
+						}
+					});
+				}
+
+
+				// Divs
+				$('.right_side')
+					.append($('<div>').addClass('timeline_container')
+						.append($('<div>').addClass('timeline')
+							.append($('<div>').addClass('plus')
+						)
+					)
+				).masonry({itemSelector: '.note'});
+				Arrow_Points();
+
+
+			});
+		} else if ($('.wall').length !== 0) {
+			var width = $(window).width();
+			var note_width = 350;		//$(this).find('.note').width() + 40;		// normally 320px
+			var num_col = Math.floor(width / note_width);
+			$('.wall').css({
+				'-webkit-column-count': num_col,
+				'-webkit-column-fill': num_col,
+
+				'-moz-column-count': num_col,
+				'-moz-column-fill': num_col,
+
+				'column-count': num_col,
+				'column-fill': num_col
+
+			});
+		}
+
 		$body.removeClass("loading");
+
 		//var page = 'ready';
 
 		var active = {};
@@ -334,48 +383,6 @@ $(document).on({
 			});
 
 
-		if($('.desk').length > 0) {
-
-				$(function () {
-					function Arrow_Points() {
-						var s = $('.right_side').find('.note');
-						$.each(s, function (i, obj) {
-							var posLeft = $(obj).position().left;		//css("left");
-							//	$(obj).addClass('borderclass');
-							if (posLeft === 0) {
-//							html = "<span class='rightCorner'></span>";
-								$(obj).prepend($('<span>').addClass('rightCorner'));
-							}
-							else {
-//							html = "<span class='leftCorner'></span>";
-								$(obj).css({'text-align': 'right'}).prepend($('<span>').addClass('leftCorner'));
-							}
-						});
-					}
-
-
-					// Divs
-					$('.right_side').masonry({itemSelector: '.note'});
-					Arrow_Points();
-
-
-				});
-			}
-
-		if($('.wall').length !== 0) {
-			var width = $(window).width();
-			var note_width = $(this).find('.note').width() + 60;
-			var num_col = Math.floor(width / note_width) - 1;
-			console.log(width);
-			console.log(note_width);
-			console.log(num_col);
-			$('.wall').css({
-				'-webkit-column-count': num_col,
-				'-moz-column-count': num_col,
-				'column-count': num_col,
-				'width': num_col * note_width
-			});
-		}
 	}
 
 });
