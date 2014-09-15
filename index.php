@@ -46,6 +46,9 @@
 
 
 	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/nb.css">
+<!--
+	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/responsive.css">
+-->
 
 </head>
 <body>
@@ -220,6 +223,18 @@ $(window).load(function() {
 	}
 	/* show some content */
 	$('.viewer').shownote(NB);
+
+	if($('.wall').length !== 0) {
+		var width = $(window).width();
+		var note_width = $(this).find('.note').width() + 60;
+		var num_col = Math.floor(width / note_width);
+		$(this).css({
+			'-webkit-column-count': num_col,
+			'-moz-column-count': num_col,
+			'column-count': num_col,
+			'width': num_col * note_width
+		});
+	}
 });
 
 /* remove the floating elements on clicking the esc-key */
@@ -286,7 +301,7 @@ var activator = function (element) {
 $body = $("body");
 
 $(document).on({
-	ajaxStart: function() { $body.addClass("loading");    },
+	ajaxStart: function() {$body.addClass("loading");},
 	ajaxStop: function() {
 		$body.removeClass("loading");
 		//var page = 'ready';
@@ -347,6 +362,20 @@ $(document).on({
 				});
 			}
 
+		if($('.wall').length !== 0) {
+			var width = $(window).width();
+			var note_width = $(this).find('.note').width() + 60;
+			var num_col = Math.floor(width / note_width) - 1;
+			console.log(width);
+			console.log(note_width);
+			console.log(num_col);
+			$('.wall').css({
+				'-webkit-column-count': num_col,
+				'-moz-column-count': num_col,
+				'column-count': num_col,
+				'width': num_col * note_width
+			});
+		}
 	}
 
 });
@@ -354,8 +383,8 @@ $(document).on({
 
 $(window).bind("load", function() {
 	// code here
-	//alert('website is ready!?');
-//	alert($('div.note').length);
+	// alert('website is ready!?');
+	// alert($('div.note').length);
 
 });
 
