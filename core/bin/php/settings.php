@@ -5,7 +5,7 @@ $pathInfo = pathinfo($_SERVER['SCRIPT_FILENAME']);
 $mainFile = $pathInfo['filename'].".".$pathInfo['extension'];
 $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
-require_once('.conf/nb.php');
+require_once('.conf/db.php');
 
 //print_r($db);
 
