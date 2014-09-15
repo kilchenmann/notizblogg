@@ -238,7 +238,7 @@ header, footer {
   .tools {
 	opacity: 0.1;
 	border-bottom: 1px solid fade(@bg, 22%);
-	.border-radius(@rad);
+	.border-radius-custom(0, 0, @rad, @rad);
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -266,18 +266,18 @@ header, footer {
 
 .note.active .media, .note.active .text, .note.active .latex {
   background-color: @bg;
-  .border-radius(@rad);
+  .border-radius-custom(@rad, @rad, 0, 0);
 }
 
 .note.topic .media, .note.topic .text, .note.topic .latex {
   background-color: fade(darken(@bg, 33%), 33%);
   opacity: 0.8;
-  .border-radius(@rad);
+  .border-radius-custom(@rad, @rad, 0, 0);
 }
 .note.topic.active .media, .note.topic.active .text, .note.topic.active .latex{
   background-color: darken(@bg, 33%);
   opacity: 1;
-  .border-radius(@rad);
+  .border-radius-custom(@rad, @rad, 0, 0);
 }
 
 .latex {
