@@ -6,22 +6,32 @@ h1, h2, h3, h4, h5, h6, p, span {
   color: @ink;
 }
 a {
-  color: darken(@link, 5%);
+  color: @link;
 }
 a:hover {
-  color: fade(@link, 50%);
+  color: fade(@ink, 50%);
+}
+
+body {
+  background-color: #333333;
 }
 
 header, footer {
-  background-color: fade(@bg, 88%);
-  box-shadow: 0 0 2px 0 fade(@ink, 30%);
- // border-bottom: 1px solid fade(@ink, 30%);
   color: @ink;
 }
 
+header {
+  .box-shadow-bottom();
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0.6);
+}
+
+footer {
+  border-top: 1px solid @card;
+}
+
 #fullpage {
-  background-color: fade(@btn, 22%);
-  .quick-gradient(top, 0.1);
+  background-color: @bg;
+//  .quick-gradient(top, 0.1);
 /*
   background-image: url(../img/bg-empty.jpg);
   -webkit-background-size: cover;
@@ -165,11 +175,11 @@ header, footer {
 }
 
 .note {
-  background-color: fade(@bg, 0%);
+  background-color: fade(@bg, 11%);
   opacity: 1;
   .border-radius(@rad);
 //  border-bottom: 1px solid fade(@bg, 44%);
-  border-top: 1px solid fade(@bg, 44%);
+  border-top: 1px solid @line;
   margin: 10px;
  // overflow: hidden;
   width: 320px;
@@ -177,42 +187,33 @@ header, footer {
 //	background-color: @bg;
 	opacity: 0.8;
 	.border-radius-custom(@rad, @rad, 0, 0);
-	img {
+	img, video, audio {
 	  width: 100%;
 	  .border-radius-custom(@rad, @rad, 0, 0);
 //	  border-bottom: 1px solid #ccc;
 	  margin: 0;
 	  .box-shadow-bottom();
-	  //.box-shadow();
-	}
-	video {
-	  width: 100%;
-	  .border-radius-custom(@rad, @rad, 0, 0);
-//	  border-bottom: 1px solid #ccc;
-	  margin: 0;
-	}
-	audio {
-	  width: 100%;
-	  .border-radius-custom(@rad, @rad, 0, 0);
-//	  border-bottom: 1px solid #ccc;
-	  margin: 0;
+	  border-bottom: 1px solid @line;
 	}
 	p.warning {
 	  text-align: center;
 	}
+	&:hover {
+	  opacity: 1;
+	}
   }
   .text, .latex, .label, .tools {
-	background-color: fade(@bg, 0%);
 	margin: 0;
 	padding: 0;
   }
 
   .text, .latex {
 	padding: 5px;
+	border-bottom: 1px solid @line;
   }
 
   .text p.footnote, .latex p.footnote {
-	border-top: 1px solid fade(@card, 44%);
+	border-top: 1px solid @line;
 	  font-size: small;
   }
 
@@ -241,7 +242,7 @@ header, footer {
   }
   .tools {
 	opacity: 0.1;
-	border-bottom: 1px solid fade(@bg, 22%);
+	border-bottom: 1px solid @line;
 	.border-radius-custom(0, 0, @rad, @rad);
 	display: block;
 	margin-left: auto;
@@ -260,51 +261,54 @@ header, footer {
 	  }
 	}
 	.center {
-	  border-left: 1px solid fade(@bg, 22%);
-	  border-right: 1px solid fade(@bg, 22%);
+	  border-left: 1px solid @line;
+	  border-right: 1px solid @line;
+	}
+  }
+  &:hover{
+	.media, .text, .latex {
+	  .border-radius-custom(@rad, @rad, 0, 0);
+	  background-color: darken(@card, 22%);
+	}
+	.label, .tools {
+	  background-color: fade(darken(@card, 22%), 50%);
 	}
   }
 }
 
 
-
+/*
 .note.active {
   .media, .text, .latex {
 	.border-radius-custom(@rad, @rad, 0, 0);
-	background-color: @bg;
+	background-color: @card;
   }
   .label, .tools {
-	background-color: fade(@bg, 50%);
+	background-color: fade(@card, 50%);
   }
   .tools {
 	.border-radius-custom(0, 0, @rad, @rad);
   }
 }
-
+*/
 .note.topic {
-  opacity: 0.8;
   .media, .text, .latex {
 	.border-radius-custom(@rad, @rad, 0, 0);
-	background-color: darken(@bg, 11%);
+	background-color: darken(@card, 11%);
   }
   .tools {
 	.border-radius-custom(0, 0, @rad, @rad);
   }
-}
-.note.topic.active {
-  opacity: 1;
-  .media, .text, .latex {
-	.border-radius-custom(@rad, @rad, 0, 0);
-	background-color: darken(@bg, 22%);
-  }
-  .label, .tools {
-	background-color: fade(darken(@bg, 22%), 50%);
-  }
-  .tools {
-	.border-radius-custom(0, 0, @rad, @rad);
+  &:hover {
+	.media, .text, .latex {
+	  .border-radius-custom(@rad, @rad, 0, 0);
+	  background-color: darken(@card, 22%);
+	}
+	.label, .tools {
+	  background-color: fade(darken(@card, 22%), 50%);
+	}
   }
 }
-
   .latex {
 	display: none;
   }

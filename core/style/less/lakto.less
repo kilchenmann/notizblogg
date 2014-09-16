@@ -13,9 +13,10 @@ html, body {
   overflow:hidden;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   font-family: stylus, Verdana, sans-serif;
+//  .font-smoothing();
 }
 h1, h2, h3, h4, h5, h6, p, span {
-  color: #131224;
+  color: @ink;
 }
 h1 {
   font-size: 28px;
@@ -242,9 +243,10 @@ section, .section {
   height: 160px;
   clear: both;
   float: none;
-  background-color: fade(@bg, 44%);
+  background-color: fade(@bg, 99%);
   .border-radius(@rad);
   padding: 22px;
+  .box-shadow();
 
 }
 

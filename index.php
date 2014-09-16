@@ -19,6 +19,11 @@
 		$user = conuser($_SESSION['token']);
 	}
 
+	if (isset ($_GET['access'])){
+		echo "KEIN ZUGRIFF!!";
+	}
+
+
 	?>
 
 	<title>Notizblogg</title>
@@ -169,7 +174,26 @@ NB.user = {
 	avatar: '<?php echo  $user['avatar']; ?>'
 };
 NB.url = '<?php echo __SITE_URL__; ?>';
-NB.uri = NB.url + '/?' +(location.search).substr(1);
+NB.uri = NB.url + '/?' + (location.search).substr(1);
+
+if(NB.uri === NB.url + '/?access=denied') {
+	$('#fullpage').warning({
+		type: 'access',
+		lang: 'de'
+	});
+	$('body').on('click', function () {
+		window.location.href = NB.url;
+	});
+	$(document).keyup(function(event) {
+		if(event.keyCode == 27) {
+				$('.float_obj').hide();
+				$('.viewer').css({'opacity': '1'});
+			}
+		window.location.href = NB.url;
+	});
+	NB.uri = NB.url;
+}
+
 NB.api = '<?php echo __SITE_API__; ?>';
 NB.media = '<?php echo __MEDIA_URL__; ?>';
 

@@ -3,9 +3,9 @@
 require_once 'settings.php';
 $mysqli = condb('open');
 $sql = $mysqli->query('SELECT userID, name, user, token FROM user WHERE ' .
-    '(user like \'' . $_POST['usr'] . '\') AND ' .
+    '(user LIKE \'' . $_POST['usr'] . '\') AND ' .
     '(pass = \'' . md5($_POST['key']) . '\')');
-
+condb('close');
 
 if (mysqli_num_rows($sql) > 0)
 {
@@ -25,4 +25,4 @@ else
 	$_SESSION["user"] = '';
 	header ('Location: ' . __SITE_URL__ . '/?access=denied');
 }
-condb('close');
+

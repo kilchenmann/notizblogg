@@ -274,7 +274,7 @@
 				// label ele
 				$.each(data.note.label, function (i, noteLabel) {
 					label.append(
-						$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name + ' (' + noteLabel.num + ')'}).html(' #' + noteLabel.name)
+						$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name + ' (' + noteLabel.num + ')'}).html(' ' + noteLabel.name + ' ').addClass('tag_size ' + noteLabel.num)
 					)
 				});
 				// tools ele
@@ -455,7 +455,7 @@
 					// label ele
 					$.each(data.source.label, function (i, noteLabel) {
 						label.append(
-							$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name+ ' (' + noteLabel.num + ')'}).html(' ' + noteLabel.name)
+							$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name+ ' (' + noteLabel.num + ')'}).html(' ' + noteLabel.name + ' ').addClass('tag_size ' + noteLabel.num)
 						)
 					});
 

@@ -29,15 +29,21 @@
 	#131224		dunkelblau		schrift
 */
 
-@bg: #fbfbfb;
-@btn: #f3e3d3;
+@bg: #ffffff;
+@btn: #fbfbfb;
+@line: fade(darken(@btn, 11%), 50%);
 //@card: #d4b888;
-@card: #dfcfbc;
-@link: #6b4834;
-@ink: #131224;
+@card: #f5f5f5;
+@ink: #333333;
+@link: #904a24;
 
 @pos: #339900;
 @neg: #993300;
+
+.font-smoothing () {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 /* ------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------- */
@@ -69,7 +75,7 @@
   -moz-box-shadow: @x @y @blur rgba(0, 0, 0, @alpha);
   box-shadow: @x @y @blur rgba(0, 0, 0, @alpha);
 }
-.box-shadow-bottom (@x: 0px, @y: 8px, @blur: 6px, @side: -6px, @alpha: 0.5) {
+.box-shadow-bottom (@x: 0px, @y: 5px, @blur: 6px, @side: -6px, @alpha: 0.5) {
   -webkit-box-shadow: @x @y @blur @side rgba(0, 0, 0, @alpha);
   -moz-box-shadow: @x @y @blur @side rgba(0, 0, 0, @alpha);
   box-shadow: @x @y @blur @side rgba(0, 0, 0, @alpha);
