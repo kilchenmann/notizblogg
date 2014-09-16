@@ -20,7 +20,7 @@ define ("__MEDIA_URL__", $protocol.$_SERVER['HTTP_HOST'] . "/data/media");		// h
 // echo "MEDIA_URL: ".__MEDIA_URL__."<br>";
 define ('__DOWNLOAD_URL__', $protocol.$_SERVER['HTTP_HOST'] . "/data/export");	// http://somewhere.com/EXPORT
 // echo "DOWNLOAD_URL: ".__DOWNLOAD_URL__."<br>";
-define ('__SITE_API__', $protocol.$_SERVER['HTTP_HOST'] . "/nb/api");			// http://somewhereelse.com/API
+define ('__SITE_API__', $protocol.$_SERVER['HTTP_HOST'] . "/" . __BASE_FOLDER__ . "/api");			// http://somewhereelse.com/API
 // echo "SITE_API: ".__SITE_API__."<br>";
 
 include ('functions.php');
