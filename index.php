@@ -291,6 +291,18 @@ $(window).resize(function() {
 	}
 });
 
+var isTouchDevice = function() {
+	var el = document.createElement('div');
+	el.setAttribute('ongesturestart', 'return;');
+	/*
+	if(typeof el.ongesturestart == "function"){
+		return true;
+	}else {
+		return false
+	}
+	*/
+	return typeof el.ongesturestart == "function";		// true or false
+};
 
 var activator = function (element) {
 		element.toggleClass('active');
@@ -318,6 +330,9 @@ var activator = function (element) {
 		};
 		return(activeNote);
 	};
+
+
+
 
 $body = $("body");
 

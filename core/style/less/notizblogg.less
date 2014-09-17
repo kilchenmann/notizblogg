@@ -178,7 +178,6 @@ footer {
 }
 
 .note {
-  background-color: fade(@card, 33%);
   opacity: 1;
   .border-radius(@rad);
 //  border-bottom: 1px solid fade(@bg, 44%);
@@ -186,10 +185,12 @@ footer {
   margin: 10px;
  // overflow: hidden;
   width: 320px;
+  .media, .text, .latex {
+	.border-radius-custom(@rad, @rad, 0, 0);
+  }
   .media {
 //	background-color: @bg;
 	opacity: 0.8;
-	.border-radius-custom(@rad, @rad, 0, 0);
 	img, video, audio {
 	  width: 100%;
 	  .border-radius-custom(@rad, @rad, 0, 0);
@@ -212,7 +213,11 @@ footer {
 
   .text, .latex {
 	padding: 5px;
-	border-bottom: 1px solid @line;
+	background-color: fade(@card, 33%);
+  }
+
+  .label, .tools {
+	opacity: 0.1;
   }
 
   .text p.footnote, .latex p.footnote {
@@ -233,25 +238,30 @@ footer {
 	min-height: 40px;
 	padding: 10px auto;
 	opacity: 0.8;
+	text-align: center;
+	position: relative;
 	p {
 	  text-align: center;
-	  font-size: medium;
-
-	  //display: block;
+	  font-size: smaller;
+	  margin: 0;
+	  margin-left: auto;
+	  margin-right: auto;
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	transform: translate(-50%, -50%);
 	}
+	border-top: 1px solid @line;
   }
   .label.private {
-	border-top: 2px solid fade(indianred, 44%);
+	border-top: 1px solid fade(indianred, 44%);
   }
   .tools {
-	opacity: 0;
-	border-bottom: 1px solid @line;
-	.border-radius-custom(0, 0, @rad, @rad);
-//	display: none;
 	margin-left: auto;
 	margin-right: auto;
 	clear: both;
 	height: 33px;
+	.border-radius-custom(0, 0, @rad, @rad);
 	.left, .center, .right {
 	  font-size: 0.8em;
 	  float: left;
@@ -268,19 +278,17 @@ footer {
 	  border-right: 1px solid @line;
 	}
   }
-  .label, .tools {
-	background-color: fade(@bg, 88%);
-  }
   &:hover{
 	.media, .text, .latex {
 	  .border-radius-custom(@rad, @rad, 0, 0);
 	  background-color: @card;
 	}
 	.label, .tools {
-	  background-color: fade(darken(@card, 22%), 50%);
+	  background-color: fade(darken(@card, 44%), 50%);
 	}
 	.tools {
 	  opacity: 1;
+	  .border-radius-custom(0, 0, @rad, @rad);
 //	  display: block;
 	}
   }
@@ -304,7 +312,7 @@ footer {
 .note.topic {
   .media, .text, .latex {
 	.border-radius-custom(@rad, @rad, 0, 0);
-	background-color: fade(@card, 44%);
+	background-color: fade(@card, 88%);
   }
   .tools {
 	.border-radius-custom(0, 0, @rad, @rad);
@@ -315,7 +323,7 @@ footer {
 	  background-color: @card;
 	}
 	.label, .tools {
-	  background-color: fade(darken(@card, 22%), 50%);
+	  background-color: fade(darken(@card, 44%), 50%);
 	}
   }
 }
