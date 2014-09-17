@@ -209,7 +209,7 @@ $(window).load(function() {
 	$('.float_obj').center();
 
 	/* enable the project logo */
-	$('.project').append($('<a>').attr({href: NB.url}).append($('<h2>').text('Notizblogg')).addClass('logo'));
+	$('.project').append($('<a>').attr({href: NB.url}).append($('<h2>').text('Notizblogg')).addClass('title project logo'));
 	/* integrate the search bar in the header panel */
 	$('.search').finder({
 		search: 'Suche',
@@ -322,12 +322,31 @@ var activator = function (element) {
 $body = $("body");
 
 $(document).on({
-	ajaxStart: function() {$body.addClass("loading");},
+	ajaxStart: function() {
+		$body.addClass("loading");
+		$(document).keyup(function(event) {
+			if(event.keyCode == 27) {
+				$body.removeClass("loading");
+
+				if($('.float_obj').is(':visible')) {
+					window.location.href = NB.uri;
+/*
+					$(this).hide();
+					$('.viewer').css({'opacity': '1'});
+
+					if($('button.toggle_add').hasClass('toggle_delete')) {
+						$(this).toggleClass('toggle_delete');
+					}
+*/
+				} else {
+					window.location.href = NB.url;
+				}
+			}
+		});
+
+	},
 	ajaxStop: function() {
-
-
 		if ($('.desk').length > 0) {
-
 			$(function () {
 				function Arrow_Points() {
 					var s = $('.right_side').find('.note');
@@ -345,7 +364,6 @@ $(document).on({
 					});
 				}
 
-
 				// Divs
 				$('.right_side')
 					.append($('<div>').addClass('timeline_container')
@@ -355,8 +373,6 @@ $(document).on({
 					)
 				).masonry({itemSelector: '.note'});
 				Arrow_Points();
-
-
 			});
 		} else if ($('.wall').length !== 0) {
 			var width = $(window).width();
