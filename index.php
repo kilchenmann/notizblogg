@@ -44,7 +44,7 @@
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.center.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.warning.js"></script>
 
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.shownote.js"></script>
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.note.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.expand.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.masonry.min.js"></script>
 
@@ -249,7 +249,7 @@ $(window).load(function() {
 		});
 	}
 	/* show some content */
-	$('.viewer').shownote(NB);
+	$('.viewer').note(NB);
 
 });
 
