@@ -99,6 +99,7 @@
 					//var crossref = [];
 					var pages;
 					i = 0;
+					var insource = {};
 					while (i < countDetail) {
 						detailKey = Object.keys(source.detail)[i];
 						switch (detailKey) {
@@ -124,19 +125,23 @@
 								if (crossref.subtitle !== '') {
 									crossTitle += getLastChar(crossref.subtitle);
 								}
-								biblio += 'In: ' + crossAuthors + ': ' + crossTitle + ' ' + crossLocations + ', ' + crossref.date.year;
+								insource.source = 'In: ' + crossAuthors + ': ' + crossTitle + ' ' + crossLocations + ', ' + crossref.date.year;
 								break;
 							case 'pages':
 								bibtex += 'pages = {' + source.detail.pages + '},<br>';
-								biblio += ', S. ' + source.detail.pages;
+								insource.pages = ', S. ' + source.detail.pages;
 								break;
 							default:
-								bibtex += detailKey + ' = {' + source.detail.detailKey + '},<br>';
-								biblio += source.detail.detailKey;
+								if(source.detail.detailKey !== undefined){
+									bibtex += detailKey + ' = {' + source.detail.detailKey + '},<br>';
+									biblio += source.detail.detailKey;
+								}
 						}
 						i += 1;
 					}
 				}
+
+				if (insource.source && insource.pages) biblio += insource.source + insource.pages;
 				if (crossref === undefined) {
 					if (locations !== undefined) {
 						bibtex += 'location = {' + locations + '},<br>';
@@ -163,98 +168,134 @@
 			}
 			return bib;
 		},
+		createNote = function(ele) {
+			var note_ele = {};
+			ele.append(
+				note_ele.media = $('<div>').addClass('media')
+			)
+				.append(
+				note_ele.content = $('<div>').addClass('text')
+			)
+				.append(
+				note_ele.content4tex = $('<div>').addClass('latex')
+			)
+				.append(
+				$('<div>').addClass('label')
+					.append(
+					note_ele.label = $('<p>')
+				)
+			)
+				.append(
+				note_ele.tools = $('<div>').addClass('tools')
+			);
+			return note_ele;
+		},
+		createToolBar = function(ele) {
+			var note_ele = {};
+			ele.append(
+				note_ele.media = $('<div>').addClass('media')
+			)
+				.append(
+				note_ele.content = $('<div>').addClass('text')
+			)
+				.append(
+				note_ele.content4tex = $('<div>').addClass('latex')
+			)
+				.append(
+				$('<div>').addClass('label')
+					.append(
+					note_ele.label = $('<p>')
+				)
+			)
+				.append(
+				note_ele.tools = $('<div>').addClass('tools')
+			);
+			return note_ele;
+		},
 
+		createLabel = function (label, label_ele) {
+			var size;
+			if(label.length > 0) {
+				var lh = ((label.length - 0.5) * 10) + 14;
+					label_ele.parent().css({height: lh});
+				$.each(label, function (i, noteLabel) {
+					// three sizes: small, medium, large ???
+					if(noteLabel.num <= 11 && noteLabel.num > 0)	size = 'small';
+					if(noteLabel.num > 11 && noteLabel.num <= 22)	size = 'medium';
+					if(noteLabel.num > 22)	size = 'large';
+					label_ele.append(
+						$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name + ' (' + noteLabel.num + ')'}).html(' ' + noteLabel.name + ' ').addClass('tag_size ' + size)
+					)
+				});
+			} else {
+				label_ele.parent().empty().css({height: '5px'});
+			}
+		},
 
 		dispNote = function (ele, data, localdata) {
-			var note = data.note.id,
-				media,
-				title,
-				subtitle,
-				text,
-				latex,
-				sourceID,
-				source = {},
-				content,
-				content4tex,
-				label,
-				tools;
+			var note = {};
+			var source = {};
+			var note_id = data.note.id;
+			var source_id;
 
-			if (note !== 0) {
-				media = data.note.media;
-				title = data.note.title;
-				subtitle = data.note.subtitle;
-				text = data.note.comment;
-				latex = data.note.comment4tex;
-				sourceID = data.note.source.id;
-				note = ele.addClass('item').attr({'id': note});
-				note
-					.append(
-					media = $('<div>').addClass('media').html(media)
-				)
-					.append(
-					content = $('<div>').addClass('text')
-						.append($('<h3>').html(title))
-						.append($('<h4>').html(subtitle))
-						.append($('<p>').html(text))
-				)
-					.append(
-					content4tex = $('<div>').addClass('latex')
-						.append($('<h3>').html(title))
-						.append($('<h4>').html(subtitle))
-						.append($('<p>').html(latex))
-				)
-					.append(
-					$('<div>').addClass('label')
-						.append(
-						label = $('<p>')
-					)
-				)
-					.append(
-					tools = $('<div>').addClass('tools')
-				);
-				//);
-				if (data.note.public === 0) {
-					label.addClass('private');
+			if (note_id !== 0) {
+				var note_ele = ele.addClass('item').attr({'id': note_id});
+				note = createNote(note_ele);
+				if (data.note.public === '0') {
+					note_ele.addClass('private');
 				}
-				if (sourceID > 0) {
-					if(!localdata.footnote.hasOwnProperty(sourceID)) {
-						var url = NB.api + '/get.php?source=' + sourceID,
-							fn,				// footnote
-							fc;				// footcite in latex
-						localdata.footnote[sourceID] = {};
+
+				note.media
+					.html(data.note.media);
+				note.content
+					.append($('<h3>').html(data.note.title))
+					.append($('<h4>').html(data.note.subtitle))
+					.append($('<p>').html(data.note.comment));
+				note.content4tex
+					.append($('<p>').html(data.note.comment4tex));
+
+				// (1) do we need a footnote and (2) have we done already a request for the right footnote?
+				source_id = data.note.source.id;
+				if (source_id > 0) {
+					if(!(source_id in localdata.footnote)) {
+						localdata.footnote[source_id] = {};
+						var url = NB.api + '/get.php?source=' + source_id,
+							foot = {},
+							fc = data.note.source.name,				// footcite in latex
+							fn = fc;								// footnote in text
+
 						$.getJSON(url, function (sourcedata) {
-							var foot = getSource(sourcedata);
-							if (data.note.page.start !== 0) {
-								var page = data.note.page.start;
-								var dif = Math.round(data.note.page.end - data.note.page.start);
-								if (dif > 0) {
-									page = data.note.page.start + '-' + data.note.page.end;
-								}
-								var pageHere = ' S. ' + page + '.';
+							foot = getSource(sourcedata);
+							if(foot.footnote !== undefined) {
+								fn = foot.footnote;
 							}
-							fc = $('<p>').addClass('footnote bibtex').html('\\footcite[' + page + ']{<a href=\'?source=' + data.note.source.id + '\'>' + data.note.source.name + '</a>}')
-							if (foot.footnote !== undefined) {
-								fn = $('<p>').addClass('footnote biblio').append($('<a>').attr({href: '?source=' + data.note.source.id}).html(foot.footnote)).append(pageHere);
-								//	.html(foot.footnote + pageHere));
-							} else {
-								fn = $('<p>').addClass('footnote biblio').append($('<a>').attr({href: '?source=' + data.note.source.id}).html(data.note.source.name)).append(', ' + pageHere);
-							}
-							content.append(fn);
-							content4tex.append(fc);
-							localdata.footnote[ sourceID ]['fn'] = fn.html();
-							localdata.footnote[ sourceID ]['fc'] = fc.html();
-							console.log(localdata.footnote);
 						});
+						localdata.footnote[source_id].fn = fn;
+						localdata.footnote[source_id].fc = fc;
+
 					} else {
-					//	alert('wait');
-						content4tex.append($('<p>').addClass('footnote bibtex').html(localdata.footnote[ sourceID ].fc));
-						content.append($('<p>').addClass('footnote biblio').html(localdata.footnote[ sourceID ].fn));
-						//	content4tex.append(fnObj.sourceID.fc);
+						foot = localdata.footnote[source_id];
+						fn = foot.fn;
+						fc = foot.fc;
 					}
-
-
-
+					if (data.note.page.start !== 0) {
+						var page = data.note.page.start;
+						var dif = Math.round(data.note.page.end - data.note.page.start);
+						if (dif > 0) {
+							page = data.note.page.start + '-' + data.note.page.end;
+						}
+						var pageHere = ' S. ' + page + '.';
+					}
+					if (foot.footnote !== undefined) {
+						fn = fn + pageHere;
+						//	.html(foot.footnote + pageHere));
+					} else {
+						fn = fn + ',' + pageHere;
+					}
+					note.content4tex.append($('<p>').addClass('footnote bibtex').html('\\footcite[' + page + ']{<a href=\'?source=' + data.note.source.id + '\'>' + fc + '</a>'));
+					note.content.append($('<p>').addClass('footnote biblio').append($('<a>').attr({href: '?source=' + data.note.source.id}).html(fn)));
 				}
+				var latex, tex_ele, classNote;
 				if (data.note.biblio !== null) {
 					latex = data.note.comment4tex;
 					tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function () {
@@ -272,15 +313,12 @@
 					classNote = 'note item';
 				}
 
-
+				createLabel(data.note.label, note.label);
 				// label ele
-				$.each(data.note.label, function (i, noteLabel) {
-					label.append(
-						$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name + ' (' + noteLabel.num + ')'}).html(' ' + noteLabel.name + ' ').addClass('tag_size ' + noteLabel.num)
-					)
-				});
+
+
 				// tools ele
-				tools.each(function () {
+				note.tools.each(function () {
 					var $tools = $(this),
 						$note = $tools.parent($('.note')),
 						nID = $note.attr('id'),
@@ -316,7 +354,7 @@
 						note_obj[ele] = divs[i].innerHTML;
 					}
 
-					if (note.hasClass('topic') && nID === sID) {
+					if (note_ele.hasClass('topic') && nID === sID) {
 						type = 'source';
 					} else {
 						type = 'note';
@@ -417,158 +455,159 @@
 		},
 
 		dispBib = function (ele, data, localdata) {
-			var note, media, content, content4tex, biblio, bibtex, label, tools, source = data.source;
+			var note = {};
+			var source = {};
+			var source_id = data.source.id;
+
+			if (source_id !== 0) {
+				var note_ele = ele.addClass('item topic').attr({'id': source_id});
+				note = createNote(note_ele);
+				if (data.source.public === '0') {
+					note_ele.addClass('private');
+				}
+
+				var showsource = getSource(data);
+				biblio = showsource.biblio + '.';
+				bibtex = showsource.bibtex;
+
+				note.media
+					.html(data.source.media);
+				note.content
+					.append($('<p>').html(biblio));
+				note.content4tex
+					.append($('<p>').html(bibtex));
+
+
+				// label ele
+				createLabel(data.source.label, note.label);
+
+				note.tools.each(function () {
+					var $tools = $(this),
+						$note = $tools.parent($('.note')),
+						nID = $note.attr('id'),
+						sID = $tools.attr('id'),
+						edit_ele,
+						tex_ele,
+						exp_ele,
+						type,
+						divs = $note.contents(),
+						edit;
+					//		localdata.settings.access = '<?php echo $access; ?>';
+
+					var note_obj = {};
+					for (var i = 0; i < divs.filter("div").length; i++) {
+						var ele;
+						switch (i) {
+							case 0:
+								ele = 'media';
+								break;
+							case 1:
+								ele = 'text';
+								break;
+							case 2:
+								ele = 'latex';
+								break;
+							case 3:
+								ele = 'label';
+								break;
+							case 4:
+								ele = 'tools';
+								break;
+							default:
+								ele = 'empty';
+						}
+						note_obj[ele] = divs[i].innerHTML;
+					}
+
+
+					if (note_ele.hasClass('topic') && nID === sID) {
+						type = 'source';
+					} else {
+						type = 'note';
+					}
+
+					if (localdata.settings.access === '1') {
+						edit = false;
+						edit_ele = $('<button>').addClass('btn grp_none fake_btn');
+					} else {
+						edit = true;
+						edit_ele = $('<button>').addClass('btn grp_none toggle_edit').expand({
+							type: type,
+							noteID: nID,
+							sourceID: sID,
+							edit: edit,
+							data: note_obj,
+							show: 'form'
+						});
+
+					}
+
+					if ($note.children('.latex').length > 0) {
+						tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function () {
+							$(this).toggleClass('toggle_comment');
+							$note.children('.text').toggle();
+							$note.children('.latex').toggle();
+						});
+//							console.log(showsource.biblio.substr(0, 9));
+// if the source is not correct recorded yet, show the bibtex
+						if(showsource.biblio.substr(0, 9) === 'undefined'){
+							tex_ele.toggleClass('toggle_comment');
+							$note.children('.text').toggle();
+							$note.children('.latex').toggle();
+						}
+						exp_ele = $('<button>').addClass('btn grp_none toggle_expand').expand({
+							type: type,
+							noteID: nID,
+							sourceID: sID,
+							edit: edit,
+							data: note_obj,
+							show: 'booklet'
+						});
+					} else {
+						tex_ele = $('<button>').addClass('btn grp_none fake_btn');
+						exp_ele = $('<button>').addClass('btn grp_none fake_btn');
+					}
+
+					$tools
+						.append(
+						$('<div>').addClass('left').append(edit_ele).click(function () {
+							if (jQuery.inArray('text', divs)) {
+								//console.log(note_obj);
+
+							}
+						})
+					)
+						.append(
+						$('<div>').addClass('center').append(tex_ele)
+					)
+						.append(
+						$('<div>').addClass('right').append(exp_ele)
+					);
+
+					//		console.log(note_obj);
+
+				});
+			}
+
+//console.log(data);
+/*
+			var note = {};
+			var source = {};
+			var source_id = data.note.id;
+
+			//if (source_id !== 0) {
+				var note_ele = ele.addClass('item topic').attr({'id': source_id});
+			if (data.note.public === 0) {
+				note_ele.addClass('private');
+			}
+			note = createNote(note_ele);
+*/
+
+
+
 
 			if (source.id !== 0) {
 
-				var url = NB.api + '/get.php?source=' + source.id;
-				$.getJSON(url, function (sourcedata) {
-					var showsource = getSource(sourcedata);
-					biblio = showsource.biblio + '.';
-					bibtex = showsource.bibtex;
-//				content.append($('<p>').addClass('footnote biblio').html(foot.biblio + ', ' + pageHere));
-//				content4tex.append($('<p>').addClass('footnote bibtex').html('\\footcite[' + page + ']{' + data.note.source.name + '}'));
-					// 1. show a note with the source info (biblio/bibtex)
-					note = ele.addClass('topic').attr({'id': source.id});
-					note
-						.append(
-						media = $('<div>').addClass('media').html(source.media)
-					)
-						.append(
-						content = $('<div>').addClass('text').html(biblio)
-					)
-						.append(
-						content4tex = $('<div>').addClass('latex').html(bibtex)
-					)
-						.append(
-						$('<div>').addClass('label')
-							.append(
-							label = $('<p>')
-						)
-					)
-						.append(
-						tools = $('<div>').addClass('tools')
-					);
-
-					if (data.source.public === 0) {
-						label.addClass('private');
-					}
-
-					// label ele
-					$.each(data.source.label, function (i, noteLabel) {
-						label.append(
-							$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name+ ' (' + noteLabel.num + ')'}).html(' ' + noteLabel.name + ' ').addClass('tag_size ' + noteLabel.num)
-						)
-					});
-
-					tools.each(function () {
-						var $tools = $(this),
-							$note = $tools.parent($('.note')),
-							nID = $note.attr('id'),
-							sID = $tools.attr('id'),
-							edit_ele,
-							tex_ele,
-							exp_ele,
-							type,
-							divs = $note.contents(),
-							edit;
-						//		localdata.settings.access = '<?php echo $access; ?>';
-
-						var note_obj = {};
-						for (var i = 0; i < divs.filter("div").length; i++) {
-							var ele;
-							switch (i) {
-								case 0:
-									ele = 'media';
-									break;
-								case 1:
-									ele = 'text';
-									break;
-								case 2:
-									ele = 'latex';
-									break;
-								case 3:
-									ele = 'label';
-									break;
-								case 4:
-									ele = 'tools';
-									break;
-								default:
-									ele = 'empty';
-							}
-							note_obj[ele] = divs[i].innerHTML;
-						}
-
-
-						if (note.hasClass('topic') && nID === sID) {
-							type = 'source';
-						} else {
-							type = 'note';
-						}
-
-						if (localdata.settings.access === '1') {
-							edit = false;
-							edit_ele = $('<button>').addClass('btn grp_none fake_btn');
-						} else {
-							edit = true;
-							edit_ele = $('<button>').addClass('btn grp_none toggle_edit').expand({
-								type: type,
-								noteID: nID,
-								sourceID: sID,
-								edit: edit,
-								data: note_obj,
-								show: 'form'
-							});
-
-						}
-
-						if ($note.children('.latex').length > 0) {
-							tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function () {
-								$(this).toggleClass('toggle_comment');
-								$note.children('.text').toggle();
-								$note.children('.latex').toggle();
-							});
-//							console.log(showsource.biblio.substr(0, 9));
-// if the source is not correct recorded yet, show the bibtex
-							if(showsource.biblio.substr(0, 9) === 'undefined'){
-								tex_ele.toggleClass('toggle_comment');
-								$note.children('.text').toggle();
-								$note.children('.latex').toggle();
-							}
-							exp_ele = $('<button>').addClass('btn grp_none toggle_expand').expand({
-								type: type,
-								noteID: nID,
-								sourceID: sID,
-								edit: edit,
-								data: note_obj,
-								show: 'booklet'
-							});
-						} else {
-							tex_ele = $('<button>').addClass('btn grp_none fake_btn');
-							exp_ele = $('<button>').addClass('btn grp_none fake_btn');
-						}
-
-						$tools
-							.append(
-							$('<div>').addClass('left').append(edit_ele).click(function () {
-								if (jQuery.inArray('text', divs)) {
-									//console.log(note_obj);
-
-								}
-							})
-						)
-							.append(
-							$('<div>').addClass('center').append(tex_ele)
-						)
-							.append(
-							$('<div>').addClass('right').append(exp_ele)
-						);
-
-						//		console.log(note_obj);
-
-					});
-
-				});
 
 			} else {
 				//		bibtex = 'The data are not yet ready to use in laTex.';
@@ -654,20 +693,22 @@
 						url = NB.api + '/get.php?' + localdata.settings.query.type + '=' + localdata.settings.query.id;
 						$.getJSON(url, function (list) {
 							$('input.search_field').attr({value: list.name}).html(list.name);
-							$.each(list.notes, function (i, noteID) {
-								url = NB.api + '/get.php?id=' + noteID;
-								$.getJSON(url, function (data) {
-									localdata.view.container.append(
-										localdata.view.note = $('<div>').addClass('note')
-									);
-									for (var key in data) {
-										if (key === 'source') {
-											dispBib(localdata.view.note, data, localdata);
-										} else {
-											dispNote(localdata.view.note, data, localdata);
+							$.each(list.notes, function (i, note) {
+								if(note.ac >= localdata.settings.access) {
+									url = NB.api + '/get.php?id=' + note.id;
+									$.getJSON(url, function (data) {
+										localdata.view.container.append(
+											localdata.view.note = $('<div>').addClass('note')
+										);
+										for (var key in data) {
+											if (key === 'source') {
+												dispBib(localdata.view.note, data, localdata);
+											} else {
+												dispNote(localdata.view.note, data, localdata);
+											}
 										}
-									}
-								})
+									})
+								}
 							})
 						});
 						break;
@@ -682,23 +723,25 @@
 								localdata.view.source = $('<div>').addClass('note')
 							);
 							dispBib(localdata.view.source, data, localdata);
-							$.each(data.source.notes, function (i, noteID) {
-								localdata.view.right.append(
-									$('<div>').addClass('note').attr({'id': noteID})
-								);
-								url = NB.api + '/get.php?note=' + noteID;
-								$.getJSON(url, function (data) {
-									for (var key in data) {
-										localdata.view.note = $('#' + noteID);
-										if (key === 'source') {
-											//localdata.view.container.addClass('desk');
-											dispBib(localdata.view.note, data, localdata);
-										} else {
-											//localdata.view.container.addClass('booklet');
-											dispNote(localdata.view.note, data, localdata);
+							$.each(data.source.notes, function (i, note) {
+								if(note.ac >= localdata.settings.access) {
+									localdata.view.right.append(
+										$('<div>').addClass('note').attr({'id': note.id})
+									);
+									url = NB.api + '/get.php?note=' + note.id;
+									$.getJSON(url, function (data) {
+										for (var key in data) {
+											localdata.view.note = $('#' + note.id);
+											if (key === 'source') {
+												//localdata.view.container.addClass('desk');
+												dispBib(localdata.view.note, data, localdata);
+											} else {
+												//localdata.view.container.addClass('booklet');
+												dispNote(localdata.view.note, data, localdata);
+											}
 										}
-									}
-								});
+									});
+								}
 							});
 						});
 						break;
@@ -778,12 +821,6 @@
 									}
 								});
 							});
-
-
-
-
-
-
 						});
 						break;
 					default:
@@ -936,6 +973,15 @@
 
 			});											// end "return this.each"
 		},												// end "init"
+
+		edit: function () {
+			return this.each(function () {
+				var $this = $(this);
+				var localdata = $this.data('localdata');
+
+				console.log(localdata);
+			});
+		},
 
 
 		setNote2Wall: function () {

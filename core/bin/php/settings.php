@@ -16,7 +16,8 @@ define ('__SITE_PATH__', $pathInfo['dirname']);									// /Library/WebServer/Do
 // echo "SITE_PATH: ".__SITE_PATH__."<br>";
 define ('__SITE_URL__', $protocol.$_SERVER['HTTP_HOST'] . __BASE_FOLDER__);		// http://notizblogg.ch + /nb
 // echo "SITE_URL: ".__SITE_URL__."<br>";
-define ("__MEDIA_URL__", $protocol.$_SERVER['HTTP_HOST'] . "/data/media");		// http://somewhere.com/MEDIA
+//define ("__MEDIA_URL__", $protocol.$_SERVER['HTTP_HOST'] . "/data/media");		// http://somewhere.com/MEDIA
+define ("__MEDIA_URL__", "http://localhost/media");		// http://somewhere.com/MEDIA
 // echo "MEDIA_URL: ".__MEDIA_URL__."<br>";
 define ('__DOWNLOAD_URL__', $protocol.$_SERVER['HTTP_HOST'] . "/data/export");	// http://somewhere.com/EXPORT
 // echo "DOWNLOAD_URL: ".__DOWNLOAD_URL__."<br>";

@@ -1,9 +1,27 @@
 .logo {
 	font-family: sverige, jellyka, glamor, Verdana, serif;
 }
+* {
 
+}
 h1, h2, h3, h4, h5, h6, p, span {
   color: @ink;
+}
+p {
+  text-align: justify;
+  text-justify: inter-word;
+  font-size: 13px;
+  line-height: 17px;
+  word-wrap: break-word;
+}
+h3 {
+  font-size: 14px;
+  font-weight: bold;
+}
+h4 {
+  font-size: 13px;
+  font-weight: bold;
+
 }
 a {
   color: @link;
@@ -25,7 +43,7 @@ header, footer {
 
 header {
   .box-shadow-bottom();
-  background: none repeat scroll 0 0 rgba(33, 33, 33, 0.6);
+  background: none repeat scroll 0 0 fade(@tools, 80%);
 }
 
 footer {
@@ -169,9 +187,9 @@ footer {
 	  left: -6px;
 	}
 	.shade{
-	  box-shadow:0px 0px 18px #000;
-	  -moz-box-shadow:0px 0px 18px #000;
-	  -webkit-box-shadow:0px 0px 18px #000
+	  box-shadow:0px 0px 18px @tools;
+	  -moz-box-shadow:0px 0px 18px @tools;
+	  -webkit-box-shadow:0px 0px 18px @tools
 	}
   }
 
@@ -184,7 +202,8 @@ footer {
   border-top: 1px solid @line;
   margin: 10px;
  // overflow: hidden;
-  width: 320px;
+  width: 280px;
+
   .media, .text, .latex {
 	.border-radius-custom(@rad, @rad, 0, 0);
   }
@@ -202,9 +221,6 @@ footer {
 	p.warning {
 	  text-align: center;
 	}
-	&:hover {
-	  opacity: 1;
-	}
   }
   .text, .latex, .label, .tools {
 	margin: 0;
@@ -212,12 +228,13 @@ footer {
   }
 
   .text, .latex {
-	padding: 5px;
+	padding: 12px;
 	background-color: fade(@card, 33%);
   }
 
   .label, .tools {
-	opacity: 0.1;
+//	opacity: 0.1;
+	height: 40px;
   }
 
   .text p.footnote, .latex p.footnote {
@@ -235,7 +252,7 @@ footer {
   }
 
   .label {
-	min-height: 40px;
+	min-height: 5px;
 	padding: 10px auto;
 	opacity: 0.8;
 	text-align: center;
@@ -243,34 +260,39 @@ footer {
 	p {
 	  text-align: center;
 	  font-size: smaller;
-	  margin: 0;
-	  margin-left: auto;
-	  margin-right: auto;
-	  position: absolute;
-	  top: 50%;
-	  left: 50%;
-	transform: translate(-50%, -50%);
+	  margin: 7px;
+	  a.tag_size.small {
+		font-size: small;
+	  }
+	  a.tag_size.medium {
+		font-size: medium;
+	  }
+	  a.tag_size.large {
+		font-size: large;
+	  }
+
 	}
+//	.border-radius-custom(0, 0, @rad, @rad);
 	border-top: 1px solid @line;
+	border-bottom: 1px solid @line;
+
   }
-  .label.private {
-	border-top: 1px solid fade(indianred, 44%);
-  }
+
   .tools {
+	opacity: 0;
 	margin-left: auto;
 	margin-right: auto;
 	clear: both;
-	height: 33px;
 	.border-radius-custom(0, 0, @rad, @rad);
 	.left, .center, .right {
 	  font-size: 0.8em;
 	  float: left;
 	  width: 33%;
 
+
 	  button {
 		display: block;
-		margin-left: auto;
-		margin-right: auto;
+		margin: 4px auto 4px auto;
 	  }
 	}
 	.center {
@@ -282,19 +304,37 @@ footer {
 	.media, .text, .latex {
 	  .border-radius-custom(@rad, @rad, 0, 0);
 	  background-color: @card;
+	  opacity: 1;
 	}
 	.label, .tools {
-	  background-color: fade(darken(@card, 44%), 50%);
+//	  background-color: fade(darken(@card, 44%), 50%);
 	}
 	.tools {
 	  opacity: 1;
 	  .border-radius-custom(0, 0, @rad, @rad);
-//	  display: block;
+	  border-bottom: 1px solid @line;
+	}
+  }
+  &.active {
+	.media, .text, .latex {
+	  .border-radius-custom(@rad, @rad, 0, 0);
+	  background-color: @card;
+	  opacity: 1;
+	}
+	.label, .tools {
+	  //	  background-color: fade(darken(@card, 44%), 50%);
+	}
+	.tools {
+	  opacity: 1;
+	  .border-radius-custom(0, 0, @rad, @rad);
+	  border-bottom: 1px solid @line;
 	}
   }
 }
 
-
+.note.private .label {
+  border-top: 1px solid fade(indianred, 44%);
+}
 /*
 .note.active {
   .media, .text, .latex {
@@ -310,6 +350,11 @@ footer {
 }
 */
 .note.topic {
+  .latex p {
+	text-align: left;
+	text-justify: none;
+	word-wrap: normal;
+  }
   .media, .text, .latex {
 	.border-radius-custom(@rad, @rad, 0, 0);
 	background-color: fade(@card, 88%);
@@ -321,9 +366,26 @@ footer {
 	.media, .text, .latex {
 	  .border-radius-custom(@rad, @rad, 0, 0);
 	  background-color: @card;
+	  opacity: 1;
 	}
-	.label, .tools {
-	  background-color: fade(darken(@card, 44%), 50%);
+	.tools {
+	  //	  background-color: fade(darken(@card, 44%), 50%);
+	  opacity: 1;
+	  .border-radius-custom(0, 0, @rad, @rad);
+	  border-bottom: 1px solid @line;
+	}
+  }
+  &.active {
+	.media, .text, .latex {
+	  .border-radius-custom(@rad, @rad, 0, 0);
+	  background-color: @card;
+	  opacity: 1;
+	}
+	.tools {
+//	  background-color: fade(darken(@card, 44%), 50%);
+	  opacity: 1;
+	  .border-radius-custom(0, 0, @rad, @rad);
+	  border-bottom: 1px solid @line;
 	}
   }
 }

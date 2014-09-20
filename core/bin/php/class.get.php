@@ -193,9 +193,12 @@ class get {
 
 					}
 
-					$notes_sql = $mysqli->query('SELECT noteID FROM note WHERE bibID = ' . $this->id . ' ORDER BY pageStart, pageEnd, noteID');
+					$notes_sql = $mysqli->query('SELECT noteID, notePublic FROM note WHERE bibID = ' . $this->id . ' ORDER BY pageStart, pageEnd, noteID');
+					$i = 0;
 					while($notes = mysqli_fetch_object($notes_sql)){
-						array_push($data['source']['notes'], $notes->noteID);
+						$data['source']['notes'][$i]['id'] = $notes->noteID;
+						$data['source']['notes'][$i]['ac'] = $notes->notePublic;
+						$i++;
 					}
 				}
 			}
@@ -234,7 +237,7 @@ class get {
 				break;
 			case 'new';
 				if($this->access > 0) {		// = public access: show sources only, if they are public!
-					$sql = $mysqli->query('SELECT note.noteID, note.bibID FROM note, bib WHERE note.noteID = bib.noteID AND note.notePublic >= 0 ORDER BY note.dateCreated DESC  LIMIT 0, ' . $this->id . ';');
+					$sql = $mysqli->query('SELECT note.noteID, note.bibID FROM note, bib WHERE note.noteID = bib.noteID AND note.notePublic >= '.$this->access.' ORDER BY note.dateCreated DESC  LIMIT 0, ' . $this->id . ';');
 				} else {
 					$sql = $mysqli->query('SELECT noteID FROM note ORDER BY dateCreated DESC LIMIT 0, ' . $this->id . ';');
 				}

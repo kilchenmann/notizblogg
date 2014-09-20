@@ -275,9 +275,12 @@ $(window).resize(function() {
 	// set the numbers of wall columns
 	if ($('.wall').length !== 0) {
 		var width = $(window).width();
-		var note_width = 350;		// normally 320px
+		var note_width = 320;		// normally 320px
 		var num_col = Math.floor(width / note_width);
+		var ww = num_col * note_width;
 		$('.wall').css({
+			'width': ww,
+
 			'-webkit-column-count': num_col,
 			'-webkit-column-fill': num_col,
 
@@ -292,6 +295,7 @@ $(window).resize(function() {
 });
 
 var isTouchDevice = function() {
+
 	var el = document.createElement('div');
 	el.setAttribute('ongesturestart', 'return;');
 	/*
@@ -390,10 +394,14 @@ $(document).on({
 				Arrow_Points();
 			});
 		} else if ($('.wall').length !== 0) {
+
 			var width = $(window).width();
-			var note_width = 350;		//$(this).find('.note').width() + 40;		// normally 320px
+			if(width > screen.availWidth) width = screen.availWidth;
+			var note_width = 320;		//$(this).find('.note').width() + 40;		// normally 320px
 			var num_col = Math.floor(width / note_width);
+			var ww = num_col * note_width;
 			$('.wall').css({
+				'width': ww,
 				'-webkit-column-count': num_col,
 				'-webkit-column-fill': num_col,
 
@@ -413,33 +421,27 @@ $(document).on({
 		var active = {};
 		$('div.note')
 			.mouseenter(function (event) {
-				active = activator($(this));
+				if(!$(this).hasClass('active')) {
+					$(this).addClass('active');
+				}
 			})
 			.on('touchstart', function () {
-				active = activator($(this));
-			})
-
-			.hover(function () {
-				/*
-				 if($(this).hasClass('active')) {
-
-				 }
-				 */
+				if(!$(this).hasClass('active')) {
+					$(this).addClass('active');
+				}
 			})
 
 			.mouseleave(function (event) {
-				$(this).toggleClass('active');
-				$(this).children('div.media').css({'opacity': '0.8'});
-				$(this).children('div.label').css({'opacity': '0.8'});
-				$(this).children('div.tools').css({'opacity': '0.1'});
+				if($(this).hasClass('active')) {
+					$(this).removeClass('active');
+				}
 			})
 			.on('touchend', function () {
-
+				if($(this).hasClass('active')) {
+					$(this).removeClass('active');
+				}
 			});
-
-
 	}
-
 });
 
 
