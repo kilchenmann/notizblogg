@@ -262,11 +262,13 @@ function getNoteID($id) {
 }
 
 function getMedia($media) {
-	$media = explode('.', $media.'.');
-	$name = $media[0];
-	$ext = $media[1];
+	$media_file = explode('.', $media.'.');
+	$name = $media_file[0];
+	$ext = $media_file[1];
 
 	$media_tag = '<span class=\'warning invisible\'>[The media file is missing OR \'' . $ext . '\' is not supported]</span>';
+
+
 
 	switch($ext){
 		case "jpg";
@@ -291,9 +293,22 @@ function getMedia($media) {
 
 		case "pdf";
 		{
-			$media_path = __MEDIA_URL__."/documents/".$media;
-			if (@fopen($media_path,"r")==true){
-				$media_tag = "<p class='download'>".$media." (".$size."kb) <a href='".$media_path."' title='Download ".$media." (".$size."kb)' >Open</a></p><br>";
+			$media_path = __MEDIA_URL__.'/documents/'.$media;
+			if (@fopen($media_path,'r')==true){
+				//echo 'convert '.__MEDIA_PATH__.'/documents/'.$media.' -colorspace RGB -geometry 200 '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg';
+				if(!file_exists(__MEDIA_PATH__ . '/documents/'.$name.'/')) {
+					exec('mkdir ' . __MEDIA_PATH__ . '/documents/'.$name );
+				} else {
+					if(@fopen(__MEDIA_PATH__.'/documents/'.$name.'/0.jpg', 'r') == false){
+						//echo exec("whoami") . PHP_EOL;
+						//echo 'exec("convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg");';
+					}
+				}
+
+
+				//echo 'convert "'.__MEDIA_PATH__.'/documents/'.$media.'[0]" -colorspace RGB -geometry 200 "'.__MEDIA_PATH__.'/documents/'.$name.'.png"';
+				// (".$size."kb)
+				$media_tag = "<a href='".$media_path."' title='Download ".$media."' ><img class='staticMedia' src='".__MEDIA_URL__."/documents/".$name."' title='".$media."' alt='".$media."'/></a>";
 			}
 			break;
 		}

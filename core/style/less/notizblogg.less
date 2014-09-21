@@ -208,19 +208,24 @@ footer {
 	.border-radius-custom(@rad, @rad, 0, 0);
   }
   .media {
-//	background-color: @bg;
-	opacity: 0.8;
-	img, video, audio {
+	background-color: fade(@card, 33%);
+	.box-shadow-bottom();
+	img, video, audio, span {
+	  opacity: 0.8;
 	  width: 100%;
+	  text-align: center;
 	  .border-radius-custom(@rad, @rad, 0, 0);
-//	  border-bottom: 1px solid #ccc;
 	  margin: 0;
 	  .box-shadow-bottom();
 	  border-bottom: 1px solid @line;
-	}
-	p.warning {
+	  display: block;
 	  text-align: center;
 	}
+span.warning {
+  background-color: fade(@neg, 15%);
+  display: block;
+  text-align: center;
+}
   }
   .text, .latex, .label, .tools {
 	margin: 0;

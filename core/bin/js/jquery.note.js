@@ -63,7 +63,8 @@
 			source = data.source;
 			if(source.id !== 0) {
 				bibtex = '@' + source.bibTyp.name + '{';
-				if (source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book') {
+
+				if ((source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book') && jQuery.isEmptyObject(source.insource) === false) {
 					bibtex += '<a href=\'?collection=' + source.id + '\' >' + source.name + '</a><br>';
 				} else {
 					bibtex += '<a href=\'?source=' + source.id + '\' >' + source.name + '</a><br>';
@@ -83,7 +84,7 @@
 				// title
 				bibtex += 'title = {' + source.title + '},<br>';
 				if (source.title !== '') {
-					if (source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book') {
+					if ((source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book')  && jQuery.isEmptyObject(source.insource) === false) {
 						biblio += ': <a href=\'?collection=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
 					} else {
 						biblio += ': <a href=\'?source=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
@@ -244,9 +245,12 @@
 				if (data.note.public === '0') {
 					note_ele.addClass('private');
 				}
-
-				note.media
-					.html(data.note.media);
+				if(!$.isEmptyObject(data.note.media)) {
+					note.media
+						.empty()
+						.html(data.note.media);
+					note.content.css({'border-radius': '0px', '&:hover': {'border-radius': '0px'}});
+				}
 				note.content
 					.append($('<h3>').html(data.note.title))
 					.append($('<h4>').html(data.note.subtitle))
