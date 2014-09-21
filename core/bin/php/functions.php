@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(-1);
 function condb($conart) {
 	$mysqli = new mysqli($GLOBALS['nb']['host'], $GLOBALS['nb']['user'], $GLOBALS['nb']['pass'], $GLOBALS['nb']['db']);
 	if ($mysqli->connect_errno) {
@@ -295,16 +295,18 @@ function getMedia($media) {
 		{
 			$media_path = __MEDIA_URL__.'/documents/'.$media;
 			if (@fopen($media_path,'r')==true){
-				//echo 'convert '.__MEDIA_PATH__.'/documents/'.$media.' -colorspace RGB -geometry 200 '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg';
-				if(!file_exists(__MEDIA_PATH__ . '/documents/'.$name.'/')) {
-					exec('mkdir ' . __MEDIA_PATH__ . '/documents/'.$name );
-				} else {
-					if(@fopen(__MEDIA_PATH__.'/documents/'.$name.'/0.jpg', 'r') == false){
-						//echo exec("whoami") . PHP_EOL;
-						//echo 'exec("convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg");';
-					}
+//				exec('convert '.__MEDIA_PATH__.'/documents/'.$media.' -colorspace RGB -geometry 200 '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg');
+				if(!file_exists(__MEDIA_PATH__ . '/documents/'.$name.'-0.jpg')) {
+//					$imagick = new Imagick();
+//					$imagick->readImage($media);
+//					$imagick->writeImages('converted.jpg', false);
+//					//echo '/usr/local/bin/convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'.jpg;';
+//					shell_exec ('/usr/local/bin/convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'.jpg');
 				}
 
+
+				//echo 'mkdir ' . __MEDIA_PATH__ . '/documents/'.$name.'; chmod -R u+w ' . __MEDIA_PATH__ . '/documents/'.$name.'; /usr/local/bin/convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg;';
+//				$media_tag = 'exec(convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg);';
 
 				//echo 'convert "'.__MEDIA_PATH__.'/documents/'.$media.'[0]" -colorspace RGB -geometry 200 "'.__MEDIA_PATH__.'/documents/'.$name.'.png"';
 				// (".$size."kb)

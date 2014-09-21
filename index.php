@@ -227,12 +227,12 @@ $(window).load(function() {
 		$('.add')
 			.append($('<button>').addClass('btn grp_none toggle_add'))
 			.expand({
-				type: 'source',		// source || note
+				type: 'source',			// source || note
 				sourceID: 'new',
 				noteID: 'new',
-				edit: true,		// true || false
+				edit: true,				// true || false
 				data: undefined,
-				show: 'form'		// booklet || form
+				show: 'form'			// booklet || form
 			});
 
 		$('.drawer').append(
