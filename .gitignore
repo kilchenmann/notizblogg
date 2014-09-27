@@ -1,5 +1,4 @@
-.idea/
-.idea/copyright/profiles_settings.xml
-data/
-test/
+.idea/*
+data/*
+test/*
 core/bin/php/.conf/db.php
