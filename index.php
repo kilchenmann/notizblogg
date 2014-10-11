@@ -3,9 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<!--
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	-->
+
 	<?php
 	session_start ();
 	require 'core/bin/php/settings.php';
@@ -23,7 +21,40 @@
 		echo "KEIN ZUGRIFF!!";
 	}
 
+	// default parameters in case of wrong queries;
+	// these variables would be overwritten in the right case
+	$type = '';
+	$query = 'all';
+	$viewer = 'wall';
 
+	if($_SERVER['QUERY_STRING']){
+		if(isset($_GET['source'])){
+			$type = 'source';
+			$query = $_GET['source'];
+			$viewer = 'desk';
+		}
+		if(isset($_GET['note'])){
+			$type = 'note';
+			$query = $_GET['note'];
+		}
+		if(isset($_GET['label'])){
+			$type = 'label';
+			$query = $_GET['label'];
+		}
+		if(isset($_GET['author'])){
+			$type = 'author';
+			$query = $_GET['author'];
+		}
+		if(isset($_GET['collection'])){
+			$type = 'collection';
+			$query = $_GET['collection'];
+			$viewer = 'desk';
+		}
+		if(isset($_GET['q'])){
+			$type = 'search';
+			$query = $_GET['q'];
+		}
+	}
 	?>
 
 	<title>Notizblogg</title>
@@ -38,25 +69,31 @@
 	<meta name="viewport" content="width=480, user-scalable=yes">
 	<meta name="viewport" content="initial-scale=0.6, maximum-scale=0.8">
 
+	<!-- jQUERY LIBrary -->
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/lib/jquery-1.10.2.min.js"></script>
 
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/md5.js"></script>
+	<!-- some VENDOR stuff -->
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/vendor/md5.js"></script>
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/vendor/jquery.masonry.min.js"></script>
+
+	<!-- notizblogg specific tools -->
+	<!-- some functional / styling stuff -->
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.center.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.warning.js"></script>
-
+	<!-- project, searchbar and login module for the PANEL -->
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.panel.js"></script>
+	<!-- show, add, edit and expand NOTE -->
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.note.js"></script>
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.expand.js"></script>
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.masonry.min.js"></script>
 
+<!--
+	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.expand.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.finder.js"></script>
 	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.login.js"></script>
-
-
-
-	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/nb.css">
-<!--
-	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/responsive.css">
 -->
+
+	<!-- style / design / responsive specs. -->
+	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/nb.css">
+	<!-- <link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/responsive.css"> -->
 
 </head>
 <body>
@@ -80,7 +117,13 @@
 	<!-- <span class="menu"></span> -->
 </header>
 <div class="float_obj medium warning"></div>
-<div class="float_obj large pamphlet"></div>
+<!-- <div class="float_obj large pamphlet"></div> -->
+<!-- main view: fullpage -> viewer -> wall || desk -->
+<div id="fullpage">
+	<div class="viewer">
+
+	</div>
+</div>
 <footer>
 	<p class="small">
 		<a href="http://notizblogg.ch">Notizblogg</a> | Idea, Concept and Design &copy;
@@ -92,62 +135,15 @@
 	</p>
 </footer>
 <div class="modal"><!-- Place at bottom of page --></div>
-<div id="fullpage">
-	<div class="viewer">
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 
-		<?php
-		// default parameters
 
-		$type = '';
-		$query = 'all';
-		$viewer = 'wall';
 
-		if($_SERVER['QUERY_STRING']){
-			// default values; in case of wrong queries; these variables would be overwritten in the right case
-			if(isset($_GET['source'])){
-				$type = 'source';
-				$query = $_GET['source'];
-				$viewer = 'desk';
-			}
-			if(isset($_GET['note'])){
-				$type = 'note';
-				$query = $_GET['note'];
-			}
-			if(isset($_GET['label'])){
-				$type = 'label';
-				$query = $_GET['label'];
-			}
-			if(isset($_GET['author'])){
-				$type = 'author';
-				$query = $_GET['author'];
-			}
-			if(isset($_GET['collection'])){
-				$type = 'collection';
-				$query = $_GET['collection'];
-				$viewer = 'desk';
-			}
-			if(isset($_GET['q'])){
-				$type = 'search';
-				$query = $_GET['q'];
-			}
-		}
-		/*
-		else {
-			?>
-			<script type="text/javascript">
-				$('#fullpage').css({'background-image': 'url(core/style/img/bg-notizblogg.jpg)'});
-			</script>
-		<?php
-		}
 
-		show($type, $query, $access, $viewer);
-*/
-		?>
 
-	</div>
-
-</div>
 
 
 <script type="text/javascript">
@@ -202,54 +198,56 @@ NB.query = {
 	id: '<?php echo $query; ?>'
 };
 
+
+
+
+
+
+
+
+var url = require('url');
+var url_parts = url.parse(request.url, true);
+var query = url_parts.query;
+
+console.log(query);
+
+
+
+//
+// when window is LOADing
+//
 $(window).load(function() {
 	/* set the correct window size and the dimension of some elements */
 	var height = $(window).height() - $('header').height() - $('footer').height();
 	$('div.viewer').css({'height': height});
 	$('.float_obj').center();
 
+	// set the panel parts...
+
+/*
+	var project_ele = $('.project');
+	$('header .project').panel('project', function() {
+		project: 'Notizblogg';
+		logo: 'nb-logo.png';
+	});
+*/
+
+
 	/* enable the project logo */
 	$('.project').append($('<a>').attr({href: NB.url}).append($('<h2>').text('Notizblogg')).addClass('title project logo'));
 	/* integrate the search bar in the header panel */
+
+
+/*
 	$('.search').finder({
 		search: 'Suche',
 		filter: 'Erweiterte Suche',
 		database: ''
 	});
-	/* add button, user / login tools */
-	if(NB.user.name !== 'guest' && NB.access !== '1' && NB.user.id !== '') {
-		$('.user').login({
-			type: 'logout',
-			submit: 'Abmelden',
-			action: NB.url + '/core/bin/php/check.out.php'
-		});
-		/* integrate the add button */
-		$('.add')
-			.append($('<button>').addClass('btn grp_none toggle_add'))
-			.expand({
-				type: 'source',			// source || note
-				sourceID: 'new',
-				noteID: 'new',
-				edit: true,				// true || false
-				data: undefined,
-				show: 'form'			// booklet || form
-			});
+*/
 
-		$('.drawer').append(
-		//		$('<button>').addClass('btn grp_none toggle_drawer')
-		);
-
-	} else {
-		$('.user').login({
-			type: 'login',
-			user: 'Benutzername',
-			key: 'Passwort',
-			submit: 'Anmelden',
-			action: NB.url + '/core/bin/php/check.in.php'
-		});
-	}
 	/* show some content */
-	$('.viewer').note(NB);
+//	$('.viewer').note(NB);
 
 });
 
