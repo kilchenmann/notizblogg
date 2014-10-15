@@ -12,13 +12,13 @@
  * ===========================================================================
  * ======================================================================== */
 
-(function( $ ){
+
+(function ($) {
+	'use strict';
 	// -----------------------------------------------------------------------
 	// -----------------------------------------------------------------------
 	// define some functions first
 	// -----------------------------------------------------------------------
-
-
 
 
 	// -------------------------------------------------------------------------
@@ -27,15 +27,15 @@
 	// -------------------------------------------------------------------------
 	var methods = {
 		/*========================================================================*/
-		init: function() {
-			return this.each(function() {
+		init: function () {
+			return this.each(function () {
 				var $this = $(this),
 					localdata = {};
 
 				localdata.settings = {
-					project: 'Notizblogg',			// default: Notizblogg
-					logo: 'nb-logo.png',			// default: nb-logo.png
-					user: undefined				// undefined = guest
+					project: 'Notizblogg', // default: Notizblogg
+					logo: 'nb-logo.png', // default: nb-logo.png
+					user: undefined // undefined = guest
 				};
 
 				localdata.search = {};
@@ -46,25 +46,25 @@
 				console.log('text aus panel');
 
 
-			});											// end "return this.each"
-		},												// end "init"
+			}); // end "return this.each"
+		}, // end "init"
 
 
-        project: function() {
-            return this.each(function() {
-                var $this = $(this);
-                var localdata = $this.data('localdata');
+		project: function () {
+			return this.each(function () {
+				var $this = $(this),
+					localdata = $this.data('localdata');
 
-            });
-        },
+			});
+		},
 
-        search: function() {
-            return this.each(function() {
-                var $this = $(this);
-                var localdata = $this.data('localdata');
+		search: function () {
+			return this.each(function () {
+				var $this = $(this);
+				var localdata = $this.data('localdata');
 				var search = {};
-					$this
-						.append(search.simple = $('<form>')
+				$this
+					.append(search.simple = $('<form>')
 						.attr({
 							'accept-charset': 'utf-8',
 							'name': 'simpleSearch',
@@ -77,7 +77,7 @@
 								'title': 'filter'
 							})
 							.addClass('btn grp_left search_filter')
-					)
+						)
 						.append(search.field = $('<input>')
 							.attr({
 								'type': 'search',
@@ -93,56 +93,56 @@
 									})
 									.css({
 										'background-color': '#ffffe0'
-									})
+									});
 							})
 							.focusout(function () {
 								search.field
 									.attr({
-										'placeholder': 'SEARCH'
+										'placeholder': 'search'
 									})
 									.css({
 										'background-color': '#ffffff'
-									})
+									});
 							})
-					)
+						)
 						.append(search.button = $('<button>')
 							.attr({
 								'type': 'submit',
 								'title': 'GO!'
 							})
 							.addClass('btn grp_right search_btn')
-					)
-				);
+						)
+					);
 
-            });
-        },
+			});
+		},
 
-        login: function() {
-        	return this.each(function() {
-        		var $this = $(this);
-        		var localdata = $this.data('localdata');
-        	});
-        },
-
-		anotherMethod: function() {
-			return this.each(function(){
+		login: function () {
+			return this.each(function () {
 				var $this = $(this);
 				var localdata = $this.data('localdata');
 			});
-		}
-		/*========================================================================*/
+		},
+
+		anotherMethod: function () {
+				return this.each(function () {
+					var $this = $(this);
+					var localdata = $this.data('localdata');
+				});
+			}
+			/*========================================================================*/
 	};
 
 
 
-	$.fn.panel = function(method) {
+	$.fn.panel = function (method) {
 		// Method calling logic
-		if ( methods[method] ) {
-			return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-		} else if ( typeof method === 'object' || ! method ) {
-			return methods.init.apply( this, arguments );
+		if (methods[method]) {
+			return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+		} else if (typeof method === 'object' || !method) {
+			return methods.init.apply(this, arguments);
 		} else {
 			throw 'Method ' + method + ' does not exist on jQuery.tooltip';
 		}
 	};
-})( jQuery );
+})(jQuery);

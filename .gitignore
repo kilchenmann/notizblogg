@@ -1,4 +1,3 @@
-.idea/*
-data/*
-test/*
+.idea/
+data/
 core/bin/php/.conf/db.php
