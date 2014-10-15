@@ -38,6 +38,8 @@
 					user: undefined				// undefined = guest
 				};
 
+				localdata.search = {};
+
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
 
@@ -52,7 +54,7 @@
             return this.each(function() {
                 var $this = $(this);
                 var localdata = $this.data('localdata');
-				alert('project from panel plugin ' + localdata.settings.project );
+
             });
         },
 
@@ -60,6 +62,58 @@
             return this.each(function() {
                 var $this = $(this);
                 var localdata = $this.data('localdata');
+				var search = {};
+					$this
+						.append(search.simple = $('<form>')
+						.attr({
+							'accept-charset': 'utf-8',
+							'name': 'simpleSearch',
+							'action': NB.url + '/core/bin/php/search.data.php',
+							'method': 'get'
+						})
+						.append(search.filter = $('<button>')
+							.attr({
+								'type': 'button',
+								'title': 'filter'
+							})
+							.addClass('btn grp_left search_filter')
+					)
+						.append(search.field = $('<input>')
+							.attr({
+								'type': 'search',
+								'title': 'SEARCH',
+								'placeholder': 'search',
+								'name': 'q'
+							})
+							.addClass('input grp_middle search_field')
+							.focus(function () {
+								search.field
+									.attr({
+										'placeholder': ''
+									})
+									.css({
+										'background-color': '#ffffe0'
+									})
+							})
+							.focusout(function () {
+								search.field
+									.attr({
+										'placeholder': 'SEARCH'
+									})
+									.css({
+										'background-color': '#ffffff'
+									})
+							})
+					)
+						.append(search.button = $('<button>')
+							.attr({
+								'type': 'submit',
+								'title': 'GO!'
+							})
+							.addClass('btn grp_right search_btn')
+					)
+				);
+
             });
         },
 

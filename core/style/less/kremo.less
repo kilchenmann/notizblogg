@@ -250,20 +250,27 @@ input, textarea, .fake_area, select, label, .media.field_obj, label span {
   padding: 5px;
   margin: 5px;
 }
+span.search {
+    left: 50%;
+    position: absolute;
+    display: table-cell;
+    width: 620px;
+    margin-left: -310px;
 
-input[type=search] {
-  margin: 0;
-  padding: 0;
-  border-radius: 0;
-  width: 360px;
-  background-color: @bg;
-  padding-left: 4px;
-  padding-right: 4px;
-  font-size: 1em;
+
+    input[type=search] {
+      margin: 0;
+      padding: 0 4px 0 4px;
+      border-radius: 2px;
+      width: 520px;
+      height: 31px;
+      background-color: @card;
+      font-size: 1em;
+    }
 }
 
 input[type=text], input[type=password], input[type=email], input[type=date], input[type=file], textarea, .fake_area, select, .media.field_obj, label span {
-  border-top: 1px solid fade(@link, 11%);
+  border-top: 1px solid fade(@card, 11%);
   border-right: none;
   border-bottom: 1px solid fade(@link, 11%);
   border-left: none;
@@ -588,4 +595,3 @@ span.formfield {
 	margin-left: 4px;
   }
 }
-

@@ -672,10 +672,7 @@
 						id: undefined,
 						name: undefined
 					},
-					query: {
-						id: undefined,
-						type: undefined
-					}
+					query: {}
 				};
 				localdata.footnote = {};
 
@@ -689,6 +686,10 @@
 				$this.append(
 					localdata.view.container = $('<div>')
 				);
+for(i=0; i<localdata.settings.query.length; i++ ) {
+
+	console.log(localdata.settings.query[i] + ': ' + localdata.settings.query[localdata.settings.query[i]]);
+}
 				switch (localdata.settings.query.type) {
 					case 'label':
 					case 'author':
