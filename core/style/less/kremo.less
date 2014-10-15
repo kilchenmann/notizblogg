@@ -34,7 +34,7 @@ input, select, button, textarea, .fake_area, .card {
   background-image: url(../../lib/icons/btn_icons.png);
   background-position: 0px 0px;
   background-repeat: no-repeat;
-  border: 1px solid darken(@bg, 5%);
+  border: 0px solid darken(@bg, 5%);
   cursor: pointer;
   &:hover {
 	background-color: darken(@bg, 20%);
@@ -177,39 +177,39 @@ button.view_table {
   }
 }
 button.toggle_cite {
-  background-position: 0px -480px;
+  background-position: -40px -480px;
   &:hover {
-	background-position: -40px -480px;
+	background-position: 0px -480px;
   }
 }
 button.toggle_comment {
-  background-position: 0px -510px;
+  background-position: -40px -510px;
   &:hover {
-	background-position: -40px -510px;
+	background-position: 0px -510px;
   }
 }
 button.toggle_expand {
-  background-position: 0px -540px;
+  background-position: -40px -540px;
   &:hover {
-	background-position: -40px -540px;
+	background-position: 0px -540px;
   }
 }
 button.toggle_collapse {
-  background-position: 0px -570px;
+  background-position: -40px -570px;
   &:hover {
-	background-position: -40px -570px;
+	background-position: 0px -570px;
   }
 }
 button.toggle_notes {
-  background-position: 0px -600px;
+  background-position: -40px -600px;
   &:hover {
-	background-position: -40px -600px;
+	background-position: 0px -600px;
   }
 }
 button.toggle_edit {
-  background-position: 0px -630px;
+  background-position: -40px -630px;
   &:hover {
-	background-position: -40px -630px;
+	background-position: 0px -630px;
   }
 }
 button.toggle_tools {
@@ -250,19 +250,27 @@ input, textarea, .fake_area, select, label, .media.field_obj, label span {
   padding: 5px;
   margin: 5px;
 }
+span.search {
+    left: 50%;
+    position: absolute;
+    display: table-cell;
+    width: 620px;
+    margin-left: -310px;
 
-input[type=search] {
-  margin: 0;
-  padding: 0;
-  border-radius: 0;
-  width: 360px;
-  background-color: @bg;
-  padding-left: 4px;
-  padding-right: 4px;
+
+    input[type=search] {
+      margin: 0;
+      padding: 0 4px 0 4px;
+      border-radius: 2px;
+      width: 520px;
+      height: 31px;
+      background-color: @card;
+      font-size: 1em;
+    }
 }
 
 input[type=text], input[type=password], input[type=email], input[type=date], input[type=file], textarea, .fake_area, select, .media.field_obj, label span {
-  border-top: 1px solid fade(@link, 11%);
+  border-top: 1px solid fade(@card, 11%);
   border-right: none;
   border-bottom: 1px solid fade(@link, 11%);
   border-left: none;
@@ -587,4 +595,3 @@ span.formfield {
 	margin-left: 4px;
   }
 }
-

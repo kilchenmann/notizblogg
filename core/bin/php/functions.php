@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(-1);
 function condb($conart) {
 	$mysqli = new mysqli($GLOBALS['nb']['host'], $GLOBALS['nb']['user'], $GLOBALS['nb']['pass'], $GLOBALS['nb']['db']);
 	if ($mysqli->connect_errno) {
@@ -31,7 +31,7 @@ function conuser($token) {
 			if (@fopen($avatar, "r") == false) {
 				$avatar = 'http://www.gravatar.com/avatar/' . md5($row->email);
 				if (@fopen($avatar, "r") == false) {
-					$avatar = __SITE_URL__ . '/data/user/' . $row->userID;
+					$avatar = __MEDIA_URL__ . '/user/' . $row->userID;
 				}
 			}
 			$user = array(
@@ -214,18 +214,26 @@ function getIndexMN($type, $part, $id)
 
 function getNote2Author($id) {
 	$mysqli = condb('open');
-	$bsql = $mysqli->query('SELECT bibID FROM rel_bib_author WHERE authorID = ' . $id . ';');
+	$sql = $mysqli->query('SELECT bib.noteID, note.notePublic FROM rel_bib_author, note, bib WHERE rel_bib_author.authorID = ' . $id . ' AND rel_bib_author.bibID = bib.bibID AND bib.noteID = note.noteID;');
 	condb('close');
-	$num_results = mysqli_num_rows($bsql);
+	$num_results = mysqli_num_rows($sql);
 	$notes = array();
 	if($num_results > 0) {
-		while($brow = mysqli_fetch_object($bsql)) {
-			$mysqli = condb('open');
-			$sql = $mysqli->query('SELECT noteID FROM bib WHERE bibID = ' . $brow->bibID . ';');
-			condb('close');
-			while($row = mysqli_fetch_object($sql)){
-				array_push($notes, $row->noteID);
-			}
+		$i=0;
+
+
+
+		while($row = mysqli_fetch_object($sql)) {
+//			$mysqli = condb('open');
+//			$sql = $mysqli->query('SELECT noteID FROM bib WHERE bibID = ' . $brow->bibID . ';');
+//			condb('close');
+//			while($row = mysqli_fetch_object($sql)){
+//				array_push($notes, $row->noteID);
+//			}
+
+			$notes[$i]['id'] = $row->noteID;
+			$notes[$i]['ac'] = $row->notePublic;
+			$i++;
 		}
 	}
 	return $notes;
@@ -234,13 +242,16 @@ function getNote2Author($id) {
 
 function getNote2Label($id) {
 	$mysqli = condb('open');
-	$sql = $mysqli->query('SELECT noteID FROM rel_note_label WHERE labelID = ' . $id . ';');
+	$sql = $mysqli->query('SELECT note.noteID, note.notePublic FROM rel_note_label, note WHERE rel_note_label.labelID = ' . $id . ' AND rel_note_label.noteID = note.noteID;');
 	condb('close');
 	$num_results = mysqli_num_rows($sql);
 	$notes = array();
 	if($num_results > 0) {
+		$i=0;
 		while($row = mysqli_fetch_object($sql)) {
-			array_push($notes, $row->noteID);
+			$notes[$i]['id'] = $row->noteID;
+			$notes[$i]['ac'] = $row->notePublic;
+			$i++;
 		}
 	}
 	return $notes;
@@ -251,11 +262,13 @@ function getNoteID($id) {
 }
 
 function getMedia($media) {
-	$media = explode('.', $media.'.');
-	$name = $media[0];
-	$ext = $media[1];
+	$media_file = explode('.', $media.'.');
+	$name = $media_file[0];
+	$ext = $media_file[1];
 
 	$media_tag = '<span class=\'warning invisible\'>[The media file is missing OR \'' . $ext . '\' is not supported]</span>';
+
+
 
 	switch($ext){
 		case "jpg";
@@ -280,9 +293,24 @@ function getMedia($media) {
 
 		case "pdf";
 		{
-			$media_path = __MEDIA_URL__."/documents/".$media;
-			if (@fopen($media_path,"r")==true){
-				$media_tag = "<p class='download'>".$media." (".$size."kb) <a href='".$media_path."' title='Download ".$media." (".$size."kb)' >Open</a></p><br>";
+			$media_path = __MEDIA_URL__.'/documents/'.$media;
+			if (@fopen($media_path,'r')==true){
+//				exec('convert '.__MEDIA_PATH__.'/documents/'.$media.' -colorspace RGB -geometry 200 '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg');
+				if(!file_exists(__MEDIA_PATH__ . '/documents/'.$name.'-0.jpg')) {
+//					$imagick = new Imagick();
+//					$imagick->readImage($media);
+//					$imagick->writeImages('converted.jpg', false);
+//					//echo '/usr/local/bin/convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'.jpg;';
+//					shell_exec ('/usr/local/bin/convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'.jpg');
+				}
+
+
+				//echo 'mkdir ' . __MEDIA_PATH__ . '/documents/'.$name.'; chmod -R u+w ' . __MEDIA_PATH__ . '/documents/'.$name.'; /usr/local/bin/convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg;';
+//				$media_tag = 'exec(convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg);';
+
+				//echo 'convert "'.__MEDIA_PATH__.'/documents/'.$media.'[0]" -colorspace RGB -geometry 200 "'.__MEDIA_PATH__.'/documents/'.$name.'.png"';
+				// (".$size."kb)
+				$media_tag = "<a href='".$media_path."' title='Download ".$media."' ><img class='staticMedia' src='".__MEDIA_URL__."/documents/".$name."' title='".$media."' alt='".$media."'/></a>";
 			}
 			break;
 		}

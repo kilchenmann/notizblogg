@@ -1,27 +1,59 @@
 .logo {
 	font-family: sverige, jellyka, glamor, Verdana, serif;
 }
+* {
 
+}
 h1, h2, h3, h4, h5, h6, p, span {
   color: @ink;
 }
+p {
+  text-align: justify;
+  text-justify: inter-word;
+  font-size: 13px;
+  line-height: 17px;
+  word-wrap: break-word;
+}
+h3 {
+  font-size: 14px;
+  font-weight: bold;
+}
+h4 {
+  font-size: 13px;
+  font-weight: bold;
+
+}
 a {
-  color: darken(@link, 5%);
+  color: @link;
 }
 a:hover {
-  color: fade(@link, 50%);
+  color: fade(@ink, 50%);
+}
+
+body {
+  background-color: #ffffff;
 }
 
 header, footer {
-  background-color: fade(@bg, 88%);
-  box-shadow: 0 0 2px 0 fade(@ink, 30%);
- // border-bottom: 1px solid fade(@ink, 30%);
-  color: @ink;
+  color: @btn;
+  .project h2 {
+	color: @btn;
+  }
+}
+
+header {
+//  .box-shadow-bottom();
+  background: none repeat scroll 0 0 fade(@header, 45%);
+}
+
+footer {
+  border-top: 1px solid @card;
+  background: none repeat scroll 0 0 fade(@footer, 10%);
 }
 
 #fullpage {
-  background-color: fade(@btn, 22%);
-  .quick-gradient(top, 0.1);
+//  background-color: fade(@bg, 88%);
+//  .quick-gradient(top, 0.1);
 /*
   background-image: url(../img/bg-empty.jpg);
   -webkit-background-size: cover;
@@ -156,63 +188,63 @@ header, footer {
 	  left: -6px;
 	}
 	.shade{
-	  box-shadow:0px 0px 18px #000;
-	  -moz-box-shadow:0px 0px 18px #000;
-	  -webkit-box-shadow:0px 0px 18px #000
+	  box-shadow:0px 0px 18px @tools;
+	  -moz-box-shadow:0px 0px 18px @tools;
+	  -webkit-box-shadow:0px 0px 18px @tools
 	}
   }
 
 }
 
 .note {
-  background-color: fade(@bg, 0%);
   opacity: 1;
   .border-radius(@rad);
 //  border-bottom: 1px solid fade(@bg, 44%);
-  border-top: 1px solid fade(@bg, 44%);
+  border-top: 1px solid @line;
   margin: 10px;
  // overflow: hidden;
-  width: 320px;
-  .media {
-//	background-color: @bg;
-	opacity: 0.8;
+  width: 280px;
+
+  .media, .text, .latex {
 	.border-radius-custom(@rad, @rad, 0, 0);
-	img {
+  }
+  .media {
+	background-color: fade(@card, 33%);
+	.box-shadow-bottom();
+	img, video, audio, span {
+	  opacity: 0.8;
 	  width: 100%;
+	  text-align: center;
 	  .border-radius-custom(@rad, @rad, 0, 0);
-//	  border-bottom: 1px solid #ccc;
 	  margin: 0;
 	  .box-shadow-bottom();
-	  //.box-shadow();
-	}
-	video {
-	  width: 100%;
-	  .border-radius-custom(@rad, @rad, 0, 0);
-//	  border-bottom: 1px solid #ccc;
-	  margin: 0;
-	}
-	audio {
-	  width: 100%;
-	  .border-radius-custom(@rad, @rad, 0, 0);
-//	  border-bottom: 1px solid #ccc;
-	  margin: 0;
-	}
-	p.warning {
+	  border-bottom: 1px solid @line;
+	  display: block;
 	  text-align: center;
 	}
+span.warning {
+  background-color: fade(@neg, 15%);
+  display: block;
+  text-align: center;
+}
   }
   .text, .latex, .label, .tools {
-	background-color: fade(@bg, 0%);
 	margin: 0;
 	padding: 0;
   }
 
   .text, .latex {
-	padding: 5px;
+	padding: 12px;
+	background-color: fade(@card, 33%);
+  }
+
+  .label, .tools {
+//	opacity: 0.1;
+	height: 40px;
   }
 
   .text p.footnote, .latex p.footnote {
-	border-top: 1px solid fade(@card, 44%);
+	border-top: 1px solid @line;
 	  font-size: small;
   }
 
@@ -226,85 +258,140 @@ header, footer {
   }
 
   .label {
-	min-height: 40px;
+	min-height: 5px;
 	padding: 10px auto;
 	opacity: 0.8;
+	text-align: center;
+	position: relative;
 	p {
 	  text-align: center;
-	  font-size: medium;
+	  font-size: smaller;
+	  margin: 7px;
+	  a.tag_size.small {
+		font-size: small;
+	  }
+	  a.tag_size.medium {
+		font-size: medium;
+	  }
+	  a.tag_size.large {
+		font-size: large;
+	  }
 
-	  //display: block;
 	}
+//	.border-radius-custom(0, 0, @rad, @rad);
+	border-top: 1px solid @line;
+	border-bottom: 1px solid @line;
+
   }
-  .label.private {
-	border-top: 2px solid fade(indianred, 44%);
-  }
+
   .tools {
-	opacity: 0.1;
-	border-bottom: 1px solid fade(@bg, 22%);
-	.border-radius-custom(0, 0, @rad, @rad);
-	display: block;
+	opacity: 0;
 	margin-left: auto;
 	margin-right: auto;
 	clear: both;
-	height: 33px;
+	.border-radius-custom(0, 0, @rad, @rad);
 	.left, .center, .right {
 	  font-size: 0.8em;
 	  float: left;
 	  width: 33%;
 
+
 	  button {
 		display: block;
-		margin-left: auto;
-		margin-right: auto;
+		margin: 4px auto 4px auto;
 	  }
 	}
 	.center {
-	  border-left: 1px solid fade(@bg, 22%);
-	  border-right: 1px solid fade(@bg, 22%);
+	  border-left: 1px solid @line;
+	  border-right: 1px solid @line;
+	}
+  }
+  &:hover{
+	.media, .text, .latex {
+	  .border-radius-custom(@rad, @rad, 0, 0);
+	  background-color: @card;
+	  opacity: 1;
+	}
+	.label, .tools {
+//	  background-color: fade(darken(@card, 44%), 50%);
+	}
+	.tools {
+	  opacity: 1;
+	  .border-radius-custom(0, 0, @rad, @rad);
+	  border-bottom: 1px solid @line;
+	}
+  }
+  &.active {
+	.media, .text, .latex {
+	  .border-radius-custom(@rad, @rad, 0, 0);
+	  background-color: @card;
+	  opacity: 1;
+	}
+	.label, .tools {
+	  //	  background-color: fade(darken(@card, 44%), 50%);
+	}
+	.tools {
+	  opacity: 1;
+	  .border-radius-custom(0, 0, @rad, @rad);
+	  border-bottom: 1px solid @line;
 	}
   }
 }
 
-
-
+.note.private .label {
+  border-top: 1px solid fade(indianred, 44%);
+}
+/*
 .note.active {
   .media, .text, .latex {
 	.border-radius-custom(@rad, @rad, 0, 0);
-	background-color: @bg;
+	background-color: @card;
   }
   .label, .tools {
-	background-color: fade(@bg, 50%);
+	background-color: fade(@card, 50%);
   }
   .tools {
 	.border-radius-custom(0, 0, @rad, @rad);
   }
 }
-
+*/
 .note.topic {
-  opacity: 0.8;
+  .latex p {
+	text-align: left;
+	text-justify: none;
+	word-wrap: normal;
+  }
   .media, .text, .latex {
 	.border-radius-custom(@rad, @rad, 0, 0);
-	background-color: darken(@bg, 11%);
+	background-color: fade(@card, 88%);
   }
   .tools {
 	.border-radius-custom(0, 0, @rad, @rad);
   }
+  &:hover {
+	.media, .text, .latex {
+	  .border-radius-custom(@rad, @rad, 0, 0);
+	  background-color: @card;
+	  opacity: 1;
+	}
+	.tools {
+	  //	  background-color: fade(darken(@card, 44%), 50%);
+	  opacity: 1;
+	  .border-radius-custom(0, 0, @rad, @rad);
+	  border-bottom: 1px solid @line;
+	}
+  }
+  &.active {
+	.media, .text, .latex {
+	  .border-radius-custom(@rad, @rad, 0, 0);
+	  background-color: @card;
+	  opacity: 1;
+	}
+	.tools {
+//	  background-color: fade(darken(@card, 44%), 50%);
+	  opacity: 1;
+	  .border-radius-custom(0, 0, @rad, @rad);
+	  border-bottom: 1px solid @line;
+	}
+  }
 }
-.note.topic.active {
-  opacity: 1;
-  .media, .text, .latex {
-	.border-radius-custom(@rad, @rad, 0, 0);
-	background-color: darken(@bg, 22%);
-  }
-  .label, .tools {
-	background-color: fade(darken(@bg, 22%), 50%);
-  }
-  .tools {
-	.border-radius-custom(0, 0, @rad, @rad);
-  }
-}
-
-  .latex {
-	display: none;
-  }

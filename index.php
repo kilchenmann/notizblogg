@@ -3,9 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<!--
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	-->
+
 	<?php
 	session_start ();
 	require 'core/bin/php/settings.php';
@@ -19,10 +17,14 @@
 		$user = conuser($_SESSION['token']);
 	}
 
+	if (isset ($_GET['access'])){
+		echo "KEIN ZUGRIFF!!";
+	}
+
 	?>
 
 	<title>Notizblogg</title>
-	<link rel="shortcut icon" href="<?php echo __SITE_URL__; ?>/core/style/img/favicon.ico">
+	<link rel="shortcut icon" href="core/style/img/favicon.ico">
 
 	<meta name="author" content="André Kilchenmann"/>
 	<meta name="description" content="Notizblogg ist der digitale Zettelkasten von André Kilchenmann. Nebst textuellem Inhalt kann der digitale MeMex, auch Bilder, Video- oder Ton-Dokumente aufnehmen."/>
@@ -33,25 +35,36 @@
 	<meta name="viewport" content="width=480, user-scalable=yes">
 	<meta name="viewport" content="initial-scale=0.6, maximum-scale=0.8">
 
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/lib/jquery-1.10.2.min.js"></script>
-
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/md5.js"></script>
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.center.js"></script>
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.warning.js"></script>
-
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.shownote.js"></script>
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.expand.js"></script>
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.masonry.min.js"></script>
-
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.finder.js"></script>
-	<script type="text/javascript" src="<?php echo __SITE_URL__; ?>/core/bin/js/jquery.login.js"></script>
+	<!-- jQUERY LIBrary -->
+	<script type="text/javascript" src="core/lib/jquery-1.10.2.min.js"></script>
+	<!-- and my FUNCTIONS library -->
+	<script type="text/javascript" src="core/bin/js/functions.js"></script>
 
 
+	<!-- some VENDOR stuff -->
+	<script type="text/javascript" src="core/bin/js/vendor/md5.js"></script>
+	<script type="text/javascript" src="core/bin/js/vendor/jquery.masonry.min.js"></script>
 
-	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/nb.css">
+	<!-- notizblogg specific tools -->
+	<!-- some functional / styling stuff -->
+	<script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
+	<script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
+	<!-- project, searchbar and login module for the PANEL -->
+	<script type="text/javascript" src="core/bin/js/jquery.panel.js"></script>
+	<!-- show, add, edit and expand NOTE -->
+	<script type="text/javascript" src="core/bin/js/jquery.note.js"></script>
+
+<!-- test test test test test -->
+<!-- add the expand function to the note plugin as a new method!! -->
+	<script type="text/javascript" src="core/bin/js/test/jquery.expand.js"></script>
 <!--
-	<link rel="stylesheet" type="text/css" href="<?php echo __SITE_URL__; ?>/core/style/css/responsive.css">
+	<script type="text/javascript" src="core/bin/js/jquery.finder.js"></script>
+	<script type="text/javascript" src="core/bin/js/jquery.login.js"></script>
 -->
+
+	<!-- style / design / responsive specs. -->
+	<link rel="stylesheet" type="text/css" href="core/style/css/nb.css">
+	<!-- <link rel="stylesheet" type="text/css" href="core/style/css/responsive.css"> -->
 
 </head>
 <body>
@@ -75,157 +88,169 @@
 	<!-- <span class="menu"></span> -->
 </header>
 <div class="float_obj medium warning"></div>
-<div class="float_obj large pamphlet"></div>
+<!-- <div class="float_obj large pamphlet"></div> -->
+<!-- main view: fullpage -> viewer -> wall || desk -->
+<div id="fullpage">
+	<div class="viewer">
+
+	</div>
+</div>
 <footer>
 	<p class="small">
 		<a href="http://notizblogg.ch">Notizblogg</a> | Idea, Concept and Design &copy;
 		<a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">André Kilchenmann</a> |
 		<span class='year'></span>
 		<a href="http://milchkannen.ch">
-			<img src="<?php echo __SITE_URL__; ?>/core/style/img/akM-logo-small.png" alt="milchkannen | kilchenmann" title="milchkannen | andré kilchenmann"/>
+			<img src="core/style/img/akM-logo-small.png" alt="milchkannen | kilchenmann" title="milchkannen | andré kilchenmann"/>
 		</a>
 	</p>
 </footer>
 <div class="modal"><!-- Place at bottom of page --></div>
-<div id="fullpage">
-	<div class="viewer">
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 
-		<?php
-		// default parameters
 
-		$type = '';
-		$query = 'all';
-		$viewer = 'wall';
 
-		if($_SERVER['QUERY_STRING']){
-			// default values; in case of wrong queries; these variables would be overwritten in the right case
-			if(isset($_GET['source'])){
-				$type = 'source';
-				$query = $_GET['source'];
-				$viewer = 'desk';
-			}
-			if(isset($_GET['note'])){
-				$type = 'note';
-				$query = $_GET['note'];
-			}
-			if(isset($_GET['label'])){
-				$type = 'label';
-				$query = $_GET['label'];
-			}
-			if(isset($_GET['author'])){
-				$type = 'author';
-				$query = $_GET['author'];
-			}
-			if(isset($_GET['collection'])){
-				$type = 'collection';
-				$query = $_GET['collection'];
-				$viewer = 'desk';
-			}
-			if(isset($_GET['q'])){
-				$type = 'search';
-				$query = $_GET['q'];
-			}
-		}
-		/*
-		else {
-			?>
-			<script type="text/javascript">
-				$('#fullpage').css({'background-image': 'url(core/style/img/bg-notizblogg.jpg)'});
-			</script>
-		<?php
-		}
 
-		show($type, $query, $access, $viewer);
-*/
-		?>
 
-	</div>
-
-</div>
 
 
 <script type="text/javascript">
-// Read a page's GET URL variables and return them as an associative array.
-function getUrlVars()
-{
-	var vars = [], hash;
-	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-	for(var i = 0; i < hashes.length; i++)
-	{
-		hash = hashes[i].split('=');
-		vars.push(hash[0]);
-		vars[hash[0]] = hash[1];
-	}
-	return vars;
-}
 
+// window.location.pathname; // returns path only:	/nb/
+// window.location.href;     // returns full url(?): http://localhost/nb/?label=443
+// window.location.host;		// returns hostname: localhost
 
-var NB = {};
+NB = {};
 NB.access = '<?php echo $user['access']; ?>';
 NB.user = {
 	id:  '<?php echo  $user['id']; ?>',
 	name: '<?php echo  $user['name']; ?>',
 	avatar: '<?php echo  $user['avatar']; ?>'
 };
-NB.url = '<?php echo __SITE_URL__; ?>';
-NB.uri = NB.url + '/?' +(location.search).substr(1);
+
+NB.url = window.location.href; // + window.location.pathname;
+NB.uri = NB.url + '?' + (location.search).substr(1);
+
+if(NB.uri === NB.url + '?access=denied') {
+	$('#fullpage').warning({
+		type: 'access',
+		lang: 'de'
+	});
+	$('body').on('click', function () {
+		window.location.href = NB.url;
+	});
+	$(document).keyup(function(event) {
+		if(event.keyCode == 27) {
+				$('.float_obj').hide();
+				$('.viewer').css({'opacity': '1'});
+			}
+		window.location.href = NB.url;
+	});
+	NB.uri = NB.url;
+}
+
 NB.api = '<?php echo __SITE_API__; ?>';
 NB.media = '<?php echo __MEDIA_URL__; ?>';
 
+/*
 NB.query = {
 	type: '<?php echo $type; ?>',
 	id: '<?php echo $query; ?>'
 };
+*/
+NB.query = getUrlVars();
+for(i=0; i<NB.query.length; i++ ) {
+//	console.log(NB.query[i] + ': ' + NB.query[NB.query[i]]);
+}
 
+
+
+
+
+/*
+<?php
+	// default parameters in case of wrong queries;
+	// these variables would be overwritten in the right case
+	$type = '';
+	$query = 'all';
+	$viewer = 'wall';
+
+	if($_SERVER['QUERY_STRING']){
+		if(isset($_GET['source'])){
+			$type = 'source';
+			$query = $_GET['source'];
+			$viewer = 'desk';
+		}
+		if(isset($_GET['note'])){
+			$type = 'note';
+			$query = $_GET['note'];
+		}
+		if(isset($_GET['label'])){
+			$type = 'label';
+			$query = $_GET['label'];
+		}
+		if(isset($_GET['author'])){
+			$type = 'author';
+			$query = $_GET['author'];
+		}
+		if(isset($_GET['collection'])){
+			$type = 'collection';
+			$query = $_GET['collection'];
+			$viewer = 'desk';
+		}
+		if(isset($_GET['q'])){
+			$type = 'search';
+			$query = $_GET['q'];
+		}
+	}
+	?>
+*/
+
+
+
+//
+// when window is LOADing
+//
 $(window).load(function() {
 	/* set the correct window size and the dimension of some elements */
 	var height = $(window).height() - $('header').height() - $('footer').height();
 	$('div.viewer').css({'height': height});
 	$('.float_obj').center();
 
+
+	// set the panel parts...
+	$('header').panel();
+
+/*
+	var project_ele = $('.project');
+	$('header .project').panel('project', function() {
+		project: 'Notizblogg';
+		logo: 'nb-logo.png';
+	});
+*/
+
+	//var search_ele = $('.search');
+	$('header .search').panel('search', function() {
+
+	});
 	/* enable the project logo */
-	$('.project').append($('<a>').attr({href: NB.url}).append($('<h2>').text('Notizblogg')).addClass('logo'));
+	$('.project').append($('<a>').attr({href: NB.url}).append($('<h2>').text('Notizblogg')).addClass('title project logo'));
 	/* integrate the search bar in the header panel */
+
+
+/*
 	$('.search').finder({
 		search: 'Suche',
 		filter: 'Erweiterte Suche',
 		database: ''
 	});
-	/* add button, user / login tools */
-	if(NB.user.name !== 'guest' && NB.access !== '1' && NB.user.id !== '') {
-		$('.user').login({
-			type: 'logout',
-			submit: 'Abmelden',
-			action: NB.url + '/core/bin/php/check.out.php'
-		});
-		/* integrate the add button */
-		$('.add')
-			.append($('<button>').addClass('btn grp_none toggle_add'))
-			.expand({
-				type: 'source',		// source || note
-				sourceID: 'new',
-				noteID: 'new',
-				edit: true,		// true || false
-				data: undefined,
-				show: 'form'		// booklet || form
-			});
+*/
 
-		$('.drawer').append(
-		//		$('<button>').addClass('btn grp_none toggle_drawer')
-		);
-
-	} else {
-		$('.user').login({
-			type: 'login',
-			user: 'Benutzername',
-			key: 'Passwort',
-			submit: 'Anmelden',
-			action: NB.url + '/core/bin/php/check.in.php'
-		});
-	}
 	/* show some content */
-	$('.viewer').shownote(NB);
+	$('.viewer').note(NB);
 
 });
 
@@ -251,9 +276,12 @@ $(window).resize(function() {
 	// set the numbers of wall columns
 	if ($('.wall').length !== 0) {
 		var width = $(window).width();
-		var note_width = 350;		// normally 320px
+		var note_width = 320;		// normally 320px
 		var num_col = Math.floor(width / note_width);
+		var ww = num_col * note_width;
 		$('.wall').css({
+			'width': ww,
+
 			'-webkit-column-count': num_col,
 			'-webkit-column-fill': num_col,
 
@@ -268,42 +296,54 @@ $(window).resize(function() {
 });
 
 
-var activator = function (element) {
-		element.toggleClass('active');
-		element.children('div.media').css({'opacity': '1'});
-		element.children('div.label').css({'opacity': '1'});
-		element.children('div.tools').css({'opacity': '1'});
-		var type = undefined,
-			typeID = undefined;
-		if (!element.attr('id')) {
-			// title element
-			type = 'title';
-			typeID = 0;
-		} else {
-			if (element.hasClass('topic')) {
-				type = 'source';
-			} else {
-				type = 'note';
-			}
-			typeID = element.attr('id');
-		}
-		//var activeNote = $('.active .tools button').attr('id');
-		var activeNote = {
-			type: type,
-			id: typeID
-		};
-		return(activeNote);
-	};
+
+var isTouchDevice = function() {
+
+	var el = document.createElement('div');
+	el.setAttribute('ongesturestart', 'return;');
+	/*
+	if(typeof el.ongesturestart == "function"){
+		return true;
+	}else {
+		return false
+	}
+	*/
+	return typeof el.ongesturestart == "function";		// true or false
+};
+
+
+
+
+
 
 $body = $("body");
 
 $(document).on({
-	ajaxStart: function() {$body.addClass("loading");},
+	ajaxStart: function() {
+		$body.addClass("loading");
+		$(document).keyup(function(event) {
+			if(event.keyCode == 27) {
+				$body.removeClass("loading");
+
+				if($('.float_obj').is(':visible')) {
+					window.location.href = NB.uri;
+/*
+					$(this).hide();
+					$('.viewer').css({'opacity': '1'});
+
+					if($('button.toggle_add').hasClass('toggle_delete')) {
+						$(this).toggleClass('toggle_delete');
+					}
+*/
+				} else {
+					window.location.href = NB.url;
+				}
+			}
+		});
+
+	},
 	ajaxStop: function() {
-
-
 		if ($('.desk').length > 0) {
-
 			$(function () {
 				function Arrow_Points() {
 					var s = $('.right_side').find('.note');
@@ -321,7 +361,6 @@ $(document).on({
 					});
 				}
 
-
 				// Divs
 				$('.right_side')
 					.append($('<div>').addClass('timeline_container')
@@ -331,14 +370,16 @@ $(document).on({
 					)
 				).masonry({itemSelector: '.note'});
 				Arrow_Points();
-
-
 			});
 		} else if ($('.wall').length !== 0) {
+
 			var width = $(window).width();
-			var note_width = 350;		//$(this).find('.note').width() + 40;		// normally 320px
+			if(width > screen.availWidth) width = screen.availWidth;
+			var note_width = 320;		//$(this).find('.note').width() + 40;		// normally 320px
 			var num_col = Math.floor(width / note_width);
+			var ww = num_col * note_width;
 			$('.wall').css({
+				'width': ww,
 				'-webkit-column-count': num_col,
 				'-webkit-column-fill': num_col,
 
@@ -358,33 +399,27 @@ $(document).on({
 		var active = {};
 		$('div.note')
 			.mouseenter(function (event) {
-				active = activator($(this));
+				if(!$(this).hasClass('active')) {
+					$(this).addClass('active');
+				}
 			})
 			.on('touchstart', function () {
-				active = activator($(this));
-			})
-
-			.hover(function () {
-				/*
-				 if($(this).hasClass('active')) {
-
-				 }
-				 */
+				if(!$(this).hasClass('active')) {
+					$(this).addClass('active');
+				}
 			})
 
 			.mouseleave(function (event) {
-				$(this).toggleClass('active');
-				$(this).children('div.media').css({'opacity': '0.8'});
-				$(this).children('div.label').css({'opacity': '0.8'});
-				$(this).children('div.tools').css({'opacity': '0.1'});
+				if($(this).hasClass('active')) {
+					$(this).removeClass('active');
+				}
 			})
 			.on('touchend', function () {
-
+				if($(this).hasClass('active')) {
+					$(this).removeClass('active');
+				}
 			});
-
-
 	}
-
 });
 
 
@@ -460,38 +495,6 @@ $(window).bind("load", function() {
  })
  */
 //});
-
-
-
-$('div.desk')
-	.mouseenter(function() {
-//			$('.note').toggleClass('active');
-//			$('.note').children('div').css({'background-color': 'rgba(251, 251, 251, 0.3)'});
-	})
-	.hover(function() {
-//			$('.note').children('div').css({'background-color': 'rgba(251, 251, 251, 0.3)'});
-	})
-	.mouseleave(function() {
-//			$('.note').toggleClass('active');
-//			$('.note').children('div').css({'background-color': ''});
-	});
-
-/*
- $('div.tools button').hover(function(){
- // first function is for the mouseover/mouseenter events
- console.log($(this).attr('id'));
- },
- function(){
- // second function is for mouseleave/mouseout events
- $(this).find('button').show();
- });
- */
-
-
-
-
-
-
 
 
 /* copyright date */
