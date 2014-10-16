@@ -996,7 +996,7 @@ for(i=0; i<localdata.settings.query.length; i++ ) {
 				var win_width = $(window).width();
 				//	if($('.wall').length !== 0) {
 				var wall = $(this);
-				var note_width = wall.find('.note').width() + 60;
+				var note_width = wall.find('.note').width();
 				//		console.log('note: ' + note_width + ' window: ' + win_width)
 				var num_col = Math.floor(win_width / note_width);
 				wall.css({

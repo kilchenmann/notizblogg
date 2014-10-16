@@ -1,11 +1,11 @@
 .logo {
 	font-family: sverige, jellyka, glamor, Verdana, serif;
 }
-* {
+body {
 
 }
 h1, h2, h3, h4, h5, h6, p, span {
-  color: @ink;
+//  color: @ink;
 }
 p {
   text-align: justify;
@@ -23,39 +23,15 @@ h4 {
   font-weight: bold;
 
 }
-a {
-  color: @link;
-}
-a:hover {
-  color: fade(@ink, 50%);
-}
 
-body {
-  background-color: #ffffff;
-}
 
-header, footer {
-  color: @btn;
-  .project h2 {
-	color: @btn;
-  }
-}
-
-header {
-//  .box-shadow-bottom();
-  background: none repeat scroll 0 0 fade(@header, 45%);
-}
-
-footer {
-  border-top: 1px solid @card;
-  background: none repeat scroll 0 0 fade(@footer, 10%);
-}
 
 #fullpage {
 //  background-color: fade(@bg, 88%);
 //  .quick-gradient(top, 0.1);
+
+  background-image: url(../img/seamless_paper_texture.png);
 /*
-  background-image: url(../img/bg-empty.jpg);
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -78,17 +54,17 @@ footer {
 }
 
 .wall {
-  -moz-column-count: 3;
-  -moz-column-gap: 20px;
-  -moz-column-fill: 3;
+  -moz-column-count: 2;
+  -moz-column-gap: 4px;
+  -moz-column-fill: 2;
 
-  -webkit-column-count: 3;
-  -webkit-column-gap: 20px;
-  -webkit-column-fill: 3;
+  -webkit-column-count: 2;
+  -webkit-column-gap: 4px;
+  -webkit-column-fill: 2;
 
-  column-count: 3;
-  column-gap: 20px;
-  column-fill: 3;
+  column-count: 2;
+  column-gap: 4px;
+  column-fill: 2;
 
   display: block;
   margin-left: auto;
@@ -131,7 +107,7 @@ footer {
 
 	}
 	.item {
-	  width: 320px;
+	  width: 490px;
 	  margin: 10px;
 	  float: left;
 	  min-height:50px;
@@ -196,27 +172,28 @@ footer {
 
 }
 
+@rad: 2px;
 .note {
   opacity: 1;
   .border-radius(@rad);
 //  border-bottom: 1px solid fade(@bg, 44%);
-  border-top: 1px solid @line;
-  margin: 10px;
+  border-top: 1px solid @bg;
+  margin: 20px;
  // overflow: hidden;
-  width: 280px;
+  width: 490px;
 
   .media, .text, .latex {
 	.border-radius-custom(@rad, @rad, 0, 0);
   }
   .media {
-	background-color: fade(@card, 33%);
+//	background-color: fade(@bg, 33%);
 	.box-shadow-bottom();
 	img, video, audio, span {
 	  opacity: 0.8;
 	  width: 100%;
 	  text-align: center;
 	  .border-radius-custom(@rad, @rad, 0, 0);
-	  margin: 0;
+	  padding: 20px;
 	  .box-shadow-bottom();
 	  border-bottom: 1px solid @line;
 	  display: block;
@@ -229,13 +206,13 @@ span.warning {
 }
   }
   .text, .latex, .label, .tools {
+	padding: 20px;
 	margin: 0;
-	padding: 0;
   }
 
   .text, .latex {
-	padding: 12px;
-	background-color: fade(@card, 33%);
+//	padding: 12px;
+	background-color: fade(@bg, 33%);
   }
 
   .label, .tools {
@@ -309,11 +286,11 @@ span.warning {
   &:hover{
 	.media, .text, .latex {
 	  .border-radius-custom(@rad, @rad, 0, 0);
-	  background-color: @card;
+	  background-color: @bg;
 	  opacity: 1;
 	}
 	.label, .tools {
-//	  background-color: fade(darken(@card, 44%), 50%);
+//	  background-color: fade(darken(@bg, 44%), 50%);
 	}
 	.tools {
 	  opacity: 1;
@@ -324,11 +301,11 @@ span.warning {
   &.active {
 	.media, .text, .latex {
 	  .border-radius-custom(@rad, @rad, 0, 0);
-	  background-color: @card;
+	  background-color: @bg;
 	  opacity: 1;
 	}
 	.label, .tools {
-	  //	  background-color: fade(darken(@card, 44%), 50%);
+	  //	  background-color: fade(darken(@bg, 44%), 50%);
 	}
 	.tools {
 	  opacity: 1;
@@ -345,10 +322,10 @@ span.warning {
 .note.active {
   .media, .text, .latex {
 	.border-radius-custom(@rad, @rad, 0, 0);
-	background-color: @card;
+	background-color: @bg;
   }
   .label, .tools {
-	background-color: fade(@card, 50%);
+	background-color: fade(@bg, 50%);
   }
   .tools {
 	.border-radius-custom(0, 0, @rad, @rad);
@@ -363,7 +340,7 @@ span.warning {
   }
   .media, .text, .latex {
 	.border-radius-custom(@rad, @rad, 0, 0);
-	background-color: fade(@card, 88%);
+	background-color: fade(@bg, 88%);
   }
   .tools {
 	.border-radius-custom(0, 0, @rad, @rad);
@@ -371,11 +348,11 @@ span.warning {
   &:hover {
 	.media, .text, .latex {
 	  .border-radius-custom(@rad, @rad, 0, 0);
-	  background-color: @card;
+	  background-color: @bg;
 	  opacity: 1;
 	}
 	.tools {
-	  //	  background-color: fade(darken(@card, 44%), 50%);
+	  //	  background-color: fade(darken(@bg, 44%), 50%);
 	  opacity: 1;
 	  .border-radius-custom(0, 0, @rad, @rad);
 	  border-bottom: 1px solid @line;
@@ -384,11 +361,11 @@ span.warning {
   &.active {
 	.media, .text, .latex {
 	  .border-radius-custom(@rad, @rad, 0, 0);
-	  background-color: @card;
+	  background-color: @bg;
 	  opacity: 1;
 	}
 	.tools {
-//	  background-color: fade(darken(@card, 44%), 50%);
+//	  background-color: fade(darken(@bg, 44%), 50%);
 	  opacity: 1;
 	  .border-radius-custom(0, 0, @rad, @rad);
 	  border-bottom: 1px solid @line;

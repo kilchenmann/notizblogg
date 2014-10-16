@@ -5,6 +5,7 @@
   list-style-type: none;
   letter-spacing: 0.2em;
   line-height: 1.2em;
+  color: @ink;
 }
 
 html, body, input {
@@ -13,6 +14,7 @@ html, body, input {
   overflow:hidden;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   font-family: raleway, awesome, stylus, Verdana, sans-serif;
+  background: @bg;
   .font-smoothing();
 }
 h1, h2, h3, h4, h5, h6, p, span {
@@ -55,6 +57,13 @@ a:hover {
   color: #6b4834;
 }
 
+a {
+  color: @link;
+  &:hover {
+      color: fade(@ink, 50%);
+  }
+}
+
 h1 {
   display: none;
 }
@@ -69,33 +78,41 @@ h3 {
 h4 {
 
 }
-
 header, footer, nav {
+  color: @bg;
   position: fixed;
   display: block;
+}
+header {
+//  .box-shadow-bottom();
+  background: @header;
+  top: 0;
+  height: 44px;
+  div {
+    height: 32px;
+    margin: 6px;
+
+    &.left, &.right {
+      width: 5%;
+    }
+    &.center {
+      width: 90%;
+    }
+  }
+  .project h2{
+    color: @bg;
+  }
+}
+
+footer {
+  border-top: 1px solid @bg;
+  background: none repeat scroll 0 0 fade(@footer, 10%);
 }
 
 header, footer {
   width: 100%;
   text-align: center;
   z-index: 33;
-}
-
-header {
-  top: 0;
-  height: 44px;
-}
-
-header div {
-  height: 32px;
-  margin: 6px;
-
-  &.left, &.right {
-      width: 5%;
-  }
-  &.center {
-      width: 90%;
-  }
 }
 
 header div span h2 {
