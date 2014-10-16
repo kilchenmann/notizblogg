@@ -157,7 +157,7 @@
 						top: $('header').position().top + 44 +'px',
 						//right: 22 + 'px'
 						left: $(this).position().left - localdata.login.size - 22 + 'px'
-					})
+					});
 
 				});
 

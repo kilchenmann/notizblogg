@@ -688,7 +688,7 @@
 				);
 for(i=0; i<localdata.settings.query.length; i++ ) {
 
-	console.log(localdata.settings.query[i] + ': ' + localdata.settings.query[localdata.settings.query[i]]);
+//	console.log(localdata.settings.query[i] + ': ' + localdata.settings.query[localdata.settings.query[i]]);
 }
 				switch (localdata.settings.query.type) {
 					case 'label':

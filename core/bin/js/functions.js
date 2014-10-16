@@ -12,6 +12,17 @@ function getUrlVars()
 	return vars;
 }
 
+function fileExists(media)
+{
+	var response = jQuery.ajax({
+		url: media,
+		type: 'HEAD',
+		async: false
+	}).status;
+	//return (response != "200") ? false : true;
+	return (response == "200");
+}
+
 
 
 /*

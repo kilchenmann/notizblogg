@@ -27,24 +27,22 @@
 	// -------------------------------------------------------------------------
 	var methods = {
 		/*========================================================================*/
-		init: function () {
+		init: function (options) {
 			return this.each(function () {
 				var $this = $(this),
 					localdata = {};
 
 				localdata.settings = {
-					project: 'Notizblogg', // default: Notizblogg
-					logo: 'nb-logo.png', // default: nb-logo.png
-					user: undefined // undefined = guest
+					project: 'Notizblogg',	// default: Notizblogg
+					logo: 'nb-logo.png',	// default: nb-logo.png
+					user: undefined,		// undefined = guest
+					action: undefined
 				};
-
-				localdata.search = {};
-
+				$.extend(localdata.settings, options);
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
 
-				console.log('text aus panel');
-
+				console.log(localdata.settings);
 
 			}); // end "return this.each"
 		}, // end "init"
@@ -58,7 +56,7 @@
 			});
 		},
 
-		search: function () {
+		search: function (action) {
 			return this.each(function () {
 				var $this = $(this);
 				var localdata = $this.data('localdata');
@@ -68,7 +66,7 @@
 						.attr({
 							'accept-charset': 'utf-8',
 							'name': 'simpleSearch',
-							'action': NB.url + '/core/bin/php/search.data.php',
+							'action': action,
 							'method': 'get'
 						})
 						.append(search.filter = $('<button>')
@@ -117,10 +115,122 @@
 			});
 		},
 
-		login: function () {
+		login: function (action) {
 			return this.each(function () {
 				var $this = $(this);
 				var localdata = $this.data('localdata');
+				var login = {};
+
+				$this.append(
+					login.button = $('<button>')
+					.addClass('btn grp_none toggle_user')
+				);
+
+				$this.append(
+					login.frame = $('<div>')
+						.addClass('float_obj medium login_frame')
+						.append(
+							login.form = $('<form>')
+							.attr({
+								'action': action,
+								'method': 'post'
+							})
+						)
+				);
+				login.loginform.append($('<p>')
+					.append(login.name = $('<input>')
+						.attr({
+							'type': 'text',
+							'name': 'usr',
+							'title': 'Username',
+							'placeholder': 'Username'
+						})
+					.addClass('field_obj small')
+					)
+				)
+
+				.append($('<p>')
+					.append($('<input>')
+						.attr({
+							'type': 'password',
+							'name': 'key',
+							'title': 'Password',
+							'placeholder': 'Password'
+						})
+						.addClass('field_obj small')
+					)
+				)
+				.append($('<p>')
+					.append($('<input>')
+						.attr({
+							'type': 'hidden',
+							'name': 'uri',
+							'value': NB.uri
+						})
+						.addClass('field_obj small')
+					)
+				)
+				.append($('<p>')
+					.append($('<input>')
+						.attr({
+							'type': 'submit',
+							'title': 'Login',
+							'value': 'Login'
+						}).text('Login')
+						.addClass('button small submit')
+					)
+				);
+				// set position of float_obj
+				login.button
+					.on('mouseover', function() {
+						login.frame.css({
+							position: 'absolute',
+							top: $('header').position().top + 44 +'px',
+							left: $(this).position().left - login.frame.width() + 'px'
+						});
+					})
+					.on('click', function() {
+					if(login.frame.is(':visible')) {
+						login.frame.slideUp();
+					} else {
+						login.frame.slideDown();
+
+					}
+					if(login.frame.is(':visible')) {
+						login.name.focus();
+					}
+				});
+			});
+		},
+		logout: function (action) {
+			return this.each(function () {
+				var $this = $(this);
+				var localdata = $this.data('localdata');
+				var logout = {};
+				
+				$this.append(
+					logout.button = $('<button>')
+					.css({
+						'background-image': 'url("' + NB.user.avatar + '")',
+						'background-repeat': 'no-repeat',
+					//	'background-attachment': 'fixed',
+						'background-position': 'center',
+						'background-size': '42px 42px',
+						'border': 'none'
+					})
+				);
+
+				$this.append(
+					logout.frame = $('<div>')
+						.addClass('float_obj medium logout_frame')
+						.append(
+							logout.form = $('<form>')
+							.attr({
+								'action': action,
+								'method': 'post'
+							})
+						)
+				);
 			});
 		},
 
