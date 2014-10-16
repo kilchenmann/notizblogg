@@ -296,7 +296,8 @@ NB.query = {
             // set the numbers of wall columns
             if ($('.wall').length !== 0) {
                 var width = $(window).width();
-                var note_width = $(this).find('.note').width();
+                var note_width = $('.note').width();
+                console.log(note_width);
                 //var note_width = 320;		// normally 320px
                 var num_col = Math.floor(width / note_width);
                 var ww = num_col * note_width;

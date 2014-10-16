@@ -137,7 +137,7 @@
 							})
 						)
 				);
-				login.loginform.append($('<p>')
+				login.form.append($('<p>')
 					.append(login.name = $('<input>')
 						.attr({
 							'type': 'text',
@@ -207,7 +207,7 @@
 				var $this = $(this);
 				var localdata = $this.data('localdata');
 				var logout = {};
-				
+
 				$this.append(
 					logout.button = $('<button>')
 					.css({
