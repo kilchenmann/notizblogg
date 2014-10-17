@@ -623,7 +623,7 @@
 					});
 					$('body').on('click', function () {
 						window.location.href = NB.url;
-					})
+					});
 				}
 
 			}
@@ -686,18 +686,18 @@
 				$this.append(
 					localdata.view.container = $('<div>')
 				);
-for(i=0; i<localdata.settings.query.length; i++ ) {
 
+
+				for(i=0; i<localdata.settings.query.length; i++ ) {
 //	console.log(localdata.settings.query[i] + ': ' + localdata.settings.query[localdata.settings.query[i]]);
-}
-				switch (localdata.settings.query.type) {
+				switch (localdata.settings.query[i]) {
 					case 'label':
 					case 'author':
 						// wall
 						localdata.view.container.addClass('wall');
-						url = NB.api + '/get.php?' + localdata.settings.query.type + '=' + localdata.settings.query.id;
+						url = NB.api + '/get.php?' + localdata.settings.query[i] + '=' + localdata.settings.query[localdata.settings.query[i]];
 						$.getJSON(url, function (list) {
-							$('input.search_field').attr({value: list.name}).html(list.name);
+							$('input.search_field').attr({value: decodeURI(list.name)}).html(decodeURI(list.name));
 							$.each(list.notes, function (i, note) {
 								if(note.ac >= localdata.settings.access) {
 									url = NB.api + '/get.php?id=' + note.id;
@@ -722,7 +722,7 @@ for(i=0; i<localdata.settings.query.length; i++ ) {
 						localdata.view.container.addClass('desk')
 							.append(localdata.view.left = $('<div>').addClass('left_side'))
 							.append(localdata.view.right = $('<div>').addClass('right_side'));
-						url = NB.api + '/get.php?source=' + localdata.settings.query.id;
+						url = NB.api + '/get.php?source=' + localdata.settings.query[localdata.settings.query[i]];
 						$.getJSON(url, function (data) {
 							localdata.view.left.append(
 								localdata.view.source = $('<div>').addClass('note')
@@ -755,7 +755,7 @@ for(i=0; i<localdata.settings.query.length; i++ ) {
 						localdata.view.container.addClass('desk')
 							.append(localdata.view.left = $('<div>').addClass('left_side'))
 							.append(localdata.view.right = $('<div>').addClass('right_side'));
-						url = NB.api + '/get.php?source=' + localdata.settings.query.id;
+						url = NB.api + '/get.php?source=' + localdata.settings.query[localdata.settings.query[i]];
 						$.getJSON(url, function (data) {
 							localdata.view.left.append(
 								localdata.view.collection = $('<div>').addClass('note')
@@ -763,10 +763,6 @@ for(i=0; i<localdata.settings.query.length; i++ ) {
 							dispBib(localdata.view.collection, data, localdata);
 
 							// find "insources" with the reference to this collection
-
-
-
-
 							$.each(data.source.insource, function (i, bibID) {
 								localdata.view.right.append(
 									$('<div>').addClass('note topic').attr({'id': bibID})
@@ -789,10 +785,10 @@ for(i=0; i<localdata.settings.query.length; i++ ) {
 						break;
 					case 'note':
 						// booklet
-						url = NB.api + '/get.php?note=' + localdata.settings.query.id;
+						url = NB.api + '/get.php?note=' + localdata.settings.query[localdata.settings.query[i]];
 						$.getJSON(url, function (data) {
 							localdata.view.container.append(
-								localdata.view.note = $('<div>').addClass('note').attr({'id': localdata.settings.query.id})
+								localdata.view.note = $('<div>').addClass('note').attr({'id': localdata.settings.query[localdata.settings.query[i]]})
 							);
 							for (var key in data) {
 								if (key === 'source') {
@@ -805,9 +801,10 @@ for(i=0; i<localdata.settings.query.length; i++ ) {
 							}
 						});
 						break;
-					case 'search':
+					case 'q':
 						var url2;
-						url = NB.api + '/get.php?q=' + localdata.settings.query.id;
+						url = NB.api + '/get.php?q=' + localdata.settings.query[localdata.settings.query[i]];
+						$('input.search_field').attr({value: decodeURI(localdata.settings.query[localdata.settings.query[i]])});
 						$.getJSON(url, function (search) {
 							$.each(search.notes, function (i, noteID) {
 								url2 = NB.api + '/get.php?note=' + noteID;
@@ -845,12 +842,11 @@ for(i=0; i<localdata.settings.query.length; i++ ) {
 											dispNote(localdata.view.note, data, localdata);
 										}
 									}
-								})
-							})
+								});
+							});
 						});
 				}
-
-
+			}
 				// which data do we need?
 				// 'api/get/[id]' brings all notes and sources with the [id]
 				// 'api/get/label/[id]' brings a list of noteIDs with the label [id]
@@ -969,8 +965,8 @@ for(i=0; i<localdata.settings.query.length; i++ ) {
 							.append(
 							$('<div>').addClass('latex')
 								.append((showBib(data).bibtex))
-						)
-					})
+						);
+					});
 
 				} else {
 
@@ -984,7 +980,7 @@ for(i=0; i<localdata.settings.query.length; i++ ) {
 				var $this = $(this);
 				var localdata = $this.data('localdata');
 
-				console.log(localdata);
+				//console.log(localdata);
 			});
 		},
 

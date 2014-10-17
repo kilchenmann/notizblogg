@@ -136,8 +136,10 @@ button.toggle_unlink {
 }
 button.toggle_user, label.user {
   background-position: -40px -270px;
+  opacity: 0.6;
   &:hover {
 	background-position: 0px -270px;
+    opacity: 1;
   }
 }
 button.toggle_grp {
@@ -254,16 +256,18 @@ span.search {
     left: 50%;
     position: absolute;
     display: table-cell;
-    width: 560px;
-    margin-left: -280px;
+    width: 520px;
+    margin-left: -260px;
 
+    input[type=search], button.search_btn {
+//        height: 31px;
+        background-color: @card;
+    }
     input[type=search] {
       margin: 0;
       padding: 0 4px 0 4px;
-      border-radius: 2px;
+      .border-radius-custom (@rad, 0, 0, @rad);
       width: 470px;
-      height: 31px;
-      background-color: @card;
       font-size: 1em;
       font-weight: bold;
     }
@@ -275,7 +279,8 @@ input[type=text], input[type=password], input[type=email], input[type=date], inp
   border-bottom: 1px solid fade(@link, 11%);
   border-left: none;
   height: 24px;
-  font-size: 0.8em;
+  font-size: 1em;
+  font-weight: bold;
   &:focus {
 	background-color: fade(@card, 11%);
   }
@@ -428,7 +433,7 @@ input[type=checkbox] + label.check {
 
 input[type=submit], input[type=reset] {
 //  border: 1px solid rgba(0, 0, 0, 0);
-  font-size: 13px;
+  font-size: 1em;
   font-weight: bold;
   letter-spacing: 1px;
   //  text-shadow: 0 -1px 0 #050505;

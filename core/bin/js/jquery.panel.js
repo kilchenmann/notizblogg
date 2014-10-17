@@ -42,8 +42,6 @@
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
 
-				console.log(localdata.settings);
-
 			}); // end "return this.each"
 		}, // end "init"
 
@@ -69,13 +67,6 @@
 							'action': action,
 							'method': 'get'
 						})
-						.append(search.filter = $('<button>')
-							.attr({
-								'type': 'button',
-								'title': 'filter'
-							})
-							.addClass('btn grp_left search_filter')
-						)
 						.append(search.field = $('<input>')
 							.attr({
 								'type': 'search',
@@ -92,6 +83,7 @@
 									.css({
 										'background-color': '#ffffe0'
 									});
+									$(this).select();
 							})
 							.focusout(function () {
 								search.field
@@ -111,7 +103,6 @@
 							.addClass('btn grp_right search_btn')
 						)
 					);
-
 			});
 		},
 
@@ -202,35 +193,72 @@
 				});
 			});
 		},
-		logout: function (action) {
+		log: function (action) {
 			return this.each(function () {
 				var $this = $(this);
 				var localdata = $this.data('localdata');
-				var logout = {};
+				var log = {};
 
 				$this.append(
-					logout.button = $('<button>')
-					.css({
-						'background-image': 'url("' + NB.user.avatar + '")',
-						'background-repeat': 'no-repeat',
-					//	'background-attachment': 'fixed',
-						'background-position': 'center',
-						'background-size': '42px 42px',
-						'border': 'none'
-					})
-				);
+					log.add = $('<button>')
+						.attr({
+							'type': 'button',
+							'title': 'add new'
+						})
+						.addClass('btn grp_left toggle_add')
+					).append(
+						log.user = $('<button>')
+						.addClass('btn grp_right toggle_user')
+						.css({
+							'background-image': 'url("' + NB.user.avatar + '")',
+							'background-repeat': 'no-repeat',
+							'background-position': 'center',
+							'background-size': '42px 42px',
+							'border': 'none'
+						})
+					);
 
 				$this.append(
-					logout.frame = $('<div>')
+					log.frame = $('<div>')
 						.addClass('float_obj medium logout_frame')
 						.append(
-							logout.form = $('<form>')
+							log.form = $('<form>')
 							.attr({
 								'action': action,
 								'method': 'post'
 							})
+							.append($('<p>')
+								.append($('<input>')
+									.attr({
+										'type': 'submit',
+										'title': 'Logout',
+										'value': 'Logout'
+									}).text('Logout')
+									.addClass('button small reset')
+								)
+								.css({
+									float: 'right'
+								})
+							)
 						)
 				);
+				// set position of float_obj
+				log.user
+					.on('mouseover', function() {
+						log.frame.css({
+							position: 'absolute',
+							top: $('header').position().top + 44 +'px',
+							left: $(this).position().left - log.frame.width() + 'px'
+						});
+					})
+					.on('click', function() {
+					if(log.frame.is(':visible')) {
+						log.frame.slideUp();
+					} else {
+						log.frame.slideDown();
+
+					}
+				});
 			});
 		},
 

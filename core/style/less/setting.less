@@ -209,6 +209,14 @@
 /* ------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------- */
 
+.opacity (@opacity: 0.8, @filter: 80) {
+    -moz-opacity: @opacity !important;
+    -webkit-opacity: @opacity!important;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)" !important;
+    filter: alpha(opacity=@filter) !important;
+    opacity: @opacity !important;
+}
+
 /* Reset HTML5 Search Input in Webkit */
 input[type=search]::-webkit-search-cancel-button,
 input[type=search]::-webkit-search-decoration,

@@ -62,7 +62,7 @@
 
     <!-- style / design / responsive specs. -->
     <link rel="stylesheet" type="text/css" href="core/style/css/nb.css">
-    <!-- <link rel="stylesheet" type="text/css" href="core/style/css/responsive.css"> -->
+    <link rel="stylesheet" type="text/css" href="core/style/css/responsive.css">
 
 </head>
 
@@ -170,10 +170,6 @@ NB.query = {
             //	console.log(NB.query[i] + ': ' + NB.query[NB.query[i]]);
         }
 
-
-        console.log(NB);
-
-
         /*
 <?php
 	// default parameters in case of wrong queries;
@@ -219,17 +215,17 @@ NB.query = {
          // when window is LOADing
          //
         $(window).load(function() {
+            // set the panel parts...
+            $('header').panel({
+
+            });
+
             /* set the correct window size and the dimension of some elements */
             var height = $(window).height() - $('header').height() - $('footer').height();
             $('div.viewer').css({
                 'height': height
             });
             $('.float_obj').center();
-
-            // set the panel parts...
-            $('header').panel({
-
-            });
 
             /*
 	var project_ele = $('.project');
@@ -248,7 +244,7 @@ NB.query = {
             $('header .search').panel('search', NB.url + '/core/bin/php/search.data.php');
 
             if (NB.user.id !== '' && NB.access !== '1') {
-                $('header .user').panel('logout', NB.url + '/core/bin/php/check.out.php');
+                $('header .user').panel('log', NB.url + '/core/bin/php/check.out.php');
             } else {
                 $('header .user').panel('login', NB.url + '/core/bin/php/check.in.php');
             }
@@ -294,27 +290,31 @@ NB.query = {
             });
             $('.float_obj').center();
             // set the numbers of wall columns
+
             if ($('.wall').length !== 0) {
                 var width = $(window).width();
                 var note_width = $('.note').width();
-                console.log(note_width);
                 //var note_width = 320;		// normally 320px
                 var num_col = Math.floor(width / note_width);
                 var ww = num_col * note_width;
                 $('.wall').css({
                     'width': ww,
 
-                    '-webkit-column-count': num_col,
-                    '-webkit-column-fill': num_col,
+//                    '-webkit-column-count': num_col,
+//                    '-webkit-column-fill': num_col,
 
                     '-moz-column-count': num_col,
                     '-moz-column-fill': num_col,
+
+                    '-o-column-count': num_col,
+                    '-o-column-fill': num_col,
 
                     'column-count': num_col,
                     'column-fill': num_col
 
                 });
             }
+
         });
 
 
@@ -378,7 +378,8 @@ NB.query = {
                                 } else {
                                     //							html = "<span class='leftCorner'></span>";
                                     $(obj).css({
-                                        'text-align': 'right'
+                                        'text-align': 'right',
+                                        'left': posLeft + 6 + 'px'
                                     }).prepend($('<span>').addClass('leftCorner'));
                                 }
                             });
@@ -396,7 +397,7 @@ NB.query = {
                         Arrow_Points();
                     });
                 } else if ($('.wall').length !== 0) {
-
+/*
                     var width = $(window).width();
                     if (width > screen.availWidth) width = screen.availWidth;
                     var note_width = $(this).find('.note').width();
@@ -405,8 +406,8 @@ NB.query = {
                     var ww = num_col * note_width;
                     $('.wall').css({
                         'width': ww,
-                        '-webkit-column-count': num_col,
-                        '-webkit-column-fill': num_col,
+            //            '-webkit-column-count': num_col,
+            //            '-webkit-column-fill': num_col,
 
                         '-moz-column-count': num_col,
                         '-moz-column-fill': num_col,
@@ -415,6 +416,7 @@ NB.query = {
                         'column-fill': num_col
 
                     });
+*/
                 }
 
                 $body.removeClass("loading");
