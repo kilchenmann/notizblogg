@@ -45,9 +45,9 @@ function conuser($token) {
 	return ($user);
 }
 
-/* ************************************************************** 
+/* **************************************************************
  * Change umlauts like ä to ae: It's important for the author-links & latex
- * ************************************************************** 
+ * **************************************************************
  */
 function changeUmlaut($string){
   $upas = array("ä"=>"ae", "ö"=>"oe", "ü"=>"ue", "Ä"=>"Ae", "Ö"=>"Oe", "Ü"=>"Ue", " "=>"-", "é"=>"e", "è"=>"e", "à"=>"a", "É"=>"E", "È"=>"E", "À"=>"A", "ñ"=>"n", "ë"=>"e");
@@ -144,7 +144,7 @@ function makeurl($text)
 		("!&amp;lt;(wiki:)([^ >\n\t]+)&amp;gt;!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
 		("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "<a href='".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2' title='Search here <\\2>'>\\2</a>", $text);
-		
+
 	$text = preg_replace
 		("!&lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&gt;!i", "<a href='http://\\2' target='_blank'>\\4</a>", $text);
 	$text = preg_replace
@@ -153,7 +153,7 @@ function makeurl($text)
 		("!&lt;(wiki:)([^ >\n\t]+)&gt;!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
 		("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "<a href='".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2' title='Search here <\\2>'>\\2</a>", $text);
-		
+
 	$text = preg_replace
 		("!<(link:)([^ >\n\t]+)(:)([^ >\n\t]+)>!i", "<a href='http://\\2' target='_blank'>\\4</a>", $text);
 	$text = preg_replace
@@ -277,7 +277,7 @@ function getMedia($media) {
 		case "jpeg";
 		case "tif";
 		{
-			$media_path = __MEDIA_URL__."/pictures/".$name;
+			$media_path = __MEDIA_URL__."/pictures/".$media;
 
 			if (@fopen($media_path,"r")==true){
 
@@ -286,7 +286,7 @@ function getMedia($media) {
 				//$name = $media_path['filename'];
 				$size = getimagesize($media_path);
 				// ergibt mit $infoSize[0] für breite und $infoSize[1] für höhe
-				$media_tag = "<img class='staticMedia' src='".$media_path."' alt='".$name."' title='".$name."' />";
+				$media_tag = "<img class='staticMedia' src='".$media_path."' alt='".$media."' title='".$name."' />";
 			}
 			break;
 		}
@@ -802,4 +802,3 @@ function prep4js($table) {
 	}
 	echo "</textarea>";
 }
-
