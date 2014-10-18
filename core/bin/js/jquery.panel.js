@@ -46,10 +46,27 @@
 		}, // end "init"
 
 
-		project: function () {
+		project: function (name, logo) {
 			return this.each(function () {
-				var $this = $(this),
-					localdata = $this.data('localdata');
+				var $this = $(this);
+				var localdata = $this.data('localdata');
+				var project;
+				$this
+				.append($('<a>')
+					.attr({
+						href: NB.url
+					})
+					.append($('<img>')
+						.attr({
+							src: NB.media + '/project/' + logo
+						})
+						.addClass('title project logo')
+					)
+					.append($('<h2>')
+						.text(name)
+						.addClass('title project name')
+					)
+				);
 
 			});
 		},
@@ -183,9 +200,14 @@
 					.on('click', function() {
 					if(login.frame.is(':visible')) {
 						login.frame.slideUp();
+						$('.viewer').css({
+							'opacity': '1'
+						});
 					} else {
+						$('.viewer').css({
+							'opacity': '0.3'
+						});
 						login.frame.slideDown();
-
 					}
 					if(login.frame.is(':visible')) {
 						login.name.focus();
@@ -208,12 +230,12 @@
 						.addClass('btn grp_left toggle_add')
 					).append(
 						log.user = $('<button>')
-						.addClass('btn grp_right toggle_user')
+						.addClass('btn grp_right toggle_user img')
 						.css({
 							'background-image': 'url("' + NB.user.avatar + '")',
 							'background-repeat': 'no-repeat',
 							'background-position': 'center',
-							'background-size': '42px 42px',
+							'background-size': '40px',
 							'border': 'none'
 						})
 					);
@@ -254,9 +276,14 @@
 					.on('click', function() {
 					if(log.frame.is(':visible')) {
 						log.frame.slideUp();
+						$('.viewer').css({
+							'opacity': '1'
+						});
 					} else {
+						$('.viewer').css({
+							'opacity': '0.3'
+						});
 						log.frame.slideDown();
-
 					}
 				});
 			});

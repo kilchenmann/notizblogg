@@ -23,6 +23,12 @@ function fileExists(media)
 	return (response == "200");
 }
 
+function isTouchDevice()
+{
+	var el = document.createElement('div');
+	el.setAttribute('ongesturestart', 'return;');
+	return typeof el.ongesturestart == "function"; // true or false
+}
 
 
 /*

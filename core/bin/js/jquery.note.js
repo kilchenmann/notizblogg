@@ -226,7 +226,7 @@
 					if(noteLabel.num > 22)	size = 'large';
 					label_ele.append(
 						$('<a>').attr({href: '?label=' + noteLabel.id, title: noteLabel.name + ' (' + noteLabel.num + ')'}).html(' ' + noteLabel.name + ' ').addClass('tag_size ' + size)
-					)
+					);
 				});
 			} else {
 				label_ele.parent().empty().css({height: '5px'});
@@ -369,7 +369,12 @@
 						edit_ele = $('<button>').addClass('btn grp_none fake_btn');
 					} else {
 						edit = true;
-						edit_ele = $('<button>').addClass('btn grp_none toggle_edit').expand({
+						edit_ele = $('<button>').addClass('btn grp_none toggle_edit').on('click', function() {
+							edit_ele.note('edit', data);
+						});
+
+						/*
+						{
 							type: type,
 							noteID: nID,
 							sourceID: sID,
@@ -377,6 +382,7 @@
 							data: note_obj,
 							show: 'form'
 						});
+						*/
 
 					}
 
@@ -450,7 +456,7 @@
 					});
 					$('body').on('click', function () {
 						window.location.href = NB.url;
-					})
+					});
 				}
 			}
 
@@ -804,7 +810,9 @@
 					case 'q':
 						var url2;
 						url = NB.api + '/get.php?q=' + localdata.settings.query[localdata.settings.query[i]];
-						$('input.search_field').attr({value: decodeURI(localdata.settings.query[localdata.settings.query[i]])});
+						$('input.search_field').attr({
+							value: decodeURI(localdata.settings.query[localdata.settings.query[i]])
+						});
 						$.getJSON(url, function (search) {
 							$.each(search.notes, function (i, noteID) {
 								url2 = NB.api + '/get.php?note=' + noteID;
@@ -975,13 +983,18 @@
 			});											// end "return this.each"
 		},												// end "init"
 
-		edit: function () {
+		edit: function (data) {
 			return this.each(function () {
 				var $this = $(this);
 				var localdata = $this.data('localdata');
-
+				console.log(data);
 				//console.log(localdata);
 			});
+		},
+
+		add: function() {
+
+
 		},
 
 

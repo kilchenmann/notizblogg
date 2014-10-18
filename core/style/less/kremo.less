@@ -136,10 +136,8 @@ button.toggle_unlink {
 }
 button.toggle_user, label.user {
   background-position: -40px -270px;
-  opacity: 0.6;
   &:hover {
 	background-position: 0px -270px;
-    opacity: 1;
   }
 }
 button.toggle_grp {
@@ -239,6 +237,15 @@ button.toggle_lock {
   }
 }
 
+button.toggle_user.img {
+    opacity: 0.6;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    &:hover {
+        opacity: 1;
+    }
+}
 /* button end */
 /* ------------------------------------------------------------------------- */
 
@@ -270,6 +277,7 @@ span.search {
       width: 470px;
       font-size: 1em;
       font-weight: bold;
+      text-align: center;
     }
 }
 
