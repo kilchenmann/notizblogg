@@ -222,7 +222,7 @@
 
 
 				$this.click(function() {
-					localdata.expand.frame = $('.float_obj.large.pamphlet').empty();
+					localdata.expand.frame = $('.float_obj.large.pamphlet').empty().html('gaga');
 					localdata.expand.content = '';
 					if(localdata.settings.noteID === undefined && localdata.settings.sourceID === undefined && localdata.settings.data === undefined) {
 						// nothing is defined! There is no object to show
@@ -268,7 +268,7 @@
 												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'noteID', 'readonly': 'readonly', 'name': 'noteID', 'value': localdata.settings.sourceID }))
 												.append($('<input>').attr({'type': 'text', 'name': 'title', 'placeholder': 'Title', 'value': ''}))
 												.append($('<textarea>').attr({'type': 'text', 'name': 'content', 'placeholder': 'Content', 'required': 'required', 'rows': '10', 'cols': '50', 'value': ''}))
-										)
+										);
 
 									} else {
 // edit the note
@@ -338,13 +338,15 @@
 							$('.viewer').fadeTo('slow', '0.2');
 							localdata.expand.frame.toggle();
 							$('button.toggle_add').toggleClass('toggle_delete');
+							/*
 							localdata.expand.col_ele.click(function() {
 								// by clicking on the collapse button:
 								// close the element, show the viewer and remove the delete class from add-button
 								localdata.expand.frame.toggle().empty();
 								$('.viewer').fadeTo('slow', '1');
 								$('button.toggle_delete').toggleClass('toggle_delete');
-							})
+							});
+							*/
 						}
 
 
@@ -389,6 +391,9 @@
 			return this.each(function(){
 				var $this = $(this);
 				var localdata = $this.data('localdata');
+				$('header').append(
+
+				)
 			});
 
 

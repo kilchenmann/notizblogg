@@ -249,9 +249,57 @@ class get {
 				}
 				break;
 
-			case 'notes';
+			case 'list';
+			$notes = array();
+				switch ($this->id) {
+					case 'note';
+
+					break;
+
+					case 'source';
+						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->bibID. '::' . $row->bib);
+						}
+					break;
+
+					case 'bibtyp';
+						$sql = $mysqli->query('SELECT bibTypID, bibTyp FROM bibTyp ORDER BY bibTyp;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->bibTypID. '::' . $row->bibTyp);
+						}
+					break;
+
+					case 'label';
+						$sql = $mysqli->query('SELECT labelID, label FROM label ORDER BY label;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->labelID. '::' . $row->label);
+						}
+						break;
 
 
+					default;		// label
+						$sql = $mysqli->query('SELECT labelID, label FROM label ORDER BY label;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->labelID. '::' . $row->label);
+						}
+				}
+				break;
+			case 'bibtyp';
+				$sql = $mysqli->query('SELECT bibTyp FROM bibTyp WHERE bibTypID = ' . $this->id . ';');
+				while($row = mysqli_fetch_object($sql)) {
+					$typeName = $row->bibTyp;
+				}
+				$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib WHERE bibTyp = ' . $this->id . ' ORDER BY bib;');
+
+				$notes = array();
+				while($row = mysqli_fetch_object($sql)) {
+					array_push($notes, $row->bibID. '::' . $row->bib);
+				}
 				break;
 
 			default;

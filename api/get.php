@@ -89,6 +89,20 @@ foreach ($_GET as $key => $value){
 			echo $note->listData();
 			break;
 
+		case 'list';
+			// the number behind the query 'list' is to limit the number of sources
+			$note->id = $_GET['list'];
+			$note->type = 'list';
+			echo $note->listData();
+			break;
+
+		case 'bibtyp';
+			$note->id = $_GET['bibtyp'];
+			$note->type = 'bibtyp';
+			echo $note->listData();
+			
+			break;
+
 		case 'q';
 			$part = '';
 			if (isset($_GET['filter'])) {
@@ -132,4 +146,3 @@ foreach ($_GET as $key => $value){
 if (isset($_GET['id'])) {
 
 }
-
