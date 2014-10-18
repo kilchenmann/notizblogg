@@ -116,420 +116,235 @@
 
 
 
+<script type="text/javascript">
+    NB = {};
+    NB.access = '<?php echo $user['access']; ?>';
+    NB.user = {
+        id: '<?php echo  $user['id']; ?>',
+        name: '<?php echo  $user['name']; ?>',
+        avatar: '<?php echo  $user['avatar']; ?>'
+    };
 
+//  NB.url = window.location.href; //+ window.location.pathname;
+    NB.url = '<?php echo __SITE_URL__; ?>';
+    NB.uri = NB.url + '?' + (location.search).substr(1);
 
-    <script type="text/javascript">
-        // window.location.pathname; // returns path only:	/nb/
-         // window.location.href;     // returns full url(?): http://localhost/nb/?label=443
-         // window.location.host;		// returns hostname: localhost
-
-        NB = {};
-        NB.access = '<?php echo $user['access']; ?>';
-        NB.user = {
-            id: '<?php echo  $user['id']; ?>',
-            name: '<?php echo  $user['name']; ?>',
-            avatar: '<?php echo  $user['avatar']; ?>'
-        };
-
-
-        NB.url = window.location.href; //+ window.location.pathname;
-        NB.url = '<?php echo __SITE_URL__; ?>';
-        NB.uri = NB.url + '?' + (location.search).substr(1);
-
-        if (NB.uri === NB.url + '?access=denied') {
-            $('#fullpage').warning({
-                type: 'access',
-                lang: 'de'
-            });
-            $('body').on('click', function() {
-                window.location.href = NB.url;
-            });
-            $(document).keyup(function(event) {
-                if (event.keyCode == 27) {
-                    $('.float_obj').hide();
-                    $('.viewer').css({
-                        'opacity': '1'
-                    });
-                }
-                window.location.href = NB.url;
-            });
-            NB.uri = NB.url;
-        }
-
-        NB.api = '<?php echo __SITE_API__; ?>';
-        NB.media = '<?php echo __MEDIA_URL__; ?>';
-
-        /*
-NB.query = {
-	type: '<?php echo $type; ?>',
-	id: '<?php echo $query; ?>'
-};
-*/
-        NB.query = getUrlVars();
-        for (i = 0; i < NB.query.length; i++) {
-            //	console.log(NB.query[i] + ': ' + NB.query[NB.query[i]]);
-        }
-
-        /*
-<?php
-	// default parameters in case of wrong queries;
-	// these variables would be overwritten in the right case
-	$type = '';
-	$query = 'all';
-	$viewer = 'wall';
-
-	if($_SERVER['QUERY_STRING']){
-		if(isset($_GET['source'])){
-			$type = 'source';
-			$query = $_GET['source'];
-			$viewer = 'desk';
-		}
-		if(isset($_GET['note'])){
-			$type = 'note';
-			$query = $_GET['note'];
-		}
-		if(isset($_GET['label'])){
-			$type = 'label';
-			$query = $_GET['label'];
-		}
-		if(isset($_GET['author'])){
-			$type = 'author';
-			$query = $_GET['author'];
-		}
-		if(isset($_GET['collection'])){
-			$type = 'collection';
-			$query = $_GET['collection'];
-			$viewer = 'desk';
-		}
-		if(isset($_GET['q'])){
-			$type = 'search';
-			$query = $_GET['q'];
-		}
-	}
-	?>
-*/
-
-
-
-         //
-         // when window is LOADing
-         //
-        $(window).load(function() {
-            // set the panel parts...
-            $('header').panel({
-
-            });
-
-            /* set the correct window size and the dimension of some elements */
-            var height = $(window).height() - $('header').height() - $('footer').height();
-            $('div.viewer').css({
-                'height': height
-            });
-            $('.float_obj').center();
-
-            /*
-	var project_ele = $('.project');
-	$('header .project').panel('project', function() {
-		project: 'Notizblogg';
-		logo: 'nb-logo.png';
-	});
-*/
-
-            /* enable the project logo */
-            $('.project').append($('<a>').attr({
-                href: NB.url
-            }).append($('<h2>').text('Notizblogg')).addClass('title project logo'));
-
-            //var search_ele = $('.search');
-            $('header .search').panel('search', NB.url + '/core/bin/php/search.data.php');
-
-            if (NB.user.id !== '' && NB.access !== '1') {
-                $('header .user').panel('log', NB.url + '/core/bin/php/check.out.php');
-            } else {
-                $('header .user').panel('login', NB.url + '/core/bin/php/check.in.php');
-            }
-
-            //$('header .user').panel('login', NB.url + '/core/bin/php/check.in.php');
-            /* integrate the search bar in the header panel */
-
-
-            /*
-	$('.search').finder({
-		search: 'Suche',
-		filter: 'Erweiterte Suche',
-		database: ''
-	});
-*/
-
-            /* show some content */
-            $('.viewer').note(NB);
-
+    if (NB.uri === NB.url + '?access=denied') {
+        $('#fullpage').warning({
+            type: 'access',
+            lang: 'de'
         });
-
-        /* remove the floating elements on clicking the esc-key */
+        $('body').on('click', function() {
+            window.location.href = NB.url;
+        });
         $(document).keyup(function(event) {
             if (event.keyCode == 27) {
-                if ($('.float_obj').is(':visible')) {
-                    $(this).hide();
-                    $('.viewer').css({
-                        'opacity': '1'
-                    });
+                $('.float_obj').hide();
+                $('.viewer').css({
+                    'opacity': '1'
+                });
+            }
+            window.location.href = NB.url;
+        });
+        NB.uri = NB.url;
+    }
 
-                    if ($('button.toggle_add').hasClass('toggle_delete')) {
-                        $(this).toggleClass('toggle_delete');
+    NB.api = '<?php echo __SITE_API__; ?>';
+    NB.media = '<?php echo __MEDIA_URL__; ?>';
+
+    NB.query = getUrlVars();
+
+    //
+    // when window is LOADing
+    //
+    $(window).load(function() {
+        // initial the panel
+        $('header').panel();
+
+        $('header .project').panel('project', 'Notizblogg', 'notizblogg.png');
+        $('header .search').panel('search', NB.url + '/core/bin/php/search.data.php');
+        if (NB.user.id !== '' && NB.access !== '1') {
+            $('header .user').panel('log', NB.url + '/core/bin/php/check.out.php');
+        } else {
+            $('header .user').panel('login', NB.url + '/core/bin/php/check.in.php');
+        }
+        /* copyright date */
+        var curDate = new Date(),
+            curYear = curDate.getFullYear();
+        $('span.year').text('2006-' + curYear);
+
+        /* show some content */
+        $('.viewer').note(NB);
+
+        var height = $(window).height() - $('header').height() - $('footer').height();
+        $('div.viewer').css({
+            'height': height
+        });
+        $('.float_obj').center();
+        // set the numbers of wall columns
+    });
+
+    $(window).resize(function() {
+        var height = $(window).height() - $('header').height() - $('footer').height();
+        $('div.viewer').css({
+            'height': height
+        });
+        $('.float_obj').center();
+        // set the numbers of wall columns
+
+        if ($('.wall').length !== 0) {
+            var width = $(window).width();
+            var note_width = $('.note').width();
+            //var note_width = 320;		// normally 320px
+            var num_col = Math.floor(width / note_width);
+            var ww = num_col * note_width;
+            $('.wall').css({
+                'width': ww,
+/*
+                '-webkit-column-count': num_col,
+                '-webkit-column-fill': num_col,
+
+                '-moz-column-count': num_col,
+                '-moz-column-fill': num_col,
+
+                '-o-column-count': num_col,
+                '-o-column-fill': num_col,
+
+                'column-count': num_col,
+                'column-fill': num_col
+*/
+            });
+        }
+    });
+
+
+    /* remove the floating elements on clicking the esc-key */
+    $(document).keyup(function(event) {
+        if (event.keyCode == 27) {
+            if ($('.float_obj').is(':visible')) {
+                $('.float_obj').hide();
+                $('.viewer').css({
+                    'opacity': '1'
+                });
+
+                if ($('button.toggle_add').hasClass('toggle_delete')) {
+                    $(this).toggleClass('toggle_delete');
+                }
+
+            }
+        }
+    });
+
+    $body = $("body");
+
+    $(document).on({
+        ajaxStart: function() {
+            $body.addClass("loading");
+            $(document).keyup(function(event) {
+                if (event.keyCode == 27) {
+                    $body.removeClass("loading");
+                    /*
+                    if ($('.float_obj').is(':visible')) {
+                        window.location.href = NB.uri;
+                    } else {
+                        window.location.href = NB.url;
+                    }
+                    */
+                }
+            });
+        },
+        ajaxStop: function() {
+            if ($('.desk').length > 0) {
+                $(function() {
+                    function Arrow_Points() {
+                        var s = $('.right_side').find('.note');
+                        $.each(s, function(i, obj) {
+                            var posLeft = $(obj).position().left; //css("left");
+                            //	$(obj).addClass('borderclass');
+                            if (posLeft === 0) {
+                                //							html = "<span class='rightCorner'></span>";
+                                $(obj).prepend($('<span>').addClass('rightCorner'));
+                            } else {
+                                //							html = "<span class='leftCorner'></span>";
+                                $(obj).css({
+                                    'text-align': 'right',
+                                    'left': posLeft + 10 + 'px'
+                                }).prepend($('<span>').addClass('leftCorner'));
+                            }
+                        });
                     }
 
-                }
-            }
-        });
-
-        $(window).resize(function() {
-            var height = $(window).height() - $('header').height() - $('footer').height();
-            $('div.viewer').css({
-                'height': height
-            });
-            $('.float_obj').center();
-            // set the numbers of wall columns
-
-            if ($('.wall').length !== 0) {
+                    // Divs
+                    $('.right_side')
+                        .append($('<div>').addClass('timeline_container')
+                            .append($('<div>').addClass('timeline')
+                                .append($('<div>').addClass('plus'))
+                            )
+                    ).masonry({
+                        itemSelector: '.note'
+                    });
+                    Arrow_Points();
+                });
+            } else if ($('.wall').length !== 0) {
+/*
                 var width = $(window).width();
-                var note_width = $('.note').width();
-                //var note_width = 320;		// normally 320px
+                if (width > screen.availWidth) width = screen.availWidth;
+                var note_width = $(this).find('.note').width();
+                //			var note_width = 320;		//$(this).find('.note').width() + 40;		// normally 320px
                 var num_col = Math.floor(width / note_width);
                 var ww = num_col * note_width;
                 $('.wall').css({
                     'width': ww,
-
-//                    '-webkit-column-count': num_col,
-//                    '-webkit-column-fill': num_col,
+        //            '-webkit-column-count': num_col,
+        //            '-webkit-column-fill': num_col,
 
                     '-moz-column-count': num_col,
                     '-moz-column-fill': num_col,
-
-                    '-o-column-count': num_col,
-                    '-o-column-fill': num_col,
 
                     'column-count': num_col,
                     'column-fill': num_col
 
                 });
+*/
             }
 
-        });
+            $body.removeClass("loading");
 
+            //var page = 'ready';
 
-
-        var isTouchDevice = function() {
-
-            var el = document.createElement('div');
-            el.setAttribute('ongesturestart', 'return;');
-            /*
-	if(typeof el.ongesturestart == "function"){
-		return true;
-	}else {
-		return false
-	}
-	*/
-            return typeof el.ongesturestart == "function"; // true or false
-        };
-
-
-
-
-
-
-        $body = $("body");
-
-        $(document).on({
-            ajaxStart: function() {
-                $body.addClass("loading");
-                $(document).keyup(function(event) {
-                    if (event.keyCode == 27) {
-                        $body.removeClass("loading");
-
-                        if ($('.float_obj').is(':visible')) {
-                            window.location.href = NB.uri;
-                            /*
-					$(this).hide();
-					$('.viewer').css({'opacity': '1'});
-
-					if($('button.toggle_add').hasClass('toggle_delete')) {
-						$(this).toggleClass('toggle_delete');
-					}
-*/
-                        } else {
-                            window.location.href = NB.url;
-                        }
+            var active = {};
+            $('div.note')
+                .mouseenter(function(event) {
+                    if (!$(this).hasClass('active')) {
+                        $(this).addClass('active');
                     }
-                });
+                })
+                .on('touchstart', function() {
+                    if (!$(this).hasClass('active')) {
+                        $(this).addClass('active');
+                    }
+                })
 
-            },
-            ajaxStop: function() {
-                if ($('.desk').length > 0) {
-                    $(function() {
-                        function Arrow_Points() {
-                            var s = $('.right_side').find('.note');
-                            $.each(s, function(i, obj) {
-                                var posLeft = $(obj).position().left; //css("left");
-                                //	$(obj).addClass('borderclass');
-                                if (posLeft === 0) {
-                                    //							html = "<span class='rightCorner'></span>";
-                                    $(obj).prepend($('<span>').addClass('rightCorner'));
-                                } else {
-                                    //							html = "<span class='leftCorner'></span>";
-                                    $(obj).css({
-                                        'text-align': 'right',
-                                        'left': posLeft + 6 + 'px'
-                                    }).prepend($('<span>').addClass('leftCorner'));
-                                }
-                            });
-                        }
-
-                        // Divs
-                        $('.right_side')
-                            .append($('<div>').addClass('timeline_container')
-                                .append($('<div>').addClass('timeline')
-                                    .append($('<div>').addClass('plus'))
-                                )
-                        ).masonry({
-                            itemSelector: '.note'
-                        });
-                        Arrow_Points();
-                    });
-                } else if ($('.wall').length !== 0) {
-/*
-                    var width = $(window).width();
-                    if (width > screen.availWidth) width = screen.availWidth;
-                    var note_width = $(this).find('.note').width();
-                    //			var note_width = 320;		//$(this).find('.note').width() + 40;		// normally 320px
-                    var num_col = Math.floor(width / note_width);
-                    var ww = num_col * note_width;
-                    $('.wall').css({
-                        'width': ww,
-            //            '-webkit-column-count': num_col,
-            //            '-webkit-column-fill': num_col,
-
-                        '-moz-column-count': num_col,
-                        '-moz-column-fill': num_col,
-
-                        'column-count': num_col,
-                        'column-fill': num_col
-
-                    });
-*/
+            .mouseleave(function(event) {
+                if ($(this).hasClass('active')) {
+                    $(this).removeClass('active');
                 }
-
-                $body.removeClass("loading");
-
-                //var page = 'ready';
-
-                var active = {};
-                $('div.note')
-                    .mouseenter(function(event) {
-                        if (!$(this).hasClass('active')) {
-                            $(this).addClass('active');
-                        }
-                    })
-                    .on('touchstart', function() {
-                        if (!$(this).hasClass('active')) {
-                            $(this).addClass('active');
-                        }
-                    })
-
-                .mouseleave(function(event) {
+            })
+                .on('touchend', function() {
                     if ($(this).hasClass('active')) {
                         $(this).removeClass('active');
                     }
-                })
-                    .on('touchend', function() {
-                        if ($(this).hasClass('active')) {
-                            $(this).removeClass('active');
-                        }
-                    });
-            }
-        });
+                });
+        }
+    });
 
+    $(window).bind("load", function() {
+        // code here
+        // alert('website is ready!?');
+        // alert($('div.note').length);
+    });
 
-        $(window).bind("load", function() {
-            // code here
-            // alert('website is ready!?');
-            // alert($('div.note').length);
-
-        });
-
-
-
-
-
-
-
-         //NB.query = getUrlVars();
-
-
-         //console.log(NB);
-         //console.log('uri: ' + NB.uri);
-         //console.log('user: ' + NB.user);
-         //console.log('uid: ' + NB.uid);
-         //console.log('access: ' + NB.access);
-         //console.log(NB.query);
-
-         //console.log((location.search).substr(1));
-
-         //	$(document).ready(function () {
-
-
-
-
-
-
-
-
-         //$.getScript('core/bin/js/jquery.fullpage.min.js', function() {
-        /*
- $('#fullpage').fullpage({
- //	anchors: ['info', 'demo', 'tools', 'about', 'login' ],
- anchors: ['start'],
- //	slidesColor: ['#1A1A1A', '#1A1A1A', '#7E8F7C', '#333333'],
- slidesColor: ['#1A1A1A'],
- css3: true
- });
- */
-         //});
-
-
-        /*
- if(getUrlVars()["access"] !== undefined) {
- $('#fullpage').warning({
- type: 'access'
- });
- $('body').on('click', function(){
- window.location.href = window.location.href.split('?')[0];
- })
- }
- */
-
-         //	});
-
-
-
-         //$.getScript(NB.url + '/core/bin/js/jquery.mousewheel.min.js', function() {
-        /*
- $('div.viewer').on('mousewheel', function (e, d) {
- var viewer = $(this);
- if ((this.scrollTop === (viewer[0].scrollHeight - viewer.height()) && d < 0) || (this.scrollTop === 0 && d > 0)) {
- e.preventDefault();
- }
- })
- */
-         //});
-
-
-        /* copyright date */
-        var curDate = new Date(),
-            curYear = curDate.getFullYear();
-        $('span.year').text('2006-' + curYear);
-    </script>
-
+</script>
 
 
 </body>
