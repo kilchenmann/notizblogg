@@ -222,13 +222,6 @@
 				var log = {};
 
 				$this.append(
-					log.add = $('<button>')
-						.attr({
-							'type': 'button',
-							'title': 'add new'
-						})
-						.addClass('btn grp_left toggle_add')
-					).append(
 						log.user = $('<button>')
 						.addClass('btn grp_right toggle_user img')
 						.css({
@@ -288,6 +281,84 @@
 				});
 			});
 		},
+
+
+
+		add: function () {
+			return this.each(function () {
+				var $this = $(this);
+				var localdata = $this.data('localdata');
+				var plus = {};
+
+				$this.append(
+					plus.add = $('<button>')
+						.attr({
+							'type': 'button',
+							'title': 'add new'
+						})
+						.addClass('btn grp_left toggle_add')
+					);
+				});
+			},
+
+		foot:function () {
+			return this.each(function () {
+				var $this = $(this);
+				var localdata = $this.data('localdata');
+				var curDate = new Date(),
+					curYear = curDate.getFullYear();
+				$this.append(
+					$('<p>').addClass('small')
+					.append(
+						$('<span>').addClass('project')
+						.append($('<a>')
+							.attr({
+								'href': 'http://notizblogg.ch'
+							})
+							.html('Notizblogg')
+						)
+					)
+					.append(
+						$('<span>').addClass('definition').html(' | ')
+						.append($('<a>')
+							.attr({
+								'href': 'http://notizblogg.ch'
+							})
+							.html('Idea, Concept and Design')
+						)
+					)
+					.append(
+						$('<span>').addClass('copyright').html(' &copy; ')
+						.append($('<a>')
+							.attr({
+								'href': 'https://plus.google.com/u/0/102518416171514295136/posts?rel=author'
+							})
+							.html('André Kilchenmann')
+						)
+					)
+					.append(
+						$('<span>').addClass('year').text(' | 2006-' + curYear)
+					)
+					.append(
+						$('<span>').addClass('partner')
+						.append($('<a>')
+							.attr({
+								'href': 'http://milchkannen.ch'
+							})
+							.append(
+								$('<img>').attr({
+									'src': 'core/style/img/akM-logo-small.png',
+									'alt': 'milchkannen | kilchenmann',
+									'title': 'milchkannen | andré kilchenmann'
+								})
+
+							)
+						)
+					)
+				);
+			});
+		},
+
 
 		anotherMethod: function () {
 				return this.each(function () {

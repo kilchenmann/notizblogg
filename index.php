@@ -95,14 +95,7 @@
         </div>
     </div>
     <footer>
-        <p class="small">
-            <a href="http://notizblogg.ch">Notizblogg</a> | Idea, Concept and Design &copy;
-            <a href="https://plus.google.com/u/0/102518416171514295136/posts?rel=author">André Kilchenmann</a> |
-            <span class='year'></span>
-            <a href="http://milchkannen.ch">
-                <img src="core/style/img/akM-logo-small.png" alt="milchkannen | kilchenmann" title="milchkannen | andré kilchenmann" />
-            </a>
-        </p>
+
     </footer>
     <div class="modal">
         <!-- Place at bottom of page -->
@@ -165,13 +158,11 @@
         $('header .search').panel('search', NB.url + '/core/bin/php/search.data.php');
         if (NB.user.id !== '' && NB.access !== '1') {
             $('header .user').panel('log', NB.url + '/core/bin/php/check.out.php');
+            $('header .add').panel('add');
         } else {
             $('header .user').panel('login', NB.url + '/core/bin/php/check.in.php');
         }
-        /* copyright date */
-        var curDate = new Date(),
-            curYear = curDate.getFullYear();
-        $('span.year').text('2006-' + curYear);
+        $('footer').panel('foot');
 
         /* show some content */
         $('.viewer').note(NB);

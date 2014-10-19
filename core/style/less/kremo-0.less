@@ -31,17 +31,15 @@ input, select, button, textarea, .fake_area, .card {
   height: 32px;
 //  background-color: @bg;
 //  background-color: lighten(@bg, 20%);
-  background-color: transparent;
-  background-image: url(../../lib/icons/btn.png);
+  background-image: url(../../lib/icons/btn_icons.png);
   background-position: 0px 0px;
   background-repeat: no-repeat;
-//  border: 0px solid darken(@bg, 5%);
+  border: 0px solid darken(@bg, 5%);
   cursor: pointer;
-
   &:hover {
-//	background-color: darken(@bg, 20%);
+	background-color: darken(@bg, 20%);
 	//background-color: transparent;
-    opacity: 1;
+	border: 0px solid transparent;
   }
 }
 .grp_left, .grp_middle, .grp_right {
@@ -101,7 +99,10 @@ button.toggle_power {
   }
 }
 button.search_btn {
-  background-position: -333px -445px;
+  background-position: -40px -90px;
+  &:hover {
+	background-position: 0px -90px;
+  }
 }
 button.search_filter {
   background-position: -40px -120px;
@@ -110,7 +111,10 @@ button.search_filter {
   }
 }
 button.toggle_add {
-  background-position: -460px -1080px;
+  background-position: -40px -150px;
+  &:hover {
+	background-position: 0px -150px;
+  }
 }
 button.toggle_delete {
   background-position: -40px -180px;
@@ -131,8 +135,10 @@ button.toggle_unlink {
   }
 }
 button.toggle_user, label.user {
-  background-position: -460px -440px;
-
+  background-position: -40px -270px;
+  &:hover {
+	background-position: 0px -270px;
+  }
 }
 button.toggle_grp {
   background-position: -40px -300px;
@@ -183,7 +189,10 @@ button.toggle_comment {
   }
 }
 button.toggle_expand {
-  background-position: -715px -1206px;
+  background-position: -40px -540px;
+  &:hover {
+	background-position: 0px -540px;
+  }
 }
 button.toggle_collapse {
   background-position: -40px -570px;

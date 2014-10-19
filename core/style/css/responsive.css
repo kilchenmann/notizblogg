@@ -21,6 +21,9 @@
 	header .project .logo {
 		display: block;
 	}
+	footer .definition {
+		display: none;
+	}
 }
 /* Phone */
 @media screen and (max-width: 960px) {
@@ -35,5 +38,19 @@
 	}
 	header .project .logo {
 		display: block;
+	}
+	header div.center {
+		width: 300px;
+	}
+	header .center .search {
+		margin-left: -120px;
+		width: 300px;
+	}
+	header .center .search input{
+		width: 240px;
+	}
+	footer {
+		display: none;
+		height: 4px;
 	}
 }
