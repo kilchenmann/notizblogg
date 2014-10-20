@@ -302,8 +302,8 @@
 				var latex, tex_ele, classNote;
 				if (data.note.biblio !== null) {
 					latex = data.note.comment4tex;
-					tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function () {
-						$(this).toggleClass('toggle_comment');
+					tex_ele = $('<button>').addClass('btn grp_none comment').click(function () {
+						$(this).toggleClass('calendar');
 						$note.children('.text').toggle();
 						$note.children('.latex').toggle();
 					});
@@ -369,7 +369,7 @@
 						edit_ele = $('<button>').addClass('btn grp_none fake_btn');
 					} else {
 						edit = true;
-						edit_ele = $('<button>').addClass('btn grp_none toggle_edit').on('click', function() {
+						edit_ele = $('<button>').addClass('btn grp_none edit').on('click', function() {
 							edit_ele.note('edit', data);
 						});
 
@@ -387,12 +387,12 @@
 					}
 
 					if ($note.find('.latex').length > 0) {
-						tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function () {
-							$(this).toggleClass('toggle_comment');
+						tex_ele = $('<button>').addClass('btn grp_none calendar').click(function () {
+							$(this).toggleClass('comment');
 							$note.find('.text').toggle();
 							$note.find('.latex').toggle();
 						});
-						exp_ele = $('<button>').addClass('btn grp_none toggle_expand').expand({
+						exp_ele = $('<button>').addClass('btn grp_none expand').expand({
 							type: type,
 							noteID: nID,
 							sourceID: sID,
@@ -553,19 +553,19 @@
 					}
 
 					if ($note.children('.latex').length > 0) {
-						tex_ele = $('<button>').addClass('btn grp_none toggle_cite').click(function () {
-							$(this).toggleClass('toggle_comment');
+						tex_ele = $('<button>').addClass('btn grp_none calendar').click(function () {
+							$(this).toggleClass('comment');
 							$note.children('.text').toggle();
 							$note.children('.latex').toggle();
 						});
 //							console.log(showsource.biblio.substr(0, 9));
 // if the source is not correct recorded yet, show the bibtex
 						if(showsource.biblio.substr(0, 9) === 'undefined'){
-							tex_ele.toggleClass('toggle_comment');
+							tex_ele.toggleClass('comment');
 							$note.children('.text').toggle();
 							$note.children('.latex').toggle();
 						}
-						exp_ele = $('<button>').addClass('btn grp_none toggle_expand').expand({
+						exp_ele = $('<button>').addClass('btn grp_none expand').expand({
 							type: type,
 							noteID: nID,
 							sourceID: sID,
