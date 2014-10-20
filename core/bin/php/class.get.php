@@ -224,7 +224,7 @@ class get {
 			case 'label';
 				$sql = $mysqli->query('SELECT label FROM label WHERE labelID=' . $this->id . ';');
 				while($row = mysqli_fetch_object($sql)) {
-					$typeName = $row->label;
+					$typeName = ($row->label);
 				}
 				$notes = getNote2Label($this->id);
 				break;
@@ -243,9 +243,17 @@ class get {
 				}
 
 				$notes = array();
-				$typeName = 'newest';
+				$typeName = 'created';
 				while($row = mysqli_fetch_object($sql)) {
 					array_push($notes, $row->noteID);
+				}
+				break;
+			case 'recent';		// like 'new' but only for sources
+					$sql = $mysqli->query('SELECT note.noteID, note.bibID, bib.bibID, bib.bib FROM note, bib WHERE note.noteID = bib.noteID AND note.notePublic >= '.$this->access.' ORDER BY note.dateModified DESC  LIMIT 0, ' . $this->id . ';');
+				$notes = array();
+				$typeName = 'modified';
+				while($row = mysqli_fetch_object($sql)) {
+					array_push($notes, $row->bibID. '::' . $row->bib);
 				}
 				break;
 

@@ -44,7 +44,7 @@
 	}
 	header .center .search {
 		margin-left: -120px;
-		width: 300px;
+/*		width: 300px;	*/
 	}
 	header .center .search input{
 		width: 240px;

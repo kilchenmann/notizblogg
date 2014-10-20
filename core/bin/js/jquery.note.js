@@ -450,7 +450,7 @@
 				 */
 			} else {
 				if ($('div.note').length === 0) {
-					$('#fullpage').warning({
+					$('.wrapper').warning({
 						type: 'noresults',
 						lang: 'de'
 					});
@@ -541,7 +541,7 @@
 						edit_ele = $('<button>').addClass('btn grp_none fake_btn');
 					} else {
 						edit = true;
-						edit_ele = $('<button>').addClass('btn grp_none toggle_edit').expand({
+						edit_ele = $('<button>').addClass('btn grp_none edit').expand({
 							type: type,
 							noteID: nID,
 							sourceID: sID,
@@ -623,7 +623,7 @@
 				//		bibtex = 'The data are not yet ready to use in laTex.';
 				//		biblio = '<a href=\'?source=' + data.source.id + '\' >' + data.source.comment + '</a>';
 				if($('div.note').length === 0) {
-					$('#fullpage').warning({
+					$('.wrapper').warning({
 						type: 'noresults',
 						lang: 'de'
 					});
@@ -947,7 +947,7 @@
 // warning if no note exist
 				/*
 				 if ($('.note').length === 0) {
-				 $('#fullpage').warning({
+				 $('.wrapper').warning({
 				 type: 'noresults',
 				 lang: 'de'
 				 });
@@ -992,8 +992,129 @@
 			});
 		},
 
-		add: function() {
+		add: function(action) {
+			return this.each(function () {
+				var $this = $(this);
+				var localdata = $this.data('localdata');
+				//console.log(localdata);
+				var form = {}, bibtyp, source, recent;
 
+				bibtyp = NB.api + '/get.php?list=bibtyp';
+				$.getJSON(bibtyp, function (data) {
+					//form.bibtyp = ;
+					form.bibtyp.html($('<option>')
+						.html('recent')
+						.attr({'value': '0'})
+					);
+					for (var k in data.notes) {
+						form.bibtyp.append($('<option>')
+							.html(data.notes[k].split('::')[1])
+							.attr({'value': data.notes[k].split('::')[0]})
+						);
+					}
+				});
+
+				recent = NB.api + '/get.php?recent=3';
+				$.getJSON(recent, function (data) {
+					//form.bibtyp = ;
+					for (var k in data.notes) {
+						form.source.append($('<option>')
+							.html(data.notes[k].split('::')[1])
+							.attr({'value': data.notes[k].split('::')[0]})
+						);
+					}
+				});
+
+				source = NB.api + '/get.php?list=source';
+				$.getJSON(source, function (data) {
+					//form.bibtyp = ;
+					for (var k in data.notes) {
+						form.source.append($('<option>')
+							.html(data.notes[k].split('::')[1])
+							.attr({'value': data.notes[k].split('::')[0]})
+						);
+					}
+				});
+
+				$this.html(
+					form.form = $('<form>')
+					.attr({
+						'action': action,
+						'method': 'post'
+					})
+					.append($('<p>')
+						.append(form.bibtyp = $('<select>')
+							.attr({
+								'name': 'bibtyp'
+							})
+							.addClass('field_obj small select first_form_ele')
+							.change(function() {
+								form.source.empty();
+								if(form.bibtyp.val() === '0') {
+									recent = NB.api + '/get.php?recent=3';
+									$.getJSON(recent, function (data) {
+										//form.bibtyp = ;
+										for (var k in data.notes) {
+											form.source.append($('<option>')
+												.html(data.notes[k].split('::')[1])
+												.attr({'value': data.notes[k].split('::')[0]})
+											);
+										}
+									});
+
+									source = NB.api + '/get.php?list=source';
+									$.getJSON(source, function (data) {
+										//form.bibtyp = ;
+										for (var k in data.notes) {
+											form.source.append($('<option>')
+												.html(data.notes[k].split('::')[1])
+												.attr({'value': data.notes[k].split('::')[0]})
+											);
+										}
+									});
+								} else {
+									source = NB.api + '/get.php?bibtyp=' + form.bibtyp.val();
+									$.getJSON(source, function (data) {
+										//form.bibtyp = ;
+										for (var k in data.notes) {
+											form.source.append($('<option>')
+												.html(data.notes[k].split('::')[1])
+												.attr({'value': data.notes[k].split('::')[0]})
+											);
+										}
+									});
+								}
+
+							})
+						)
+						.append(form.source = $('<select>')
+							.attr({
+								'name': 'source'
+							})
+							.addClass('field_obj large select')
+						)
+						.append(form.new = $('<input>')
+							.attr({
+								'name': 'newsource',
+								'type': 'button',
+								'value': 'new'
+							})
+							.addClass('btn grp_none new')
+						)
+					)
+
+					.append($('<p>')
+
+					)
+					.append($('<p>')
+
+					)
+					.append($('<p>')
+
+					)
+				);
+
+			});
 
 		},
 
@@ -1037,7 +1158,7 @@
 		} else if (typeof method === 'object' || !method) {
 			return methods.init.apply(this, arguments);
 		} else {
-			throw 'Method ' + method + ' does not exist on jQuery.tooltip';
+			throw 'Method ' + method + ' does not exist on jQuery.note';
 		}
 	};
 })(jQuery);

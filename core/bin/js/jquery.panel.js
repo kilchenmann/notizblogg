@@ -19,7 +19,29 @@
 	// -----------------------------------------------------------------------
 	// define some functions first
 	// -----------------------------------------------------------------------
+	var blur = function(btn, action) {
+		var vague = $('.wrapper').Vague({
+			intensity:      3,		// Blur Intensity
+			forceSVGUrl:    false,	// Force absolute path to the SVG filter,
+			// default animation options
+		});
+		if(action === 'remove' && btn.hasClass('active')) {
+			vague.destroy();
+		} else {
+			// open the form
+			vague.blur();
+		}
+		btn.toggleClass('active');
+	},
 
+		checkframe = function() {
+			if($('header .btn').hasClass('active')) {
+				if($('.float_obj').is(':visible')) {
+					$('.float_obj').slideUp();
+				}
+				$('.btn').removeClass('active');
+			}
+	};
 
 	// -------------------------------------------------------------------------
 	// -------------------------------------------------------------------------
@@ -89,7 +111,8 @@
 								'type': 'search',
 								'title': 'SEARCH',
 								'placeholder': 'search',
-								'name': 'q'
+								'name': 'q',
+								'accept-charset': 'utf-8'
 							})
 							.addClass('input grp_middle search_field')
 							.focus(function () {
@@ -130,8 +153,8 @@
 				var login = {};
 
 				$this.append(
-					login.button = $('<button>')
-					.addClass('btn grp_none toggle_user')
+					login.user = $('<button>')
+					.addClass('btn grp_none user')
 				);
 
 				$this.append(
@@ -143,53 +166,53 @@
 								'action': action,
 								'method': 'post'
 							})
+							.append($('<p>')
+								.append(login.name = $('<input>')
+									.attr({
+										'type': 'text',
+										'name': 'usr',
+										'title': 'Username',
+										'placeholder': 'Username'
+									})
+								.addClass('field_obj small')
+								)
+							)
+
+							.append($('<p>')
+								.append($('<input>')
+									.attr({
+										'type': 'password',
+										'name': 'key',
+										'title': 'Password',
+										'placeholder': 'Password'
+									})
+									.addClass('field_obj small')
+								)
+							)
+							.append($('<p>')
+								.append($('<input>')
+									.attr({
+										'type': 'hidden',
+										'name': 'uri',
+										'value': NB.uri
+									})
+									.addClass('field_obj small')
+								)
+							)
+							.append($('<p>')
+								.append($('<input>')
+									.attr({
+										'type': 'submit',
+										'title': 'Login',
+										'value': 'Login'
+									}).text('Login')
+									.addClass('button small submit')
+								)
+							)
 						)
 				);
-				login.form.append($('<p>')
-					.append(login.name = $('<input>')
-						.attr({
-							'type': 'text',
-							'name': 'usr',
-							'title': 'Username',
-							'placeholder': 'Username'
-						})
-					.addClass('field_obj small')
-					)
-				)
-
-				.append($('<p>')
-					.append($('<input>')
-						.attr({
-							'type': 'password',
-							'name': 'key',
-							'title': 'Password',
-							'placeholder': 'Password'
-						})
-						.addClass('field_obj small')
-					)
-				)
-				.append($('<p>')
-					.append($('<input>')
-						.attr({
-							'type': 'hidden',
-							'name': 'uri',
-							'value': NB.uri
-						})
-						.addClass('field_obj small')
-					)
-				)
-				.append($('<p>')
-					.append($('<input>')
-						.attr({
-							'type': 'submit',
-							'title': 'Login',
-							'value': 'Login'
-						}).text('Login')
-						.addClass('button small submit')
-					)
-				);
 				// set position of float_obj
-				login.button
+				login.user
 					.on('mouseover', function() {
 						login.frame.css({
 							position: 'absolute',
@@ -198,20 +221,15 @@
 						});
 					})
 					.on('click', function() {
-					if(login.frame.is(':visible')) {
-						login.frame.slideUp();
-						$('.viewer').css({
-							'opacity': '1'
-						});
-					} else {
-						$('.viewer').css({
-							'opacity': '0.3'
-						});
-						login.frame.slideDown();
-					}
-					if(login.frame.is(':visible')) {
-						login.name.focus();
-					}
+						if(login.frame.is(':visible')) {
+							login.frame.slideUp();
+							blur(login.user, 'remove');
+						} else {
+							checkframe();
+							blur(login.user);
+							login.frame.slideDown();
+							login.name.focus();
+						}
 				});
 			});
 		},
@@ -223,7 +241,7 @@
 
 				$this.append(
 						log.user = $('<button>')
-						.addClass('btn grp_right users img')
+						.addClass('btn grp_none user img')
 						.css({
 							'background-image': 'url("' + NB.user.avatar + '")',
 							'background-repeat': 'no-repeat',
@@ -267,18 +285,15 @@
 						});
 					})
 					.on('click', function() {
-					if(log.frame.is(':visible')) {
-						log.frame.slideUp();
-						$('.viewer').css({
-							'opacity': '1'
-						});
-					} else {
-						$('.viewer').css({
-							'opacity': '0.3'
-						});
-						log.frame.slideDown();
-					}
-				});
+						if(log.frame.is(':visible')) {
+							log.frame.slideUp();
+							blur(log.user, 'remove');
+						} else {
+							checkframe();
+							blur(log.user);
+							log.frame.slideDown();
+						}
+					});
 			});
 		},
 
@@ -288,15 +303,37 @@
 			return this.each(function () {
 				var $this = $(this);
 				var localdata = $this.data('localdata');
-				var plus = {};
-
+				var form = {};
 				$this.append(
-					plus.add = $('<button>')
+					form.frame = $('<div>')
+						.addClass('float_obj large form_frame')
+						.note('add', NB.api + '/post.php')
+				);
+				$this.append(
+					form.new = $('<button>')
 						.attr({
 							'type': 'button',
 							'title': 'add new'
 						})
-						.addClass('btn grp_left add')
+						.addClass('btn grp_none plus')
+
+						.on('mouseover', function() {
+							form.frame.css({
+								position: 'absolute',
+								top: $('header').position().top + 44 +'px'
+							});
+						})
+						.on('click', function(){
+							if(form.frame.is(':visible')) {
+								form.frame.slideUp();
+								blur(form.new, 'remove');
+							} else {
+								checkframe();
+								blur(form.new);
+								form.frame.slideDown();
+								$('.first_form_ele').focus();
+							}
+						})
 					);
 				});
 			},

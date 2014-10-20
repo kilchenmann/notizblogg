@@ -59,7 +59,7 @@ input, select, button, textarea, .fake_area, .card {
 .grp_none {
   .border-radius(@rad);
   margin-left: 2px;
-  margin-right: 2px;
+  margin-right: 8px;
 }
 button {
     background-color: transparent;
@@ -209,8 +209,11 @@ button.menu {
 button.basket {
   background-position: -280px -1000px;
 }
-button.add {
+button.plus {
   background-position: -440px -1000px;
+  &.active {
+      background-position: -280px -1480px;
+  }
 }
 button.doc {
   background-position: -600px -1000px;
@@ -433,7 +436,7 @@ button.toggle_lock {
   }
 }
 */
-button.users.img {
+button.user.img {
     border-radius: 50%;
     &:hover {
 
@@ -487,7 +490,6 @@ input[type=text], input[type=password], input[type=email], input[type=date], inp
   border-left: none;
   height: 24px;
   font-size: 1em;
-  font-weight: bold;
   &:focus {
 	background-color: fade(@card, 11%);
   }
@@ -775,7 +777,7 @@ input.input, select.select {
 
 select.select {
   overflow: hidden;
-  background-image: url('icons/btn_icons.png');
+  background-image: url(../../lib/icons/btn.png);
   background-position: -50px -90px;
 }
 

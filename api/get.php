@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: ak
- * Date: 01.07.14
- * Time: 23:23
- */
 header('Content-Type: application/json; charset=utf-8');
 
  // access public: true = 1
@@ -89,6 +83,15 @@ foreach ($_GET as $key => $value){
 			echo $note->listData();
 			break;
 
+		case 'recent';
+			// the number behind the query 'new' is to limit the number of notes
+			// on the public site: get just the sources, order by dateCreated
+			// on the private site: get all newest notes
+			$note->id = $_GET['recent'];
+			$note->type = 'recent';
+			echo $note->listData();
+			break;
+
 		case 'list';
 			// the number behind the query 'list' is to limit the number of sources
 			$note->id = $_GET['list'];
@@ -100,7 +103,7 @@ foreach ($_GET as $key => $value){
 			$note->id = $_GET['bibtyp'];
 			$note->type = 'bibtyp';
 			echo $note->listData();
-			
+
 			break;
 
 		case 'q';

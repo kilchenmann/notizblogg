@@ -42,6 +42,7 @@
     <!-- some VENDOR stuff -->
     <script type="text/javascript" src="core/bin/js/vendor/md5.js"></script>
     <script type="text/javascript" src="core/bin/js/vendor/jquery.masonry.min.js"></script>
+    <script type="text/javascript" src="core/bin/js/vendor/jquery.vague.js"></script>
 
     <!-- notizblogg specific tools -->
     <!-- some functional / styling stuff -->
@@ -88,8 +89,8 @@
     </header>
     <div class="float_obj medium warning"></div>
     <!-- <div class="float_obj large pamphlet"></div> -->
-    <!-- main view: fullpage -> viewer -> wall || desk -->
-    <div id="fullpage">
+    <!-- main view: wrapper -> viewer -> wall || desk -->
+    <div class="wrapper">
         <div class="viewer">
 
         </div>
@@ -123,7 +124,7 @@
     NB.uri = NB.url + '?' + (location.search).substr(1);
 
     if (NB.uri === NB.url + '?access=denied') {
-        $('#fullpage').warning({
+        $('.wrapper').warning({
             type: 'access',
             lang: 'de'
         });
@@ -132,7 +133,7 @@
         });
         $(document).keyup(function(event) {
             if (event.keyCode == 27) {
-                $('.float_obj').hide();
+                $('.float_obj.warning').hide();
                 $('.viewer').css({
                     'opacity': '1'
                 });
@@ -212,8 +213,8 @@
     /* remove the floating elements on clicking the esc-key */
     $(document).keyup(function(event) {
         if (event.keyCode == 27) {
-            if ($('.float_obj').is(':visible')) {
-                $('.float_obj').hide();
+            if ($('.float_obj.warning').is(':visible')) {
+                $('.float_obj.warning').hide();
                 $('.viewer').css({
                     'opacity': '1'
                 });
