@@ -28,7 +28,7 @@ input, select, button, textarea, .fake_area, .card {
 // buttons are defined as input button type with the following three classes // (element + position + action) // element: .btn // position: .grp_left || .grp_middle || .grp_right || grp_none // action: .toggle_drawer (as example)
 .btn {
   width: 40px;
-  height: 32px;
+  height: 40px;
 //  background-color: @bg;
 //  background-color: lighten(@bg, 20%);
   background-color: transparent;
@@ -37,11 +37,11 @@ input, select, button, textarea, .fake_area, .card {
   background-repeat: no-repeat;
 //  border: 0px solid darken(@bg, 5%);
   cursor: pointer;
-
+  opacity: 1;
   &:hover {
 //	background-color: darken(@bg, 20%);
 	//background-color: transparent;
-    opacity: 1;
+    opacity: 0.8;
   }
 }
 .grp_left, .grp_middle, .grp_right {
@@ -61,7 +61,10 @@ input, select, button, textarea, .fake_area, .card {
   margin-left: 2px;
   margin-right: 2px;
 }
-
+button {
+    background-color: transparent;
+    border: none;
+}
 button.toggle_labels,
 button.toggle_add,
 button.toggle_delete,
@@ -88,35 +91,237 @@ button.fake_btn {
 /* ------------ */
 /* button icons */
 /* ------------ */
+button.home {
+  background-position: -120px -160px;
+}
+button.notification {
+  background-position: -280px -160px;
+}
+button.video {
+  background-position: -440px -160px;
+}
+button.compass {
+  background-position: -600px -160px;
+}
+button.file {
+  background-position: -760px -160px;
+}
+// --
+button.location {
+  background-position: -120px -280px;
+}
+button.lock {
+  background-position: -280px -280px;
+}
+button.trash {
+  background-position: -440px -280px;
+}
+button.presentation {
+  background-position: -600px -280px;
+}
+button.target {
+  background-position: -760px -280px;
+}
+// --
+button.mute {
+  background-position: -120px -400px;
+}
+button.search {
+  background-position: -280px -400px;
+}
+button.users {
+  background-position: -440px -400px;
+}
+button.calendar {
+  background-position: -600px -400px;
+}
+button.social {
+  background-position: -760px -400px;
+}
+// --
+button.link {
+  background-position: -120px -520px;
+}
+button.comment {
+  background-position: -280px -520px;
+}
+button.save {
+  background-position: -440px -520px;
+}
+button.purchase {
+  background-position: -600px -520px;
+}
+button.exit {
+  background-position: -760px -520px;
+}
+// --
+button.edit {
+  background-position: -120px -640px;
+}
+button.mail {
+  background-position: -280px -640px;
+}
+button.case {
+  background-position: -440px -640px;
+}
+button.picture {
+  background-position: -600px -640px;
+}
+button.download {
+  background-position: -760px -640px;
+}
+// --
+button.more {
+  background-position: -120px -760px;
+}
+button.photo {
+  background-position: -280px -760px;
+}
+button.like {
+  background-position: -440px -760px;
+}
+button.cup {
+  background-position: -600px -760px;
+}
+button.statistic {
+  background-position: -760px -760px;
+}
+// --
+button.volume {
+  background-position: -120px -880px;
+}
+button.time {
+  background-position: -280px -880px;
+}
+button.bookmarks {
+  background-position: -440px -880px;
+}
+button.bookmark {
+  background-position: -600px -880px;
+}
+button.share {
+  background-position: -760px -880px;
+}
+// --
+button.menu {
+  background-position: -120px -1000px;
+}
+button.basket {
+  background-position: -280px -1000px;
+}
+button.add {
+  background-position: -440px -1000px;
+}
+button.doc {
+  background-position: -600px -1000px;
+}
+button.memory {
+  background-position: -760px -1000px;
+}
+// --
+button.list {
+  background-position: -120px -1120px;
+}
+button.user {
+  background-position: -280px -1120px;
+}
+button.music {
+  background-position: -440px -1120px;
+}
+button.view {
+  background-position: -600px -1120px;
+}
+button.expand {
+  background-position: -760px -1120px;
+}
+// --
+button.label {
+  background-position: -120px -1240px;
+}
+button.flag {
+  background-position: -280px -1240px;
+}
+button.notebook {
+  background-position: -440px -1240px;
+}
+button.add2basket {
+  background-position: -600px -1240px;
+}
+button.refresh {
+  background-position: -760px -1240px;
+}
+// --
+button.settings {
+  background-position: -120px -1360px;
+}
+button.support {
+  background-position: -280px -1360px;
+}
+button.dashboard {
+  background-position: -440px -1360px;
+}
+button.microphone {
+  background-position: -600px -1360px;
+}
+button.folder {
+  background-position: -760px -1360px;
+}
+// --
+button.left {
+  background-position: -120px -1480px;
+}
+button.close {
+  background-position: -280px -1480px;
+}
+button.done {
+  background-position: -440px -1480px;
+}
+button.off {
+  background-position: -600px -1480px;
+}
+button.right {
+  background-position: -760px -1480px;
+}
+// --
+button.rewind {
+  background-position: -120px -1600px;
+}
+button.shuffle {
+  background-position: -280px -1600px;
+}
+button.play {
+  background-position: -440px -1600px;
+}
+button.loop {
+  background-position: -600px -1600px;
+}
+button.forward {
+  background-position: -760px -1600px;
+}
+// --
+
+/*
+
 button.toggle_drawer {
-  background-position: -40px -30px;
-  &:hover {
-	background-position: 0px -30px;
-  }
+  background-position: -120px -760px;
 }
 button.toggle_power {
-  background-position: -40px -60px;
-  &:hover {
-	background-position: 0px -60px;
-  }
+  background-position: -600px -1480px;
 }
 button.search_btn {
-  background-position: -333px -445px;
+  background-position: -282px -406px;
 }
 button.search_filter {
-  background-position: -40px -120px;
-  &:hover {
-	background-position: 0px -120px;
-  }
+  background-position: -280px -400px;
 }
 button.toggle_add {
-  background-position: -460px -1080px;
+  background-position: -440px -1000px;
+  &:hover {
+    background-position: -280px -1480px;
+  }
 }
 button.toggle_delete {
-  background-position: -40px -180px;
-  &:hover {
-	background-position: 0px -180px;
-  }
+  background-position: -280px -1480px;
 }
 button.toggle_link {
   background-position: -40px -210px;
@@ -177,13 +382,13 @@ button.toggle_cite {
   }
 }
 button.toggle_comment {
-  background-position: -40px -510px;
+  background-position: -600px -1000px;
   &:hover {
 	background-position: 0px -510px;
   }
 }
 button.toggle_expand {
-  background-position: -715px -1206px;
+  background-position: -760px -1120px;
 }
 button.toggle_collapse {
   background-position: -40px -570px;
@@ -198,7 +403,7 @@ button.toggle_notes {
   }
 }
 button.toggle_edit {
-  background-position: -40px -630px;
+  background-position: -120px -640px;
   &:hover {
 	background-position: 0px -630px;
   }
@@ -227,16 +432,14 @@ button.toggle_lock {
 	background-position: 0px -750px;
   }
 }
-
-button.toggle_user.img {
-    opacity: 0.6;
-    width: 32px;
-    height: 32px;
+*/
+button.users.img {
     border-radius: 50%;
     &:hover {
-        opacity: 1;
+
     }
 }
+
 /* button end */
 /* ------------------------------------------------------------------------- */
 
@@ -256,19 +459,24 @@ span.search {
     display: table-cell;
     width: 520px;
     margin-left: -260px;
+    margin-top: 4px;
 
-    input[type=search], button.search_btn {
+    input[type=search], button.search {
 //        height: 31px;
         background-color: @card;
+        margin: 0;
+        padding: 0;
     }
     input[type=search] {
-      margin: 0;
-      padding: 0 4px 0 4px;
       .border-radius-custom (@rad, 0, 0, @rad);
       width: 470px;
       font-size: 1em;
       font-weight: bold;
       text-align: center;
+      height: 30px;
+    }
+    button.search {
+        height: 32px;
     }
 }
 

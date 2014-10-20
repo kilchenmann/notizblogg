@@ -117,7 +117,7 @@
 								'type': 'submit',
 								'title': 'GO!'
 							})
-							.addClass('btn grp_right search_btn')
+							.addClass('btn grp_right search')
 						)
 					);
 			});
@@ -223,7 +223,7 @@
 
 				$this.append(
 						log.user = $('<button>')
-						.addClass('btn grp_right toggle_user img')
+						.addClass('btn grp_right users img')
 						.css({
 							'background-image': 'url("' + NB.user.avatar + '")',
 							'background-repeat': 'no-repeat',
@@ -296,7 +296,7 @@
 							'type': 'button',
 							'title': 'add new'
 						})
-						.addClass('btn grp_left toggle_add')
+						.addClass('btn grp_left add')
 					);
 				});
 			},
