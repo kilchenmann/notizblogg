@@ -58,7 +58,7 @@
 			return locations;
 		},
 		getSource = function (data) {
-			var i, authors, locations, biblio, bibtex, footnote, source, bib;
+			var i, authors, locations, biblio, bibtex, footnote, source, bib, crossref, insource = {};
 			// return source.biblio, source.bibtex;
 			source = data.source;
 			if(source.id !== 0) {
@@ -100,7 +100,6 @@
 					//var crossref = [];
 					var pages;
 					i = 0;
-					var insource = {};
 					while (i < countDetail) {
 						detailKey = Object.keys(source.detail)[i];
 						switch (detailKey) {
@@ -113,7 +112,7 @@
 								biblio += '(Stand: ' + source.detail.urldate + ')';
 								break;
 							case 'crossref':
-								var crossref = source.detail.crossref.source, crossTitle = '', crossAuthors, crossLocations;
+								crossref = source.detail.crossref.source, crossTitle = '', crossAuthors, crossLocations;
 								bibtex += 'crossref = {' + crossref.name + '},<br>';
 								//console.log(crossref.author);
 								crossAuthors = getAuthors(crossref.author);
@@ -169,29 +168,11 @@
 			}
 			return bib;
 		},
-		createNote = function(ele) {
-			var note_ele = {};
-			ele.append(
-				note_ele.media = $('<div>').addClass('media')
-			)
-				.append(
-				note_ele.content = $('<div>').addClass('text')
-			)
-				.append(
-				note_ele.content4tex = $('<div>').addClass('latex')
-			)
-				.append(
-				$('<div>').addClass('label')
-					.append(
-					note_ele.label = $('<p>')
-				)
-			)
-				.append(
-				note_ele.tools = $('<div>').addClass('tools')
-			);
-			return note_ele;
+		getMedia = function() {
+
 		},
-		createToolBar = function(ele) {
+
+		createNote = function(ele) {
 			var note_ele = {};
 			ele.append(
 				note_ele.media = $('<div>').addClass('media')
@@ -233,11 +214,35 @@
 			}
 		},
 
+		createToolBar = function(ele) {
+			var note_ele = {};
+			ele.append(
+				note_ele.media = $('<div>').addClass('media')
+			)
+				.append(
+				note_ele.content = $('<div>').addClass('text')
+			)
+				.append(
+				note_ele.content4tex = $('<div>').addClass('latex')
+			)
+				.append(
+				$('<div>').addClass('label')
+					.append(
+					note_ele.label = $('<p>')
+				)
+			)
+				.append(
+				note_ele.tools = $('<div>').addClass('tools')
+			);
+			return note_ele;
+		},
+
 		dispNote = function (ele, data, localdata) {
 			var note = {};
 			var source = {};
 			var note_id = data.note.id;
 			var source_id;
+			var foot = {}, fn, fc;
 
 			if (note_id !== 0) {
 				var note_ele = ele.addClass('item').attr({'id': note_id});
@@ -261,11 +266,11 @@
 				// (1) do we need a footnote and (2) have we done already a request for the right footnote?
 				source_id = data.note.source.id;
 				if (source_id > 0) {
+					var pageHere, page;
 					if(!(source_id in localdata.footnote)) {
 						localdata.footnote[source_id] = {};
-						var url = NB.api + '/get.php?source=' + source_id,
-							foot = {},
-							fc = data.note.source.name,				// footcite in latex
+						var url = NB.api + '/get.php?source=' + source_id;
+							fc = data.note.source.name;				// footcite in latex
 							fn = fc;								// footnote in text
 
 						$.getJSON(url, function (sourcedata) {
@@ -283,12 +288,12 @@
 						fc = foot.fc;
 					}
 					if (data.note.page.start !== 0) {
-						var page = data.note.page.start;
+						page = data.note.page.start;
 						var dif = Math.round(data.note.page.end - data.note.page.start);
 						if (dif > 0) {
 							page = data.note.page.start + '-' + data.note.page.end;
 						}
-						var pageHere = ' S. ' + page + '.';
+						pageHere = ' S. ' + page + '.';
 					}
 					if (foot.footnote !== undefined) {
 						fn = fn + pageHere;
@@ -536,6 +541,7 @@
 						type = 'note';
 					}
 
+
 					if (localdata.settings.access === '1') {
 						edit = false;
 						edit_ele = $('<button>').addClass('btn grp_none fake_btn');
@@ -549,7 +555,6 @@
 							data: note_obj,
 							show: 'form'
 						});
-
 					}
 
 					if ($note.children('.latex').length > 0) {
@@ -640,6 +645,18 @@
 				'bibtex': bibtex
 			});
 
+		},
+
+		option = function(select_ele, request) {
+			url = NB.api + '/get.php?' + request;
+			$.getJSON(url, function (data) {
+				for (var k in data.notes) {
+					select_ele.append($('<option>')
+						.html(data.notes[k].split('::')[1])
+						.attr({'value': data.notes[k].split('::')[0]})
+					);
+				}
+			});
 		};
 
 
@@ -998,51 +1015,14 @@
 				var localdata = $this.data('localdata');
 				//console.log(localdata);
 				var form = {}, bibtyp, source, recent;
-
-				bibtyp = NB.api + '/get.php?list=bibtyp';
-				$.getJSON(bibtyp, function (data) {
-					//form.bibtyp = ;
-					form.bibtyp.html($('<option>')
-						.html('recent')
-						.attr({'value': '0'})
-					);
-					for (var k in data.notes) {
-						form.bibtyp.append($('<option>')
-							.html(data.notes[k].split('::')[1])
-							.attr({'value': data.notes[k].split('::')[0]})
-						);
-					}
-				});
-
-				recent = NB.api + '/get.php?recent=3';
-				$.getJSON(recent, function (data) {
-					//form.bibtyp = ;
-					for (var k in data.notes) {
-						form.source.append($('<option>')
-							.html(data.notes[k].split('::')[1])
-							.attr({'value': data.notes[k].split('::')[0]})
-						);
-					}
-				});
-
-				source = NB.api + '/get.php?list=source';
-				$.getJSON(source, function (data) {
-					//form.bibtyp = ;
-					for (var k in data.notes) {
-						form.source.append($('<option>')
-							.html(data.notes[k].split('::')[1])
-							.attr({'value': data.notes[k].split('::')[0]})
-						);
-					}
-				});
-
+				// select a source first
 				$this.html(
 					form.form = $('<form>')
 					.attr({
 						'action': action,
 						'method': 'post'
 					})
-					.append($('<p>')
+					.append(form.select_source = $('<p>')
 						.append(form.bibtyp = $('<select>')
 							.attr({
 								'name': 'bibtyp'
@@ -1051,40 +1031,11 @@
 							.change(function() {
 								form.source.empty();
 								if(form.bibtyp.val() === '0') {
-									recent = NB.api + '/get.php?recent=3';
-									$.getJSON(recent, function (data) {
-										//form.bibtyp = ;
-										for (var k in data.notes) {
-											form.source.append($('<option>')
-												.html(data.notes[k].split('::')[1])
-												.attr({'value': data.notes[k].split('::')[0]})
-											);
-										}
-									});
-
-									source = NB.api + '/get.php?list=source';
-									$.getJSON(source, function (data) {
-										//form.bibtyp = ;
-										for (var k in data.notes) {
-											form.source.append($('<option>')
-												.html(data.notes[k].split('::')[1])
-												.attr({'value': data.notes[k].split('::')[0]})
-											);
-										}
-									});
+									option(form.source, 'recent=3');
+									option(form.source, 'list=source');
 								} else {
-									source = NB.api + '/get.php?bibtyp=' + form.bibtyp.val();
-									$.getJSON(source, function (data) {
-										//form.bibtyp = ;
-										for (var k in data.notes) {
-											form.source.append($('<option>')
-												.html(data.notes[k].split('::')[1])
-												.attr({'value': data.notes[k].split('::')[0]})
-											);
-										}
-									});
+									option(form.source, 'bibtyp=' + form.bibtyp.val());
 								}
-
 							})
 						)
 						.append(form.source = $('<select>')
@@ -1092,6 +1043,13 @@
 								'name': 'source'
 							})
 							.addClass('field_obj large select')
+							.change(function() {
+								form.selected_source.empty();
+								url = NB.api + '/get.php?source=' + form.source.val();
+								$.getJSON(url, function (data) {
+									dispBib(form.selected_source, data, localdata);
+								});
+							})
 						)
 						.append(form.new = $('<input>')
 							.attr({
@@ -1103,7 +1061,7 @@
 						)
 					)
 
-					.append($('<p>')
+					.append(form.selected_source = $('<p>')
 
 					)
 					.append($('<p>')
@@ -1114,6 +1072,13 @@
 					)
 				);
 
+				form.bibtyp.html($('<option>')
+					.html('recent')
+					.attr({'value': '0'})
+				);
+				option(form.bibtyp, 'list=bibtyp');
+				option(form.source, 'recent=3');
+				option(form.source, 'list=source');
 			});
 
 		},
