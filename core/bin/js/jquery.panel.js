@@ -231,6 +231,14 @@
 							login.name.focus();
 						}
 				});
+				$(document).keyup(function(event) {
+					if (event.keyCode == 27) {
+						if(login.frame.is(':visible')) {
+							login.frame.slideUp();
+							blur(login.user, 'remove');
+						}
+					}
+				});
 			});
 		},
 		log: function (action) {
@@ -294,6 +302,14 @@
 							log.frame.slideDown();
 						}
 					});
+				$(document).keyup(function(event) {
+					if (event.keyCode == 27) {
+						if(log.frame.is(':visible')) {
+							log.frame.slideUp();
+							blur(log.user, 'remove');
+						}
+					}
+				});
 			});
 		},
 
@@ -335,6 +351,14 @@
 							}
 						})
 					);
+					$(document).keyup(function(event) {
+						if (event.keyCode == 27) {
+							if(form.frame.is(':visible')) {
+								form.frame.slideUp();
+								blur(form.new, 'remove');
+							}
+						}
+					});
 				});
 			},
 
