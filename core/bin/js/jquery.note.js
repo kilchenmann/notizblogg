@@ -23,6 +23,17 @@
 			}
 			return(string + ' ');
 		},
+		option = function(select_ele, request) {
+			url = NB.api + '/get.php?' + request;
+			$.getJSON(url, function (data) {
+				for (var k in data.notes) {
+					select_ele.append($('<option>')
+						.html(data.notes[k].split('::')[1])
+						.attr({'value': data.notes[k].split('::')[0]})
+					);
+				}
+			});
+		},
 		getAuthors = function (author) {
 			// authors
 			var i = 0, authors = undefined;
@@ -112,7 +123,8 @@
 								biblio += '(Stand: ' + source.detail.urldate + ')';
 								break;
 							case 'crossref':
-								crossref = source.detail.crossref.source, crossTitle = '', crossAuthors, crossLocations;
+								crossref = source.detail.crossref.source;
+								var crossTitle = '', crossAuthors, crossLocations;
 								bibtex += 'crossref = {' + crossref.name + '},<br>';
 								//console.log(crossref.author);
 								crossAuthors = getAuthors(crossref.author);
@@ -164,14 +176,13 @@
 					biblio: undefined,
 					bibtex: undefined,
 					footnote: undefined
-				}
+				};
 			}
 			return bib;
 		},
 		getMedia = function() {
 
 		},
-
 		createNote = function(ele) {
 			var note_ele = {};
 			ele.append(
@@ -645,18 +656,6 @@
 				'bibtex': bibtex
 			});
 
-		},
-
-		option = function(select_ele, request) {
-			url = NB.api + '/get.php?' + request;
-			$.getJSON(url, function (data) {
-				for (var k in data.notes) {
-					select_ele.append($('<option>')
-						.html(data.notes[k].split('::')[1])
-						.attr({'value': data.notes[k].split('::')[0]})
-					);
-				}
-			});
 		};
 
 
@@ -735,9 +734,9 @@
 												dispNote(localdata.view.note, data, localdata);
 											}
 										}
-									})
+									});
 								}
-							})
+							});
 						});
 						break;
 					case 'source':
