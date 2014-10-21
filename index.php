@@ -181,8 +181,12 @@
         $('div.viewer').css({
             'height': height
         });
-        $('.float_obj').center();
+        $('.float_obj.warning').center();
         // set the numbers of wall columns
+
+        $('.float_obj.form_frame').center('horizontal');
+        $('.float_obj.logout_frame').center('horizontal');
+        $('.float_obj.logout_frame').center('bound2object', $('button.user'));
 
         if ($('.wall').length !== 0) {
             var width = $(window).width();

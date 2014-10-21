@@ -280,7 +280,7 @@
 					.on('mouseover', function() {
 						log.frame.css({
 							position: 'absolute',
-							top: $('header').position().top + 44 +'px',
+							top: $('header').position().top + $('header').height() +'px',
 							left: $(this).position().left - log.frame.width() + 'px'
 						});
 					})
@@ -320,7 +320,7 @@
 						.on('mouseover', function() {
 							form.frame.css({
 								position: 'absolute',
-								top: $('header').position().top + 44 +'px'
+								top: $('header').position().top + $('header').height() +'px'
 							});
 						})
 						.on('click', function(){
