@@ -35,7 +35,8 @@
 
     <!-- jQUERY LIBrary -->
     <script type="text/javascript" src="core/lib/jquery-1.10.2.min.js"></script>
-    <!-- and my FUNCTIONS library -->
+    <!-- and my SETTINGS and FUNCTIONS library -->
+    <script type="text/javascript" src="settings.js"></script>
     <script type="text/javascript" src="core/bin/js/functions.js"></script>
 
 
@@ -111,7 +112,6 @@
 
 
 <script type="text/javascript">
-    NB = {};
     NB.access = '<?php echo $user['access']; ?>';
     NB.user = {
         id: '<?php echo  $user['id']; ?>',
@@ -119,9 +119,9 @@
         avatar: '<?php echo  $user['avatar']; ?>'
     };
 
-//  NB.url = window.location.href; //+ window.location.pathname;
-    NB.url = '<?php echo __SITE_URL__; ?>';
-    NB.uri = NB.url + '?' + (location.search).substr(1);
+    //NB.url = '<?php echo __SITE_URL__; ?>';
+    NB.query = getUrlVars();
+    NB.uri = NB.url + (location.search);
 
     if (NB.uri === NB.url + '?access=denied') {
         $('.wrapper').warning({
@@ -143,11 +143,14 @@
         NB.uri = NB.url;
     }
 
+/*
+
     NB.api = '<?php echo __SITE_API__; ?>';
     NB.media = '<?php echo __MEDIA_URL__; ?>';
 
-    NB.query = getUrlVars();
+*/
 
+//console.log(NB);
     //
     // when window is LOADing
     //

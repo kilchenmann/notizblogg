@@ -1,6 +1,6 @@
 /* ===========================================================================
  *
- * @frame: jQuery plugin for lakto — flat one page and responsive webdesign template
+ * @frame: jQuery plugin for notizblogg
  *
  * @author André Kilchenmann code@milchkannen.ch
  *
@@ -23,7 +23,7 @@
 			}
 			return(string + ' ');
 		},
-		option = function(select_ele, request) {
+		selOption = function(select_ele, request) {
 			url = NB.api + '/get.php?' + request;
 			$.getJSON(url, function (data) {
 				for (var k in data.notes) {
@@ -36,7 +36,7 @@
 		},
 		getAuthors = function (author) {
 			// authors
-			var i = 0, authors = undefined;
+			var i = 0, authors;
 			if (author.length > 4) {
 				authors = '<a href=\'?author=' + author[i].id + '\'>' + author[i].name + '</a> et al.';
 			} else {
@@ -53,7 +53,7 @@
 		},
 		getLocations = function (location) {
 			// locations
-			var i = 0, locations = undefined;
+			var i = 0, locations;
 			if (location.length > 4) {
 				locations = location[i].name + ' et al.';
 			} else {
@@ -312,7 +312,7 @@
 					} else {
 						fn = fn + ',' + pageHere;
 					}
-					note.content4tex.append($('<p>').addClass('footnote bibtex').html('\\footcite[' + page + ']{<a href=\'?source=' + data.note.source.id + '\'>' + fc + '</a>'));
+					note.content4tex.append($('<p>').addClass('footnote bibtex').html('\\footcite[' + page + ']{<a href=\'?source=' + data.note.source.id + '\'>' + fc + '</a>}'));
 					note.content.append($('<p>').addClass('footnote biblio').append($('<a>').attr({href: '?source=' + data.note.source.id}).html(fn)));
 				}
 				var latex, tex_ele, classNote;
@@ -484,6 +484,7 @@
 			var note = {};
 			var source = {};
 			var source_id = data.source.id;
+			var biblio, bibtex;
 
 			if (source_id !== 0) {
 				var note_ele = ele.addClass('item topic').attr({'id': source_id});
@@ -613,6 +614,16 @@
 					//		console.log(note_obj);
 
 				});
+
+			} else {
+
+				$('.wrapper').warning({
+					type: 'noresults',
+					lang: 'de'
+				});
+				$('body').on('click', function () {
+					window.location.href = NB.url;
+				});
 			}
 
 //console.log(data);
@@ -638,23 +649,12 @@
 			} else {
 				//		bibtex = 'The data are not yet ready to use in laTex.';
 				//		biblio = '<a href=\'?source=' + data.source.id + '\' >' + data.source.comment + '</a>';
-				if($('div.note').length === 0) {
-					$('.wrapper').warning({
-						type: 'noresults',
-						lang: 'de'
-					});
-					$('body').on('click', function () {
-						window.location.href = NB.url;
-					});
-				}
+
 
 			}
 
 
-			return({
-				'biblio': biblio,
-				'bibtex': bibtex
-			});
+
 
 		};
 
@@ -1030,10 +1030,10 @@
 							.change(function() {
 								form.source.empty();
 								if(form.bibtyp.val() === '0') {
-									option(form.source, 'recent=3');
-									option(form.source, 'list=source');
+									selOption(form.source, 'recent=3');
+									selOption(form.source, 'list=source');
 								} else {
-									option(form.source, 'bibtyp=' + form.bibtyp.val());
+									selOption(form.source, 'bibtyp=' + form.bibtyp.val());
 								}
 							})
 						)
@@ -1075,9 +1075,9 @@
 					.html('recent')
 					.attr({'value': '0'})
 				);
-				option(form.bibtyp, 'list=bibtyp');
-				option(form.source, 'recent=3');
-				option(form.source, 'list=source');
+				selOption(form.bibtyp, 'list=bibtyp');
+				selOption(form.source, 'recent=3');
+				selOption(form.source, 'list=source');
 			});
 
 		},
