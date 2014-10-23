@@ -12,12 +12,7 @@
  * ===========================================================================
  * ======================================================================== */
 
-* {
-  color: @ink;
-}
-
 input, select, button, textarea, .fake_area, .card {
-  color: @ink;
   background-color: fade(@bg, 22%);
   border-top: 1px solid darken(@bg, 8%);
   border-left: 1px solid lighten(@bg, 8%);
@@ -449,7 +444,7 @@ button.user.img {
 
 /* form start */
 
-label, input[type=submit], input[type=reset], input[type=file] {
+label, input[type=submit], input[type=reset], input[type=file], input[type=button] {
   cursor: pointer;
 }
 input, textarea, .fake_area, select, label, .media.field_obj, label span {
@@ -474,7 +469,6 @@ span.search {
     input[type=search] {
       .border-radius-custom (@rad, 0, 0, @rad);
       width: 470px;
-      font-weight: bold;
       text-align: center;
       height: 30px;
     }
@@ -807,4 +801,30 @@ span.formfield {
 	padding-left: 2px;
 	margin-left: 4px;
   }
+}
+
+
+.left {
+    text-align: left;
+}
+.center {
+    text-align: center;
+}
+.right {
+    text-align: right;
+}
+
+.separation {
+
+    &.horizontal {
+        border-bottom: 1px solid fade(@ink, 50%);
+    }
+
+    &.vertical.left {
+        border-left: 1px solid fade(@ink, 50%);
+    }
+
+    &.vertical.right {
+        border-right: 1px solid fade(@ink, 50%);
+    }
 }

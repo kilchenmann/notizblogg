@@ -16,14 +16,24 @@
 	// -----------------------------------------------------------------------
 	// define some functions
 	// -----------------------------------------------------------------------
-	var selOption = function(select_ele, request) {
-			url = NB.api + '/get.php?' + request;
+	var selOption = function(select_ele, request, selected_ele) {
+			var url = NB.api + '/get.php?' + request, url2;
 			$.getJSON(url, function (data) {
 				for (var k in data.notes) {
+//					console.log(k + ': ' + data.notes[k].split('::')[0]);
 					select_ele.append($('<option>')
 						.html(data.notes[k].split('::')[1])
 						.attr({'value': data.notes[k].split('::')[0]})
 					);
+				}
+				if(selected_ele) {
+					selected_ele.empty();
+					if(data.notes[0] !== undefined) {
+						url2 = NB.api + '/get.php?source=' + data.notes[0].split('::')[0];
+						$.getJSON(url2, function (data2) {
+							selected_ele.html(getSource(data2).biblio).attr({'id': data.notes[0].split('::')[0]});
+						});
+					}
 				}
 			});
 		},
@@ -885,71 +895,132 @@
 				var $this = $(this);
 				var localdata = $this.data('localdata');
 				//console.log(localdata);
-				var form = {}, bibtyp, source, recent;
+				var form = {}, bibtyp, source, recent, recent_url, recent_data, opt_val;
+
+				form.source = {};
+				form.note = {};
+
 				// select a source first
 				$this.html(
 					form.form = $('<form>')
-					.attr({
-						'action': action,
-						'method': 'post'
-					})
-					.append(form.select_source = $('<p>')
-						.append(form.bibtyp = $('<select>')
-							.attr({
-								'name': 'bibtyp'
-							})
-							.addClass('field_obj small select first_form_ele')
-							.change(function() {
-								form.source.empty();
-								if(form.bibtyp.val() === '0') {
-									selOption(form.source, 'recent=3');
-									selOption(form.source, 'list=source');
-								} else {
-									selOption(form.source, 'bibtyp=' + form.bibtyp.val());
-								}
-							})
-						)
-						.append(form.source = $('<select>')
-							.attr({
-								'name': 'source'
-							})
-							.addClass('field_obj large select')
-							.change(function() {
-								form.selected_source.empty();
-								url = NB.api + '/get.php?source=' + form.source.val();
-								$.getJSON(url, function (data) {
-									dispBib(form.selected_source, data, localdata);
-								});
-							})
-						)
-						.append(form.new = $('<input>')
-							.attr({
-								'name': 'newsource',
-								'type': 'button',
-								'value': 'new'
-							})
-							.addClass('btn grp_none new')
+						.attr({
+							'action': action,
+							'method': 'post'
+						}).addClass('form_frame')
+						.append(
+							$('<div>').addClass('top source_form active')
+							.append($('<table>').addClass('source_form')
+							.append(form.source.info = $('<tr>')
+								.append($('<th>')
+									.attr({'colspan': '2'})
+									.text('Select a source / theme...')
+									.addClass('left')
+								)
+								.append($('<th>').text('or ADD'))
+							)
+							.append(form.source.select = $('<tr>')
+								.append($('<td>')
+									.append(form.source.typ = $('<select>')
+									.attr({
+										'name': 'bibtyp'
+									})
+									.addClass('field_obj small select bibtyp first_form_ele')
+									.change(function() {
+										form.source.bib.empty();
+										if(form.source.typ.val() === '0') {
+											selOption(form.source.bib, 'recent=3', form.source.selected);
+											selOption(form.source.bib, 'list=source');
+										} else {
+											selOption(form.source.bib, 'bibtyp=' + form.source.typ.val(), form.source.selected);
+										}
+									}))
+								)
+								.append($('<td>')
+									.append(form.source.bib = $('<select>')
+									.attr({
+										'name': 'source'
+									})
+									.addClass('field_obj large select source')
+									.change(function() {
+										form.source.selected.empty();
+										url = NB.api + '/get.php?source=' + form.source.bib.val();
+										$.getJSON(url, function (data) {
+											//dispBib(form.selected_source, data, localdata);
+											form.source.selected.html(getSource(data).biblio).attr({'id': form.source.bib.val()});
+										});
+									}))
+								)
+								.append($('<td>')
+									.append($('<input>')
+									.attr({
+										'name': 'newsource',
+										'type': 'button',
+										'value': 'new'
+									})
+									.addClass('button small new')
+									)
+								)
+							)
+
+							.append($('<tr>')
+								.append(form.source.selected = $('<td>')
+									.attr({'colspan': '2'})
+									.addClass('selected center')
+								)
+								.append($('<td>')
+									.append($('<input>')
+									.attr({
+										'name': 'editsource',
+										'type': 'button',
+										'value': 'edit'
+									})
+									.addClass('button small edit')
+									)
+								)
+							)
 						)
 					)
-
-					.append(form.selected_source = $('<p>')
-
-					)
-					.append($('<p>')
-
-					)
-					.append($('<p>')
-
+					.append(
+						$('<div>').addClass('bottom note_form')
+						.append($('<table>').addClass('source_form')
+							/*
+							.append(form.note.info = $('<tr>')
+								.append($('<th>')
+									.attr({'colspan': '2'})
+									.text('Select a source / theme...')
+									.addClass('left')
+								)
+								.append($('<th>').text('or ADD'))
+							)
+							*/
+							.append(form.note.select = $('<tr>')
+								.append($('<td>'))
+							)
+						)
 					)
 				);
 
-				form.bibtyp.html($('<option>')
+				form.source.typ.html($('<option>')
 					.html('recent')
 					.attr({'value': '0'})
 				);
-				selOption(form.bibtyp, 'list=bibtyp');
-				selOption(form.source, 'recent=3');
-				selOption(form.source, 'list=source');
+				selOption(form.source.typ, 'list=bibtyp');
+				selOption(form.source.bib, 'recent=3', form.source.selected);
+				selOption(form.source.bib, 'list=source');
+
+				/*
+				recent_url = NB.api + '/get.php?recent=1';
+				$.getJSON(recent_url, function (rec) {
+					for (var k in rec.notes) {
+						recent_data = NB.api + '/get.php?source=' + rec.notes[k].split('::')[0];
+						$.getJSON(recent_data, function (data) {
+							form.source.selected.html(getSource(data).biblio);
+						});
+					}
+
+				});
+				*/
+
 			});
 
 		},
