@@ -320,7 +320,7 @@
 				var $this = $(this);
 				var localdata = $this.data('localdata');
 				var form = {};
-				$this.append(
+				$('header').after(
 					form.frame = $('<div>')
 						.addClass('float_obj large form_frame')
 						.note('add', NB.api + '/post.php')
