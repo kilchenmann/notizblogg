@@ -965,7 +965,7 @@
 							.append($('<tr>')
 								.append(form.source.selected = $('<td>')
 									.attr({'colspan': '2'})
-									.addClass('selected center')
+									.addClass('selected source center')
 								)
 								.append($('<td>')
 									.append($('<input>')
@@ -975,6 +975,9 @@
 										'value': 'edit'
 									})
 									.addClass('button small edit')
+									.on('click', function() {
+										console.log($('.selected.source').attr('id'));
+									})
 									)
 								)
 							)
