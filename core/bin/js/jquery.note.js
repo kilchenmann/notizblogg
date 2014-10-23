@@ -16,14 +16,7 @@
 	// -----------------------------------------------------------------------
 	// define some functions
 	// -----------------------------------------------------------------------
-	var getLastChar = function (string) {
-			var lastChar = string.substr(string.length - 1);
-			if ((lastChar !== '?') && (lastChar !== '!')) {
-				string += '.';
-			}
-			return(string + ' ');
-		},
-		selOption = function(select_ele, request) {
+	var selOption = function(select_ele, request) {
 			url = NB.api + '/get.php?' + request;
 			$.getJSON(url, function (data) {
 				for (var k in data.notes) {
@@ -225,27 +218,110 @@
 			}
 		},
 
-		createToolBar = function(ele) {
-			var note_ele = {};
-			ele.append(
-				note_ele.media = $('<div>').addClass('media')
-			)
-				.append(
-				note_ele.content = $('<div>').addClass('text')
-			)
-				.append(
-				note_ele.content4tex = $('<div>').addClass('latex')
-			)
-				.append(
-				$('<div>').addClass('label')
+		createTool = function(tools_ele, localdata) {
+			tools_ele.each(function () {
+				var tools = $(this),
+					note = tools_ele.parent($('.note')),
+					nID = note.attr('id'),
+					sID = tools.attr('id'),
+					edit_ele,
+					tex_ele,
+					exp_ele,
+					type,
+					divs = note.contents(),
+					edit;
+				var note_obj = {};
+				for (var i = 0; i < divs.filter("div").length; i++) {
+					var ele;
+					switch (i) {
+						case 0:
+							ele = 'media';
+							break;
+						case 1:
+							ele = 'text';
+							break;
+						case 2:
+							ele = 'latex';
+							break;
+						case 3:
+							ele = 'label';
+							break;
+						case 4:
+							ele = 'tools';
+							break;
+						default:
+							ele = 'empty';
+					}
+					note_obj[ele] = divs[i].innerHTML;
+				}
+
+				if (note.hasClass('topic') && nID === sID) {
+					type = 'source';
+				} else {
+					type = 'note';
+				}
+
+				if (localdata.settings.access === '1') {
+					edit = false;
+					edit_ele = $('<button>').addClass('btn grp_none fake_btn');
+				} else {
+					edit = true;
+					edit_ele = $('<button>').addClass('btn grp_none edit').on('click', function() {
+						edit_ele.note('edit', data);
+					});
+
+					/*
+					{
+						type: type,
+						noteID: nID,
+						sourceID: sID,
+						edit: edit,
+						data: note_obj,
+						show: 'form'
+					});
+					*/
+
+				}
+
+				if (note.find('.latex').length > 0) {
+					tex_ele = $('<button>').addClass('btn grp_none calendar').click(function () {
+						$(this).toggleClass('comment');
+						note.find('.text').toggle();
+						note.find('.latex').toggle();
+					});
+					exp_ele = $('<button>').addClass('btn grp_none expand').expand({
+						type: type,
+						noteID: nID,
+						sourceID: sID,
+						edit: edit,
+						data: note_obj,
+						show: 'booklet'
+					});
+				} else {
+					tex_ele = $('<button>').addClass('btn grp_none fake_btn');
+					exp_ele = $('<button>').addClass('btn grp_none fake_btn');
+				}
+
+				tools
 					.append(
-					note_ele.label = $('<p>')
+					$('<div>').addClass('left').append(edit_ele).click(function () {
+						if (jQuery.inArray('text', divs)) {
+							//console.log(note_obj);
+
+						}
+					})
 				)
-			)
-				.append(
-				note_ele.tools = $('<div>').addClass('tools')
-			);
-			return note_ele;
+					.append(
+					$('<div>').addClass('center').append(tex_ele)
+				)
+					.append(
+					$('<div>').addClass('right').append(exp_ele)
+				);
+
+				//		console.log(note_obj);
+
+			});
+
 		},
 
 		dispNote = function (ele, data, localdata) {
@@ -333,113 +409,12 @@
 					classNote = 'note item';
 				}
 
-				createLabel(data.note.label, note.label);
 				// label ele
-
+				createLabel(data.note.label, note.label);
 
 				// tools ele
-				note.tools.each(function () {
-					var $tools = $(this),
-						$note = $tools.parent($('.note')),
-						nID = $note.attr('id'),
-						sID = $tools.attr('id'),
-						edit_ele,
-						tex_ele,
-						exp_ele,
-						type,
-						divs = $note.contents(),
-						edit;
-					var note_obj = {};
-					for (var i = 0; i < divs.filter("div").length; i++) {
-						var ele;
-						switch (i) {
-							case 0:
-								ele = 'media';
-								break;
-							case 1:
-								ele = 'text';
-								break;
-							case 2:
-								ele = 'latex';
-								break;
-							case 3:
-								ele = 'label';
-								break;
-							case 4:
-								ele = 'tools';
-								break;
-							default:
-								ele = 'empty';
-						}
-						note_obj[ele] = divs[i].innerHTML;
-					}
+				createTool(note.tools, localdata);
 
-					if (note_ele.hasClass('topic') && nID === sID) {
-						type = 'source';
-					} else {
-						type = 'note';
-					}
-
-					if (localdata.settings.access === '1') {
-						edit = false;
-						edit_ele = $('<button>').addClass('btn grp_none fake_btn');
-					} else {
-						edit = true;
-						edit_ele = $('<button>').addClass('btn grp_none edit').on('click', function() {
-							edit_ele.note('edit', data);
-						});
-
-						/*
-						{
-							type: type,
-							noteID: nID,
-							sourceID: sID,
-							edit: edit,
-							data: note_obj,
-							show: 'form'
-						});
-						*/
-
-					}
-
-					if ($note.find('.latex').length > 0) {
-						tex_ele = $('<button>').addClass('btn grp_none calendar').click(function () {
-							$(this).toggleClass('comment');
-							$note.find('.text').toggle();
-							$note.find('.latex').toggle();
-						});
-						exp_ele = $('<button>').addClass('btn grp_none expand').expand({
-							type: type,
-							noteID: nID,
-							sourceID: sID,
-							edit: edit,
-							data: note_obj,
-							show: 'booklet'
-						});
-					} else {
-						tex_ele = $('<button>').addClass('btn grp_none fake_btn');
-						exp_ele = $('<button>').addClass('btn grp_none fake_btn');
-					}
-
-					$tools
-						.append(
-						$('<div>').addClass('left').append(edit_ele).click(function () {
-							if (jQuery.inArray('text', divs)) {
-								//console.log(note_obj);
-
-							}
-						})
-					)
-						.append(
-						$('<div>').addClass('center').append(tex_ele)
-					)
-						.append(
-						$('<div>').addClass('right').append(exp_ele)
-					);
-
-					//		console.log(note_obj);
-
-				});
 				/*
 				 var active = {};
 				 $('div.note')
@@ -508,112 +483,9 @@
 				// label ele
 				createLabel(data.source.label, note.label);
 
-				note.tools.each(function () {
-					var $tools = $(this),
-						$note = $tools.parent($('.note')),
-						nID = $note.attr('id'),
-						sID = $tools.attr('id'),
-						edit_ele,
-						tex_ele,
-						exp_ele,
-						type,
-						divs = $note.contents(),
-						edit;
-					//		localdata.settings.access = '<?php echo $access; ?>';
+				// tools ele
+				createTool(note.tools, localdata);
 
-					var note_obj = {};
-					for (var i = 0; i < divs.filter("div").length; i++) {
-						var ele;
-						switch (i) {
-							case 0:
-								ele = 'media';
-								break;
-							case 1:
-								ele = 'text';
-								break;
-							case 2:
-								ele = 'latex';
-								break;
-							case 3:
-								ele = 'label';
-								break;
-							case 4:
-								ele = 'tools';
-								break;
-							default:
-								ele = 'empty';
-						}
-						note_obj[ele] = divs[i].innerHTML;
-					}
-
-
-					if (note_ele.hasClass('topic') && nID === sID) {
-						type = 'source';
-					} else {
-						type = 'note';
-					}
-
-
-					if (localdata.settings.access === '1') {
-						edit = false;
-						edit_ele = $('<button>').addClass('btn grp_none fake_btn');
-					} else {
-						edit = true;
-						edit_ele = $('<button>').addClass('btn grp_none edit').expand({
-							type: type,
-							noteID: nID,
-							sourceID: sID,
-							edit: edit,
-							data: note_obj,
-							show: 'form'
-						});
-					}
-
-					if ($note.children('.latex').length > 0) {
-						tex_ele = $('<button>').addClass('btn grp_none calendar').click(function () {
-							$(this).toggleClass('comment');
-							$note.children('.text').toggle();
-							$note.children('.latex').toggle();
-						});
-//							console.log(showsource.biblio.substr(0, 9));
-// if the source is not correct recorded yet, show the bibtex
-						if(showsource.biblio.substr(0, 9) === 'undefined'){
-							tex_ele.toggleClass('comment');
-							$note.children('.text').toggle();
-							$note.children('.latex').toggle();
-						}
-						exp_ele = $('<button>').addClass('btn grp_none expand').expand({
-							type: type,
-							noteID: nID,
-							sourceID: sID,
-							edit: edit,
-							data: note_obj,
-							show: 'booklet'
-						});
-					} else {
-						tex_ele = $('<button>').addClass('btn grp_none fake_btn');
-						exp_ele = $('<button>').addClass('btn grp_none fake_btn');
-					}
-
-					$tools
-						.append(
-						$('<div>').addClass('left').append(edit_ele).click(function () {
-							if (jQuery.inArray('text', divs)) {
-								//console.log(note_obj);
-
-							}
-						})
-					)
-						.append(
-						$('<div>').addClass('center').append(tex_ele)
-					)
-						.append(
-						$('<div>').addClass('right').append(exp_ele)
-					);
-
-					//		console.log(note_obj);
-
-				});
 
 			} else {
 

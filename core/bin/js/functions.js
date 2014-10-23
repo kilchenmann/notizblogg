@@ -30,6 +30,16 @@ function isTouchDevice()
 	return typeof el.ongesturestart == "function"; // true or false
 }
 
+function getLastChar(string)
+{
+	var lastChar = string.substr(string.length - 1);
+	if ((lastChar !== '?') && (lastChar !== '!')) {
+		string += '.';
+	}
+	return(string + ' ');
+}
+
+
 
 /*
 var activator = function (element) {
