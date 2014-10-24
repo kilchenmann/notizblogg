@@ -287,18 +287,27 @@ section, .section {
         padding: 22px;
     }
     &.large{
-        height: 570px;
+        height: auto;
         width: 780px;
         background-color: transparent;
+//        overflow: hidden;
     }
     .top {
 //        border-bottom: 1px solid fade(@ink, 50%);
+        height: 170px;
+        background-color: @bg;
+        .box-shadow-bottom();
+    }
 
+    .bottom {
+        overflow: scroll;
+        height: 500px;
+        background-color: fade(@bg, 81%);
     }
 
     .top, .bottom {
-        background-color: fade(@bg, 66%);
-        padding: 22px;
+        padding: 12px;
+
     }
 
     .top.active, .bottom.active {
