@@ -16,7 +16,7 @@
 	// -----------------------------------------------------------------------
 	// define some functions
 	// -----------------------------------------------------------------------
-	var selOption = function(select_ele, request, selected_ele) {
+	var selOption = function(select_ele, request, selected_ele, note_ele) {
 			var url = NB.api + '/get.php?' + request, url2;
 			$.getJSON(url, function (data) {
 				for (var k in data.notes) {
@@ -32,6 +32,7 @@
 						url2 = NB.api + '/get.php?source=' + data.notes[0].split('::')[0];
 						$.getJSON(url2, function (data2) {
 							selected_ele.html(getSource(data2).biblio).attr({'id': data.notes[0].split('::')[0]});
+							form4note(note_ele, data2);
 						});
 					}
 				}
@@ -332,6 +333,33 @@
 
 			});
 
+		},
+
+		form4note = function (ele, data) {
+			var form = {};
+
+			$.each(data.source.notes, function (i, note) {
+					url = NB.api + '/get.php?note=' + note.id;
+					$.getJSON(url, function (data2) {
+						for (var key in data2) {
+							//form4note(form.note.table, data2);
+							ele
+							.append($('<tr>').attr({'id': note.id})
+								.append($('<td>').html('media')
+								)
+								.append(
+									$('<td>')
+									.append($('<input>').addClass('field_obj large text title').html(data2.note.title).attr({'placeholder': 'title'}))
+									.append($('<textarea>').addClass('field_obj large tiny text comment').html(data2.note.comment).attr({'placeholder': 'comment'}))
+								)
+								.append(
+									$('<td>')
+								)
+							)
+							.append($('<tr>').append($('<td>').attr({'colspan': '3'}).addClass('separation horizontal')));
+						}
+					});
+			});
 		},
 
 		dispNote = function (ele, data, localdata) {
@@ -928,10 +956,10 @@
 									.change(function() {
 										form.source.bib.empty();
 										if(form.source.typ.val() === '0') {
-											selOption(form.source.bib, 'recent=3', form.source.selected);
+											selOption(form.source.bib, 'recent=3', form.source.selected, form.note.table);
 											selOption(form.source.bib, 'list=source');
 										} else {
-											selOption(form.source.bib, 'bibtyp=' + form.source.typ.val(), form.source.selected);
+											selOption(form.source.bib, 'bibtyp=' + form.source.typ.val(), form.source.selected, form.note.table);
 										}
 									}))
 								)
@@ -943,10 +971,11 @@
 									.addClass('field_obj large select source')
 									.change(function() {
 										form.source.selected.empty();
+										form.note.table.empty();
 										url = NB.api + '/get.php?source=' + form.source.bib.val();
 										$.getJSON(url, function (data) {
-											//dispBib(form.selected_source, data, localdata);
 											form.source.selected.html(getSource(data).biblio).attr({'id': form.source.bib.val()});
+											form4note(form.note.table, data);
 										});
 									}))
 								)
@@ -968,7 +997,7 @@
 									.addClass('selected center')
 								)
 								.append($('<td>')
-									.append($('<input>')
+									.append(form.source.editbtn = $('<input>')
 									.attr({
 										'name': 'editsource',
 										'type': 'button',
@@ -982,7 +1011,7 @@
 					)
 					.append(
 						$('<div>').addClass('bottom note_form')
-						.append($('<table>').addClass('source_form')
+						.append(form.note.table = $('<table>').addClass('note_form')
 							/*
 							.append(form.note.info = $('<tr>')
 								.append($('<th>')
@@ -993,19 +1022,23 @@
 								.append($('<th>').text('or ADD'))
 							)
 							*/
-							.append(form.note.select = $('<tr>')
-								.append($('<td>'))
-							)
+
 						)
 					)
 				);
-
+				/*
+				if(form.source.select.val() === '') {
+					form.source.editbtn.hide();
+				} else {
+					form.source.editbtn.show();
+				}
+				*/
 				form.source.typ.html($('<option>')
 					.html('recent')
 					.attr({'value': '0'})
 				);
 				selOption(form.source.typ, 'list=bibtyp');
-				selOption(form.source.bib, 'recent=3', form.source.selected);
+				selOption(form.source.bib, 'recent=3', form.source.selected, form.note.table);
 				selOption(form.source.bib, 'list=source');
 
 				/*
