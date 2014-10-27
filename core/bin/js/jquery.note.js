@@ -72,6 +72,15 @@
 			}
 			return locations;
 		},
+		getPages = function(start, end) {
+			var pages;
+			if(start <= end || end === '0') {
+				pages = start;
+			} else {
+				pages = start + '-' + end;
+			}
+			return pages;
+		},
 		getSource = function (data) {
 			var i, authors, locations, biblio, bibtex, footnote, source, bib, crossref, insource = {};
 			// return source.biblio, source.bibtex;
@@ -337,27 +346,84 @@
 
 		form4note = function (ele, data) {
 			var form = {};
-
 			$.each(data.source.notes, function (i, note) {
+
 					url = NB.api + '/get.php?note=' + note.id;
 					$.getJSON(url, function (data2) {
+						if(data2.note.label.length > 0) {
+							$.each(data2.note.label, function (i, label) {
+								form.labels += label.name + ',';
+							});
+						} else {
+							form.labels = '';
+						}
 						for (var key in data2) {
+							form.pages = getPages(data2.note.page.start, data2.note.page.end);
+							if(data2.note.subtitle !== null) {
+								form.title = data2.note.title + '//' + data2.note.subtitle;
+							} else {
+								form.title = data2.note.title;
+							}
 							//form4note(form.note.table, data2);
 							ele
-							.append($('<tr>').attr({'id': note.id})
-								.append($('<td>').html('media')
+							.append(
+								form.line_1 = $('<tr>').attr({'id': note.id})
+								.append(
+									$('<td>')
+									.append($('<span>').html(data2.note.id))
 								)
 								.append(
 									$('<td>')
-									.append($('<input>').addClass('field_obj large text title').html(data2.note.title).attr({'placeholder': 'title'}))
+									.append($('<input>').addClass('field_obj large text title').attr({'type': 'text', 'placeholder': 'Title//Subtitle', 'title': 'Title//Subtitle'}).val(form.title))
+								)
+								.append(
+									$('<td>')
+									.append($('<input>').addClass('field_obj small').html(form.pages).attr({'type': 'text', 'title': 'Pages', 'placeholder': 'Pages'}))
+								)
+							)
+							.append(
+								form.line_2 = $('<tr>').attr({'id': note.id})
+								.append(
+									$('<td>').html('media')
+								)
+								.append(
+									$('<td>')
 									.append($('<textarea>').addClass('field_obj large tiny text comment').html(data2.note.comment).attr({'placeholder': 'comment'}))
 								)
 								.append(
 									$('<td>')
+									.append($('<textarea>').addClass('field_obj small tiny text label').html(form.labels).attr({'placeholder': 'Label', 'title': 'Label 1<br>Label 2<br>etc.'}))
 								)
 							)
-							.append($('<tr>').append($('<td>').attr({'colspan': '3'}).addClass('separation horizontal')));
+							.append(
+								form.line_3 = $('<tr>').attr({'id': note.id})
+								.append(
+									$('<td>').html('media')
+								)
+								.append(
+									$('<td>')
+									.append($('<input>').addClass('field_obj large text label').html(form.labels).attr({'type': 'text', 'placeholder': 'label'}))
+								)
+								.append(
+									$('<td>')
+									.append(form.edit_btn = $('<button>').addClass('btn grp_none edit').attr({'id': note.id, 'type': 'button'}))
+								)
+							);
 						}
+						i++;
+						if(i !== data.source.notes.length) {
+							ele.append($('<tr>').append($('<td>').attr({'colspan': '3'}).addClass('separation horizontal')));
+						}
+
+						form.line_1.find('input, textarea, select').attr('readonly', true);
+						form.line_2.find('input, textarea, select').attr('readonly', true);
+						form.line_3.find('input, textarea, select').attr('readonly', true);
+
+						form.edit_btn.on('click', function() {
+							form.note.find('input, textarea, select').attr('readonly', false);
+							//$(this).css({'display': 'none'});
+					//		form.buttons.append(form.save_btn = $('<button>').addClass('btn grp_none done').attr({'id': note.id, 'type': 'submit'}));
+						});
 					});
 			});
 		},
@@ -1005,7 +1071,7 @@
 									})
 									.addClass('button small edit')
 									.on('click', function() {
-										console.log($('.selected.source').attr('id'));
+						//				console.log($('.selected.source').attr('id'));
 									})
 									)
 								)
