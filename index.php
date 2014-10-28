@@ -197,9 +197,10 @@
             //var note_width = 320;		// normally 320px
             var num_col = Math.floor(width / note_width);
             var ww = num_col * note_width;
-            $('.wall').css({
-                'width': ww,
 /*
+            $('.wall').css({
+                'width': ww
+
                 '-webkit-column-count': num_col,
                 '-webkit-column-fill': num_col,
 
@@ -211,8 +212,9 @@
 
                 'column-count': num_col,
                 'column-fill': num_col
-*/
+
             });
+*/
         }
     });
 
