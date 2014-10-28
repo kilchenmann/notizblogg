@@ -193,8 +193,19 @@
 			}
 			return bib;
 		},
-		getMedia = function() {
-
+		getLabel = function(label) {
+			var i = 0, labels;
+			if(label.length !== 0) {
+				while (i < label.length) {
+					if (labels === undefined) {
+						labels = label[i].name;
+					} else {
+						labels += ', ' + label[i].name;
+					}
+					i += 1;
+				}
+			}
+			return labels;
 		},
 		createNote = function(ele) {
 			var note_ele = {};
@@ -218,6 +229,7 @@
 			);
 			return note_ele;
 		},
+
 
 		createLabel = function (label, label_ele) {
 			var size;
@@ -350,13 +362,7 @@
 
 					url = NB.api + '/get.php?note=' + note.id;
 					$.getJSON(url, function (data2) {
-						if(data2.note.label.length > 0) {
-							$.each(data2.note.label, function (i, label) {
-								form.labels += label.name + ',';
-							});
-						} else {
-							form.labels = '';
-						}
+						form.labels = getLabel(data2.note.label);
 						for (var key in data2) {
 							form.pages = getPages(data2.note.page.start, data2.note.page.end);
 							if(data2.note.subtitle !== null) {
@@ -364,66 +370,67 @@
 							} else {
 								form.title = data2.note.title;
 							}
-							//form4note(form.note.table, data2);
-							ele
-							.append(
-								form.line_1 = $('<tr>').attr({'id': note.id})
+							ele.attr({'id': note.id})
 								.append(
-									$('<td>')
-									.append($('<span>').html(data2.note.id))
-								)
-								.append(
-									$('<td>')
-									.append($('<input>').addClass('field_obj large text title').attr({'type': 'text', 'placeholder': 'Title//Subtitle', 'title': 'Title//Subtitle'}).val(form.title))
-								)
-								.append(
-									$('<td>')
-									.append($('<input>').addClass('field_obj small').html(form.pages).attr({'type': 'text', 'title': 'Pages', 'placeholder': 'Pages'}))
-								)
-							)
-							.append(
-								form.line_2 = $('<tr>').attr({'id': note.id})
-								.append(
-									$('<td>').html('media')
-								)
-								.append(
-									$('<td>')
-									.append($('<textarea>').addClass('field_obj large tiny text comment').html(data2.note.comment).attr({'placeholder': 'comment'}))
-								)
-								.append(
-									$('<td>')
-									.append($('<textarea>').addClass('field_obj small tiny text label').html(form.labels).attr({'placeholder': 'Label', 'title': 'Label 1<br>Label 2<br>etc.'}))
-								)
-							)
-							.append(
-								form.line_3 = $('<tr>').attr({'id': note.id})
-								.append(
-									$('<td>').html('media')
-								)
-								.append(
-									$('<td>')
-									.append($('<input>').addClass('field_obj large text label').html(form.labels).attr({'type': 'text', 'placeholder': 'label'}))
-								)
-								.append(
-									$('<td>')
-									.append(form.edit_btn = $('<button>').addClass('btn grp_none edit').attr({'id': note.id, 'type': 'button'}))
-								)
-							);
+									form.table = $('<table>')
+										.append(
+											$('<tr>')
+											.append(
+												$('<td>')
+												.append($('<span>').html(data2.note.id))
+											)
+											.append(
+												$('<td>')
+												.append($('<input>').addClass('field_obj large text title').attr({'type': 'text', 'placeholder': 'Title//Subtitle', 'title': 'Title//Subtitle'}).val(form.title))
+											)
+											.append(
+												$('<td>')
+												.append($('<input>').addClass('field_obj small').attr({'type': 'text', 'title': 'Pages', 'placeholder': 'Pages'}).val(form.pages))
+											)
+										)
+										.append(
+											$('<tr>').attr({'id': note.id})
+											.append(
+												$('<td>').html('media')
+											)
+											.append(
+												$('<td>')
+												.append($('<textarea>').addClass('field_obj large tiny text comment').html(data2.note.comment).attr({'placeholder': 'comment'}))
+											)
+											.append(
+												$('<td>')
+												.append($('<textarea>').addClass('field_obj small tiny text label').html(form.labels).attr({'placeholder': 'Label', 'title': 'Label 1<br>Label 2<br>etc.'}))
+											)
+										)
+										.append(
+											$('<tr>').attr({'id': note.id})
+											.append(
+												$('<td>').html('media')
+											)
+											.append(
+												$('<td>')
+												.append($('<input>').addClass('field_obj large text label').val(form.labels).attr({'type': 'text', 'placeholder': 'label'}))
+											)
+											.append(
+												$('<td>')
+												.append(form.edit_btn = $('<button>').addClass('btn grp_none edit').attr({'id': note.id, 'type': 'button'}))
+											)
+										)
+
+								);
+							ele.find('input, textarea, select').attr('readonly', true);
+
+							form.edit_btn.on('click', function() {
+								ele.find('input, textarea, select').attr('readonly', false);
+								//$(this).css({'display': 'none'});
+						//		form.buttons.append(form.save_btn = $('<button>').addClass('btn grp_none done').attr({'id': note.id, 'type': 'submit'}));
+							});
 						}
 						i++;
 						if(i !== data.source.notes.length) {
-							ele.append($('<tr>').append($('<td>').attr({'colspan': '3'}).addClass('separation horizontal')));
+							ele.append($('<hr>'));
 						}
 
-						form.line_1.find('input, textarea, select').attr('readonly', true);
-						form.line_2.find('input, textarea, select').attr('readonly', true);
-						form.line_3.find('input, textarea, select').attr('readonly', true);
-
-						form.edit_btn.on('click', function() {
-							form.note.find('input, textarea, select').attr('readonly', false);
-							//$(this).css({'display': 'none'});
-					//		form.buttons.append(form.save_btn = $('<button>').addClass('btn grp_none done').attr({'id': note.id, 'type': 'submit'}));
-						});
 					});
 			});
 		},
@@ -1022,10 +1029,10 @@
 									.change(function() {
 										form.source.bib.empty();
 										if(form.source.typ.val() === '0') {
-											selOption(form.source.bib, 'recent=3', form.source.selected, form.note.table);
+											selOption(form.source.bib, 'recent=3', form.source.selected, form.note.container);
 											selOption(form.source.bib, 'list=source');
 										} else {
-											selOption(form.source.bib, 'bibtyp=' + form.source.typ.val(), form.source.selected, form.note.table);
+											selOption(form.source.bib, 'bibtyp=' + form.source.typ.val(), form.source.selected, form.note.container);
 										}
 									}))
 								)
@@ -1037,11 +1044,11 @@
 									.addClass('field_obj large select source')
 									.change(function() {
 										form.source.selected.empty();
-										form.note.table.empty();
+										form.note.container.empty();
 										url = NB.api + '/get.php?source=' + form.source.bib.val();
 										$.getJSON(url, function (data) {
 											form.source.selected.html(getSource(data).biblio).attr({'id': form.source.bib.val()});
-											form4note(form.note.table, data);
+											form4note(form.note.container, data);
 										});
 									}))
 								)
@@ -1080,7 +1087,7 @@
 					)
 					.append(
 						$('<div>').addClass('bottom note_form')
-						.append(form.note.table = $('<table>').addClass('note_form')
+						.append(form.note.container = $('<div>').addClass('note_form')
 							/*
 							.append(form.note.info = $('<tr>')
 								.append($('<th>')
@@ -1107,7 +1114,7 @@
 					.attr({'value': '0'})
 				);
 				selOption(form.source.typ, 'list=bibtyp');
-				selOption(form.source.bib, 'recent=3', form.source.selected, form.note.table);
+				selOption(form.source.bib, 'recent=3', form.source.selected, form.note.container);
 				selOption(form.source.bib, 'list=source');
 
 				/*
