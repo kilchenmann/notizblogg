@@ -370,9 +370,9 @@
 							} else {
 								form.title = data2.note.title;
 							}
-							ele.attr({'id': note.id})
+							ele
 								.append(
-									form.table = $('<table>')
+									form.table = $('<table>').attr({'id': note.id})
 										.append(
 											$('<tr>')
 											.append(
@@ -414,17 +414,47 @@
 											.append(
 												$('<td>')
 												.append(form.edit_btn = $('<button>').addClass('btn grp_none edit').attr({'id': note.id, 'type': 'button'}))
+												.append(form.reset_btn = $('<button>').addClass('btn grp_none close invisible').attr({'id': note.id, 'type': 'button'}))
+												.append(form.save_btn = $('<button>').addClass('btn grp_none done invisible').attr({'id': note.id, 'type': 'button'}))
 											)
 										)
 
 								);
-							ele.find('input, textarea, select').attr('readonly', true);
+							$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
 
 							form.edit_btn.on('click', function() {
-								ele.find('input, textarea, select').attr('readonly', false);
+								var id = $(this).attr('id');
+								console.log(id);
+
+
+								$('table#' + id).find('input, textarea, select').attr('readonly', false);
+								form.edit_btn.toggleClass('invisible');
+								form.reset_btn.toggleClass('invisible');
+								form.save_btn.toggleClass('invisible');
+
+								form.save_btn.on('click', function() {
+									// collect the data
+
+
+									// and send them in the background to the api
+									$.ajax({
+										type: "POST",
+										url: NB.api + '/post.php?note=' + note.id,
+										data: dataString,
+										cache: false,
+										success: function(result){
+										alert(result);
+										}
+									});
+
+
+								});
+
 								//$(this).css({'display': 'none'});
 						//		form.buttons.append(form.save_btn = $('<button>').addClass('btn grp_none done').attr({'id': note.id, 'type': 'submit'}));
 							});
+
+
 						}
 						i++;
 						if(i !== data.source.notes.length) {
