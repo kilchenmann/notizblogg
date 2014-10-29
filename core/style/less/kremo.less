@@ -450,6 +450,10 @@ button.user.img {
 label, input[type=submit], input[type=reset], input[type=file], input[type=button] {
   cursor: pointer;
 }
+input[readonly=readonly], textarea[readonly=readonly], select[readonly=readonly] {
+    background-color: transparent;
+    border: none;
+}
 input, textarea, .fake_area, select, label, .media.field_obj, label span {
   .border-radius(@rad);
   padding: 5px;
@@ -481,10 +485,6 @@ span.search {
 }
 
 input[type=text], input[type=password], input[type=email], input[type=date], input[type=file], textarea, .fake_area, select, .media.field_obj, label span {
-  border-top: 1px solid fade(@card, 11%);
-  border-right: none;
-  border-bottom: 1px solid fade(@link, 11%);
-  border-left: none;
   height: 24px;
   &:focus {
 	background-color: fade(@card, 11%);
