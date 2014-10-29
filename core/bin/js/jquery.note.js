@@ -31,7 +31,8 @@
 					if(data.notes[0] !== undefined) {
 						url2 = NB.api + '/get.php?source=' + data.notes[0].split('::')[0];
 						$.getJSON(url2, function (data2) {
-							selected_ele.html(getSource(data2).biblio).attr({'id': data.notes[0].split('::')[0]});
+							selected_ele
+							.html(getSource(data2).biblio).attr({'id': data.notes[0].split('::')[0]});
 							form4note(note_ele, data2);
 						});
 					}
@@ -377,8 +378,15 @@
 											$('<tr>')
 											.append(
 												$('<td>')
-												.append($('<span>').html(data2.note.id))
+												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'noteID', 'title': 'noteID'}).val(data2.note.id))
 											)
+											.append(
+												$('<td>')
+												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'sourceID', 'title': 'sourceID'}).val(data.source.id))
+											)
+										)
+										.append(
+											$('<tr>')
 											.append(
 												$('<td>')
 												.append($('<input>').addClass('field_obj large text title').attr({'type': 'text', 'placeholder': 'Title//Subtitle', 'title': 'Title//Subtitle'}).val(form.title))
@@ -391,46 +399,39 @@
 										.append(
 											$('<tr>').attr({'id': note.id})
 											.append(
-												$('<td>').html('media')
-											)
-											.append(
 												$('<td>')
 												.append($('<textarea>').addClass('field_obj large tiny text comment').html(data2.note.comment).attr({'placeholder': 'comment'}))
 											)
 											.append(
-												$('<td>')
-												.append($('<textarea>').addClass('field_obj small tiny text label').html(form.labels).attr({'placeholder': 'Label', 'title': 'Label 1<br>Label 2<br>etc.'}))
+												$('<td>').html('media')
 											)
 										)
 										.append(
 											$('<tr>').attr({'id': note.id})
 											.append(
-												$('<td>').html('media')
-											)
-											.append(
 												$('<td>')
 												.append($('<input>').addClass('field_obj large text label').val(form.labels).attr({'type': 'text', 'placeholder': 'label'}))
 											)
 											.append(
-												$('<td>')
+												$('<td>').addClass('right')
 												.append(form.edit_btn = $('<button>').addClass('btn grp_none edit').attr({'id': note.id, 'type': 'button'}))
 												.append(form.reset_btn = $('<button>').addClass('btn grp_none close invisible').attr({'id': note.id, 'type': 'button'}))
 												.append(form.save_btn = $('<button>').addClass('btn grp_none done invisible').attr({'id': note.id, 'type': 'button'}))
 											)
 										)
-
 								);
 							$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
 
 							form.edit_btn.on('click', function() {
 								var id = $(this).attr('id');
 								console.log(id);
-
-
-								$('table#' + id).find('input, textarea, select').attr('readonly', false);
 								form.edit_btn.toggleClass('invisible');
 								form.reset_btn.toggleClass('invisible');
 								form.save_btn.toggleClass('invisible');
+
+
+								$('table#' + id).find('input, textarea, select').attr('readonly', false);
+
 
 								form.save_btn.on('click', function() {
 									// collect the data
@@ -1044,10 +1045,30 @@
 							.append(form.source.info = $('<tr>')
 								.append($('<th>')
 									.attr({'colspan': '2'})
-									.text('Select a source / theme...')
 									.addClass('left')
+									.append($('<p>').text('Select a source / theme or ')
+										.append(
+											form.source.new = $('<input>').attr({
+											'name': 'newsource',
+											'type': 'button',
+											'value': 'ADD NEW'
+										})
+										.addClass('button medium new')
+										)
+										.append($('<input>')
+											.attr({
+												'name': 'editsource',
+												'type': 'button',
+												'value': 'EDIT the acitve'
+											})
+											.addClass('button small edit')
+											.css({float: 'right'})
+											.on('click', function() {
+								//				console.log($('.selected.source').attr('id'));
+											})
+										)
+									)
 								)
-								.append($('<th>').text('or ADD'))
 							)
 							.append(form.source.select = $('<tr>')
 								.append($('<td>')
@@ -1082,35 +1103,12 @@
 										});
 									}))
 								)
-								.append($('<td>')
-									.append($('<input>')
-									.attr({
-										'name': 'newsource',
-										'type': 'button',
-										'value': 'new'
-									})
-									.addClass('button small new')
-									)
-								)
 							)
 
 							.append($('<tr>')
 								.append(form.source.selected = $('<td>')
 									.attr({'colspan': '2'})
 									.addClass('selected source center')
-								)
-								.append($('<td>')
-									.append(form.source.editbtn = $('<input>')
-									.attr({
-										'name': 'editsource',
-										'type': 'button',
-										'value': 'edit'
-									})
-									.addClass('button small edit')
-									.on('click', function() {
-						//				console.log($('.selected.source').attr('id'));
-									})
-									)
 								)
 							)
 						)

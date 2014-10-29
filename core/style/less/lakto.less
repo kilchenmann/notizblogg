@@ -1,12 +1,15 @@
 * {
   padding: 0;
   margin: 0;
-  text-decoration: none;
-  list-style-type: none;
-  letter-spacing: 0.2em;
-  line-height: 1.2em;
-  color: @ink;
-  font-family: raleway, awesome, stylus, Verdana, sans-serif;
+}
+
+body, header, footer, nav, section, span, p, input, select, textarea {
+    text-decoration: none;
+    list-style-type: none;
+    letter-spacing: 0.2em;
+    line-height: 1.2em;
+    color: @ink;
+    font-family: raleway, awesome, stylus, Verdana, sans-serif;
 }
 
 html, body, input {
@@ -83,6 +86,9 @@ header, footer, nav {
   color: @bg;
   position: fixed;
   display: block;
+  width: 100%;
+  text-align: center;
+  z-index: 33;
 }
 header {
 //  .box-shadow-bottom();
@@ -120,18 +126,21 @@ header {
 footer {
   border-top: 1px solid @bg;
   background: none repeat scroll 0 0 fade(@footer, 10%);
+  bottom: 0;
+  position: fixed;
+  overflow: visible;
+  p {
+    display: block;
+    padding: 1px;
+  }
+  img {
+    position:absolute;
+    bottom:2px;
+    right: 12px;
+    width: 24px;
+  }
+
 }
-
-header, footer {
-  width: 100%;
-  text-align: center;
-  z-index: 33;
-}
-
-header div span h2 {
-
-}
-
 
 header div.left {
   float: left;
@@ -147,34 +156,12 @@ header div.right {
   text-align: right;
 }
 
-header div.center span.search {
-
-}
 
 nav {
   width: 240px;
   height: 100%;
   top: 66px;
   z-index: 22;
-}
-
-footer {
-  bottom: 0;
-  position: fixed;
-  overflow: visible;
-}
-
-footer p {
-  display: block;
-  padding: 1px;
-}
-
-footer img {
-
-  position:absolute;
-  bottom:2px;
-  right: 12px;
-  width: 24px;
 }
 
 
@@ -252,15 +239,28 @@ section, .section {
 }
 
 
-/*
+table {
+    tr {
 
-@media (max-width: 767px) {
-  div.title { position: fixed; width: auto; padding: 0px; margin: 0 !important; left: 20px}
-  .about { position: relative; width: auto; padding: 20px; margin: 0 !important; top: 50px;}
-  .backstretch { opacity: 0.2; }
+    }
+
+    td {
+
+
+        .right {
+            text-align: right;
+
+            &button {
+
+                float: right;
+            }
+        }
+    }
+
+
+
+
 }
-
-*/
 
 .float_obj {
   z-index: 100;
@@ -288,7 +288,7 @@ section, .section {
     }
     &.large{
         height: auto;
-        width: 780px;
+        width: 700px;
         background-color: transparent;
 //        overflow: hidden;
     }
