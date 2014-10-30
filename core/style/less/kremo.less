@@ -456,6 +456,7 @@ input[readonly=readonly], textarea[readonly=readonly], select[readonly=readonly]
 }
 input, textarea, .fake_area, select, label, .media.field_obj, label span {
   .border-radius(@rad);
+  background-color: @card;
   padding: 5px;
   margin: 5px;
 }
@@ -491,9 +492,8 @@ input[type=text], input[type=password], input[type=email], input[type=date], inp
   }
 }
 
-input[type=file], .media.field_obj {
-  height: 160px;
-  background-color: @bg;
+input[type=file], .field_obj.file_upload {
+  display:none;
 }
 
 input.upload.field_obj {
