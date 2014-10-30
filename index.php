@@ -44,6 +44,10 @@
     <script type="text/javascript" src="core/bin/js/vendor/md5.js"></script>
     <script type="text/javascript" src="core/bin/js/vendor/jquery.masonry.min.js"></script>
     <script type="text/javascript" src="core/bin/js/vendor/jquery.vague.js"></script>
+    <script type="text/javascript" src="core/bin/js/vendor/jquery.knob.js"></script>
+    <script type="text/javascript" src="core/bin/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="core/bin/js/vendor/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="core/bin/js/vendor/jquery.fileupload.js"></script>
 
     <!-- notizblogg specific tools -->
     <!-- some functional / styling stuff -->

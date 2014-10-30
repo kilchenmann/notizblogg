@@ -492,9 +492,97 @@ input[type=text], input[type=password], input[type=email], input[type=date], inp
   }
 }
 
-input[type=file], .field_obj.file_upload {
-  display:none;
+form.upload {
+    .border-radius(@rad);
+
+    .drop {
+        padding: 5px;
+        margin-bottom: 30px;
+        border: 20px solid rgba(0, 0, 0, 0);
+        border-radius: 3px;
+        border-image: url('../img/upload-border.png') 25 repeat;
+        text-align: center;
+        text-transform: uppercase;
+
+        font-size:16px;
+        font-weight:bold;
+        color:#7f858a;
+
+        input[type=file], .field_obj.file_upload {
+          display:none;
+        }
+
+        ul{
+            list-style:none;
+            border-top:1px solid #2b2e31;
+            border-bottom:1px solid #3d4043;
+            li{
+
+                background-color:#333639;
+
+                background-image:-webkit-linear-gradient(top, #333639, #303335);
+                background-image:-moz-linear-gradient(top, #333639, #303335);
+                background-image:linear-gradient(top, #333639, #303335);
+
+                border-top:1px solid #3d4043;
+                border-bottom:1px solid #2b2e31;
+                padding:15px;
+                height: 52px;
+
+                position: relative;
+
+                p {
+                    width: 144px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    color: #EEE;
+                    font-size: 16px;
+                    font-weight: bold;
+                    position: absolute;
+                    top: 20px;
+                    left: 100px;
+                }
+
+                i {
+                    font-weight: normal;
+                    font-style:normal;
+                    color:#7f7f7f;
+                    display:block;
+
+                }
+
+                canvas {
+                    top: 15px;
+                    left: 32px;
+                    position: absolute;
+
+                }
+
+                span {
+                    width: 15px;
+                    height: 12px;
+                    background: url('../img/upload-icons.png') no-repeat;
+                    position: absolute;
+                    top: 34px;
+                    right: 33px;
+                    cursor:pointer;
+
+                }
+
+                &.working span {
+                    height: 16px;
+                    background-position: 0 -12px;
+                }
+                &.error p {
+                    color:red;
+                }
+            }
+
+
+        }
+    }
 }
+
 
 input.upload.field_obj {
   opacity: 0;
