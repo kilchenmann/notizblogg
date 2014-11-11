@@ -43,6 +43,7 @@ class post {
 			}
 		$comment = htmlentities($this->data['comment'], ENT_QUOTES, 'UTF-8');
 		$media = $this->data['filename'];
+		$public = $this->data['public'];
 		$labels = explode(',', $this->data['label']);
 		$tmp_pages = explode('-', $this->data['pages']);
 			if(strpos($this->data['pages'], '-') !== false) {
@@ -57,7 +58,6 @@ class post {
 				$page_start = $this->data['pages'];
 				$page_end = '0';
 			}
-		//$media =
 
 		if(!empty($comment) && !empty($sourceID))
 		{
@@ -76,7 +76,8 @@ class post {
 									'bibID=\'' . $sourceID . '\', ' .
 									'pageStart=\'' . $page_start. '\', ' .
 									'pageEnd=\'' . $page_end. '\', ' .
-									'userID=\'' . $this->user. '\' ' .
+									'userID=\'' . $this->user. '\', ' .
+									'notePublic=\'' . $public . '\' ' .
 									'WHERE noteID = ' . $noteID . ';');
 			condb('close');
 
@@ -106,7 +107,7 @@ class post {
 
 	function uploadMedia() {
 		// A list of permitted file extensions
-		$allowed = array('jpg', 'png', 'gif', 'jpeg', 'tif', 'pdf', 'mp4', 'webm', 'mp3', 'wav');
+		$allowed = array('jpg', 'JPG', 'png', 'PNG', 'gif', 'jpeg', 'tif', 'pdf', 'mp4', 'webm', 'mp3', 'wav');
 
 		if(isset($this->data['upl']) && $this->data['upl']['error'] == 0){
 
@@ -122,20 +123,22 @@ class post {
 
 			switch($ext) {
 				case "jpg";
+				case "JPG";
 				case "png";
+				case "PNG";
 				case "gif";
 				case "jpeg";
 				case "tif";
-					$dir = '/pictures/';
+					$dir = '/picture/';
 					break;
 
 				case "pdf";
-					$dir = '/documents/';
+					$dir = '/document/';
 					break;
 
 				case "mp4";
 				case "webm";
-					$dir = '/movies/';
+					$dir = '/movie/';
 					break;
 
 				case "mp3";

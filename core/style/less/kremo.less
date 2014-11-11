@@ -486,7 +486,7 @@ span.search {
 }
 
 input[type=text], input[type=password], input[type=email], input[type=date], input[type=file], textarea, .fake_area, select, .media.field_obj, label span {
-  height: 24px;
+  height: 28px;
   &:focus {
 	background-color: fade(@card, 11%);
   }
@@ -496,8 +496,6 @@ form.upload {
     .border-radius(@rad);
 
     .drop {
-        padding: 5px;
-        margin-bottom: 30px;
         border: 20px solid rgba(0, 0, 0, 0);
         border-radius: 3px;
         border-image: url('../img/upload-border.png') 25 repeat;
@@ -592,9 +590,24 @@ input.upload.field_obj {
   //  top: -160px;
 }
 
-.field_obj.upload img {
-    max-width: 120px;
-    max-height: 120px;
+.field_obj.upload {
+
+    img {
+        max-width: 120px;
+        max-height: 120px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    span {
+        position: relative;
+        background-color: fade(@bg, 22%);
+        border-top: 1px solid lighten(@bg, 8%);
+        border-left: 1px solid lighten(@bg, 8%);
+        border-right: 1px solid lighten(@bg, 8%);
+        border-bottom: 1px solid darken(@bg, 8%);
+        font-size: 1em;
+    }
 }
 
 img.media, video.media, audio.media {

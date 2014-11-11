@@ -266,37 +266,48 @@ function getMedia($media) {
 	$name = $media_file[0];
 	$ext = $media_file[1];
 
+	$media_path = __MEDIA_URL__  . '/' . $media;
+
+	//if(file_exists($media_path)) echo 'file exists';
+
+	if($media != '') {
+
+	}
 	$media_tag = '<span class=\'warning invisible\'>[The media file is missing OR \'' . $ext . '\' is not supported]</span>';
 
-
-
-	switch($ext){
-		case "jpg";
-		case "png";
-		case "gif";
-		case "jpeg";
-		case "tif";
-		{
-			$media_path = __MEDIA_URL__."/pictures/".$media;
-
-			if (@fopen($media_path,"r")==true){
-
-				//if (file_exists($media)){
-				//$size = ceil(filesize($media	)/1024);
-				//$name = $media_path['filename'];
+	if (@fopen($media_path, 'r') == true) {
+		$mediatype = explode('/', $media);
+		switch($mediatype[0]) {
+			case 'picture';
 				$size = getimagesize($media_path);
 				// ergibt mit $infoSize[0] für breite und $infoSize[1] für höhe
-				$media_tag = "<img class='staticMedia' src='".$media_path."' alt='".$media."' title='".$name."' />";
-			}
-			break;
+				$media_tag = '<img class=\'staticMedia\' src=\'' . $media_path . '\' alt=\'' . $media . '\' title=\'' . $media . '\'>';
+				break;
+			case 'document';
+		//		$media_tag = '<a href=\'' . $media_path . '\' title=\'Download ' . $media . '\'><img class=\'staticMedia\' src=\'' . __MEDIA_URL__ . "/documents/".$name."' title='".$media."' alt='".$media."'/></a>";
+				break;
+			case 'movie';
+				$media_tag = '<video class=\'motionPicture\'>Motion Picture is not yet supported in Notizblogg</video>';
+				break;
+			case 'sound';
+				$media_tag = '<audio class=\'motionPicture\'>Motion Picture is not yet supported in Notizblogg</audio>';
+				break;
+			default;
+				$media_tag = '';
 		}
+	} else {
+		$media_tag = '';
+	}
 
-		case "pdf";
-		{
-			$media_path = __MEDIA_URL__.'/documents/'.$media;
+	return $media_tag;
+}
+
+
+/*
+			$media_path = __MEDIA_URL__ . '/' . $media;
 			if (@fopen($media_path,'r')==true){
 //				exec('convert '.__MEDIA_PATH__.'/documents/'.$media.' -colorspace RGB -geometry 200 '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg');
-				if(!file_exists(__MEDIA_PATH__ . '/documents/'.$name.'-0.jpg')) {
+				if(!file_exists(__MEDIA_PATH__ . $name.'-0.jpg')) {
 //					$imagick = new Imagick();
 //					$imagick->readImage($media);
 //					$imagick->writeImages('converted.jpg', false);
@@ -312,65 +323,7 @@ function getMedia($media) {
 				// (".$size."kb)
 				$media_tag = "<a href='".$media_path."' title='Download ".$media."' ><img class='staticMedia' src='".__MEDIA_URL__."/documents/".$name."' title='".$media."' alt='".$media."'/></a>";
 			}
-			break;
-		}
-
-		case "mp4";
-		case "webm";
-		{
-			$media_path = __MEDIA_URL__."/movies/".$name;
-			if (@fopen($media_path,"r")==true){
-
-				$media_tag = "<video>not yet implemented</video>";
-				/*
-				echo "<video class='dynamicMedia' controls preload='auto' poster='".$media_path."png'>";
-				echo "<source src='".__MEDIA_URL__."/movies/".$fileName.".mp4' >";
-				//type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'
-				echo "<source src='".__MEDIA_URL__."/movies/".$fileName.".webm' >";
-				//type='video/webm; codecs=\"vp8, vorbis\"'
-				echo "</video>";
-				*/
-			}
-			break;
-		}
-
-		case "mp3";
-		case "wav";
-		{
-			$media_path = __MEDIA_URL__."/sound/".$media;
-			if (@fopen($media_path,"r")==true){
-
-				$media_tag = "<audio>not yet implemented</audio>";
-				/*
-				echo "<video class='dynamicMedia' controls preload='auto' poster='".$media_path."png'>";
-				echo "<source src='".__MEDIA_URL__."/movies/".$fileName.".mp4' >";
-				//type='video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"'
-				echo "<source src='".__MEDIA_URL__."/movies/".$fileName.".webm' >";
-				//type='video/webm; codecs=\"vp8, vorbis\"'
-				echo "</video>";
-				*/
-				/*
-				echo "<audio class='dynamicMedia' controls preload='auto'>";
-				echo "<source src='".__MEDIA_URL__."/sound/".$fileName.".mp3' type='audio/mpeg; codecs=mp3'>";
-				echo "<source src='".__MEDIA_URL__."/sound/".$fileName.".wav' type='audio/wav; codecs=1'>";
-				echo "</audio>";
-				*/
-			}
-			break;
-		}
-
-		default; {
-		$media_tag = "";
-					 // <p class='warning invisible'>[".$ext."] is not supported in notizblogg!?</p>
-		}
-
-	}
-
-	return $media_tag;
-}
-
-
-
+*/
 
 
 
