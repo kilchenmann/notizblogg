@@ -4,6 +4,9 @@ class post {
 	var $id;	// id number
 	var $access;	// do you have the rights to see notes and sources?
 	var $type;
+	var $data;
+	var $user;
+
 	var $part;
 	var $query;
 	var $json;
@@ -27,18 +30,70 @@ class post {
 		return $source;
 	}
 
-	function updateNote($post) {
-		$data = json_decode($post);
+	function updateNote() {
+		$checkID = $this->data['checkID'];
+		$noteID = $this->data['noteID'];
+		$sourceID = $this->data['sourceID'];
+		$tmp_title = explode('//', $this->data['title']);
+			$title = $tmp_title[0];
+			if(isset($tmp_title[1])) {
+				$subtitle = $tmp_title[1];
+			} else {
+				$subtitle = null;
+			}
+		$comment = htmlentities($this->data['comment'], ENT_QUOTES, 'UTF-8');
+		$media = $this->data['filename'];
+		$labels = explode(',', $this->data['label']);
+		$tmp_pages = explode('-', $this->data['pages']);
+			if(strpos($this->data['pages'], '-') !== false) {
+				$page_start = $tmp_pages[0];
+				$page_end = $tmp_pages[1];
+				if($page_end != '') {
+					if($page_end < $page_start) $page_end = '0';
+				} else {
+					$page_end = '0';
+				}
+			} else {
+				$page_start = $this->data['pages'];
+				$page_end = '0';
+			}
+		//$media =
 
-		//echo "updateNote";
-		print_r($data);
-		/*
-		$data = array(
-			'message' => "no post"
-		);
-		*/
-		return json_encode($data);
+		if(!empty($comment) && !empty($sourceID))
+		{
+			// some checks and request first
+			$mysqli = condb('open');
+			//$bibsql = $mysqli->query('SELECT bibID ')
+			if($checkID == '') {
+
+			}
+			// update the data
+			$sql = $mysqli->query('UPDATE note SET ' .
+									'noteTitle=\'' . $title . '\', ' .
+									'noteSubtitle=\'' . $subtitle . '\', ' .
+									'noteComment=\'' . $comment . '\', ' .
+									'noteMedia=\'' . $media . '\', ' .
+									'bibID=\'' . $sourceID . '\', ' .
+									'pageStart=\'' . $page_start. '\', ' .
+									'pageEnd=\'' . $page_end. '\', ' .
+									'userID=\'' . $this->user. '\' ' .
+									'WHERE noteID = ' . $noteID . ';');
+			condb('close');
+
+			return json_encode(array(
+				'error' => false,
+			));
+			exit;
+		}else{
+			return json_encode(array(
+				'error' => true,
+				'msg'   => "Something went totally wrong!"
+			));
+			exit;
+		}
 	}
+
+
 
 	function updateSource() {
 
@@ -47,6 +102,59 @@ class post {
 	function deleteNote() {
 
 
+	}
+
+	function uploadMedia() {
+		// A list of permitted file extensions
+		$allowed = array('jpg', 'png', 'gif', 'jpeg', 'tif', 'pdf', 'mp4', 'webm', 'mp3', 'wav');
+
+		if(isset($this->data['upl']) && $this->data['upl']['error'] == 0){
+
+			$ext = pathinfo($this->data['upl']['name'], PATHINFO_EXTENSION);
+
+			if(!in_array(strtolower($ext), $allowed)){
+				return json_encode(array(
+					'error' => true,
+					'msg'   => "Something went totally wrong!"
+				));
+			}
+
+
+			switch($ext) {
+				case "jpg";
+				case "png";
+				case "gif";
+				case "jpeg";
+				case "tif";
+					$dir = '/pictures/';
+					break;
+
+				case "pdf";
+					$dir = '/documents/';
+					break;
+
+				case "mp4";
+				case "webm";
+					$dir = '/movies/';
+					break;
+
+				case "mp3";
+				case "wav";
+					$dir = '/sound/';
+					break;
+			}
+
+			if(move_uploaded_file($this->data['upl']['tmp_name'], __MEDIA_PATH__ . $dir .$this->data['upl']['name'])){
+				return json_encode(array(
+					'error' => false,
+				));
+			}
+		} else {
+			return json_encode(array(
+				'error' => true,
+				'msg'   => "Something went totally wrong!"
+			));
+		}
 	}
 
 
@@ -302,3 +410,4 @@ if($_POST['content'] != ""){
 	}
 }
 condb('close');
+*/

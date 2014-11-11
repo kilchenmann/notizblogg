@@ -354,7 +354,7 @@ class get {
 		$mysqli = condb('open');
 		switch($f){
 			case 'note';
-				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
+				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteSubtitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
 				while($row = mysqli_fetch_object($sql)) {
 					$results[] = $row->noteID;
 				}
@@ -390,7 +390,7 @@ class get {
 				break;
 
 			default;		// search everywhere
-				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');
+				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteSubtitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');
 				while($row = mysqli_fetch_object($sql)) {
 					$results[] = $row->noteID;
 				}

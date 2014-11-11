@@ -208,13 +208,13 @@
 			}
 			return htmlDecode(labels);
 		},
-		createUpload = function(ele) {
+		createUpload = function(ele, id) {
 			var upl = {};
 			ele.html(
 				upl.form = $('<form>').addClass('upload')
 					.attr({
 						'method': 'post',
-						'action': NB.url + '/core/bin/php/upload.php',
+						'action': NB.api + '/post.php?media',
 						'enctype': 'multipart/form-data'
 					})
 					.append(upl.drop = $('<div>')
@@ -235,13 +235,9 @@
 							})
 							.addClass('field_obj file_upload')
 						)
-						.append(upl.list = $('<ul>')
-
+						.append(upl.ele = $('<div>')
 						)
-
-
 					)
-
 			);
 			upl.btn.on('click', function(){
 				upl.inp.click();
@@ -250,26 +246,47 @@
 			upl.form.fileupload({
 
 				// This element will accept file drag/drop uploading
-				dropZone: $('#drop'),
+				dropZone: $('.drop'),
 
 				// This function is called when a file is added to the queue;
 				// either via the browse button, or via drag/drop:
 				add: function (e, data) {
 
-					var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
-						' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
+					// = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"'+
+					//	' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
 
 					// Append the file name and file size
-					tpl.find('p').text(data.files[0].name)
-								.append('<i>' + formatFileSize(data.files[0].size) + '</i>');
+					$('table#' + id).find('input.n_medianame').val(data.files[0].name);
+
+					var tpl = {};
+					data.context = upl.ele.addClass('working').empty()
+							.append(tpl.inp = $('<input>')
+								.attr({
+									'type': 'text',
+									'value': '0',
+									'data-width': '48',
+									'data-height': '48',
+									'data-fgColor': '#0788a5',
+									'data-readOnly': '1',
+									'data-bgColor': '#3e4043'
+								})
+							);
+/*
+					tpl.find('span').append($('<img>').attr({'src': NB.media + '/' + data.files[0].name}).css({'width': '120px'}));
+*/
+					/*
+					.text(data.files[0].name)
+								.append('<span>' + formatFileSize(data.files[0].size) + '</span>');
+					*/
 
 					// Add the HTML to the UL element
-					data.context = tpl.appendTo(upl.list);
+			//		data.context = tpl.appendTo(upl.ele);
 
 					// Initialize the knob plugin
-					tpl.find('input').knob();
+					tpl.inp.knob();
 
 					// Listen for clicks on the cancel icon
+					/*
 					tpl.find('span').click(function(){
 
 						if(tpl.hasClass('working')){
@@ -281,6 +298,7 @@
 						});
 
 					});
+					*/
 
 					// Automatically upload the file once it is added to the queue
 					var jqXHR = data.submit();
@@ -296,13 +314,17 @@
 					data.context.find('input').val(progress).change();
 
 					if(progress == 100){
-						data.context.removeClass('working');
+						data.context.find('div').remove();
+						data.context.append($('<img>')
+							.attr({'src': NB.media + '/' + data.files[0].name})
+							.css({'max-width': '120px', 'max-height': '120px'})
+						);
 					}
 				},
 
 				fail:function(e, data){
 					// Something has gone wrong!
-					data.context.addClass('error');
+					data.context.addClass('error').text('There was a probelm with the file upload');
 				}
 
 			});
@@ -465,7 +487,7 @@
 						form.labels = getLabel(data2.note.label);
 						for (var key in data2) {
 							form.pages = getPages(data2.note.page.start, data2.note.page.end);
-							if(data2.note.subtitle !== null) {
+							if(data2.note.subtitle !== null && data2.note.subtitle !== '') {
 								form.title = htmlDecode(data2.note.title) + '//' + htmlDecode(data2.note.subtitle);
 							} else {
 								form.title = htmlDecode(data2.note.title);
@@ -532,6 +554,11 @@
 												.append($('<span>')
 													.addClass('field_obj small upload n_media')
 													.html(data2.note.media))
+												.append($('<br>'))
+												.append($('<input>')
+													.addClass('field_obj small n_medianame')
+													.attr({'type': 'hidden', 'placeholder': 'file name', 'name': 'filename'})
+												)
 											)
 										)
 										.append(
@@ -565,6 +592,7 @@
 									if(data.error){
 										$('table#' + note.id).find('textarea.n_comment').addClass('error');
 									}else {
+										$('table#' + note.id).find('span.n_media').empty().html(data2.note.media);
 										$('table#' + note.id).find('button.close').addClass('invisible');
 										$('table#' + note.id).find('button.done').addClass('invisible');
 										$('table#' + note.id).find('button.edit').removeClass('invisible');
@@ -577,127 +605,65 @@
 							return false;
 						});
 
-						/*
-						$('button#' + note.id + '.done').on('click', function() {
-							// collect the data
-							var title_subtitle = $('table#' + note.id).find('input.n_title').val().split('//');
-							var title = title_subtitle[0];
-							var subtitle = title_subtitle[1];
-							var comment = $('table#' + note.id).find('textarea.n_comment').val();
-							var labels = $('table#' + note.id).find('input.n_label').val();
-							var media = 'datei.jpg';
-							var pages = $('table#' + note.id).find('input.n_pages').val().split('-');
-							var page_start = pages[0];
-							var page_end = pages[1];
-							var savenote = {
-								'note': {
-									'id': note.id,
-									'checkID': null,
-									'title': htmlDecode(title),
-									'subtitle': htmlDecode(subtitle),
-									'comment': htmlDecode(comment),
-									'label': htmlDecode(labels),
-									'media': media,
-									'source': {
-										'id': data.source.id,
-										'name': data.source.name,
-										'link': null
-									},
-									'page': {
-										'start': page_start,
-										'end': page_end
-									},
-								}
-							};
 
-							// and send them in the background to the api
-							$.ajax({
-								type: "POST",
-								url: NB.api + '/post.php?note=' + note.id,
-								data: savenote,
-								//cache: true
-								dataType: "JSON",
-								success: function( data, textStatus, jQxhr ){
-									//$('#response pre').html( JSON.stringify( data ));
-									$('table#' + note.id).find('button').toggleClass('invisible');
+					$('button#' + note.id + '.edit').on('click', function() {
+						var upload_ele = $('table#' + note.id).find('span.n_media');
+						createUpload(upload_ele, note.id);
+						$('table#' + note.id).find('button').toggleClass('invisible');
+						$('table#' + note.id).find('input, textarea, select').attr('readonly', false);
+						// collect the data for a reset
+						var title_subtitle = $('table#' + note.id).find('input.n_title').val().split('//');
+						var title = title_subtitle[0];
+						var subtitle = title_subtitle[1];
+						var comment = $('table#' + note.id).find('textarea.n_comment').val();
+						var labels = $('table#' + note.id).find('input.n_label').val();
+						var media = 'datei.jpg';
+						var pages = $('table#' + note.id).find('input.n_pages').val().split('-');
+						var page_start = pages[0];
+						var page_end = pages[1];
+						var editnote = {
+							'note': {
+								'id': note.id,
+								'checkID': null,
+								'title': htmlDecode(title),
+								'subtitle': htmlDecode(subtitle),
+								'comment': htmlDecode(comment),
+								'label': htmlDecode(labels),
+								'media': media,
+								'source': {
+									'id': data.source.id,
+									'name': data.source.name,
+									'link': null
 								},
-								error: function( jqXhr, textStatus, errorThrown ){
-									console.log( errorThrown );
-								}
-							});
+								'page': {
+									'start': page_start,
+									'end': page_end
+								},
+							}
+						};
 
+						$('button#' + note.id + '.close').on('click', function() {
+							$('table#' + note.id).find('span.n_media').empty().html(data2.note.media);
 
+							if(editnote.note.subtitle !== '') {
+								$('table#' + note.id).find('input.n_title').val(editnote.note.title + '//' + editnote.note.subtitle);
+							} else {
+								$('table#' + note.id).find('input.n_title').val(editnote.note.title);
+							}
+							if(editnote.note.page.end !== undefined) {
+								$('table#' + note.id).find('input.n_pages').val(editnote.note.page.start + '-' + editnote.note.page.end);
+							} else {
+								$('table#' + note.id).find('input.n_pages').val(editnote.note.page.start);
+							}
+							$('table#' + note.id).find('textarea.n_comment').val(editnote.note.comment).removeClass('error');
+							$('table#' + note.id).find('input.n_label').val(editnote.note.label);
+
+							$('table#' + note.id).find('button.close').addClass('invisible');
+							$('table#' + note.id).find('button.done').addClass('invisible');
+							$('table#' + note.id).find('button.edit').removeClass('invisible');
+							$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
 						});
-						*/
-
-$('button#' + note.id + '.edit').on('click', function() {
-	var upload_ele = $('table#' + note.id).find('span.n_media');
-	createUpload(upload_ele);
-	$('table#' + note.id).find('button').toggleClass('invisible');
-	$('table#' + note.id).find('input, textarea, select').attr('readonly', false);
-	// collect the data for a reset
-	var title_subtitle = $('table#' + note.id).find('input.n_title').val().split('//');
-	var title = title_subtitle[0];
-	var subtitle = title_subtitle[1];
-	var comment = $('table#' + note.id).find('textarea.n_comment').val();
-	var labels = $('table#' + note.id).find('input.n_label').val();
-	var media = 'datei.jpg';
-	var pages = $('table#' + note.id).find('input.n_pages').val().split('-');
-	var page_start = pages[0];
-	var page_end = pages[1];
-	var editnote = {
-		'note': {
-			'id': note.id,
-			'checkID': null,
-			'title': htmlDecode(title),
-			'subtitle': htmlDecode(subtitle),
-			'comment': htmlDecode(comment),
-			'label': htmlDecode(labels),
-			'media': media,
-			'source': {
-				'id': data.source.id,
-				'name': data.source.name,
-				'link': null
-			},
-			'page': {
-				'start': page_start,
-				'end': page_end
-			},
-		}
-	};
-
-	$('button#' + note.id + '.close').on('click', function() {
-		$('table#' + note.id).find('span.n_media').empty().html(data2.note.media);
-
-		if(editnote.note.subtitle !== '') {
-			$('table#' + note.id).find('input.n_title').val(editnote.note.title + '//' + editnote.note.subtitle);
-		} else {
-			$('table#' + note.id).find('input.n_title').val(editnote.note.title);
-		}
-		if(editnote.note.page.end !== undefined) {
-			$('table#' + note.id).find('input.n_pages').val(editnote.note.page.start + '-' + editnote.note.page.end);
-		} else {
-			$('table#' + note.id).find('input.n_pages').val(editnote.note.page.start);
-		}
-		$('table#' + note.id).find('textarea.n_comment').val(editnote.note.comment).removeClass('error');
-		$('table#' + note.id).find('input.n_label').val(editnote.note.label);
-
-		$('table#' + note.id).find('button.close').addClass('invisible');
-		$('table#' + note.id).find('button.done').addClass('invisible');
-		$('table#' + note.id).find('button.edit').removeClass('invisible');
-		$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
-
-	});
-
-
-
-
-
-
-
-});
-
-
+					});
 
 						if(i !== data.source.notes.length) {
 							ele.append($('<hr>'));

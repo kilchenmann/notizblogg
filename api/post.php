@@ -1,6 +1,6 @@
 <?php
 
-//header('Content-Type: application/json; charset=utf-8');
+header('Content-Type: application/json; charset=utf-8');
 
  // access public: true = 1
  // access !public = private = 0
@@ -9,7 +9,7 @@ session_start ();
 $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
 require '../core/bin/php/settings.php';
-//require '../core/bin/php/class.post.php';
+require '../core/bin/php/class.post.php';
 
 $user = array(
 	'access' => 1,
@@ -29,7 +29,57 @@ if (isset($_GET['token']) && ($_GET['token'] == $_SESSION['token'])) {
 }
 
 
-if(!empty($_POST) && $user['access'] == 0) {
+if((!empty($_POST) || !empty($_FILES)) && $user['access'] == 0) {
+
+	// the user has the right to edit, to create and to upload media files
+
+	$note = NEW post();
+	$note->access = $user['access'];
+	$note->user = $user['id'];
+
+	foreach ($_GET as $key => $value) {
+
+		switch ($key) {
+			case 'note';
+				$note->id = $_GET['note'];
+				$note->data = $_POST;
+				echo $note->updateNote();
+
+				break;
+
+			case 'source';
+
+
+				break;
+
+
+			case 'media';
+				$note->data = $_FILES;
+				echo $note->uploadMedia();
+
+
+				break;
+
+			default;
+
+
+		}
+	}
+
+} else {
+	echo json_encode(array(
+		'error' => true,
+		'msg'   => "Something went totally wrong!"
+	));
+	exit;
+}
+
+
+
+/*
+
+
+
 	$checkID = $_POST['checkID'];
 	$noteID = $_POST['noteID'];
 	$sourceID = $_POST['sourceID'];
@@ -43,8 +93,20 @@ if(!empty($_POST) && $user['access'] == 0) {
 	$comment = htmlentities($_POST['comment'], ENT_QUOTES, 'UTF-8');
 	$labels = explode(',', $_POST['label']);
 	$tmp_pages = explode('-', $_POST['pages']);
+
+	if(strpos($_POST['pages'], '-') !== false) {
 		$page_start = $tmp_pages[0];
 		$page_end = $tmp_pages[1];
+		if($page_end != '') {
+			if($page_end < $page_start) $page_end = '0';
+		} else {
+			$page_end = '0';
+		}
+	} else {
+		$page_start = $_POST['pages'];
+		$page_end = '0';
+	}
+
 
 	//$media =
 
@@ -59,11 +121,7 @@ if(!empty($_POST) && $user['access'] == 0) {
 		if($checkID == '') {
 
 		}
-		if($page_end != '') {
-			if($page_end < $page_start) $page_end = '0';
-		} else {
-			$page_end = '0';
-		}
+
 
 
 		// update the data
@@ -147,3 +205,4 @@ if(isset($_POST['data'])) {
 	);
 	return json_encode($data);
 }
+*/
