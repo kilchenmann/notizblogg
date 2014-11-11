@@ -10,8 +10,8 @@ RewriteBase /nb
 #RewriteRule ^q=([a-z]+)$ /nb/index.php?search=$1
 
 #api rules
-RewriteRule ^get/([0-9]+)$ /nb/api/get.php?id=$1
-RewriteRule ^post/([0-9]+)$ /nb/api/post.php?id=$1
+#RewriteRule ^get/([0-9]+)$ /nb/api/get.php?id=$1
+#RewriteRule ^post/([0-9]+)$ /nb/api/post.php?id=$1
 
 RewriteRule ^get/label/([0-9]+)$ /nb/api/get.php?label=$1
 RewriteRule ^get/author/([0-9]+)$ /nb/api/get.php?author=$1
@@ -63,6 +63,3 @@ ErrorDocument 402 /nb/note/0
 ErrorDocument 403 /nb/note/0
 ErrorDocument 404 /nb/note/0
 ErrorDocument 500 /nb/note/0
-
-
-

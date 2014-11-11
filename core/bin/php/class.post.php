@@ -1,7 +1,64 @@
 <?php
+
+class post {
+	var $id;	// id number
+	var $access;	// do you have the rights to see notes and sources?
+	var $type;
+	var $part;
+	var $query;
+	var $json;
+
+
+	function post() {
+
+
+	}
+
+	function checkNote() {
+		$source = false;
+		$mysqli = condb('open');
+		$sql = $mysqli->query('SELECT bibID FROM bib WHERE noteID = ' . $this->id .';');
+		if(mysqli_num_rows($sql) > 0) {
+			// note is a source
+			while($row = mysqli_fetch_object($sql)) {
+				$source = $row->bibID;
+			}
+		}
+		return $source;
+	}
+
+	function updateNote($post) {
+		$data = json_decode($post);
+
+		//echo "updateNote";
+		print_r($data);
+		/*
+		$data = array(
+			'message' => "no post"
+		);
+		*/
+		return json_encode($data);
+	}
+
+	function updateSource() {
+
+	}
+
+	function deleteNote() {
+
+
+	}
+
+
+
+}
+
+/*
+
 require_once 'settings.php';
 condb('open');
 if($_POST['content'] != ""){
+	print_r($_POST['content']);
 	//0. collect Post-Data
 	$checkID = $_POST['checkID'];
 	$noteTitle = htmlentities($_POST['title'], ENT_NOQUOTES, 'UTF-8');
@@ -49,6 +106,7 @@ if($_POST['content'] != ""){
 		$projectName = "--";
 	}
 */
+/* // media upload
 	$mediaFile = $_POST['media'];
 	$allowedExts = array("jpg", "jpeg", "gif", "png", "tif", "pdf", "ogv", "mp4", "webm", "ogg", "mp3", "wav");
 	$fileName = $_FILES['upload']['name'];
@@ -103,6 +161,11 @@ if($_POST['content'] != ""){
 		}
 		echo "</div>";
 	}
+	*/
+
+
+
+	/*
 	$noteSourceExtern = '';//htmlentities($_POST['link'],ENT_QUOTES,'UTF-8');
 	$noteSourceName = htmlentities($_POST['source'],ENT_QUOTES,'UTF-8');
 	if($noteSourceName!="" || $noteSourceName!="source"){

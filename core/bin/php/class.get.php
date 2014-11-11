@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: ak
- * Date: 25.06.14
- * Time: 16:50
- */
 
 class get {
 	var $id;	// id number

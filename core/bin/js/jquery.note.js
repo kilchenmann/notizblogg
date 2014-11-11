@@ -54,7 +54,7 @@
 					i += 1;
 				}
 			}
-			return authors;
+			return htmlDecode(authors);
 		},
 		getLocations = function (location) {
 			// locations
@@ -71,7 +71,7 @@
 					i += 1;
 				}
 			}
-			return locations;
+			return htmlDecode(locations);
 		},
 		getPages = function(start, end) {
 			var pages;
@@ -206,7 +206,7 @@
 					i += 1;
 				}
 			}
-			return labels;
+			return htmlDecode(labels);
 		},
 		createUpload = function(ele) {
 			var upl = {};
@@ -400,7 +400,7 @@
 				} else {
 					edit = true;
 					edit_ele = $('<button>').addClass('btn grp_none edit').on('click', function() {
-						edit_ele.note('edit', data);
+						edit_ele.note('edit', nID);
 					});
 
 					/*
@@ -460,142 +460,245 @@
 		form4note = function (ele, data) {
 			var form = {};
 			$.each(data.source.notes, function (i, note) {
-
 					url = NB.api + '/get.php?note=' + note.id;
 					$.getJSON(url, function (data2) {
 						form.labels = getLabel(data2.note.label);
 						for (var key in data2) {
 							form.pages = getPages(data2.note.page.start, data2.note.page.end);
 							if(data2.note.subtitle !== null) {
-								form.title = data2.note.title + '//' + data2.note.subtitle;
+								form.title = htmlDecode(data2.note.title) + '//' + htmlDecode(data2.note.subtitle);
 							} else {
-								form.title = data2.note.title;
+								form.title = htmlDecode(data2.note.title);
 							}
 							ele
 								.append(
-									form.table = $('<table>').attr({'id': note.id})
+									form.form = $('<form>').attr({'method': 'post', 'action': '', 'id': 'form_' + note.id})
+									.append(form.table = $('<table>').attr({'id': note.id})
 										.append(
-											$('<tr>')
+											$('<tr>').addClass('invisible')
 											.append(
-												$('<td>')
-												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'noteID', 'title': 'noteID'}).val(data2.note.id))
+												$('<td>').attr({'colspan': '2'})
+												.append($('<input>')
+													.attr({'type': 'hidden', 'placeholder': 'noteID', 'title': 'noteID', 'name': 'noteID'})
+													.val(data2.note.id)
+												)
+												.append($('<input>')
+													.attr({'type': 'hidden', 'placeholder': 'checkID', 'title': 'checkID', 'name': 'checkID'})
+													.val(data2.note.checkID)
+												)
+												.append($('<input>')
+													.attr({'type': 'hidden', 'placeholder': 'sourceID', 'title': 'sourceID', 'name': 'sourceID'})
+													.val(data.source.id)
+												)
 											)
+										)
+										.append(
+											$('<tr>').addClass('invisible')
 											.append(
-												$('<td>')
-												.append($('<input>').attr({'type': 'hidden', 'placeholder': 'sourceID', 'title': 'sourceID'}).val(data.source.id))
+												$('<td>').attr({'colspan': '2'})
+												.append('<span>')
+													.addClass('error_' + note.id)
+													//.text('You haven\'t completed all required fields!')
 											)
 										)
 										.append(
 											$('<tr>')
 											.append(
 												$('<td>')
-												.append($('<input>').addClass('field_obj large text n_title').attr({'type': 'text', 'placeholder': 'Title//Subtitle', 'title': 'Title//Subtitle'}).val(form.title))
+												.append($('<input>')
+													.addClass('field_obj large text n_title')
+													.attr({'type': 'text', 'placeholder': 'Title//Subtitle', 'title': 'Title//Subtitle', 'name': 'title'})
+													.val(form.title))
 											)
 											.append(
 												$('<td>')
-												.append($('<input>').addClass('field_obj small text n_pages').attr({'type': 'text', 'title': 'Pages', 'placeholder': 'Pages'}).val(form.pages))
-											)
-										)
-										.append(
-											$('<tr>')
-											.append(
-												$('<td>')
-												.append($('<textarea>').addClass('field_obj large tiny text n_comment').html(data2.note.comment).attr({'placeholder': 'comment'}))
-											)
-											.append(
-												$('<td>')
-												.append($('<span>').addClass('field_obj small upload n_media').html(data2.note.media))
+												.append($('<input>')
+													.addClass('field_obj small text n_pages')
+													.attr({'type': 'text', 'title': 'Pages', 'placeholder': 'Pages', 'name': 'pages'})
+													.val(form.pages))
 											)
 										)
 										.append(
 											$('<tr>')
 											.append(
 												$('<td>')
-												.append($('<input>').addClass('field_obj large text n_label').val(form.labels).attr({'type': 'text', 'placeholder': 'label'}))
+												.append($('<textarea>')
+													.addClass('field_obj large tiny text n_comment')
+													.text(htmlDecode(data2.note.comment))
+													.attr({'placeholder': 'comment', 'name': 'comment'}))
+											)
+											.append(
+												$('<td>')
+												.append($('<span>')
+													.addClass('field_obj small upload n_media')
+													.html(data2.note.media))
+											)
+										)
+										.append(
+											$('<tr>')
+											.append(
+												$('<td>')
+												.append($('<input>')
+													.addClass('field_obj large text n_label')
+													.val(form.labels)
+													.attr({'type': 'text', 'placeholder': 'label', 'name': 'label'}))
 											)
 											.append(
 												$('<td>').addClass('right')
 												.append(form.edit_btn = $('<button>').addClass('btn grp_none edit').attr({'id': note.id, 'type': 'button'}))
 												.append(form.reset_btn = $('<button>').addClass('btn grp_none close invisible').attr({'id': note.id, 'type': 'button'}))
-												.append(form.save_btn = $('<button>').addClass('btn grp_none done invisible').attr({'id': note.id, 'type': 'button'}))
+												.append(form.save_btn = $('<button>').addClass('btn grp_none done invisible').attr({'id': note.id, 'type': 'submit'}))
 											)
 										)
+									)
 								);
 							$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
-
-							$('button#' + note.id + '.edit').on('click', function() {
-
-								var upload_ele = $('table#' + note.id).find('span.n_media');
-								createUpload(upload_ele);
-
-								// collect the data
-								var title_subtitle = $('table#' + note.id).find('input.n_title').val().split('//');
-								var title = title_subtitle[0];
-								var subtitle = title_subtitle[1];
-								var comment = $('table#' + note.id).find('textarea.n_comment').val();
-								var labels = $('table#' + note.id).find('input.n_label').val();
-								var media = 'datei.jpg';
-								var pages = $('table#' + note.id).find('input.n_pages').val().split('-');
-								var page_start = pages[0];
-								var page_end = pages[1];
-								var editnote = {
-									'note': {
-										'id': note.id,
-										'checkID': null,
-										'title': title,
-										'subtitle': subtitle,
-										'comment': data2.note.comment,
-										'label': labels,
-										'media': media,
-										'source': {
-											'id': data.source.id,
-											'name': data.source.name,
-											'link': null
-										},
-										'page': {
-											'start': page_start,
-											'end': page_end
-										},
-
-
+						}
+						//i++;
+						$('#form_' + note.id).submit(function(){
+							$.ajax({
+								url:NB.api + '/post.php?note=' + note.id,
+								type : 'POST',
+								dataType: 'json',
+								data: $(this).serialize(),
+								success: function(data){
+									if(data.error){
+										$('table#' + note.id).find('textarea.n_comment').addClass('error');
+									}else {
+										$('table#' + note.id).find('button.close').addClass('invisible');
+										$('table#' + note.id).find('button.done').addClass('invisible');
+										$('table#' + note.id).find('button.edit').removeClass('invisible');
+										$('table#' + note.id).find('textarea.n_comment').removeClass('error');
+										$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
 									}
-								};
-								$('table#' + note.id).find('button').toggleClass('invisible');
-								$('table#' + note.id).find('input, textarea, select').attr('readonly', false);
 
-								$('button#' + note.id + '.close').on('click', function() {
-									$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
-									$('table#' + note.id).find('span.n_media').empty().html(data2.note.media);
+								}
+							});
+							return false;
+						});
+
+						/*
+						$('button#' + note.id + '.done').on('click', function() {
+							// collect the data
+							var title_subtitle = $('table#' + note.id).find('input.n_title').val().split('//');
+							var title = title_subtitle[0];
+							var subtitle = title_subtitle[1];
+							var comment = $('table#' + note.id).find('textarea.n_comment').val();
+							var labels = $('table#' + note.id).find('input.n_label').val();
+							var media = 'datei.jpg';
+							var pages = $('table#' + note.id).find('input.n_pages').val().split('-');
+							var page_start = pages[0];
+							var page_end = pages[1];
+							var savenote = {
+								'note': {
+									'id': note.id,
+									'checkID': null,
+									'title': htmlDecode(title),
+									'subtitle': htmlDecode(subtitle),
+									'comment': htmlDecode(comment),
+									'label': htmlDecode(labels),
+									'media': media,
+									'source': {
+										'id': data.source.id,
+										'name': data.source.name,
+										'link': null
+									},
+									'page': {
+										'start': page_start,
+										'end': page_end
+									},
+								}
+							};
+
+							// and send them in the background to the api
+							$.ajax({
+								type: "POST",
+								url: NB.api + '/post.php?note=' + note.id,
+								data: savenote,
+								//cache: true
+								dataType: "JSON",
+								success: function( data, textStatus, jQxhr ){
+									//$('#response pre').html( JSON.stringify( data ));
 									$('table#' + note.id).find('button').toggleClass('invisible');
-								});
-
-								$('button#' + note.id + '.save').on('click', function() {
-									// collect the data
-
-
-									// and send them in the background to the api
-									$.ajax({
-										type: "POST",
-										url: NB.api + '/post.php?note=' + note.id,
-										data: dataString,
-										cache: false,
-										success: function(result){
-										alert(result);
-										}
-									});
-
-
-								});
-
-
-
-								//$(this).css({'display': 'none'});
-						//		form.buttons.append(form.save_btn = $('<button>').addClass('btn grp_none done').attr({'id': note.id, 'type': 'submit'}));
+								},
+								error: function( jqXhr, textStatus, errorThrown ){
+									console.log( errorThrown );
+								}
 							});
 
 
-						}
-						i++;
+						});
+						*/
+
+$('button#' + note.id + '.edit').on('click', function() {
+	var upload_ele = $('table#' + note.id).find('span.n_media');
+	createUpload(upload_ele);
+	$('table#' + note.id).find('button').toggleClass('invisible');
+	$('table#' + note.id).find('input, textarea, select').attr('readonly', false);
+	// collect the data for a reset
+	var title_subtitle = $('table#' + note.id).find('input.n_title').val().split('//');
+	var title = title_subtitle[0];
+	var subtitle = title_subtitle[1];
+	var comment = $('table#' + note.id).find('textarea.n_comment').val();
+	var labels = $('table#' + note.id).find('input.n_label').val();
+	var media = 'datei.jpg';
+	var pages = $('table#' + note.id).find('input.n_pages').val().split('-');
+	var page_start = pages[0];
+	var page_end = pages[1];
+	var editnote = {
+		'note': {
+			'id': note.id,
+			'checkID': null,
+			'title': htmlDecode(title),
+			'subtitle': htmlDecode(subtitle),
+			'comment': htmlDecode(comment),
+			'label': htmlDecode(labels),
+			'media': media,
+			'source': {
+				'id': data.source.id,
+				'name': data.source.name,
+				'link': null
+			},
+			'page': {
+				'start': page_start,
+				'end': page_end
+			},
+		}
+	};
+
+	$('button#' + note.id + '.close').on('click', function() {
+		$('table#' + note.id).find('span.n_media').empty().html(data2.note.media);
+
+		if(editnote.note.subtitle !== '') {
+			$('table#' + note.id).find('input.n_title').val(editnote.note.title + '//' + editnote.note.subtitle);
+		} else {
+			$('table#' + note.id).find('input.n_title').val(editnote.note.title);
+		}
+		if(editnote.note.page.end !== undefined) {
+			$('table#' + note.id).find('input.n_pages').val(editnote.note.page.start + '-' + editnote.note.page.end);
+		} else {
+			$('table#' + note.id).find('input.n_pages').val(editnote.note.page.start);
+		}
+		$('table#' + note.id).find('textarea.n_comment').val(editnote.note.comment).removeClass('error');
+		$('table#' + note.id).find('input.n_label').val(editnote.note.label);
+
+		$('table#' + note.id).find('button.close').addClass('invisible');
+		$('table#' + note.id).find('button.done').addClass('invisible');
+		$('table#' + note.id).find('button.edit').removeClass('invisible');
+		$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
+
+	});
+
+
+
+
+
+
+
+});
+
+
+
 						if(i !== data.source.notes.length) {
 							ele.append($('<hr>'));
 						}
@@ -871,7 +974,8 @@
 						localdata.view.container.addClass('wall');
 						url = NB.api + '/get.php?' + localdata.settings.query[i] + '=' + localdata.settings.query[localdata.settings.query[i]];
 						$.getJSON(url, function (list) {
-							$('input.search_field').attr({value: decodeURI(list.name)}).html(decodeURI(list.name));
+							var name = htmlDecode(decodeURI(list.name));
+							$('input.search_field').attr({value: name}).html(name);
 							$.each(list.notes, function (i, note) {
 								if(note.ac >= localdata.settings.access) {
 									url = NB.api + '/get.php?id=' + note.id;
@@ -977,9 +1081,11 @@
 						break;
 					case 'q':
 						var url2;
+						var qstring = htmlDecode(decodeURI(localdata.settings.query[localdata.settings.query[i]]));
 						url = NB.api + '/get.php?q=' + localdata.settings.query[localdata.settings.query[i]];
+
 						$('input.search_field').attr({
-							value: decodeURI(localdata.settings.query[localdata.settings.query[i]])
+							value: qstring
 						});
 						$.getJSON(url, function (search) {
 							$.each(search.notes, function (i, noteID) {
@@ -1172,11 +1278,12 @@
 
 				// select a source first
 				$this.html(
-					form.form = $('<form>')
-						.attr({
+					form.form = $('<div>')
+						/*.attr({
 							'action': action,
 							'method': 'post'
-						}).addClass('form_frame')
+						})*/
+						.addClass('form_frame')
 						.append(
 							$('<div>').addClass('top source_form active')
 							.append($('<table>').addClass('source_form')

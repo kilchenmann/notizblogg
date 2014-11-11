@@ -1,3 +1,23 @@
+function getStorage(type) {
+    /*
+  var storage = window[type + 'Storage'],
+    delta = 0,
+    li = document.createElement('li');
+
+  if (!window[type + 'Storage']) return;
+
+  if (storage.getItem('value')) {
+    delta = ((new Date()).getTime() - (new Date()).setTime(storage.getItem('timestamp'))) / 1000;
+
+    li.innerHTML = type + 'Storage: ' + storage.getItem('value') + ' (last updated: ' + delta + 's ago)';
+  } else {
+    li.innerHTML = type + 'Storage is empty';
+  }
+
+  document.querySelector('#previous').appendChild(li);
+  */
+}
+
 // Read a page's GET URL variables and return them as an associative array.
 function getUrlVars()
 {
@@ -55,7 +75,13 @@ function formatFileSize(bytes) {
 	return (bytes / 1000).toFixed(2) + ' KB';
 }
 
+function htmlEncode(value) {
+	return $('<div/>').text(value).html();
+}
 
+function htmlDecode(value) {
+	return $('<div/>').html(value).text();
+}
 
 /*
 var activator = function (element) {

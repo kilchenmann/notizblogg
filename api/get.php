@@ -7,7 +7,8 @@ session_start ();
 
 $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
-require '../core/bin/php/settings.php'; require '../core/bin/php/class.get.php';
+require '../core/bin/php/settings.php';
+require '../core/bin/php/class.get.php';
 
 $user = array(
 	'access' => 1,
@@ -22,7 +23,7 @@ if (isset($_GET['token']) && ($_GET['token'] == $_SESSION['token'])) {
 		'access' => 0
 	);
 } else if (isset($_SESSION["token"])) {
-	// without the thoken, check the user with the session parameters
+	// without the token, check the user with the session parameters
 	$user = conuser($_SESSION['token']);
 }
 
@@ -40,7 +41,7 @@ foreach ($_GET as $key => $value){
 			if($source != false) {
 				$note->id = $source;
 				$note->type = 'source';
-				echo $note->getsource();
+				echo $note->getSource();
 				// or redirect to the right request
 			} else {
 				echo $note->getNote();
