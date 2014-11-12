@@ -50,9 +50,10 @@
     <script type="text/javascript" src="core/bin/js/vendor/jquery.fileupload.js"></script>
 
     <!-- notizblogg specific tools -->
-    <!-- some functional / styling stuff -->
+    <!-- some functional and styling stuff -->
     <script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
     <script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
+    <script type="text/javascript" src="core/bin/js/jquery.upload.js"></script>
     <!-- project, searchbar and login module for the PANEL -->
     <script type="text/javascript" src="core/bin/js/jquery.panel.js"></script>
     <!-- show, add, edit and expand NOTE -->

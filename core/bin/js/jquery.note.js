@@ -208,187 +208,8 @@
 			}
 			return htmlDecode(labels);
 		},
-		createUpload = function(ele, id) {
-			var upl = {};
-			ele.html(
-				upl.form = $('<form>').addClass('upload')
-					.attr({
-						'method': 'post',
-						'action': NB.api + '/post.php?media',
-						'enctype': 'multipart/form-data'
-					})
-					.append(upl.drop = $('<div>')
-						.addClass('field_obj small drop')
-						.append(upl.btn = $('<input>')
-							.attr({
-								'type': 'button',
-								'title': 'Browse',
-								'value': 'Browse'
-							}).text('Browse')
-							.addClass('button small browse')
-							.css({'text-align': 'center'})
-						)
-						.append(upl.inp = $('<input>')
-							.attr({
-								'type': 'file',
-								'name': 'upl'
-							})
-							.addClass('field_obj file_upload')
-						)
-						.append(upl.ele = $('<div>')
-						)
-					)
-			);
-			upl.btn.on('click', function(){
-				upl.inp.click();
-			});
-
-			upl.form.fileupload({
-				// This element will accept file drag/drop uploading
-				dropZone: $('.drop'),
-				// This function is called when a file is added to the queue;
-				// either via the browse button, or via drag/drop:
-				add: function (e, data) {
-					var ext = data.files[0].name.split('.').pop();
-					switch(ext) {
-						case 'jpg':
-						case 'JPG':
-						case 'jpeg':
-						case 'png':
-						case 'PNG':
-						case 'gif':
-						case 'tif':
-						case 'tiff':
-							data.dir = 'picture/';
-							break;
-						case 'pdf':
-							data.dir = 'document/';
-							break;
-						case 'mp4':
-						case 'webm':
-							data.dir = 'movie/';
-							break;
-						case 'mp3':
-						case 'wav':
-							data.dir = 'sound/';
-							break;
-						default:
-							//not supported
-					}
-
-					// Append the file name and file size
-					$('table#' + id).find('input.n_filename').val(data.dir + data.files[0].name);
-					var tpl = {};
-					data.context = upl.ele.addClass('working').empty()
-							.append(tpl.inp = $('<input>')
-								.attr({
-									'type': 'text',
-									'value': '0',
-									'data-width': '48',
-									'data-height': '48',
-									'data-fgColor': '#0788a5',
-									'data-readOnly': '1',
-									'data-bgColor': '#3e4043'
-								})
-							);
-/*
-					tpl.find('span').append($('<img>').attr({'src': NB.media + '/' + data.files[0].name}).css({'width': '120px'}));
-*/
-					/*
-					.text(data.files[0].name)
-								.append('<span>' + formatFileSize(data.files[0].size) + '</span>');
-					*/
-
-					// Add the HTML to the UL element
-			//		data.context = tpl.appendTo(upl.ele);
-
-					// Initialize the knob plugin
-					tpl.inp.knob();
-
-					// Listen for clicks on the cancel icon
-					/*
-					tpl.find('span').click(function(){
-
-						if(tpl.hasClass('working')){
-							jqXHR.abort();
-						}
-
-						tpl.fadeOut(function(){
-							tpl.remove();
-						});
-
-					});
-					*/
-
-					// Automatically upload the file once it is added to the queue
-					var jqXHR = data.submit();
-				},
-
-				progress: function(e, data){
-
-					// Calculate the completion percentage of the upload
-					var progress = parseInt(data.loaded / data.total * 100, 10);
-
-					// Update the hidden input field and trigger a change
-					// so that the jQuery knob plugin knows to update the dial
-					data.context.find('input').val(progress).change();
-
-					if(progress == 100){
-						data.context.find('div').remove();
 
 
-
-
-						data.context.append($('<img>')
-							.attr({'src': NB.media + '/' + data.dir + data.files[0].name})
-							.css({'max-width': '120px', 'max-height': '120px'})
-						);
-					}
-				},
-
-				fail:function(e, data){
-					// Something has gone wrong!
-					data.context.addClass('error').text('There was a probelm with the file upload');
-				}
-
-			});
-
-
-		},
-		deleteUpload = function(ele, id) {
-			var del = {};
-			del.media = ele.html();
-			ele.empty().html(del.form =
-				$('<form>').addClass('upload')
-				.append($('<div>')
-					.addClass('field_obj small drop')
-					.html(del.media)
-					.append(del.btn =
-						$('<input>')
-						.attr({
-							'type': 'button',
-							'title': 'Delete',
-							'value': 'Delete'
-						}).text('Delete')
-						.addClass('button small delete')
-						.css({'text-align': 'center'})
-					)
-				)
-			);
-			/*
-			ele.append(del.btn =
-				$('<span>').text('delete media').addClass('action_obj delete_media btn').css({'height': '20px', 'width': '120px', 'margin-bottom': '-20px;'})
-			);
-			*/
-
-			del.btn.on('click', function() {
-				$('table#' + id).find('input.n_filename').val('');
-				ele.empty();
-					createUpload(ele, id);
-			});
-
-
-		},
 		createNote = function(ele) {
 			var note_ele = {};
 			ele.append(
@@ -520,7 +341,6 @@
 					$('<div>').addClass('left').append(edit_ele).click(function () {
 						if (jQuery.inArray('text', divs)) {
 							//console.log(note_obj);
-
 						}
 					})
 				)
@@ -609,20 +429,32 @@
 											)
 											.append(
 												$('<td>')
-												.append($('<span>')
+												.append(form.upload = $('<div>')
 													.addClass('field_obj small upload n_media')
-													.html(data2.note.media))
-												.append($('<br>'))
+													.append($('<span>').addClass('place4media').html(data2.note.media.html))
+													.append($('<span>').addClass('button4media'))
+												)
 												.append(form.file = $('<input>')
 													.addClass('field_obj small n_filename')
 													.attr({'type': 'hidden', 'placeholder': 'file name', 'name': 'filename'})
-													.val(data2.note.media)
+													.val(data2.note.media.path)
 												)
 												.append(
-													$('<select>').addClass('field_obj small').attr({'name': 'public'})
+													$('<label>')
+													.attr({
+														'for': 'rights_' + note.id
+													}).text('Public')
+												)
+												.append(form.pub = $('<input>')
+													.attr({'type': 'checkbox', 'name': 'public', 'id': 'rights_' + note.id})
+													.val('1')			// public
+													.addClass('n_rights')
+												)
+
+/*													$('<select>').addClass('field_obj small').attr({'name': 'public'})
 													.append($('<option>').text('public').attr({'value': '1'}))
 													.append($('<option>').text('private').attr({'value': '0'}))
-												)
+*/
 											)
 										)
 										.append(
@@ -645,8 +477,9 @@
 									)
 								);
 							$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
+							$('table#' + note.id).find('input.n_rights').attr({'onclick': 'return false'});
 							$('table#' + note.id).find('select').attr('disabled', true);
-							$('table#' + note.id).find('select').val(data2.note.public);
+							if(data2.note.public === '1') $('table#' + note.id).find('input.n_rights').attr({'checked': 'checked'});
 						}
 						//i++;
 						$('#form_' + note.id).submit(function(){
@@ -659,15 +492,29 @@
 									if(data.error){
 										$('table#' + note.id).find('textarea.n_comment').addClass('error');
 									}else {
-										var media = $('table#' + note.id).find('img').html();
+										var filename = $('table#' + note.id).find('input.n_filename').val();
+										var media = '';
+										if(filename !== '') media = $('table#' + note.id).find('span.place4media').html();
+										var upload_ele = $('table#' + note.id).find('div.upload');
+										upload_ele.upload('cancel');
 
-										$('table#' + note.id).find('span.n_media').empty().html(media);
+										$('table#' + note.id).find('span.place4media').removeClass('drop').html(media);
+										//$('table#' + note.id).find('span.place4media input').remove();
+										$('table#' + note.id).find('span.button4media').empty();
+/*
+										$('table#' + note.id).find('div.n_media').empty()
+											.append(
+												$('<span>').addClass('place4media')
+												.html(media)
+											);
+*/
 										$('table#' + note.id).find('button.trash').addClass('invisible');
 										$('table#' + note.id).find('button.close').addClass('invisible');
 										$('table#' + note.id).find('button.done').addClass('invisible');
 										$('table#' + note.id).find('button.edit').removeClass('invisible');
 										$('table#' + note.id).find('textarea.n_comment').removeClass('error');
 										$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
+										$('table#' + note.id).find('input.n_rights').attr({'onclick': 'return false'});
 										$('table#' + note.id).find('select').attr('disabled', true);
 									}
 								}
@@ -675,29 +522,26 @@
 							return false;
 						});
 
-
 					$('button#' + note.id + '.edit').on('click', function() {
-						var media;
-						var upload_ele = $('table#' + note.id).find('span.n_media');
-						if(upload_ele.is(':empty') === true) {
-							media = createUpload(upload_ele, note.id);
-						} else {
-							media = deleteUpload(upload_ele, note.id);
-						}
-
-						$('table#' + note.id).find('button').toggleClass('invisible');
-						$('table#' + note.id).find('input, textarea, select').attr('readonly', false);
-						$('table#' + note.id).find('select').attr('disabled', false);
 						// collect the data for a reset
 						var title_subtitle = $('table#' + note.id).find('input.n_title').val().split('//');
 						var title = title_subtitle[0];
 						var subtitle = title_subtitle[1];
 						var comment = $('table#' + note.id).find('textarea.n_comment').val();
 						var labels = $('table#' + note.id).find('input.n_label').val();
-						var filename = $('table#' + note.id).find('input.filename').val();
+						var filename = $('table#' + note.id).find('input.n_filename').val();
 						var pages = $('table#' + note.id).find('input.n_pages').val().split('-');
 						var page_start = pages[0];
 						var page_end = pages[1];
+						var media = $('table#' + note.id).find('span.place4media').html();
+
+						var rights = $('table#' + note.id).find('input.n_rights');
+						if(rights.is(':checked')) {
+							rights = 1;
+						} else {
+							rights = 0;
+						}
+						console.log(rights);
 						var editnote = {
 							'note': {
 								'id': note.id,
@@ -707,7 +551,7 @@
 								'comment': htmlDecode(comment),
 								'label': htmlDecode(labels),
 								'media': media,
-								'filename': filename,
+								'file': filename,
 								'source': {
 									'id': data.source.id,
 									'name': data.source.name,
@@ -717,11 +561,20 @@
 									'start': page_start,
 									'end': page_end
 								},
+								'rights': rights
 							}
 						};
+						$('table#' + note.id).find('button').toggleClass('invisible');
+						$('table#' + note.id).find('input, textarea, select').attr('readonly', false);
+						$('table#' + note.id).find('select').attr('disabled', false);
+						$('table#' + note.id).find('input.n_rights').attr({'onclick': 'return true'});
+
+						var upload_ele = $('table#' + note.id).find('div.upload');
+						var file_ele = $('table#' + note.id).find('input.n_filename');
+						upload_ele.upload({'file': file_ele, 'media': media, 'note': note.id});
 
 						$('button#' + note.id + '.close').on('click', function() {
-							$('table#' + note.id).find('span.n_media').empty().html(data2.note.media);
+							upload_ele.upload('cancel');
 
 							if(editnote.note.subtitle !== '') {
 								$('table#' + note.id).find('input.n_title').val(editnote.note.title + '//' + editnote.note.subtitle);
@@ -735,13 +588,17 @@
 							}
 							$('table#' + note.id).find('textarea.n_comment').val(editnote.note.comment).removeClass('error');
 							$('table#' + note.id).find('input.n_label').val(editnote.note.label);
-							$('table#' + note.id).find('input.n_media').val(editnote.note.media);
-
+							$('table#' + note.id).find('span.place4media').html(editnote.note.media);
+							$('table#' + note.id).find('input.n_filename').val(editnote.note.file);
+							$('table#' + note.id).find('input.n_rights').removeAttr('checked');
+							if(editnote.note.rights === 1) $('table#' + note.id).find('input.n_rights').attr({'checked': 'checked'});
+							
 							$('table#' + note.id).find('button.trash').addClass('invisible');
 							$('table#' + note.id).find('button.close').addClass('invisible');
 							$('table#' + note.id).find('button.done').addClass('invisible');
 							$('table#' + note.id).find('button.edit').removeClass('invisible');
 							$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
+							$('table#' + note.id).find('input.n_rights').attr({'onclick': 'return false'});
 						});
 					});
 
@@ -766,10 +623,10 @@
 				if (data.note.public === '0') {
 					note_ele.addClass('private');
 				}
-				if(!$.isEmptyObject(data.note.media)) {
+				if(!$.isEmptyObject(data.note.media.html)) {
 					note.media
 						.empty()
-						.html(data.note.media);
+						.html(data.note.media.html);
 					note.content.css({'border-radius': '0px', '&:hover': {'border-radius': '0px'}});
 				}
 				note.content
@@ -902,7 +759,7 @@
 				bibtex = showsource.bibtex;
 
 				note.media
-					.html(data.source.media);
+					.html(data.source.media.html);
 				note.content
 					.append($('<p>').html(biblio));
 				note.content4tex

@@ -262,29 +262,33 @@ function getNoteID($id) {
 }
 
 function getMedia($media) {
-	$media_file = explode('.', $media.'.');
-	$name = $media_file[0];
-	$ext = $media_file[1];
+	$tmp_media = explode('/', $media . '/');
+	$mediaType = $tmp_media[0];
+	$mediaFile = $tmp_media[1];
 
-	$media_path = __MEDIA_URL__  . '/' . $media;
+	$tmp_file = explode('.', $mediaFile . '.');
+	$name = $tmp_file[0];
+	$ext = $tmp_file[1];
 
-	//if(file_exists($media_path)) echo 'file exists';
+	$mediaURL = __MEDIA_URL__  . '/' . $media;
+	$mediaPath = __MEDIA_PATH__  . '/' . $media;
+
+	//if(file_exists($mediaURL)) echo 'file exists';
 
 	if($media != '') {
 
 	}
-	$media_tag = '<span class=\'warning invisible\'>[The media file is missing OR \'' . $ext . '\' is not supported]</span>';
+	$media_tag = '<span class=\'warning invisible\'>[The ' . $mediaType . ' file is missing!]</span>';
 
-	if (@fopen($media_path, 'r') == true) {
-		$mediatype = explode('/', $media);
-		switch($mediatype[0]) {
+	if (@fopen($mediaPath, 'r') == true) {
+		switch($mediaType) {
 			case 'picture';
-				$size = getimagesize($media_path);
+				$size = getimagesize($mediaURL);
 				// ergibt mit $infoSize[0] für breite und $infoSize[1] für höhe
-				$media_tag = '<img class=\'staticMedia\' src=\'' . $media_path . '\' alt=\'' . $media . '\' title=\'' . $media . '\'>';
+				$media_tag = '<img class=\'staticMedia\' src=\'' . $mediaURL . '\' alt=\'' . $mediaFile . '\' title=\'' . $mediaType . ': ' .$mediaFile . '\'>';
 				break;
 			case 'document';
-		//		$media_tag = '<a href=\'' . $media_path . '\' title=\'Download ' . $media . '\'><img class=\'staticMedia\' src=\'' . __MEDIA_URL__ . "/documents/".$name."' title='".$media."' alt='".$media."'/></a>";
+		//		$media_tag = '<a href=\'' . $mediaURL . '\' title=\'Download ' . $media . '\'><img class=\'staticMedia\' src=\'' . __MEDIA_URL__ . "/documents/".$name."' title='".$media."' alt='".$media."'/></a>";
 				break;
 			case 'movie';
 				$media_tag = '<video class=\'motionPicture\'>Motion Picture is not yet supported in Notizblogg</video>';
@@ -296,10 +300,17 @@ function getMedia($media) {
 				$media_tag = '';
 		}
 	} else {
-		$media_tag = '';
+	//	$media_tag = '';
 	}
 
-	return $media_tag;
+	$media_arr = array(
+			'type' => $mediaType,
+			'file' => $mediaFile,
+			'path' => $media,
+			'html' => $media_tag
+	);
+
+	return $media_arr;
 }
 
 

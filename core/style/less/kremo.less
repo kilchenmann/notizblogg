@@ -501,14 +501,9 @@ form.upload {
         border-image: url('../img/upload-border.png') 25 repeat;
         text-align: center;
         text-transform: uppercase;
-
         font-size:16px;
         font-weight:bold;
         color:#7f858a;
-
-        input[type=file], .field_obj.file_upload {
-          display:none;
-        }
 
         ul{
             list-style:none;
@@ -579,7 +574,46 @@ form.upload {
 
         }
     }
+
+    input[type=file] {
+      display:none;
+    }
 }
+
+.place4media {
+
+    &.drop {
+        width: 120px;
+        height: 120px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    img {
+        max-width: 120px;
+        max-height: 120px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+}
+.button4media {
+
+    input {
+        position: relative;
+        background-color: fade(@bg, 22%);
+        border-top: 1px solid lighten(@bg, 8%);
+        border-left: 1px solid lighten(@bg, 8%);
+        border-right: 1px solid lighten(@bg, 8%);
+        border-bottom: 1px solid darken(@bg, 8%);
+        font-size: 1em;
+    }
+}
+
+
+/*
 
 
 input.upload.field_obj {
@@ -590,25 +624,7 @@ input.upload.field_obj {
   //  top: -160px;
 }
 
-.field_obj.upload {
-
-    img {
-        max-width: 120px;
-        max-height: 120px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    span {
-        position: relative;
-        background-color: fade(@bg, 22%);
-        border-top: 1px solid lighten(@bg, 8%);
-        border-left: 1px solid lighten(@bg, 8%);
-        border-right: 1px solid lighten(@bg, 8%);
-        border-bottom: 1px solid darken(@bg, 8%);
-        font-size: 1em;
-    }
-}
+*/
 
 img.media, video.media, audio.media {
   max-width: 160px;
@@ -677,8 +693,8 @@ label.check {
   top: 0px;
   left: 0px;
 }
-input[type=checkbox] {
-  display: none;
+input[type=checkbox], input[type=radio] {
+//  display: none;
 }
 @-webkit-keyframes labelNO {
   0% {
