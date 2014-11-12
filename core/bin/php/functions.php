@@ -314,6 +314,81 @@ function getMedia($media) {
 }
 
 
+/* *************************************************
+/* Formular and post functions
+/* *********************************************** */
+// for label, for author, for locations
+// table: label, author, location
+// tableID: labelID, authorID, locationID
+// value:	label, author, location
+// rel_table: rel_note_label, rel_bib_author, rel_bib_location
+// relID: noteID, bibID, bibID
+function insertMN($name, $rel, $data, $id) {
+	$data = trim($data);
+	$tableID = $name . 'ID';
+	$rel_table = 'rel_' . $rel . '_' . $name;
+	$relID = $rel . 'ID';
+	if($data != '') {
+		$d = explode(', ', $data);
+		foreach($d as $n) {
+			$mysqli = condb('open');
+			$sql = $mysqli->query('SELECT ' . $tableID . ' FROM ' . $name . ' WHERE ' . $name . ' = \'' . $n . '\';');
+			$num_results = mysqli_num_rows($sql);
+			if($num_results == 1) {
+				while($row = mysqli_fetch_object($sql)) {
+					$relIDs[] = $row->$tableID;
+				}
+			} else {
+				// new data
+				$newsql = $mysqli->query('INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');');
+				 	$relIDs[] = mysqli_insert_id($newsql);
+			}
+
+			foreach($relIDs as $rid) {
+				$mysli->query('INSERT INTO ' . $rel_table . ' (' . $tableID . ', ' . $relID . ') VALUES (\'' . $rid . '\', \'' . $id . '\');');
+			}
+			$mysqli = condb('close');
+		}
+
+
+	}
+
+	return 'ok';
+
+}
+
+
+function insertMN_old($table,$relTable,$data,$linkID,$linkTable){
+	$data=trim($data);
+	$tableID = $table.'ID';
+	$tableName = $table."Name";
+	$linkTableID = $linkTable."ID";
+	// Check Table, if data already exists
+	if($data!=""){
+		$relSql = mysql_query("SELECT ".$tableID." FROM ".$table." WHERE ".$tableName." = '".$data."'");
+		if(mysql_num_rows($relSql)==1) {
+			while($row = mysql_fetch_object($relSql)){
+				$relIDs[] = $row->$tableID;
+			}
+		} else {
+			// New Data
+			mysql_query("INSERT INTO ".$table." (".$tableName.") VALUES ('".$data."')");
+			$relIDs[] = mysql_insert_id();
+		}
+		// Save data in relational Table
+		foreach($relIDs as $relID) {
+			mysql_query("INSERT INTO ".$relTable." (".$tableID.", ".$linkTableID.") VALUES ('".$relID."', '".$linkID."')");
+		}
+	}
+}
+
+
+
+
+
+
+
+
 /*
 			$media_path = __MEDIA_URL__ . '/' . $media;
 			if (@fopen($media_path,'r')==true){
@@ -610,29 +685,6 @@ function showZeroResults() {
  * **************************************************************
  */
 
-function insertMN($table,$relTable,$data,$linkID,$linkTable){
-	$data=trim($data);
-	$tableID = $table."ID";
-	$tableName = $table."Name";
-	$linkTableID = $linkTable."ID";
-	// Check Table, if data already exists
-	if($data!=""){
-		$relSql = mysql_query("SELECT ".$tableID." FROM ".$table." WHERE ".$tableName." = '".$data."'");
-		if(mysql_num_rows($relSql)==1) {
-			while($row = mysql_fetch_object($relSql)){
-				$relIDs[] = $row->$tableID;
-			}
-		} else {
-			// New Data
-			mysql_query("INSERT INTO ".$table." (".$tableName.") VALUES ('".$data."')");
-			$relIDs[] = mysql_insert_id();
-		}
-		// Save data in relational Table
-		foreach($relIDs as $relID) {
-			mysql_query("INSERT INTO ".$relTable." (".$tableID.", ".$linkTableID.") VALUES ('".$relID."', '".$linkID."')");
-		}
-	}
-}
 
 
 	function showEditNoteLink($note, $notePublic, $editLink){

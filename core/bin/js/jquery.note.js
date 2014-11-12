@@ -372,7 +372,7 @@
 							}
 							ele
 								.append(
-									form.form = $('<form>').attr({'method': 'post', 'action': '', 'id': 'form_' + note.id})
+									form.form = $('<form>').attr({'method': 'post', 'action': '', 'id': 'form_' + note.id}).addClass('')
 									.append(form.table = $('<table>').attr({'id': note.id})
 										.append(
 											$('<tr>').addClass('invisible')
@@ -464,7 +464,7 @@
 												.append($('<input>')
 													.addClass('field_obj large text n_label')
 													.val(form.labels)
-													.attr({'type': 'text', 'placeholder': 'label', 'name': 'label'}))
+													.attr({'type': 'text', 'placeholder': 'label', 'name': 'label', 'title': 'label 1, label 2, etc.'}))
 											)
 											.append(
 												$('<td>').addClass('right')
@@ -592,7 +592,7 @@
 							$('table#' + note.id).find('input.n_filename').val(editnote.note.file);
 							$('table#' + note.id).find('input.n_rights').removeAttr('checked');
 							if(editnote.note.rights === 1) $('table#' + note.id).find('input.n_rights').attr({'checked': 'checked'});
-							
+
 							$('table#' + note.id).find('button.trash').addClass('invisible');
 							$('table#' + note.id).find('button.close').addClass('invisible');
 							$('table#' + note.id).find('button.done').addClass('invisible');

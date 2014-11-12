@@ -67,6 +67,9 @@ class post {
 			if($checkID == '') {
 
 			}
+	// change to updateMN!!!!!!!
+	//		$label = insertMN('label', 'note', $this->data['label'], $noteID);
+
 			// update the data
 			$sql = $mysqli->query('UPDATE note SET ' .
 									'noteTitle=\'' . $title . '\', ' .
