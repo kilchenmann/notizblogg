@@ -43,7 +43,12 @@ class post {
 			}
 		$comment = htmlentities($this->data['comment'], ENT_QUOTES, 'UTF-8');
 		$media = $this->data['filename'];
-		$public = $this->data['public'];
+		if(array_key_exists('public', $this->data)) {
+			$public = 1;
+		} else {
+			$public = 0;
+		}
+//		$public = $this->data['public'];
 		$labels = explode(',', $this->data['label']);
 		$tmp_pages = explode('-', $this->data['pages']);
 			if(strpos($this->data['pages'], '-') !== false) {

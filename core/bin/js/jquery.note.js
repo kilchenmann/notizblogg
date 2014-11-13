@@ -439,22 +439,6 @@
 													.attr({'type': 'hidden', 'placeholder': 'file name', 'name': 'filename'})
 													.val(data2.note.media.path)
 												)
-												.append(
-													$('<label>')
-													.attr({
-														'for': 'rights_' + note.id
-													}).text('Public')
-												)
-												.append(form.pub = $('<input>')
-													.attr({'type': 'checkbox', 'name': 'public', 'id': 'rights_' + note.id})
-													.val('1')			// public
-													.addClass('n_rights')
-												)
-
-/*													$('<select>').addClass('field_obj small').attr({'name': 'public'})
-													.append($('<option>').text('public').attr({'value': '1'}))
-													.append($('<option>').text('private').attr({'value': '0'}))
-*/
 											)
 										)
 										.append(
@@ -468,8 +452,39 @@
 											)
 											.append(
 												$('<td>').addClass('right')
+												.append(form.reset_btn = $('<button>').addClass('btn grp_none view invisible').attr({'id': note.id, 'type': 'button'}))
+												.append(form.save_btn = $('<button>').addClass('btn grp_none trash invisible').attr({'id': note.id, 'type': 'button'}))
+/*
+.attr({
+	'for': 'rights_' + note.id
+}).text('Public')
+)
+.append(form.pub = $('<button>')
+.attr({'type': 'checkbox', 'name': 'public', 'id': 'rights_' + note.id})
+.val('1')			// public
+.addClass('n_rights')
+)
+*/
+
+/*													$('<select>').addClass('field_obj small').attr({'name': 'public'})
+.append($('<option>').text('public').attr({'value': '1'}))
+.append($('<option>').text('private').attr({'value': '0'}))
+*/
+
+											)
+										)
+										.append(
+											$('<tr>')
+											.append(
+												$('<td>')
+												.append($('<input>')
+													.addClass('field_obj large text n_url')
+													.val(form.url)
+													.attr({'type': 'text', 'placeholder': 'url', 'name': 'url', 'title': 'Hypertext Reference (URL)'}))
+											)
+											.append(
+												$('<td>').addClass('right')
 												.append(form.edit_btn = $('<button>').addClass('btn grp_none edit').attr({'id': note.id, 'type': 'button'}))
-												.append(form.trash_btn = $('<button>').addClass('btn grp_none trash invisible').attr({'id': note.id, 'type': 'button'}))
 												.append(form.reset_btn = $('<button>').addClass('btn grp_none close invisible').attr({'id': note.id, 'type': 'button'}))
 												.append(form.save_btn = $('<button>').addClass('btn grp_none done invisible').attr({'id': note.id, 'type': 'submit'}))
 											)
@@ -479,7 +494,7 @@
 							$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
 							$('table#' + note.id).find('input.n_rights').attr({'onclick': 'return false'});
 							$('table#' + note.id).find('select').attr('disabled', true);
-							if(data2.note.public === '1') $('table#' + note.id).find('input.n_rights').attr({'checked': 'checked'});
+							if(data2.note.public === '1') $('table#' + note.id).find('button.view').css({'border': '2px solid green', 'border-radius': '50%'});
 						}
 						//i++;
 						$('#form_' + note.id).submit(function(){
@@ -508,6 +523,7 @@
 												.html(media)
 											);
 */
+										$('table#' + note.id).find('button.view').addClass('invisible');
 										$('table#' + note.id).find('button.trash').addClass('invisible');
 										$('table#' + note.id).find('button.close').addClass('invisible');
 										$('table#' + note.id).find('button.done').addClass('invisible');
@@ -536,12 +552,12 @@
 						var media = $('table#' + note.id).find('span.place4media').html();
 
 						var rights = $('table#' + note.id).find('input.n_rights');
+
 						if(rights.is(':checked')) {
 							rights = 1;
 						} else {
 							rights = 0;
 						}
-						console.log(rights);
 						var editnote = {
 							'note': {
 								'id': note.id,
@@ -564,7 +580,15 @@
 								'rights': rights
 							}
 						};
-						$('table#' + note.id).find('button').toggleClass('invisible');
+						$('table#' + note.id).find('button.view').removeClass('invisible').on('click', function(){
+							$(this).toggleClass('active');
+						});
+						$('table#' + note.id).find('button.trash').removeClass('invisible').on('click', function(){
+							$(this).toggleClass('active');
+						});
+						$('table#' + note.id).find('button.close').removeClass('invisible');
+						$('table#' + note.id).find('button.done').removeClass('invisible');
+						$('table#' + note.id).find('button.edit').addClass('invisible');
 						$('table#' + note.id).find('input, textarea, select').attr('readonly', false);
 						$('table#' + note.id).find('select').attr('disabled', false);
 						$('table#' + note.id).find('input.n_rights').attr({'onclick': 'return true'});
@@ -593,10 +617,14 @@
 							$('table#' + note.id).find('input.n_rights').removeAttr('checked');
 							if(editnote.note.rights === 1) $('table#' + note.id).find('input.n_rights').attr({'checked': 'checked'});
 
-							$('table#' + note.id).find('button.trash').addClass('invisible');
+
+							$('table#' + note.id).find('button.view').addClass('invisible');
+							$('table#' + note.id).find('button.trash').addClass('invisible').removeClass('active');
 							$('table#' + note.id).find('button.close').addClass('invisible');
 							$('table#' + note.id).find('button.done').addClass('invisible');
 							$('table#' + note.id).find('button.edit').removeClass('invisible');
+
+							//$('table#' + note.id).find('button').toggleClass('invisible');
 							$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
 							$('table#' + note.id).find('input.n_rights').attr({'onclick': 'return false'});
 						});
@@ -897,6 +925,7 @@
 								}
 							});
 						});
+
 						break;
 					case 'source':
 						// desk

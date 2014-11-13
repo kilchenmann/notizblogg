@@ -230,7 +230,7 @@ function insertMN($name, $rel, $data, $id) {
                      $relIDs[] = mysqli_insert_id($newsql);
             }
             foreach($relIDs as $rid) {
-                $mysli->query('INSERT INTO ' . $rel_table . ' (' . $tableID . ', ' . $relID . ') VALUES (\'' . $rid . '\', \'' . $id . '\');');
+                $mysqli->query('INSERT INTO ' . $rel_table . ' (' . $tableID . ', ' . $relID . ') VALUES (\'' . $rid . '\', \'' . $id . '\');');
             }
             $mysqli = condb('close');
         }
