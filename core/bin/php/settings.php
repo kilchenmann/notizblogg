@@ -26,3 +26,4 @@ define ('__SITE_API__', $protocol.$_SERVER['HTTP_HOST'] . __BASE_FOLDER__ . "/ap
 // echo "SITE_API: ".__SITE_API__."<br>";
 
 include ('functions.php');
+include ('fun4mysql.php');
