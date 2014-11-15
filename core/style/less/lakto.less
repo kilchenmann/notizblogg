@@ -6,7 +6,7 @@
 body, header, footer, nav, section, span, p, input, select, textarea {
     text-decoration: none;
     list-style-type: none;
-    letter-spacing: 0.2em;
+    letter-spacing: 2px;
     line-height: 1.2em;
     color: @ink;
     font-family: raleway, awesome, stylus, Verdana, sans-serif;
@@ -256,11 +256,12 @@ table {
             }
         }
     }
-
-
-
-
 }
+
+.invisible {
+    display: none;
+}
+
 
 .float_obj {
   z-index: 100;
@@ -294,14 +295,14 @@ table {
     }
     .top {
 //        border-bottom: 1px solid fade(@ink, 50%);
-        height: 170px;
+        height: 250px;
         background-color: @bg;
         .box-shadow-bottom();
     }
 
     .bottom {
-        overflow: scroll;
-        height: 620px;
+        overflow: hidden;
+        height: 450px;
         background-color: fade(@bg, 81%);
     }
 

@@ -31,62 +31,44 @@ class post {
 	}
 
 	function updateNote() {
-		$checkID = $this->data['checkID'];
-		$noteID = $this->data['noteID'];
-		$sourceID = $this->data['sourceID'];
-		$tmp_title = explode('//', $this->data['title']);
-			$title = $tmp_title[0];
-			if(isset($tmp_title[1])) {
-				$subtitle = $tmp_title[1];
-			} else {
-				$subtitle = null;
-			}
-		$comment = htmlentities($this->data['comment'], ENT_QUOTES, 'UTF-8');
-		$media = $this->data['filename'];
-		if(array_key_exists('public', $this->data)) {
-			$public = 1;
-		} else {
-			$public = 0;
-		}
-//		$public = $this->data['public'];
-		$labels = explode(',', $this->data['label']);
-		$tmp_pages = explode('-', $this->data['pages']);
-			if(strpos($this->data['pages'], '-') !== false) {
-				$page_start = $tmp_pages[0];
-				$page_end = $tmp_pages[1];
-				if($page_end != '') {
-					if($page_end < $page_start) $page_end = '0';
-				} else {
-					$page_end = '0';
-				}
-			} else {
-				$page_start = $this->data['pages'];
-				$page_end = '0';
-			}
+		if(!array_key_exists('notePublic', $this->data)) $this->data['notePublic'] = 0;
 
-		if(!empty($comment) && !empty($sourceID))
+		$this->data['pageStart'] = '0';
+		$this->data['pageEnd'] = '0';
+		$tmp_pages = explode('-', $this->data['pages']);
+		if(strpos($this->data['pages'], '-') !== false) {
+			$this->data['pageStart'] = $tmp_pages[0];
+			$this->data['pageEnd'] = $tmp_pages[1];
+			if($this->data['pageEnd'] != '') {
+				if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
+			}
+		} else {
+			$page_start = $this->data['pages'];
+		}
+
+		if(!empty($this->data['noteComment']) && !empty($this->data['bibID']))
 		{
 			// some checks and request first
 			$mysqli = condb('open');
 			//$bibsql = $mysqli->query('SELECT bibID ')
-			if($checkID == '') {
+			if($this->data['checkID'] == '') {
 
 			}
-
-			$label = updateMN('label', 'note', $this->data['label'], $noteID);
+			updateMN('label', 'note', $this->data['noteLabel'], $this->data['noteID']);
 
 			// update the data
 			$sql = $mysqli->query('UPDATE note SET ' .
-									'noteTitle=\'' . $title . '\', ' .
-									'noteSubtitle=\'' . $subtitle . '\', ' .
-									'noteComment=\'' . $comment . '\', ' .
-									'noteMedia=\'' . $media . '\', ' .
-									'bibID=\'' . $sourceID . '\', ' .
-									'pageStart=\'' . $page_start. '\', ' .
-									'pageEnd=\'' . $page_end. '\', ' .
+									'noteTitle=\'' . $this->data['noteTitle'] . '\', ' .
+									'noteSubtitle=\'' . $this->data['noteSubtitle'] . '\', ' .
+									'noteComment=\'' . $this->data['noteComment'] . '\', ' .
+									'noteLink=\'' . $this->data['noteLink'] . '\', ' .
+									'noteMedia=\'' . $this->data['noteMedia'] . '\', ' .
+									'bibID=\'' . $this->data['bibID'] . '\', ' .
+									'pageStart=\'' . $this->data['pageStart']. '\', ' .
+									'pageEnd=\'' . $this->data['pageEnd']. '\', ' .
 									'userID=\'' . $this->user. '\', ' .
-									'notePublic=\'' . $public . '\' ' .
-									'WHERE noteID = ' . $noteID . ';');
+									'notePublic=\'' . $this->data['notePublic'] . '\' ' .
+									'WHERE noteID = ' . $this->data['noteID'] . ';');
 			condb('close');
 
 			return json_encode(array(
