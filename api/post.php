@@ -48,7 +48,9 @@ if((!empty($_POST) || !empty($_FILES)) && $user['access'] == 0) {
 				break;
 
 			case 'source';
-
+				$note->id = $_GET['source'];
+				$note->data = $_POST;
+				echo $note->updateSource();
 
 				break;
 

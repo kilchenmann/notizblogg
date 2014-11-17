@@ -281,6 +281,20 @@ class get {
 							array_push($notes, $row->labelID. '::' . $row->label);
 						}
 						break;
+					case 'author';
+						$sql = $mysqli->query('SELECT authorID, author FROM author ORDER BY author;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->authorID. '::' . $row->author);
+						}
+						break;
+					case 'location';
+						$sql = $mysqli->query('SELECT locationID, location FROM location ORDER BY location;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->locationID. '::' . $row->location);
+						}
+						break;
 
 
 					default;		// label
@@ -379,9 +393,9 @@ class get {
 				break;
 
 			case 'label';
-				$asql = $mysqli->query('SELECT label.labelID, rel_note_label.bibID FROM label, rel_note_label WHERE label.label LIKE \'%'.$q.'%\' AND label.labelID = rel_note_label.labelID');
+				$asql = $mysqli->query('SELECT label.labelID, rel_note_label.noteID FROM label, rel_note_label WHERE label.label LIKE \'%'.$q.'%\' AND label.labelID = rel_note_label.labelID');
 				while($arow = mysqli_fetch_object($asql)) {
-					$sql = $mysqli->query('SELECT note.noteID FROM bib, note WHERE bib.bibID = ' . $arow->bibID . ' AND bib.noteID = note.noteID AND note.notePublic >= ' . $this->access . ';' );
+					$sql = $mysqli->query('SELECT note.noteID FROM note WHERE note.noteID = ' . $arow->noteID . ' AND note.notePublic >= ' . $this->access . ';');
 					while($row = mysqli_fetch_object($sql)) {
 						$results[] = $row->noteID;
 					}
@@ -395,7 +409,6 @@ class get {
 					$results[] = $row->noteID;
 				}
 				$f = 'note';
-
 		}
 		$list = array(
 			'type' => $f,
@@ -403,6 +416,7 @@ class get {
 			'query' => $q,
 			'notes' => $results
 		);
+		//print_r($list);
 
 		$this->json = json_encode($list);
 

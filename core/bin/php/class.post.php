@@ -87,7 +87,65 @@ class post {
 
 
 	function updateSource() {
+		if(!array_key_exists('notePublic', $this->data)) $this->data['notePublic'] = 0;
+		if(!array_key_exists('bibEditor', $this->data)) $this->data['bibEditor'] = 0;
 
+		$this->data['pageStart'] = '0';
+		$this->data['pageEnd'] = '0';
+		$tmp_pages = explode('-', $this->data['pages']);
+		if(strpos($this->data['pages'], '-') !== false) {
+			$this->data['pageStart'] = $tmp_pages[0];
+			$this->data['pageEnd'] = $tmp_pages[1];
+			if($this->data['pageEnd'] != '') {
+				if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
+			}
+		} else {
+			$page_start = $this->data['pages'];
+		}
+
+		if(!empty($this->data['noteComment']) && !empty($this->data['bibID']))
+		{
+			// some checks and request first
+			$mysqli = condb('open');
+			//$bibsql = $mysqli->query('SELECT bibID ')
+			if($this->data['checkID'] == '') {
+
+			}
+			updateMN('author', 'bib', $this->data['noteAuthor'], $this->data['bibID']);
+			updateMN('location', 'bib', $this->data['noteLocation'], $this->data['bibID']);
+			updateMN('label', 'note', $this->data['noteLabel'], $this->data['noteID']);
+
+			$bibsql = $mysqli->query('UPDATE bib SET ' .
+									'bib=\'' . $this->data['bibName'] . '\', ' .
+									'bibEditor=\'' . $this->data['bibEditor'] . '\', ' .
+									'bibTyp=\'' . $this->data['bibTyp'] . '\' ' .
+									'WHERE bibID = ' . $this->data['bibID'] . ';');
+
+			// update the data
+			$sql = $mysqli->query('UPDATE note SET ' .
+									'noteTitle=\'' . $this->data['noteTitle'] . '\', ' .
+									'noteSubtitle=\'' . $this->data['noteSubtitle'] . '\', ' .
+									'noteComment=\'' . $this->data['noteComment'] . '\', ' .
+									'noteLink=\'' . $this->data['noteLink'] . '\', ' .
+									'noteMedia=\'' . $this->data['noteMedia'] . '\', ' .
+									'pageStart=\'' . $this->data['pageStart']. '\', ' .
+									'pageEnd=\'' . $this->data['pageEnd']. '\', ' .
+									'userID=\'' . $this->user. '\', ' .
+									'notePublic=\'' . $this->data['notePublic'] . '\' ' .
+									'WHERE noteID = ' . $this->data['noteID'] . ';');
+			condb('close');
+
+			return json_encode(array(
+				'error' => false,
+			));
+			exit;
+		}else{
+			return json_encode(array(
+				'error' => true,
+				'msg'   => "Something went totally wrong!"
+			));
+			exit;
+		}
 	}
 
 	function deleteNote() {

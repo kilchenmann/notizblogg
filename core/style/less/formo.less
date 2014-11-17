@@ -1,24 +1,36 @@
+.form_frame {
+    overflow: hidden;
+    .note_form {
+        margin-right: -15px;
+        margin-bottom: -15px;
+        padding-bottom: 22px;
+        form {
+            textarea {
+                max-width: 480px;
+                max-height: 200px;
+            }
+        }
+    }
+}
 table {
+//    max-height: 450px;
     tr {
         min-height: 40px;
-
-
+//        max-height: 212px;
         th, td {
-
             &.large {
                 width: 500px;
                 max-width: 500px;
+                height: 40px;
+                max-height: 212px;
             }
-
             &.medium {
                 width: 140px;
                 max-width: 140px;
             }
-
             &.small {
                 width: 50px;
                 max-width: 50px;
-
             }
         }
     }

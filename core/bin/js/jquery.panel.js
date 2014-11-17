@@ -323,7 +323,7 @@
 				$('header').after(
 					form.frame = $('<div>')
 						.addClass('float_obj large form_frame')
-						.note('add', NB.api + '/post.php')
+						.form('add', NB.api + '/post.php')
 				);
 				$this.append(
 					form.new = $('<button>')

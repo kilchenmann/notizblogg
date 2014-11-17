@@ -5,9 +5,11 @@ error_reporting(-1);
 //
 function condb($conart) {
     $mysqli = new mysqli($GLOBALS['nb']['host'], $GLOBALS['nb']['user'], $GLOBALS['nb']['pass'], $GLOBALS['nb']['db']);
+
     if ($mysqli->connect_errno) {
         die('Connect Error: ' . $mysqli->connect_errno);
     }
+//    mysqli_set_charset($mysqli->connect,'utf8');
     if($conart == 'close') {
         mysqli_close($mysqli);
         $mysqli = null;
@@ -215,9 +217,12 @@ function insertMN($name, $rel, $data, $id) {
     $rel_table = 'rel_' . $rel . '_' . $name;
     $relID = $rel . 'ID';
     if($data != '') {
-        $d = explode(', ', $data);
+        $d = explode('/', $data);
         foreach($d as $n) {
+            $n = trim($n);
+//            echo 'INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');';
             $mysqli = condb('open');
+
             $sql = $mysqli->query('SELECT ' . $tableID . ' FROM ' . $name . ' WHERE ' . $name . ' = \'' . $n . '\';');
             $num_results = mysqli_num_rows($sql);
             if($num_results == 1) {
@@ -226,8 +231,10 @@ function insertMN($name, $rel, $data, $id) {
                 }
             } else {
                 // new data
-                $newsql = $mysqli->query('INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');');
-                     $relIDs[] = mysqli_insert_id($newsql);
+                if($n != '') {
+                    $newsql = $mysqli->query('INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');');
+                    $relIDs[] = mysqli_insert_id($newsql);
+                }
             }
             foreach($relIDs as $rid) {
                 $mysqli->query('INSERT INTO ' . $rel_table . ' (' . $tableID . ', ' . $relID . ') VALUES (\'' . $rid . '\', \'' . $id . '\');');
@@ -255,6 +262,7 @@ function updateMN($name, $rel, $data, $id) {
         // first: delete the relation and set it as new
         $mysqli = condb('open');
         $mysqli->query('DELETE FROM ' . $rel_table . ' WHERE ' . $relID . ' = ' . $id . ';');
+        echo 'DELETE FROM ' . $rel_table . ' WHERE ' . $relID . ' = ' . $id . ';';
         $mysqli = condb('close');
         insertMN($name, $rel, $data, $id);
     }

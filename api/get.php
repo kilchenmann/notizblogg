@@ -107,6 +107,8 @@ foreach ($_GET as $key => $value){
 
 			break;
 
+		case 'filter';
+			break;
 		case 'q';
 			$part = '';
 			if (isset($_GET['filter'])) {

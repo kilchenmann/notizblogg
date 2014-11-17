@@ -25,7 +25,7 @@
 //            btn_ele.emtpy();
         // set the delete-button
         btn_ele.append(del.btn =
-            $('<input>')
+            $('<button>')
             .attr({
                 'type': 'button',
                 'title': 'Delete',
@@ -51,7 +51,7 @@
         var upl = {};
         // set the browse-button
         btn_ele.append(upl.btn =
-            $('<input>')
+            $('<button>')
             .attr({
                 'type': 'button',
                 'title': 'Browse',
@@ -142,7 +142,7 @@
                     destroyUpload(ele);
                     deleteUpload(ele, settings);
 
-                    //media_ele.empty();
+                    media_ele.empty();
                     media_ele.html(upl.media =
                         $('<img>')
                             .attr({'src': NB.media + '/' + data.dir + data.files[0].name})
@@ -294,7 +294,6 @@
                 var localdata = $this.data('localdata');
                 var data = {};
                 data.media = $this.find('span.place4media').children('img').html();
-                console.log(data.media);
                 data.file = localdata.settings.file.val();
                 destroyUpload($this);
                 return data.media;

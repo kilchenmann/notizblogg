@@ -34,7 +34,8 @@
     <meta name="viewport" content="initial-scale=0.6, maximum-scale=0.8">
 
     <!-- jQUERY LIBrary -->
-    <script type="text/javascript" src="core/lib/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="core/lib/jquery.min.js"></script>
+    <script type="text/javascript" src="core/lib/jquery-ui.min.js"></script>
     <!-- and my SETTINGS and FUNCTIONS library -->
     <script type="text/javascript" src="settings.js"></script>
     <script type="text/javascript" src="core/bin/js/functions.js"></script>
@@ -58,6 +59,7 @@
     <script type="text/javascript" src="core/bin/js/jquery.panel.js"></script>
     <!-- show, add, edit and expand NOTE -->
     <script type="text/javascript" src="core/bin/js/jquery.note.js"></script>
+    <script type="text/javascript" src="core/bin/js/jquery.form.js"></script>
 
     <!-- test test test test test -->
     <!-- add the expand function to the note plugin as a new method!! -->
@@ -68,6 +70,8 @@
 -->
 
     <!-- style / design / responsive specs. -->
+
+    <link rel="stylesheet" type="text/css" href="core/style/css/jquery-ui.min.css">
     <link rel="stylesheet" type="text/css" href="core/style/css/nb.css">
     <link rel="stylesheet" type="text/css" href="core/style/css/responsive.css">
 
