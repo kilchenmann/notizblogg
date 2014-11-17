@@ -337,8 +337,6 @@
 									'name': 'bibTyp'
 								})
 								.addClass('field_obj small select bibTyp')
-								.change(function() {})
-								.val(data.source.bibTyp.id)
 							)
 						)
 						.append($('<td>').addClass('large')
@@ -469,6 +467,7 @@
 				)
 			);
 			selOption(form.typ, 'list=bibtyp');
+			$('table#' + data.source.noteID).find('select.bibTyp').val(data.source.bibTyp.id);
 			completeMultipleValues('author', $('table#' + data.source.noteID).find('input.noteAuthor'));
 			completeMultipleValues('location', $('table#' + data.source.noteID).find('input.noteLocation'));
 			completeMultipleValues('label', $('table#' + data.source.noteID).find('input.noteLabel'));
@@ -493,7 +492,7 @@
 					success: function(data){
 						if(data.error){
 			//				$('table#' + data.source.noteID).find('textarea.noteComment').addClass('error');
-						}else {
+						} else {
 						//	var filename = $('table#' + data.source.noteID).find('input.noteMedia').val();
 						//	var media = '';
 						//	if(filename !== '') media = $('table#' + data.source.noteID).find('span.place4media').html();
