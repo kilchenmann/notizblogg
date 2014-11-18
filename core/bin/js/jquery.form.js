@@ -22,7 +22,7 @@
 			for (var k in data.notes) {
 				select_ele.append($('<option>')
 					.html(data.notes[k].split('::')[1])
-					.attr({'value': data.notes[k].split('::')[0]})
+					.val(data.notes[k].split('::')[0])
 				);
 			}
 			if(selected_ele) {
@@ -101,7 +101,7 @@
 								*/
 								.append($('<tr>')
 									.append($('<td>').addClass('medium')
-										.append($('<select>')
+										.append($('<input>')
 											.addClass('field_obj large text noteTitle')
 											.attr({'type': 'text', 'placeholder': 'Title', 'title': 'Title', 'name': 'noteTitle'})
 											.val(data2.note.title))
@@ -308,17 +308,18 @@
 		var form = {};
 		var url = NB.api + '/get.php?source=' + id;
 		$.getJSON(url, function (data) {
+			var noteID = data.source.noteID;
 			form.author = getAuthors(data.source.author, ' / ');
 			form.location = getLocations(data.source.location, ' / ');
 			form.pages = getPages(data.source.page.start, data.source.page.end);
 			if(form.pages === '0') form.pages = '';
-			ele.append($('<form>').attr({'method': 'post', 'action': '', 'id': 'form_' + data.source.noteID}).addClass('')
-				.append(form.table = $('<table>').attr({'id': data.source.noteID})
+			ele.append($('<form>').attr({'method': 'post', 'action': '', 'id': 'form_' + noteID}).addClass('')
+				.append(form.table = $('<table>').attr({'id': noteID})
 					.append($('<tr>').addClass('invisible')
 						.append($('<td>').attr({'colspan': '3'})
 							.append($('<input>')
 								.attr({'type': 'hidden', 'placeholder': 'noteID', 'title': 'noteID', 'name': 'noteID'})
-								.val(data.source.noteID)
+								.val(noteID)
 							)
 							.append($('<input>')
 								.attr({'type': 'hidden', 'placeholder': 'checkID', 'title': 'checkID', 'name': 'checkID'})
@@ -357,6 +358,15 @@
 					)
 					.append($('<tr>')
 						.append($('<td>').addClass('medium')
+							.append($('<select>')
+								.attr({
+									'name': 'bibEditor',
+									'placeholder': 'editor'
+								})
+								.addClass('field_obj small select bibEditor')
+								.append($('<option>').text('').val('0'))
+								.append($('<option>').text('editor').val('1'))
+							)
 
 						)
 						.append($('<td>').addClass('large')
@@ -458,7 +468,7 @@
 							.append(form.delete_box = $('<input>').addClass('invisible deleteNote').attr({'type': 'checkbox', 'name': 'deleteNote'}).val('1'))
 						)
 						.append($('<td>').addClass('large right')
-							.append(form.save_btn = $('<button>').addClass('btn grp_none done').attr({'id': data.source.noteID, 'type': 'submit'}))
+							.append(form.save_btn = $('<button>').addClass('btn grp_none done').attr({'id': noteID, 'type': 'submit'}))
 						)
 						.append($('<td>').addClass('small')
 
@@ -467,23 +477,37 @@
 				)
 			);
 			selOption(form.typ, 'list=bibtyp');
-			$('table#' + data.source.noteID).find('select.bibTyp').val(data.source.bibTyp.id);
-			completeMultipleValues('author', $('table#' + data.source.noteID).find('input.noteAuthor'));
-			completeMultipleValues('location', $('table#' + data.source.noteID).find('input.noteLocation'));
-			completeMultipleValues('label', $('table#' + data.source.noteID).find('input.noteLabel'));
+			completeMultipleValues('author', $('table#' + noteID).find('input.noteAuthor'));
+			completeMultipleValues('location', $('table#' + noteID).find('input.noteLocation'));
+			completeMultipleValues('label', $('table#' + noteID).find('input.noteLabel'));
 
-			var upload_ele = $('table#' + data.source.noteID).find('div.upload');
-			var file_ele = $('table#' + data.source.noteID).find('input.noteMedia');
-			// upload_ele.upload({'file': file_ele, 'media': values.mediaHTML, 'note': data.source.noteID});
+			var upload_ele = $('table#' + noteID).find('div.upload');
+			var file_ele = $('table#' + noteID).find('input.noteMedia');
+			// upload_ele.upload({'file': file_ele, 'media': values.mediaHTML, 'note': noteID});
 
 			if(data.source.public === '1') {
-				$('table#' + data.source.noteID).find('input.notePublic').click();
-				$('table#' + data.source.noteID).find('button.view').toggleClass('active invisible');
+				$('table#' + noteID).find('input.notePublic').click();
+				$('table#' + noteID).find('button.view').toggleClass('active');
 			}
+
+			$('table#' + noteID).find('button.view').on('click', function(){
+				$('table#' + noteID).find('input.notePublic').click();
+				$(this).toggleClass('active');
+			});
+			$('table#' + noteID).find('button.trash').on('click', function(){
+				$('table#' + noteID).find('input.deleteNote').click();
+				$(this).toggleClass('active');
+			});
+
+			$('table#' + noteID).find('select.bibEditor').val(data.source.editor);
+
+			setTimeout(function(){
+				$('#form_' + noteID).find('select.bibTyp').val(data.source.bibTyp.id);
+			}, 300);
 
 //			$('table#' + id).find('input, textarea, select').attr('readonly', true);
 //			$('table#' + id).find('input.notePublic').attr({'disabled': true});
-			$('#form_' + data.source.noteID).submit(function() {
+			$('#form_' + noteID).submit(function() {
 				$.ajax({
 					url: NB.api + '/post.php?source=' + data.source.id,
 					type : 'POST',
@@ -491,22 +515,22 @@
 					data: $(this).serialize(),
 					success: function(data){
 						if(data.error){
-			//				$('table#' + data.source.noteID).find('textarea.noteComment').addClass('error');
+			//				$('table#' + noteID).find('textarea.noteComment').addClass('error');
 						} else {
-						//	var filename = $('table#' + data.source.noteID).find('input.noteMedia').val();
+						//	var filename = $('table#' + noteID).find('input.noteMedia').val();
 						//	var media = '';
-						//	if(filename !== '') media = $('table#' + data.source.noteID).find('span.place4media').html();
-						//	var upload_ele = $('table#' + data.source.noteID).find('div.upload');
+						//	if(filename !== '') media = $('table#' + noteID).find('span.place4media').html();
+						//	var upload_ele = $('table#' + noteID).find('div.upload');
 						//	upload_ele.upload('save');
 
-						//	$('table#' + data.source.noteID).find('span.place4media').removeClass('drop').html(media);
-						//	$('table#' + data.source.noteID).find('span.button4media').empty();
+						//	$('table#' + noteID).find('span.place4media').removeClass('drop').html(media);
+						//	$('table#' + noteID).find('span.button4media').empty();
 
 							/*
-							if($('table#' + data.source.noteID).find('input.notePublic').is(':checked') === true) {
-								$('table#' + data.source.noteID).find('button.view').addClass('active');
+							if($('table#' + noteID).find('input.notePublic').is(':checked') === true) {
+								$('table#' + noteID).find('button.view').addClass('active');
 							} else {
-								$('table#' + data.source.noteID).find('button.view').removeClass('active');
+								$('table#' + noteID).find('button.view').removeClass('active');
 							}
 							*/
 						}

@@ -7,14 +7,18 @@ function getAuthors(author, sep) {
 	} else {
 		while (i < author.length) {
 			if (authors === undefined) {
-				authors = '<a href=\'?author=' + author[i].id + '\'>' + author[i].name + '</a>';
+				authors = '<a href=\'' + NB.url + '?author=' + author[i].id + '\'>' + author[i].name + '</a>';
 			} else {
-				authors += sep + '<a href=\'?author=' + author[i].id + '\'>' + author[i].name + '</a>';
+				authors += sep + '<a href=\'' + NB.url + '?author=' + author[i].id + '\'>' + author[i].name + '</a>';
 			}
 			i += 1;
 		}
 	}
-	return htmlDecode(authors);
+	if(sep !== ', ') {
+		return htmlDecode(authors);
+	} else {
+		return authors;
+	}
 }
 function getLocations(location, sep) {
 	// locations
@@ -77,20 +81,20 @@ function getSource(data) {
 		locations = getLocations(source.location);
 
 		// authors
-		if (data.editor === 1) {
+		if (source.editor === '1') {
 			bibtex += 'editor = {' + authors + '},<br>';
-			biblio += authors + '(Hg.): ';
+			biblio += authors + ' (Hg.): ';
 		} else {
 			bibtex += 'author = {' + authors + '},<br>';
-			biblio += authors;
+			biblio += authors + ': ';
 		}
 		// title
 		bibtex += 'title = {' + source.title + '},<br>';
 		if (source.title !== '') {
 			if ((source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book')  && jQuery.isEmptyObject(source.insource) === false) {
-				biblio += ': <a href=\'?collection=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
+				biblio += '<a href=\'?collection=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
 			} else {
-				biblio += ': <a href=\'?source=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
+				biblio += '<a href=\'?source=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
 			}
 			footnote = biblio;
 			if (source.subtitle !== '') {
@@ -120,6 +124,12 @@ function getSource(data) {
 						bibtex += 'crossref = {' + crossref.name + '},<br>';
 						//console.log(crossref.author);
 						crossAuthors = getAuthors(crossref.author);
+						// authors
+						if (source.detail.crossref.source.editor === '1') {
+							crossAuthors += ' (Hg.): ';
+						} else {
+							crossAuthors += ': ';
+						}
 						crossLocations = getLocations(crossref.location);
 						if (crossref.bibTyp.name === 'collection' || crossref.bibTyp.name === 'proceedings' || crossref.bibTyp.name === 'book') {
 							crossTitle = '<a href=\'?collection=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
@@ -129,7 +139,7 @@ function getSource(data) {
 						if (crossref.subtitle !== '') {
 							crossTitle += getLastChar(crossref.subtitle);
 						}
-						insource.source = 'In: ' + crossAuthors + ': ' + crossTitle + ' ' + crossLocations + ', ' + crossref.date.year;
+						insource.source = 'In: ' + crossAuthors + crossTitle + ' ' + crossLocations + ', ' + crossref.date.year;
 						break;
 					case 'pages':
 						bibtex += 'pages = {' + source.detail.pages + '},<br>';

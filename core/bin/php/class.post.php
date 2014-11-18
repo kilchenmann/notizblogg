@@ -88,8 +88,7 @@ class post {
 
 	function updateSource() {
 		if(!array_key_exists('notePublic', $this->data)) $this->data['notePublic'] = 0;
-		if(!array_key_exists('bibEditor', $this->data)) $this->data['bibEditor'] = 0;
-
+		
 		$this->data['pageStart'] = '0';
 		$this->data['pageEnd'] = '0';
 		$tmp_pages = explode('-', $this->data['pages']);

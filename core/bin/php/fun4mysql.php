@@ -262,7 +262,6 @@ function updateMN($name, $rel, $data, $id) {
         // first: delete the relation and set it as new
         $mysqli = condb('open');
         $mysqli->query('DELETE FROM ' . $rel_table . ' WHERE ' . $relID . ' = ' . $id . ';');
-        echo 'DELETE FROM ' . $rel_table . ' WHERE ' . $relID . ' = ' . $id . ';';
         $mysqli = condb('close');
         insertMN($name, $rel, $data, $id);
     }
