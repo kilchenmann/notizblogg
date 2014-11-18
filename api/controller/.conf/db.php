@@ -8,8 +8,7 @@ if(!defined('IN_PHP')){
 $GLOBALS['nb'] = array(
 	'path' => '/nb',				// domain + path = url
 	'host' => 'localhost',
-	'user' => 'db-user',
-	'pass' => 'db-pass',
-	'db' => 'db-name'
+	'user' => 'luhmann',
+	'pass' => 'zettelkasten',
+	'db' => 'nb'
 );
-

@@ -6,7 +6,7 @@
 
     <?php
 		session_start ();
-		require 'core/bin/php/settings.php';
+		require 'api/controller/settings.php';
 		$user = array (
 			'access' => 1,
 			'name' => 'guest',
@@ -38,35 +38,35 @@
     <script type="text/javascript" src="core/lib/jquery-ui.min.js"></script>
     <!-- and my SETTINGS and FUNCTIONS library -->
     <script type="text/javascript" src="settings.js"></script>
-    <script type="text/javascript" src="core/bin/js/functions.js"></script>
+    <script type="text/javascript" src="core/app/functions.js"></script>
 
 
     <!-- some VENDOR stuff -->
-    <script type="text/javascript" src="core/bin/js/vendor/md5.js"></script>
-    <script type="text/javascript" src="core/bin/js/vendor/jquery.masonry.min.js"></script>
-    <script type="text/javascript" src="core/bin/js/vendor/jquery.vague.js"></script>
-    <script type="text/javascript" src="core/bin/js/vendor/jquery.knob.js"></script>
-    <script type="text/javascript" src="core/bin/js/vendor/jquery.ui.widget.js"></script>
-    <script type="text/javascript" src="core/bin/js/vendor/jquery.iframe-transport.js"></script>
-    <script type="text/javascript" src="core/bin/js/vendor/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="core/app/vendor/md5.js"></script>
+    <script type="text/javascript" src="core/app/vendor/jquery.masonry.min.js"></script>
+    <script type="text/javascript" src="core/app/vendor/jquery.vague.js"></script>
+    <script type="text/javascript" src="core/app/vendor/jquery.knob.js"></script>
+    <script type="text/javascript" src="core/app/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="core/app/vendor/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="core/app/vendor/jquery.fileupload.js"></script>
 
     <!-- notizblogg specific tools -->
     <!-- some functional and styling stuff -->
-    <script type="text/javascript" src="core/bin/js/jquery.center.js"></script>
-    <script type="text/javascript" src="core/bin/js/jquery.warning.js"></script>
-    <script type="text/javascript" src="core/bin/js/jquery.upload.js"></script>
+    <script type="text/javascript" src="core/app/jquery.center.js"></script>
+    <script type="text/javascript" src="core/app/jquery.warning.js"></script>
+    <script type="text/javascript" src="core/app/jquery.upload.js"></script>
     <!-- project, searchbar and login module for the PANEL -->
-    <script type="text/javascript" src="core/bin/js/jquery.panel.js"></script>
+    <script type="text/javascript" src="core/app/jquery.panel.js"></script>
     <!-- show, add, edit and expand NOTE -->
-    <script type="text/javascript" src="core/bin/js/jquery.note.js"></script>
-    <script type="text/javascript" src="core/bin/js/jquery.form.js"></script>
+    <script type="text/javascript" src="core/app/jquery.note.js"></script>
+    <script type="text/javascript" src="core/app/jquery.form.js"></script>
 
     <!-- test test test test test -->
     <!-- add the expand function to the note plugin as a new method!! -->
-    <script type="text/javascript" src="core/bin/js/test/jquery.expand.js"></script>
+    <script type="text/javascript" src="core/app/jquery.expand.js"></script>
     <!--
-	<script type="text/javascript" src="core/bin/js/jquery.finder.js"></script>
-	<script type="text/javascript" src="core/bin/js/jquery.login.js"></script>
+	<script type="text/javascript" src="core/app/jquery.finder.js"></script>
+	<script type="text/javascript" src="core/app/jquery.login.js"></script>
 -->
 
     <!-- style / design / responsive specs. -->
@@ -168,12 +168,12 @@
         $('header').panel();
 
         $('header .project').panel('project', 'Notizblogg', 'notizblogg.png');
-        $('header .search').panel('search', NB.url + '/core/bin/php/search.data.php');
+        $('header .search').panel('search', NB.api + '/controller/search.data.php');
         if (NB.user.id !== '' && NB.access !== '1') {
-            $('header .user').panel('log', NB.url + '/core/bin/php/check.out.php');
+            $('header .user').panel('log', NB.api + '/controller/check.out.php');
             $('header .add').panel('add');
         } else {
-            $('header .user').panel('login', NB.url + '/core/bin/php/check.in.php');
+            $('header .user').panel('login', NB.api + '/controller/check.in.php');
         }
         $('footer').panel('foot');
 
