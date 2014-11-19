@@ -260,12 +260,16 @@ function isTouchDevice()
 
 function getLastChar(string)
 {
-	string = string.charAt(0).toUpperCase() + string.slice(1)
-	var lastChar = string.substr(string.length - 1);
-	if ((lastChar !== '?') && (lastChar !== '!')) {
-		string += '.';
-	}
-	return(string + ' ');
+    if(string !== null) {
+        string = string.charAt(0).toUpperCase() + string.slice(1)
+        var lastChar = string.substr(string.length - 1);
+        if ((lastChar !== '?') && (lastChar !== '!')) {
+            string += '.';
+        }
+        return(string + ' ');
+    } else {
+        return(' ');
+    }
 }
 
 function formatFileSize(bytes) {

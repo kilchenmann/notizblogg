@@ -88,6 +88,7 @@ class post {
 
 	function updateSource() {
 		if(!array_key_exists('notePublic', $this->data)) $this->data['notePublic'] = 0;
+		if(!array_key_exists('bibEditor', $this->data)) $this->data['bibEditor'] = 0;
 /*
 		$this->data['pageStart'] = '0';
 		$this->data['pageEnd'] = '0';
@@ -107,14 +108,18 @@ class post {
 		{
 			if($this->data['noteID'] == 0) {
 				//new source: insert
-				$this->data['noteID'] == '';
-				$this->data['bibID'] == '';
+				if($this->data['noteComment'] == '') $this->data['noteComment'] = $this->data['noteTitle'];
 				$mysqli = condb('open');
-				$sql = $mysqli->query('INSERT INTO note ' .
-										'(`noteTitle`, `userID`, `checkID`, `noteContent`) ' .
+				$notesql = $mysqli->query('INSERT INTO note ' .
+										'(`noteTitle`, `userID`, `checkID`, `noteComment`) ' .
 										'VALUES' .
-										'(\'' . $this->data['noteTitle'] . '\', \'' . $this->user . '\', \'' . $this->data['checkID'] . '\', \'' . $this->data['noteContent'] . '\');');
-				$this->data['noteID'] = mysqli_insert_id($sql);
+										'(\'' . $this->data['noteTitle'] .
+										 '\', \'' . $this->user .
+										 '\', \'' . $this->data['checkID'] .
+										 '\', \'' . $this->data['noteComment'] . '\');');
+				$noteID = $mysqli->insert_id;
+				$this->data['noteID'] = $noteID;
+				echo $this->data['noteID'];
 				$sql = $mysqli->query('INSERT INTO bib ' .
 										'(\'bib\', \'bibEditor\', \'bibTyp\', \'noteID\') ' .
 										'VALUES' .

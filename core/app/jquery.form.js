@@ -628,9 +628,6 @@
 				)
 			);
 			selOption(form.typ, 'list=bibtyp');
-			completeMultipleValues('author', $('table#' + noteID).find('input.noteAuthor'));
-			completeMultipleValues('location', $('table#' + noteID).find('input.noteLocation'));
-			completeMultipleValues('label', $('table#' + noteID).find('input.noteLabel'));
 
 			var upload_ele = $('table#' + noteID).find('div.upload');
 			var file_ele = $('table#' + noteID).find('input.noteMedia');
@@ -663,6 +660,12 @@
 				var plus_val = $('#form_' + noteID).find('select.bibTyp').find(':selected').text();
 				addFields(plus_ele, plus_val, data.source);
 			}, 300);
+
+
+			completeMultipleValues('author', $('table#' + noteID).find('input.noteAuthor'));
+			completeMultipleValues('location', $('table#' + noteID).find('input.noteLocation'));
+			completeMultipleValues('label', $('table#' + noteID).find('input.noteLabel'));
+
 
 //			$('table#' + id).find('input, textarea, select').attr('readonly', true);
 //			$('table#' + id).find('input.notePublic').attr({'disabled': true});
