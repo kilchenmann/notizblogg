@@ -55,6 +55,161 @@
 			}
 		});
 	};
+	var addFields = function (ele, val, data) {
+		var plus = {};
+		var detail = {};
+		detail.location = getLocations(data.location, ' / ');
+		ele.empty();
+		switch(val) {
+			case 'article':
+				detail.num = '3';
+				plus.field = $('<span>')
+					.append(
+						$('<input>')
+						.addClass('field_obj large text journaltitle')
+						.attr({'type': 'text', 'placeholder': 'Journal Title', 'title': 'Journal Title', 'name': 'journaltitle'})
+						.val(data.detail.journaltitle)
+					)
+					.append($('<br>'))
+					.append(
+						$('<input>')
+						.addClass('field_obj small number')
+						.attr({'type': 'number', 'placeholder': 'Number', 'title': 'Journal Number', 'name': 'number'})
+						.val(data.detail.number)
+					).append(
+						$('<input>')
+						.addClass('field_obj small year')
+						.attr({'type': 'number', 'placeholder': 'Year', 'title': 'Year', 'name': 'year'})
+						.val(data.detail.year)
+					).append(
+						$('<input>')
+						.addClass('field_obj small pages')
+						.attr({'type': 'text', 'placeholder': 'Pages', 'title': 'Page Start - Page End', 'name': 'pages'})
+						.val(data.detail.pages)
+					);
+				break;
+
+			case 'book':
+			case 'booklet':
+			case 'collection':
+			case 'project':
+				plus.field = $('<span>')
+					.append($('<input>')
+						.addClass('field_obj large text noteLocation')
+						.attr({'type': 'text', 'placeholder': 'Location 1 / Location 2', 'title': 'Location 1 / Location 2 / etc.', 'name': 'noteLocation'})
+						.val(detail.location)
+					);
+				break;
+
+			case 'online':
+				plus.field = $('<span>')
+					.append(
+						$('<input>')
+						.addClass('field_obj large text url')
+						.attr({'type': 'text', 'placeholder': 'URL', 'title': 'URL', 'name': 'url'})
+						.val(data.detail.url)
+					)
+					.append($('<br>'))
+					.append(
+						$('<input>')
+						.addClass('field_obj small urldate')
+						.attr({'type': 'date', 'placeholder': 'URL Date', 'title': 'Date of request (yyyy-mm-dd)', 'name': 'urldate'})
+						.val(data.detail.urldate)
+					);
+				break;
+			case 'proceedings':
+				plus.field = $('<span>')
+					.append(
+						$('<input>')
+						.addClass('field_obj large text eventtitle')
+						.attr({'type': 'text', 'placeholder': 'Event Title', 'title': 'Title of Event', 'name': 'eventtitle'})
+						.val(data.detail.eventtitle)
+					)
+					.append($('<br>'))
+					.append(
+						$('<input>')
+						.addClass('field_obj large text venue')
+						.attr({'type': 'date', 'placeholder': 'Event Venue', 'title': 'Venue of Event', 'name': 'venue'})
+						.val(data.detail.venue)
+					)
+					.append($('<input>')
+						.addClass('field_obj large text noteLocation')
+						.attr({'type': 'text', 'placeholder': 'Location 1 / Location 2', 'title': 'Location 1 / Location 2 / etc.', 'name': 'noteLocation'})
+						.val(detail.location)
+					);
+				break;
+
+			case 'report':
+			case 'thesis':
+				plus.field = $('<span>')
+					.append(
+						$('<input>')
+						.addClass('field_obj large text type')
+						.attr({'type': 'text', 'placeholder': 'Type', 'title': 'Type', 'name': 'type'})
+						.val(data.detail.type)
+					)
+					.append($('<br>'))
+					.append(
+						$('<input>')
+						.addClass('field_obj large text institution')
+						.attr({'type': 'text', 'placeholder': 'Institution', 'title': 'Institution', 'name': 'institution'})
+						.val(data.detail.institution)
+					);
+				break;
+
+			case 'inbook':
+			case 'incollection':
+			case 'inproceedings':
+				var intyp;
+				if(val === 'inbook') intyp = 'book';
+				if(val === 'incollection') intyp = 'collection';
+				if(val === 'inproceedings') intyp = 'proceedings';
+				plus.field = $('<span>')
+					.append(plus.insource =
+						$('<select>')
+						.attr({'name': 'crossref'})
+						.addClass('field_obj large select insource')
+					)
+					.append($('<br>'))
+					.append(
+						$('<input>')
+						.addClass('field_obj small text inpages')
+						.attr({'type': 'text', 'placeholder': 'Pages', 'title': 'Pages (11-22)', 'name': 'pages'})
+						.val(data.detail.pages)
+					);
+					selOption(plus.insource, 'bibtyp=' + intyp);
+					setTimeout(function(){
+						if(data.detail.crossref !== undefined) plus.insource.val(data.detail.crossref.source.id);
+					}, 300);
+				break;
+
+
+			case 'manual':
+			case 'misc':
+			case 'periodical':
+			case 'unpublished':
+
+				break;
+		}
+
+
+		ele.append($('<td>').addClass('medium')
+			.append(
+				$('<input>')
+				.addClass('field_obj small text bibTypName')
+				.attr({'type': 'hidden', 'placeholder': 'bibTypName', 'name': 'bibTypName'})
+				.val(val)
+			)
+		)
+		.append($('<td>').addClass('large')
+			.append(plus.field)
+
+		)
+		.append($('<td>').addClass('small')
+
+		);
+
+	};
 	var form4note = function (ele, data) {
 		var form = {};
 		$.each(data.source.notes, function (i, note) {
@@ -407,19 +562,8 @@
 
 						)
 					)
-					.append($('<tr>')
-						.append($('<td>').addClass('medium')
+					.append(form.res = $('<tr>').addClass('field_plus')
 
-						)
-						.append($('<td>').addClass('large')
-							.append($('<input>')
-								.addClass('field_obj large text noteLocation')
-								.attr({'type': 'text', 'placeholder': 'Location 1 / Location 2', 'title': 'Location 1 / Location 2 / etc.', 'name': 'noteLocation'})
-								.val(form.location))
-						)
-						.append($('<td>').addClass('small')
-
-						)
 					)
 					.append($('<tr>')
 						.append($('<td>').addClass('medium')
@@ -500,9 +644,17 @@
 			});
 
 			$('table#' + noteID).find('select.bibEditor').val(data.source.editor);
+				$('#form_' + noteID).find('select.bibTyp').change(function(){
+					var plus_ele = $('#form_' + noteID).find('tr.field_plus');
+					var plus_val = $(this).find(':selected').text();
+					addFields(plus_ele, plus_val, data.source);
 
+				});
 			setTimeout(function(){
 				$('#form_' + noteID).find('select.bibTyp').val(data.source.bibTyp.id);
+				var plus_ele = $('#form_' + noteID).find('tr.field_plus');
+				var plus_val = $('#form_' + noteID).find('select.bibTyp').find(':selected').text();
+				addFields(plus_ele, plus_val, data.source);
 			}, 300);
 
 //			$('table#' + id).find('input, textarea, select').attr('readonly', true);

@@ -306,6 +306,9 @@ class get {
 				}
 				break;
 			case 'bibtyp';
+				if($this->id === 'book') $this->id = 2;
+				if($this->id === 'collection') $this->id = 5;
+				if($this->id === 'proceedings') $this->id = 11;
 				$sql = $mysqli->query('SELECT bibTyp FROM bibTyp WHERE bibTypID = ' . $this->id . ';');
 				while($row = mysqli_fetch_object($sql)) {
 					$typeName = $row->bibTyp;

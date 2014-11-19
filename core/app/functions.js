@@ -103,6 +103,18 @@ function getSource(data) {
 			}
 		}
 		if ('detail' in data.source) {
+			switch (source.bibTyp.name) {
+				case 'article':
+					bibtex += 'journaltitle = {' + source.detail.journaltitle + '},<br>';
+					bibtex += 'number = {' + source.detail.number + '},<br>';
+					bibtex += 'year = {' + source.detail.year + '},<br>';
+					bibtex += 'pages = {' + source.detail.pages + '},<br>';
+					biblio += ' In: ' + source.detail.journaltitle + ' ' + source.detail.number + '/' + source.detail.year + ', ' + source.detail.pages + '.';
+					break;
+			}
+
+
+
 			var detailKey, countDetail = Object.keys(source.detail).length;
 			//var crossref = [];
 			var pages;

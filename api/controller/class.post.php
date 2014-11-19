@@ -88,7 +88,7 @@ class post {
 
 	function updateSource() {
 		if(!array_key_exists('notePublic', $this->data)) $this->data['notePublic'] = 0;
-		
+
 		$this->data['pageStart'] = '0';
 		$this->data['pageEnd'] = '0';
 		$tmp_pages = explode('-', $this->data['pages']);
@@ -102,7 +102,7 @@ class post {
 			$page_start = $this->data['pages'];
 		}
 
-		if(!empty($this->data['noteComment']) && !empty($this->data['bibID']))
+		if(!empty($this->data['bibName']) && !empty($this->data['bibID']))
 		{
 			// some checks and request first
 			$mysqli = condb('open');
@@ -111,15 +111,67 @@ class post {
 
 			}
 			updateMN('author', 'bib', $this->data['noteAuthor'], $this->data['bibID']);
-			updateMN('location', 'bib', $this->data['noteLocation'], $this->data['bibID']);
 			updateMN('label', 'note', $this->data['noteLabel'], $this->data['noteID']);
+			$detail = array();
+			switch($this->data['bibTypName']) {
+				case 'article';
+					$detail[] = 'journaltitle';
+					$detail[] = 'number';
+					$detail[] = 'year';
+					$detail[] = 'pages';
+					break;
+
+				case 'book';
+				case 'booklet';
+				case 'collection';
+				case 'project';
+					updateMN('location', 'bib', $this->data['noteLocation'], $this->data['bibID']);
+					break;
+
+				case 'online';
+					$detail[] = 'url';
+					$detail[] = 'urldate';
+					break;
+				case 'proceedings';
+					$detail[] = 'eventtitle';
+					$detail[] = 'venue';
+					updateMN('location', 'bib', $this->data['noteLocation'], $this->data['bibID']);
+					break;
+
+				case 'report';
+				case 'thesis';
+					$detail[] = 'type';
+					$detail[] = 'institution';
+					break;
+
+				case 'inbook';
+				case 'incollection';
+				case 'inproceedings';
+					$detail[] = 'crossref';
+					$detail[] = 'pages';
+					break;
+
+
+				case 'manual';
+				case 'misc';
+				case 'periodical';
+				case 'unpublished';
+
+					break;
+			}
+
+			if( !empty($detail) ) {
+				updateDetail($v, $this->data[$v], $this->data['bibID']);
+				foreach($detail as $v) {
+					insertDetail($v, $this->data[$v], $this->data['bibID']);
+				}
+			}
 
 			$bibsql = $mysqli->query('UPDATE bib SET ' .
 									'bib=\'' . $this->data['bibName'] . '\', ' .
 									'bibEditor=\'' . $this->data['bibEditor'] . '\', ' .
 									'bibTyp=\'' . $this->data['bibTyp'] . '\' ' .
 									'WHERE bibID = ' . $this->data['bibID'] . ';');
-
 			// update the data
 			$sql = $mysqli->query('UPDATE note SET ' .
 									'noteTitle=\'' . $this->data['noteTitle'] . '\', ' .

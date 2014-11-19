@@ -268,6 +268,23 @@ function updateMN($name, $rel, $data, $id) {
 }
 
 
+function insertDetail($prop, $val, $id) {
+    $mysqli = condb('open');
+    $sql = $mysqli->query('SELECT bibFieldID FROM bibField WHERE bibField = \'' . $prop . '\';');
+    while($row = mysqli_fetch_object($sql)) {
+        $bibFieldID = $row->bibFieldID;
+    }
+    $newsql = $mysqli->query('INSERT INTO bibDetail ( bibID, bibFieldID, bibDetail ) VALUES (\'' . $id . '\', \'' . $bibFieldID . '\', \'' . $val . '\');');
+    $mysqli = condb('close');
+}
+
+function updateDetail($prop, $val, $id) {
+    $mysqli = condb('open');
+    $mysqli->query('DELETE FROM bibDetail WHERE bibID = ' . $id . ';');
+    $mysqli = condb('close');
+}
+
+
 
 //
 // delete functions
