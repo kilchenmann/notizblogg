@@ -88,7 +88,7 @@ class post {
 
 	function updateSource() {
 		if(!array_key_exists('notePublic', $this->data)) $this->data['notePublic'] = 0;
-
+/*
 		$this->data['pageStart'] = '0';
 		$this->data['pageEnd'] = '0';
 		$tmp_pages = explode('-', $this->data['pages']);
@@ -101,9 +101,32 @@ class post {
 		} else {
 			$page_start = $this->data['pages'];
 		}
+*/
 
-		if(!empty($this->data['bibName']) && !empty($this->data['bibID']))
+		if(!empty($this->data['bibName']) && !empty($this->data['bibTyp']))
 		{
+			if($this->data['noteID'] == 0) {
+				//new source: insert
+				$this->data['noteID'] == '';
+				$this->data['bibID'] == '';
+				$mysqli = condb('open');
+				$sql = $mysqli->query('INSERT INTO note ' .
+										'(`noteTitle`, `userID`, `checkID`, `noteContent`) ' .
+										'VALUES' .
+										'(\'' . $this->data['noteTitle'] . '\', \'' . $this->user . '\', \'' . $this->data['checkID'] . '\', \'' . $this->data['noteContent'] . '\');');
+				$this->data['noteID'] = mysqli_insert_id($sql);
+				$sql = $mysqli->query('INSERT INTO bib ' .
+										'(\'bib\', \'bibEditor\', \'bibTyp\', \'noteID\') ' .
+										'VALUES' .
+										'(\'' . $this->data['bibName'] .
+										 '\', \'' . $this->data['bibEditor'] .
+										 '\', \'' . $this->data['bibTyp'] .
+										 '\', \'' . $this->data['noteID'] .
+										 '\');');
+				$this->data['bibID'] = mysqli_insert_id($sql);
+				$mysqli = condb('close');
+			}
+			//old source: update
 			// some checks and request first
 			$mysqli = condb('open');
 			//$bibsql = $mysqli->query('SELECT bibID ')
@@ -190,6 +213,7 @@ class post {
 				'error' => false,
 			));
 			exit;
+
 		}else{
 			return json_encode(array(
 				'error' => true,

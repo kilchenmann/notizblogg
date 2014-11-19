@@ -108,19 +108,18 @@ column-count:auto; column-gap:12px; column-fill: balance;
 .desk {
   .left_side,
   .right_side {
-    float: left;
+    width: 1004px;
   }
   .left_side {
-    width: 516px;
-    left: 10px;
-
+     position: relative;
     .item {
-        margin: 10px;
+        width: 640px
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
-
   }
   .right_side {
-    width: 1024px;
 
     //	margin: 0 auto;
     .note {
@@ -164,7 +163,7 @@ column-count:auto; column-gap:12px; column-fill: balance;
       display: block;
     }
     .timeline {
-      margin: 10px auto;
+      margin: -5px auto;
       background-color: fade(@bg, 33%);
       display: block;
       float: left;

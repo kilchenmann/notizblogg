@@ -267,7 +267,7 @@
             if ($('.desk').length > 0) {
                 $(function() {
                     function Arrow_Points() {
-                        var s = $('.right_side').find('.note');
+                        var s = $('.container').find('.note');
                         $.each(s, function(i, obj) {
                             var posLeft = $(obj).position().left; //css("left");
                             //	$(obj).addClass('borderclass');
@@ -285,7 +285,7 @@
                     }
 
                     // Divs
-                    $('.right_side')
+                    $('.container')
                         .append($('<div>').addClass('timeline_container')
                             .append($('<div>').addClass('timeline')
                                 .append($('<div>').addClass('plus'))

@@ -89,119 +89,155 @@ class get {
 	function getSource() {
 		// 1 set some variables and arrays
 		$data = array();
-		$mysqli = condb('open');
-		// 2 get the data from db
-		$sql = $mysqli->query('SELECT * FROM bib WHERE bibID = ' . $this->id . ';');
-		// 3 prepare the result
-		$num_results = mysqli_num_rows($sql);
-		if($num_results > 0) {
-			while ($row = mysqli_fetch_object($sql)) {
-				// bibTyp
-				$bibTyp = getIndex('bibTyp', $row->bibTyp);
-				// bibName
-				$bibName = getIndex('bib', $this->id);
-				// author
-				$author = getIndexMN('bib', 'author', $this->id);
-				// location
-				$location = getIndexMN('bib', 'location', $this->id);
-				// get more details --> 4
-				$detail_sql = $mysqli->query('SELECT bibFieldID, bibDetail FROM bibDetail WHERE bibID = ' . $this->id . ';');
-				$source_sql = $mysqli->query('SELECT * FROM note WHERE noteID = ' . $row->noteID . ';');
-				$bibInfo = array();
-				// 4 get the details from table bibDetail
-				$num_details = mysqli_num_rows($detail_sql);
-				if($num_details > 0) {
-					while ($detail = mysqli_fetch_object($detail_sql)) {
-						// get the bibField value
-						$bibfield_sql = $mysqli->query('SELECT bibField FROM bibField WHERE bibFieldID = ' . $detail->bibFieldID . ';');
-						while ($field = mysqli_fetch_object($bibfield_sql)) {
-							$bibDetail = $detail->bibDetail;
-							if($field->bibField == 'crossref') {
-								$bib = NEW get();
-								$bib->id = $detail->bibDetail;
-								$bib->type = 'source';
-								$bib->access = $this->access;
-								$bibDetail = json_decode($bib->getSource());
-								$bibInfo['crossref'] = $bibDetail;
-							}
-
-							$bibInfo[$field->bibField] = $bibDetail;
-							//print_r($bibInfo);
-						}
-					}
-				}
-
-				// 5 get more details from table note
-				while ($note = mysqli_fetch_object($source_sql)) {
-					// get the labels and set a link to other notes with the same label
-					$label = getIndexMN('note', 'label', $note->noteID);
-					// get the user info
-					$user = getIndex('user', $note->userID);
-					$media = getMedia($note->noteMedia);
-					$data = array(
-						$this->type => array(
-							'id' => $row->bibID,
-							'checkID' => $note->checkID,
-							'noteID' => $row->noteID,
-							'bibTyp' => $bibTyp,
-							'name' => $bibName['name'],
-							'title' => $note->noteTitle,
-							'subtitle' => $note->noteSubtitle,
-							'editor' => $row->bibEditor,
-							'author' => $author,
-							'location' => $location,
-							'comment' => makeurl($note->noteComment),
-							'href' => $note->noteLink,
-							'label' => $label,
-							'media' => $media,
-							'page' => array(
-								'start' => $note->pageStart,
-								'end' => $note->pageEnd
-							),
-							'date' => array(
-								'year' => $note->dateYear,
-								'created' => $note->dateCreated,
-								'modified' => $note->dateModified
-							),
-							'user' => $user,
-							'public' => $note->notePublic,
-							'detail' => $bibInfo,
-							'notes' => array(),
-							'insource' => array()
-						),
-					);
-
-					if($bibTyp['name'] == 'collection' || $bibTyp['name'] == 'book' || $bibTyp['name'] == 'proceedings') {
-						// get the inbooks, incollections and in proceedings
-						// id of crossref in bibField
-						$bibf = $mysqli->query('SELECT bibFieldID FROM bibField WHERE bibField = \'crossref\';');
-						while ($bibfid = mysqli_fetch_object($bibf)) {
-			//				echo 'SELECT bibID FROM bibDetail WHERE bibFieldID = '.$bibfid->bibFieldID.' AND bibDetail = '.$this->id.';';
-							$sql = $mysqli->query('SELECT bibID FROM bibDetail WHERE bibFieldID = '.$bibfid->bibFieldID.' AND bibDetail = '.$this->id.';');
-							while ($row = mysqli_fetch_object($sql)) {
-								array_push($data['source']['insource'], $row->bibID);
-							}
-						}
-						// id of sources in sourceDetail
-
-
-					}
-
-					$notes_sql = $mysqli->query('SELECT noteID, notePublic FROM note WHERE bibID = ' . $this->id . ' ORDER BY pageStart, pageEnd, noteID');
-					$i = 0;
-					while($notes = mysqli_fetch_object($notes_sql)){
-						$data['source']['notes'][$i]['id'] = $notes->noteID;
-						$data['source']['notes'][$i]['ac'] = $notes->notePublic;
-						$i++;
-					}
-				}
-			}
-		} else {
+		if($this->id == 0) {
+			// empty json data set
 			$data = array(
-				'source' => array(
-					'id' => 0
-				)
+				$this->type => array(
+					'id' => '0',
+					'checkID' => NULL,
+					'noteID' => '0',
+					'bibTyp' => '',
+					'name' => '',
+					'title' => '',
+					'subtitle' => '',
+					'editor' => '',
+					'author' => '',
+					'location' => '',
+					'comment' => '',
+					'href' => '',
+					'label' => '',
+					'media' => '',
+					'page' => array(
+						'start' => '',
+						'end' => ''
+					),
+					'date' => array(
+						'year' => '',
+						'created' => '',
+						'modified' => ''
+					),
+					'user' => '',
+					'public' => '0',
+					'detail' => '',
+					'notes' => array(),
+					'insource' => array()
+				),
 			);
+		} else {
+			$mysqli = condb('open');
+			// 2 get the data from db
+			$sql = $mysqli->query('SELECT * FROM bib WHERE bibID = ' . $this->id . ';');
+			// 3 prepare the result
+			$num_results = mysqli_num_rows($sql);
+			if($num_results > 0) {
+				while ($row = mysqli_fetch_object($sql)) {
+					// bibTyp
+					$bibTyp = getIndex('bibTyp', $row->bibTyp);
+					// bibName
+					$bibName = getIndex('bib', $this->id);
+					// author
+					$author = getIndexMN('bib', 'author', $this->id);
+					// location
+					$location = getIndexMN('bib', 'location', $this->id);
+					// get more details --> 4
+					$detail_sql = $mysqli->query('SELECT bibFieldID, bibDetail FROM bibDetail WHERE bibID = ' . $this->id . ';');
+					$source_sql = $mysqli->query('SELECT * FROM note WHERE noteID = ' . $row->noteID . ';');
+					$bibInfo = array();
+					// 4 get the details from table bibDetail
+					$num_details = mysqli_num_rows($detail_sql);
+					if($num_details > 0) {
+						while ($detail = mysqli_fetch_object($detail_sql)) {
+							// get the bibField value
+							$bibfield_sql = $mysqli->query('SELECT bibField FROM bibField WHERE bibFieldID = ' . $detail->bibFieldID . ';');
+							while ($field = mysqli_fetch_object($bibfield_sql)) {
+								$bibDetail = $detail->bibDetail;
+								if($field->bibField == 'crossref') {
+									$bib = NEW get();
+									$bib->id = $detail->bibDetail;
+									$bib->type = 'source';
+									$bib->access = $this->access;
+									$bibDetail = json_decode($bib->getSource());
+									$bibInfo['crossref'] = $bibDetail;
+								}
+
+								$bibInfo[$field->bibField] = $bibDetail;
+								//print_r($bibInfo);
+							}
+						}
+					}
+
+					// 5 get more details from table note
+					while ($note = mysqli_fetch_object($source_sql)) {
+						// get the labels and set a link to other notes with the same label
+						$label = getIndexMN('note', 'label', $note->noteID);
+						// get the user info
+						$user = getIndex('user', $note->userID);
+						$media = getMedia($note->noteMedia);
+						$data = array(
+							$this->type => array(
+								'id' => $row->bibID,
+								'checkID' => $note->checkID,
+								'noteID' => $row->noteID,
+								'bibTyp' => $bibTyp,
+								'name' => $bibName['name'],
+								'title' => $note->noteTitle,
+								'subtitle' => $note->noteSubtitle,
+								'editor' => $row->bibEditor,
+								'author' => $author,
+								'location' => $location,
+								'comment' => makeurl($note->noteComment),
+								'href' => $note->noteLink,
+								'label' => $label,
+								'media' => $media,
+								'page' => array(
+									'start' => $note->pageStart,
+									'end' => $note->pageEnd
+								),
+								'date' => array(
+									'year' => $note->dateYear,
+									'created' => $note->dateCreated,
+									'modified' => $note->dateModified
+								),
+								'user' => $user,
+								'public' => $note->notePublic,
+								'detail' => $bibInfo,
+								'notes' => array(),
+								'insource' => array()
+							),
+						);
+
+						if($bibTyp['name'] == 'collection' || $bibTyp['name'] == 'book' || $bibTyp['name'] == 'proceedings') {
+							// get the inbooks, incollections and in proceedings
+							// id of crossref in bibField
+							$bibf = $mysqli->query('SELECT bibFieldID FROM bibField WHERE bibField = \'crossref\';');
+							while ($bibfid = mysqli_fetch_object($bibf)) {
+				//				echo 'SELECT bibID FROM bibDetail WHERE bibFieldID = '.$bibfid->bibFieldID.' AND bibDetail = '.$this->id.';';
+								$sql = $mysqli->query('SELECT bibID FROM bibDetail WHERE bibFieldID = '.$bibfid->bibFieldID.' AND bibDetail = '.$this->id.';');
+								while ($row = mysqli_fetch_object($sql)) {
+									array_push($data['source']['insource'], $row->bibID);
+								}
+							}
+							// id of sources in sourceDetail
+
+
+						}
+
+						$notes_sql = $mysqli->query('SELECT noteID, notePublic FROM note WHERE bibID = ' . $this->id . ' ORDER BY pageStart, pageEnd, noteID');
+						$i = 0;
+						while($notes = mysqli_fetch_object($notes_sql)){
+							$data['source']['notes'][$i]['id'] = $notes->noteID;
+							$data['source']['notes'][$i]['ac'] = $notes->notePublic;
+							$i++;
+						}
+					}
+				}
+			} else {
+				$data = array(
+					'source' => array(
+						'id' => 0
+					)
+				);
+			}
 		}
 		return json_encode($data);
 	}

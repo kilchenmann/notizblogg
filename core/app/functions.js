@@ -111,59 +111,69 @@ function getSource(data) {
 					bibtex += 'pages = {' + source.detail.pages + '},<br>';
 					biblio += ' In: ' + source.detail.journaltitle + ' ' + source.detail.number + '/' + source.detail.year + ', ' + source.detail.pages + '.';
 					break;
-			}
 
+				case 'online':
+					bibtex += 'url = {<a target=\'_blank\' href=\'' + source.detail.url + '\' >' + source.detail.url + '</a>},<br>';
+					bibtex += 'urldate = {' + source.detail.urldate + '},<br>';
+					biblio += ', URL: <a target=\'_blank\' href=\'' + source.detail.url + '\'>' + source.detail.url + '</a> (Stand: ' + source.detail.urldate + ')';
+					break;
 
+				case 'proceedings':
+					bibtex += 'eventtitle = {' + source.detail.eventtitle + '},<br>';
+					bibtex += 'venue = {' + source.detail.venue + '},<br>';
+					bibtex += 'location = {' + locations + '},<br>';
+					biblio += getLastChar(source.detail.eventtitle);
+					biblio += getLastChar(source.detail.venue);
+					//biblio += locations + ', ' + source.date.year + '.';
+					break;
 
-			var detailKey, countDetail = Object.keys(source.detail).length;
-			//var crossref = [];
-			var pages;
-			i = 0;
-			while (i < countDetail) {
-				detailKey = Object.keys(source.detail)[i];
-				switch (detailKey) {
-					case 'url':
-						bibtex += 'url = {<a target=\'_blank\' href=\'' + source.detail.url + '\' >' + source.detail.url + '</a>},<br>';
-						biblio += ', URL: <a target=\'_blank\' href=\'' + source.detail.url + '\'>' + source.detail.url + '</a> ';
-						break;
-					case 'urldate':
-						bibtex += 'urldate = {' + source.detail.urldate + '},<br>';
-						biblio += '(Stand: ' + source.detail.urldate + ')';
-						break;
-					case 'crossref':
-						crossref = source.detail.crossref.source;
-						var crossTitle = '', crossAuthors, crossLocations;
-						bibtex += 'crossref = {' + crossref.name + '},<br>';
-						//console.log(crossref.author);
-						crossAuthors = getAuthors(crossref.author);
-						// authors
-						if (source.detail.crossref.source.editor === '1') {
-							crossAuthors += ' (Hg.): ';
-						} else {
-							crossAuthors += ': ';
-						}
-						crossLocations = getLocations(crossref.location);
-						if (crossref.bibTyp.name === 'collection' || crossref.bibTyp.name === 'proceedings' || crossref.bibTyp.name === 'book') {
-							crossTitle = '<a href=\'?collection=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
-						} else {
-							crossTitle += '<a href=\'?source=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
-						}
-						if (crossref.subtitle !== '') {
-							crossTitle += getLastChar(crossref.subtitle);
-						}
-						insource.source = 'In: ' + crossAuthors + crossTitle + ' ' + crossLocations + ', ' + crossref.date.year;
-						break;
-					case 'pages':
-						bibtex += 'pages = {' + source.detail.pages + '},<br>';
-						insource.pages = ', S. ' + source.detail.pages;
-						break;
-					default:
+				case 'report':
+				case 'thesis':
+					bibtex += 'type = {' + source.detail.type + '},<br>';
+					bibtex += 'institution = {' + source.detail.institution + '},<br>';
+					biblio += '(' + source.detail.type + ')' + getLastChar(source.detail.institution);
+					break;
+
+				case 'inbook':
+				case 'incollection':
+				case 'inproceedings':
+					crossref = source.detail.crossref.source;
+					var crossTitle = '', crossAuthors, crossLocations;
+					bibtex += 'crossref = {' + crossref.name + '},<br>';
+					//console.log(crossref.author);
+					crossAuthors = getAuthors(crossref.author);
+					// authors
+					if (source.detail.crossref.source.editor === '1') {
+						crossAuthors += ' (Hg.): ';
+					} else {
+						crossAuthors += ': ';
+					}
+					crossLocations = getLocations(crossref.location);
+					if (crossref.bibTyp.name === 'collection' || crossref.bibTyp.name === 'proceedings' || crossref.bibTyp.name === 'book') {
+						crossTitle = '<a href=\'?collection=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
+					} else {
+						crossTitle += '<a href=\'?source=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
+					}
+					if (crossref.subtitle !== '') {
+						crossTitle += getLastChar(crossref.subtitle);
+					}
+					insource.source = 'In: ' + crossAuthors + crossTitle + ' ' + crossLocations + ', ' + crossref.date.year;
+					// pages
+					bibtex += 'pages = {' + source.detail.pages + '},<br>';
+					insource.pages = ', S. ' + source.detail.pages;
+					break;
+
+				default:
+					var detailKey, countDetail = Object.keys(source.detail).length;
+					i = 0;
+					while (i < countDetail) {
+						detailKey = Object.keys(source.detail)[i];
 						if(source.detail.detailKey !== undefined){
 							bibtex += detailKey + ' = {' + source.detail.detailKey + '},<br>';
 							biblio += source.detail.detailKey;
 						}
-				}
-				i += 1;
+						i += 1;
+					}
 			}
 		}
 
@@ -178,6 +188,7 @@ function getSource(data) {
 				biblio += source.date.year;
 			}
 		}
+
 		bibtex += 'note = {' + source.comment + '}}';
 		//biblio += '';
 		bib = {
@@ -249,6 +260,7 @@ function isTouchDevice()
 
 function getLastChar(string)
 {
+	string = string.charAt(0).toUpperCase() + string.slice(1)
 	var lastChar = string.substr(string.length - 1);
 	if ((lastChar !== '?') && (lastChar !== '!')) {
 		string += '.';

@@ -401,16 +401,20 @@
 						// desk
 						localdata.view.container.addClass('desk')
 							.append(localdata.view.left = $('<div>').addClass('left_side'))
-							.append(localdata.view.right = $('<div>').addClass('right_side'));
+							.append(localdata.view.right = $('<div>').addClass('right_side')
+								.append(localdata.view.container = $('<div>').addClass('container'))
+							);
 						url = NB.api + '/get.php?source=' + localdata.settings.query[localdata.settings.query[i]];
 						$.getJSON(url, function (data) {
 							localdata.view.left.append(
 								localdata.view.source = $('<div>').addClass('note')
 							);
 							dispBib(localdata.view.source, data, localdata);
+							localdata.view.left.center('horizontal').css({'position': 'relative'});
+							localdata.view.right.center('horizontal').css({'position': 'relative'});
 							$.each(data.source.notes, function (i, note) {
 								if(note.ac >= localdata.settings.access) {
-									localdata.view.right.append(
+									localdata.view.container.append(
 										$('<div>').addClass('note').attr({'id': note.id})
 									);
 									url = NB.api + '/get.php?note=' + note.id;
@@ -434,17 +438,20 @@
 						// desk
 						localdata.view.container.addClass('desk')
 							.append(localdata.view.left = $('<div>').addClass('left_side'))
-							.append(localdata.view.right = $('<div>').addClass('right_side'));
+							.append(localdata.view.right = $('<div>').addClass('right_side')
+								.append(localdata.view.container = $('<div>').addClass('container'))
+							);
 						url = NB.api + '/get.php?source=' + localdata.settings.query[localdata.settings.query[i]];
 						$.getJSON(url, function (data) {
 							localdata.view.left.append(
 								localdata.view.collection = $('<div>').addClass('note')
 							);
 							dispBib(localdata.view.collection, data, localdata);
-
+							localdata.view.left.center('horizontal').css({'position': 'relative'});
+							localdata.view.right.center('horizontal').css({'position': 'relative'});
 							// find "insources" with the reference to this collection
 							$.each(data.source.insource, function (i, bibID) {
-								localdata.view.right.append(
+								localdata.view.container.append(
 									$('<div>').addClass('note topic').attr({'id': bibID})
 								);
 								url = NB.api + '/get.php?source=' + bibID;

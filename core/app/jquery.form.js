@@ -188,7 +188,12 @@
 			case 'misc':
 			case 'periodical':
 			case 'unpublished':
-
+				plus.field = $('<span>')
+					.append($('<input>')
+						.addClass('field_obj large text noteLocation')
+						.attr({'type': 'text', 'placeholder': 'Location 1 / Location 2', 'title': 'Location 1 / Location 2 / etc.', 'name': 'noteLocation'})
+						.val(detail.location)
+					);
 				break;
 		}
 
@@ -215,6 +220,7 @@
 		$.each(data.source.notes, function (i, note) {
 				url = NB.api + '/get.php?note=' + note.id;
 				$.getJSON(url, function (data2) {
+					if(data2.note.checkID === null) data2.note.checkID = check_id();
 					form.labels = getLabel(data2.note.label, ' / ');
 					for (var key in data2) {
 						form.pages = getPages(data2.note.page.start, data2.note.page.end);
@@ -464,6 +470,7 @@
 		var url = NB.api + '/get.php?source=' + id;
 		$.getJSON(url, function (data) {
 			var noteID = data.source.noteID;
+			if(data.source.checkID === null) data.source.checkID = check_id();
 			form.author = getAuthors(data.source.author, ' / ');
 			form.location = getLocations(data.source.location, ' / ');
 			form.pages = getPages(data.source.page.start, data.source.page.end);
@@ -871,6 +878,10 @@
 										})
 										.addClass('button medium new')
 										)
+										.on('click', function() {
+											form.note.container.empty();
+											form4source(form.note.container, '0');
+										})
 									)
 								)
 							)
