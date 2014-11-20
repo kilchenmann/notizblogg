@@ -1,3 +1,25 @@
+
+function tex2html(string){
+	string = string.replace(/ ``/g, ' "');
+	string = string.replace(/\'\' /g, '" ');
+	string = string.replace(/\'\'\, /g, '", ');
+	string = string.replace(/\'\'\. /g, '". ');
+	string = string.replace(/ `/g, ' \'');
+	string = string.replace(/ -- /g, ' &ndash; ');
+	string = string.replace(/\_/g, '_');
+	string = string.replace(/\§/g, '§');
+	string = string.replace(/\%/g, '%');
+	string = string.replace(/\$/g, '$');
+	string = string.replace(/\#/g, '#');
+	string = string.replace(/\{/g, '{');
+	string = string.replace(/\}/g, '}');
+	string = string.replace(/\\textasciitilde/g, '~');
+	string = string.replace(/\\texteuro/g, '€');
+	return string;
+}
+
+
+
 function getAuthors(author, sep) {
 	// authors
 	var i = 0, authors;
@@ -192,9 +214,9 @@ function getSource(data) {
 		bibtex += 'note = {' + source.comment + '}}';
 		//biblio += '';
 		bib = {
-			biblio: biblio,
+			biblio: tex2html(biblio),
 			bibtex: bibtex,
-			footnote: footnote
+			footnote: tex2html(footnote)
 		};
 	} else {
 		bib = {

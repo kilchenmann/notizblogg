@@ -25,7 +25,7 @@ function changeUmlaut4Tex($string){
   return strtr($string, $upas);
 }
 
-function change4Tex($text){
+function html2tex($text, $cite){
 	$text = preg_replace
 	("!&amp;lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&amp;gt;!i", "\\4", $text);
 	$text = preg_replace
@@ -54,12 +54,16 @@ function change4Tex($text){
 	("!<(nb:)([^ >\n\t]+)>!i", "\\2", $text);
 
 
-	$upas = array(" &quot;"=>" ``", "&quot; "=>"'' ", "&quot;, "=>"'', ", "&quot;. "=>"''. ", " &#039;"=>" `", "&#039; "=>"' ", "&#039;, "=>"', ", "&#039;. "=>"'. ", " - "=>" -- ", " — "=>" -- ", "_"=>"\_", "§"=>"\§", "$"=>"\$", " & "=>" \& ", "#"=>"\#", "{"=>"\{", "}"=>"\}", "%"=>"\%", "~"=>"\textasciitilde", "€"=>"\texteuro");
+	$upas = array(" &quot;"=>" ``", "&quot; "=>"'' ", "&quot;, "=>"'', ", "&quot;. "=>"''. ", " &#039;"=>" `", "&#039; "=>"' ", "&#039;, "=>"', ", "&#039;. "=>"'. ", " - "=>" -- ", " — "=>" -- ", "_"=>"\_", "§"=>"\§", "$"=>"\$", "& "=>"\& ", "#"=>"\#", "{"=>"\{", "}"=>"\}", "%"=>"\%", "~"=>"\textasciitilde", "€"=>"\texteuro");
   /*foreach($upas as $umlaut=>$replace){
 	return (str_replace($umlaut, $replace, $string));
   }
   */
-  return '``' . strtr($text, $upas) . '\'\'';
+  if($cite == false) {
+      return strtr($text, $upas);
+  } else {
+      return '``' . strtr($text, $upas) . '\'\'';
+  }
 }
 
 function getLastChar($string){

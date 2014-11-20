@@ -32,6 +32,7 @@ class post {
 
 	function updateNote() {
 		if(!array_key_exists('notePublic', $this->data)) $this->data['notePublic'] = 0;
+//		if(empty($this->data['dateYear'])) $this->data['dateYear'] = 0;
 
 		$this->data['pageStart'] = '0';
 		$this->data['pageEnd'] = '0';
@@ -62,13 +63,15 @@ class post {
 									'noteSubtitle=\'' . $this->data['noteSubtitle'] . '\', ' .
 									'noteComment=\'' . $this->data['noteComment'] . '\', ' .
 									'noteLink=\'' . $this->data['noteLink'] . '\', ' .
-									'noteMedia=\'' . $this->data['noteMedia'] . '\', ' .
 									'bibID=\'' . $this->data['bibID'] . '\', ' .
 									'pageStart=\'' . $this->data['pageStart']. '\', ' .
 									'pageEnd=\'' . $this->data['pageEnd']. '\', ' .
+									'noteMedia=\'' . $this->data['noteMedia'] . '\', ' .
+									'notePublic=\'' . $this->data['notePublic'] . '\', ' .
 									'userID=\'' . $this->user. '\', ' .
-									'notePublic=\'' . $this->data['notePublic'] . '\' ' .
+									'checkID=\'' . $this->data['checkID'] . '\' ' .
 									'WHERE noteID = ' . $this->data['noteID'] . ';');
+
 			condb('close');
 
 			return json_encode(array(
@@ -89,7 +92,7 @@ class post {
 	function updateSource() {
 		if(!array_key_exists('notePublic', $this->data)) $this->data['notePublic'] = 0;
 		if(!array_key_exists('bibEditor', $this->data)) $this->data['bibEditor'] = 0;
-/*
+
 		$this->data['pageStart'] = '0';
 		$this->data['pageEnd'] = '0';
 		$tmp_pages = explode('-', $this->data['pages']);
@@ -102,7 +105,7 @@ class post {
 		} else {
 			$page_start = $this->data['pages'];
 		}
-*/
+
 
 		if(!empty($this->data['bibName']) && !empty($this->data['bibTyp']))
 		{
@@ -116,19 +119,17 @@ class post {
 										'(\'' . $this->data['noteTitle'] .
 										 '\', \'' . $this->user .
 										 '\', \'' . $this->data['checkID'] .
-										 '\', \'' . $this->data['noteComment'] . '\');');
-				$noteID = $mysqli->insert_id;
-				$this->data['noteID'] = $noteID;
-				echo $this->data['noteID'];
+										 '\', \'' . html2tex($this->data['noteComment']) . '\');');
+				$this->data['noteID'] = $mysqli->insert_id;
 				$sql = $mysqli->query('INSERT INTO bib ' .
-										'(\'bib\', \'bibEditor\', \'bibTyp\', \'noteID\') ' .
+										'(`bib`, `bibEditor`, `bibTyp`, `noteID`) ' .
 										'VALUES' .
-										'(\'' . $this->data['bibName'] .
+										'(\'' . changeUmlaut($this->data['bibName']) .
 										 '\', \'' . $this->data['bibEditor'] .
 										 '\', \'' . $this->data['bibTyp'] .
 										 '\', \'' . $this->data['noteID'] .
 										 '\');');
-				$this->data['bibID'] = mysqli_insert_id($sql);
+				$this->data['bibID'] = $mysqli->insert_id;
 				$mysqli = condb('close');
 			}
 			//old source: update
@@ -202,17 +203,36 @@ class post {
 									'WHERE bibID = ' . $this->data['bibID'] . ';');
 			// update the data
 			$sql = $mysqli->query('UPDATE note SET ' .
-									'noteTitle=\'' . $this->data['noteTitle'] . '\', ' .
-									'noteSubtitle=\'' . $this->data['noteSubtitle'] . '\', ' .
-									'noteComment=\'' . $this->data['noteComment'] . '\', ' .
-									'noteLink=\'' . $this->data['noteLink'] . '\', ' .
-									'noteMedia=\'' . $this->data['noteMedia'] . '\', ' .
+									'noteTitle=\'' . html2tex($this->data['noteTitle']) . '\', ' .
+									'noteSubtitle=\'' . html2tex($this->data['noteSubtitle']) . '\', ' .
+									'noteComment=\'' . html2tex($this->data['noteComment']) . '\', ' .
+									'noteLink=\'' . html2tex($this->data['noteLink']) . '\', ' .
 									'pageStart=\'' . $this->data['pageStart']. '\', ' .
 									'pageEnd=\'' . $this->data['pageEnd']. '\', ' .
+									'noteMedia=\'' . $this->data['noteMedia'] . '\', ' .
+									'notePublic=\'' . $this->data['notePublic'] . '\', ' .
+									'dateYear=\'' . $this->data['dateYear'] . '\', ' .
 									'userID=\'' . $this->user. '\', ' .
-									'notePublic=\'' . $this->data['notePublic'] . '\' ' .
+									'checkID=\'' . $this->data['checkID'] . '\' ' .
 									'WHERE noteID = ' . $this->data['noteID'] . ';');
 			condb('close');
+
+/*
+echo 'UPDATE note SET ' .
+'noteTitle=\'' . $this->data['noteTitle'] . '\', ' .
+'noteSubtitle=\'' . $this->data['noteSubtitle'] . '\', ' .
+'noteComment=\'' . $this->data['noteComment'] . '\', ' .
+'noteLink=\'' . $this->data['noteLink'] . '\', ' .
+'bibID=\'' . $this->data['bibID'] . '\', ' .
+'pageStart=\'' . $this->data['pageStart']. '\', ' .
+'pageEnd=\'' . $this->data['pageEnd']. '\', ' .
+'noteMedia=\'' . $this->data['noteMedia'] . '\', ' .
+'notePublic=\'' . $this->data['notePublic'] . '\', ' .
+'dateYear=\'' . $this->data['dateYear'] . '\', ' .
+'userID=\'' . $this->user. '\', ' .
+'checkID=\'' . $this->data['checkID'] . '\' ' .
+'WHERE noteID = ' . $this->data['noteID'] . ';';
+*/
 
 			return json_encode(array(
 				'error' => false,

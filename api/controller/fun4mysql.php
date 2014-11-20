@@ -274,7 +274,7 @@ function insertDetail($prop, $val, $id) {
     while($row = mysqli_fetch_object($sql)) {
         $bibFieldID = $row->bibFieldID;
     }
-    $newsql = $mysqli->query('INSERT INTO bibDetail ( bibID, bibFieldID, bibDetail ) VALUES (\'' . $id . '\', \'' . $bibFieldID . '\', \'' . $val . '\');');
+    $newsql = $mysqli->query('INSERT INTO bibDetail ( bibID, bibFieldID, bibDetail ) VALUES (\'' . $id . '\', \'' . $bibFieldID . '\', \'' . html2tex($val) . '\');');
     $mysqli = condb('close');
 }
 

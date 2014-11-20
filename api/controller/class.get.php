@@ -58,7 +58,7 @@ class get {
 						'title' => $row->noteTitle,
 						'subtitle' => $row->noteSubtitle,
 						'comment' => makeurl($row->noteComment),
-						'comment4tex' => change4Tex($row->noteComment),
+						'comment4tex' => html2tex($row->noteComment, 'cite'),
 						'label' => $label,
 						'media' => $media,
 						'source' => $source,

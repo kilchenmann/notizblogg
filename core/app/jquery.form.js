@@ -38,12 +38,19 @@
 							.attr({'type': 'button', 'title': 'EDIT the acitve source'})
 							.css({'float': 'right', 'margin-top': '44px'})
 							.on('click', function() {
-								var sourceID = selected_ele.attr('id');
-								if(sourceID !== '0') {
+								if($(this).hasClass('close')) {
+									$(this).toggleClass('edit close');
 									note_ele.empty();
-									form4source(note_ele, sourceID);
+									form4note(note_ele, data2);
 								} else {
-									alert('You have to choose a source first');
+									var sourceID = selected_ele.attr('id');
+									if(sourceID !== '0') {
+										$(this).toggleClass('edit close');
+										note_ele.empty();
+										form4source(note_ele, sourceID);
+									} else {
+										alert('You have to choose a source first');
+									}
 								}
 							})
 						);
@@ -220,7 +227,7 @@
 		$.each(data.source.notes, function (i, note) {
 				url = NB.api + '/get.php?note=' + note.id;
 				$.getJSON(url, function (data2) {
-					if(data2.note.checkID === null) data2.note.checkID = check_id();
+//					if(data2.note.checkID === null) data2.note.checkID = check_id();
 					form.labels = getLabel(data2.note.label, ' / ');
 					for (var key in data2) {
 						form.pages = getPages(data2.note.page.start, data2.note.page.end);
@@ -238,14 +245,17 @@
 										.append($('<input>')
 											.attr({'type': 'hidden', 'placeholder': 'noteID', 'title': 'noteID', 'name': 'noteID'})
 											.val(data2.note.id)
+											.addClass('invisible noteID')
 										)
 										.append($('<input>')
 											.attr({'type': 'hidden', 'placeholder': 'checkID', 'title': 'checkID', 'name': 'checkID'})
 											.val(data2.note.checkID)
+											.addClass('invisible checkID')
 										)
 										.append($('<input>')
 											.attr({'type': 'hidden', 'placeholder': 'bibID', 'title': 'bibID', 'name': 'bibID'})
 											.val(data.source.id)
+											.addClass('invisible bibID')
 										)
 									)
 								)
@@ -356,6 +366,10 @@
 						$('table#' + note.id).find('input.notePublic').attr({'disabled': true});
 					}
 				$('button#' + note.id + '.edit').on('click', function() {
+					var checkID = $('table#' + note.id).find('input.checkID');
+					if(checkID.val() === '') checkID.val(check_id()); //alert(check_id());
+
+
 					var values = {};
 					$.each($('#form_' + note.id).serializeArray(), function(i, field) {
 						values[field.name] = field.value;
@@ -659,6 +673,7 @@
 				var plus_ele = $('#form_' + noteID).find('tr.field_plus');
 				var plus_val = $('#form_' + noteID).find('select.bibTyp').find(':selected').text();
 				addFields(plus_ele, plus_val, data.source);
+				completeMultipleValues('location', $('table#' + noteID).find('input.noteLocation'));
 			}, 300);
 
 
@@ -679,6 +694,7 @@
 						if(data.error){
 			//				$('table#' + noteID).find('textarea.noteComment').addClass('error');
 						} else {
+//							$('td.' + data.source.bibID).empty();
 						//	var filename = $('table#' + noteID).find('input.noteMedia').val();
 						//	var media = '';
 						//	if(filename !== '') media = $('table#' + noteID).find('span.place4media').html();
@@ -864,10 +880,9 @@
 
 				// select a source first
 				$this.html($('<div>')
-						.addClass('form_frame')
-						.append(
-							$('<div>').addClass('top source_form active')
-							.append($('<table>').addClass('source_form')
+					.addClass('form_frame')
+					.append($('<div>').addClass('top source_form active')
+						.append($('<table>').addClass('source_form')
 							.append(form.source.info = $('<tr>')
 								.append($('<th>')
 									.attr({'colspan': '2'})
@@ -882,6 +897,7 @@
 										.addClass('button medium new')
 										)
 										.on('click', function() {
+											form.source.selected.empty();
 											form.note.container.empty();
 											form4source(form.note.container, '0');
 										})
@@ -918,18 +934,25 @@
 										url = NB.api + '/get.php?source=' + form.source.bib.val();
 										$.getJSON(url, function (data) {
 											form.source.selected.html(getSource(data).biblio).attr({'id': form.source.bib.val()});
-											form.source.selected.append(
+											form.source.selected.append(form.source.edit =
 												$('<button>')
 												.addClass('btn grp_none edit')
 												.attr({'type': 'button', 'title': 'EDIT the acitve source'})
-												.css({'float': 'right', 'margin-top': '44px'})
+												.css({'float': 'right', 'margin-top': '0'})
 												.on('click', function() {
-													var sourceID = form.source.selected.attr('id');
-													if(sourceID !== '0') {
+													if($(this).hasClass('close')) {
+														$(this).toggleClass('edit close');
 														form.note.container.empty();
-														form4source(form.note.container, sourceID);
+														form4note(form.note.container, data);
 													} else {
-														alert('You have to choose a source first');
+														var sourceID = form.source.selected.attr('id');
+														if(sourceID !== '0') {
+															$(this).toggleClass('edit close');
+															form.note.container.empty();
+															form4source(form.note.container, sourceID);
+														} else {
+															alert('You have to choose a source first');
+														}
 													}
 												})
 											);
@@ -945,6 +968,14 @@
 									.addClass('selected source center')
 								)
 							)
+						)
+						.append(form.source.addnote =
+							$('<button>')
+							.addClass('btn grp_none plus')
+							.attr({'type': 'button', 'title': 'ADD new note to this source'})
+							.css({'display': 'block', 'margin': '0 auto 0 auto'})
+							.on('click', function() {
+							})
 						)
 					)
 					.append(
