@@ -30,22 +30,27 @@
 				if(data.notes[0] !== undefined) {
 					url2 = NB.api + '/get.php?source=' + data.notes[0].split('::')[0];
 					$.getJSON(url2, function (data2) {
-						selected_ele.html(getSource(data2).biblio)
+						selected_ele.html(getSource(data2).biblio + '.')
 									.attr({'id': data.notes[0].split('::')[0]});
 						selected_ele.append(
-							$('<button>')
-							.addClass('btn grp_none edit')
-							.attr({'type': 'button', 'title': 'EDIT the acitve source'})
-							.css({'float': 'right', 'margin-top': '44px'})
+							$('<input>').attr({
+								'name': 'editsource',
+								'type': 'button'
+							})
+							.val('EDIT')
+							.css({'float': 'right'})
+							.addClass('button medium edit')
 							.on('click', function() {
 								if($(this).hasClass('close')) {
 									$(this).toggleClass('edit close');
+									$(this).val('EDIT');
 									note_ele.empty();
 									form4note(note_ele, data2);
 								} else {
 									var sourceID = selected_ele.attr('id');
 									if(sourceID !== '0') {
 										$(this).toggleClass('edit close');
+										$(this).val('CANCEL');
 										note_ele.empty();
 										form4source(note_ele, sourceID);
 									} else {
@@ -222,6 +227,13 @@
 		);
 
 	};
+	var form4newnote = function(ele) {
+		url = NB.api + '/get.php?source=0';
+		$.getJSON(url, function (data) {
+			form4note(ele, data);
+		});
+	};
+
 	var form4note = function (ele, data) {
 		var form = {};
 		$.each(data.source.notes, function (i, note) {
@@ -254,7 +266,7 @@
 										)
 										.append($('<input>')
 											.attr({'type': 'hidden', 'placeholder': 'bibID', 'title': 'bibID', 'name': 'bibID'})
-											.val(data.source.id)
+											.val(data2.note.source.id)
 											.addClass('invisible bibID')
 										)
 									)
@@ -881,7 +893,7 @@
 				// select a source first
 				$this.html($('<div>')
 					.addClass('form_frame')
-					.append($('<div>').addClass('top source_form active')
+					.append($('<div>').addClass('top active')
 						.append($('<table>').addClass('source_form')
 							.append(form.source.info = $('<tr>')
 								.append($('<th>')
@@ -894,6 +906,7 @@
 											'type': 'button',
 											'value': 'ADD NEW'
 										})
+										.css({'float': 'right'})
 										.addClass('button medium new')
 										)
 										.on('click', function() {
@@ -933,21 +946,28 @@
 										form.note.container.empty();
 										url = NB.api + '/get.php?source=' + form.source.bib.val();
 										$.getJSON(url, function (data) {
-											form.source.selected.html(getSource(data).biblio).attr({'id': form.source.bib.val()});
-											form.source.selected.append(form.source.edit =
-												$('<button>')
-												.addClass('btn grp_none edit')
-												.attr({'type': 'button', 'title': 'EDIT the acitve source'})
-												.css({'float': 'right', 'margin-top': '0'})
+											form.source.selected.html(getSource(data).biblio + '.').attr({'id': form.source.bib.val()});
+											form.source.selected
+											.append(form.source.edit =
+												$('<input>').attr({
+													'name': 'editsource',
+													'type': 'button'
+												})
+												.val('EDIT')
+												.css({'float': 'right'})
+												.addClass('button medium edit')
+
 												.on('click', function() {
 													if($(this).hasClass('close')) {
 														$(this).toggleClass('edit close');
+														$(this).val('EDIT');
 														form.note.container.empty();
 														form4note(form.note.container, data);
 													} else {
 														var sourceID = form.source.selected.attr('id');
 														if(sourceID !== '0') {
 															$(this).toggleClass('edit close');
+															$(this).val('CANCEL');
 															form.note.container.empty();
 															form4source(form.note.container, sourceID);
 														} else {
@@ -969,17 +989,30 @@
 								)
 							)
 						)
-						.append(form.source.addnote =
-							$('<button>')
-							.addClass('btn grp_none plus')
-							.attr({'type': 'button', 'title': 'ADD new note to this source'})
-							.css({'display': 'block', 'margin': '0 auto 0 auto'})
-							.on('click', function() {
-							})
-						)
 					)
 					.append(
-						$('<div>').addClass('bottom note_form')
+						$('<div>').addClass('bottom')
+						.append(form.source.addnote =
+							$('<button>')
+							.addClass('btn grp_none plus addnote')
+							.attr({'type': 'button', 'title': 'ADD new note to this source'})
+							.on('click', function() {
+								if($(this).hasClass('close')) {
+									$(this).toggleClass('plus close');
+									form.note.container.empty();
+									form4note(form.note.container, data);
+								} else {
+									var sourceID = form.source.selected.attr('id');
+									if(sourceID !== '0') {
+										$(this).toggleClass('plus close');
+										form.note.container.empty();
+										form4newnote(form.note.container);
+									} else {
+										alert('You have to choose a source first');
+									}
+								}
+							})
+						)
 						.append(form.note.container = $('<div>').addClass('note_form')
 							/*
 							.append(form.note.info = $('<tr>')

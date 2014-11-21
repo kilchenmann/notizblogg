@@ -200,6 +200,10 @@
         $('.float_obj.logout_frame').center('horizontal');
         $('.float_obj.logout_frame').center('bound2object', $('button.user'));
 
+        $('.left_side').center('horizontal').css({'position': 'relative'});
+        $('.right_side').center('horizontal').css({'position': 'relative'});
+
+
         if ($('.wall').length !== 0) {
             var width = $(window).width();
             var note_width = $('.note').width();

@@ -1,16 +1,33 @@
 .form_frame {
     overflow: hidden;
-    .source_form {
+    .top {
         height: auto;
     }
-    .note_form {
+    .bottom {
         margin-right: -15px;
         margin-bottom: -15px;
         padding-bottom: 22px;
-        form {
-            textarea {
-                max-width: 480px;
-                max-height: 200px;
+        .addnote {
+            display: block;
+            position: absolute;
+            overflow: hidden;
+            width: 38px;
+            height: 38px;
+            left: 50%;
+            margin-left: -20px;
+            margin-top: -32px;
+            z-index: 99;
+            border-radius: 50%;
+            box-shadow: 0 5px 6px -6px rgba(0, 0, 0, 0.5);
+            background-color: #ffffff;
+        }
+        .note_form {
+            margin: 22px auto 22px auto;
+            form {
+                textarea {
+                    max-width: 480px;
+                    max-height: 200px;
+                }
             }
         }
     }

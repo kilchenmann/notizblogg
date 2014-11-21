@@ -28,60 +28,93 @@ class get {
 	function getNote() {
 		// 1 set some variables and arrays
 		$data = array();
-		$mysqli = condb('open');
-		// 2 get the data from db
-		$sql = $mysqli->query('SELECT * FROM note WHERE noteID = ' . $this->id . ' AND notePublic >= ' . $this->access . ';');
-		condb('close');
-		// 3 prepare the result
-		$num_results = mysqli_num_rows($sql);
-		if($num_results > 0) {
-			while ($row = mysqli_fetch_object($sql)) {
-				// get the labels and set a link to other notes with the same label
-				$label = getIndexMN('note', 'label', $row->noteID);
-				// get the user info
-				$user = getIndex('user', $row->userID);
-				$media = getMedia($row->noteMedia);
-				if($row->bibID != NULL) {
-					$source = getIndex('bib', $row->bibID);
-				} else {
-					// the note is a source
-					$source = array(
-						'id' => '0',
-						'name' => ''
+		if($this->id == 0) {
+			// empty json data set
+			$data = array(
+				$this->type => array(
+					'id' => '0',
+					'checkID' => NULL,
+					'title' => '',
+					'subtitle' => '',
+					'comment' => '',
+					'comment4tex' => '',
+					'label' => '',
+					'media' => '',
+					'source' => array(
+						'id' => '',
+						'name' => '',
+						'link' => ''
+					),
+					'page' => array(
+						'start' => '',
+						'end' => ''
+					),
+					'date' => array(
+						'year' => '',
+						'created' => '',
+						'modified' => ''
+					),
+					'user' => '',
+					'public' => '0'
+				),
+			);
+		} else {
+			$mysqli = condb('open');
+			// 2 get the data from db
+			$sql = $mysqli->query('SELECT * FROM note WHERE noteID = ' . $this->id . ' AND notePublic >= ' . $this->access . ';');
+			condb('close');
+			// 3 prepare the result
+			$num_results = mysqli_num_rows($sql);
+			if($num_results > 0) {
+				while ($row = mysqli_fetch_object($sql)) {
+					// get the labels and set a link to other notes with the same label
+					$label = getIndexMN('note', 'label', $row->noteID);
+					// get the user info
+					$user = getIndex('user', $row->userID);
+					$media = getMedia($row->noteMedia);
+					if($row->bibID != NULL) {
+						$source = getIndex('bib', $row->bibID);
+					} else {
+						// the note is a source
+						$source = array(
+							'id' => '0',
+							'name' => ''
+						);
+					}
+					$source['link'] = $row->noteLink;
+					$data = array(
+						$this->type => array(
+							'id' => $row->noteID,
+							'checkID' => $row->checkID,
+							'title' => $row->noteTitle,
+							'subtitle' => $row->noteSubtitle,
+							'comment' => makeurl($row->noteComment),
+							'comment4tex' => html2tex($row->noteComment, 'cite'),
+							'label' => $label,
+							'media' => $media,
+							'source' => $source,
+							'page' => array(
+								'start' => $row->pageStart,
+								'end' => $row->pageEnd
+							),
+							'date' => array(
+								'year' => $row->dateYear,
+								'created' => $row->dateCreated,
+								'modified' => $row->dateModified
+							),
+							'user' => $user,
+							'public' => $row->notePublic
+						),
 					);
 				}
-				$source['link'] = $row->noteLink;
+			} else {
 				$data = array(
-					$this->type => array(
-						'id' => $row->noteID,
-						'checkID' => $row->checkID,
-						'title' => $row->noteTitle,
-						'subtitle' => $row->noteSubtitle,
-						'comment' => makeurl($row->noteComment),
-						'comment4tex' => html2tex($row->noteComment, 'cite'),
-						'label' => $label,
-						'media' => $media,
-						'source' => $source,
-						'page' => array(
-							'start' => $row->pageStart,
-							'end' => $row->pageEnd
-						),
-						'date' => array(
-							'year' => $row->dateYear,
-							'created' => $row->dateCreated,
-							'modified' => $row->dateModified
-						),
-						'user' => $user,
-						'public' => $row->notePublic,
-					),
+				'note' => array(
+				'id' => 0
+				)
 				);
 			}
-		} else {
-			$data = array(
-				'note' => array(
-					'id' => 0
-				)
-			);
+
 		}
 		return json_encode($data);
 	}
@@ -119,7 +152,9 @@ class get {
 					'user' => '',
 					'public' => '0',
 					'detail' => '',
-					'notes' => array(),
+					'notes' => array(
+						'id' => '0'
+					),
 					'insource' => array()
 				),
 			);
