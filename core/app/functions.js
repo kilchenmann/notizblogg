@@ -1,21 +1,23 @@
 
 function tex2html(string){
-	string = string.replace(/ ``/g, ' "');
-	string = string.replace(/\'\' /g, '" ');
-	string = string.replace(/\'\'\, /g, '", ');
-	string = string.replace(/\'\'\. /g, '". ');
-	string = string.replace(/ `/g, ' \'');
-	string = string.replace(/ -- /g, ' &ndash; ');
-	string = string.replace(/\_/g, '_');
-	string = string.replace(/\§/g, '§');
-	string = string.replace(/\%/g, '%');
-	string = string.replace(/\$/g, '$');
-	string = string.replace(/\#/g, '#');
-	string = string.replace(/\{/g, '{');
-	string = string.replace(/\}/g, '}');
-	string = string.replace(/\\textasciitilde/g, '~');
-	string = string.replace(/\\texteuro/g, '€');
-	return string;
+	if(string !== undefined) {
+		string = string.replace(/ ``/g, ' "');
+		string = string.replace(/\'\' /g, '" ');
+		string = string.replace(/\'\'\, /g, '", ');
+		string = string.replace(/\'\'\. /g, '". ');
+		string = string.replace(/ `/g, ' \'');
+		string = string.replace(/ -- /g, ' &ndash; ');
+		string = string.replace(/\_/g, '_');
+		string = string.replace(/\§/g, '§');
+		string = string.replace(/\%/g, '%');
+		string = string.replace(/\$/g, '$');
+		string = string.replace(/\#/g, '#');
+		string = string.replace(/\{/g, '{');
+		string = string.replace(/\}/g, '}');
+		string = string.replace(/\\textasciitilde/g, '~');
+		string = string.replace(/\\texteuro/g, '€');
+		return string;
+	}
 }
 
 

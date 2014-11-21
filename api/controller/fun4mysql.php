@@ -233,7 +233,7 @@ function insertMN($name, $rel, $data, $id) {
                 // new data
                 if($n != '') {
                     $newsql = $mysqli->query('INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');');
-                    $relIDs[] = mysqli_insert_id($newsql);
+                    $relIDs[] = $mysqli->insert_id;
                 }
             }
             foreach($relIDs as $rid) {
@@ -244,11 +244,6 @@ function insertMN($name, $rel, $data, $id) {
     }
 }
 
-
-
-
-
-
 //
 // update (edit) old entries
 //
@@ -258,12 +253,28 @@ function updateMN($name, $rel, $data, $id) {
     $tableID = $name . 'ID';
     $rel_table = 'rel_' . $rel . '_' . $name;
     $relID = $rel . 'ID';
+    deleteMN($name, $rel, $data, $id);
     if($data != '') {
         // first: delete the relation and set it as new
-        $mysqli = condb('open');
-        $mysqli->query('DELETE FROM ' . $rel_table . ' WHERE ' . $relID . ' = ' . $id . ';');
-        $mysqli = condb('close');
         insertMN($name, $rel, $data, $id);
+    }
+}
+
+function deleteMN($name, $rel, $data, $id) {
+    //function getIndexMN($type, $part, $id)
+    $tableID = $name . 'ID';                        // e.g. labelID
+    $rel_table = 'rel_' . $rel . '_' . $name;       // e.g. rel_note_label
+    $relID = $rel . 'ID';                           // e.g. noteID
+
+    $mysqli = condb('open');
+    $sql = $mysqli->query('SELECT ' . $tableID . ' FROM ' . $rel_table . ' WHERE ' . $relID . ' = ' . $id . ';');
+    while($row = mysqli_fetch_object($sql)) { // check the numbers of e.g. labels in rel_note_label with this labelID
+        $checksql = $mysqli->query('SELECT * FROM ' . $rel_table . ' WHERE ' . $tableID . ' = ' . $row->$tableID . ';');
+        $num_results = mysqli_num_rows($checksql);
+        if ($num_results <= 1) {
+            $mysqli->query('DELETE FROM ' . $name . ' WHERE ' . $tableID . ' = ' . $row->$tableID . ';');
+        }
+        $mysqli->query('DELETE FROM ' . $rel_table . ' WHERE ' . $relID . ' = ' . $id . ';');
     }
 }
 

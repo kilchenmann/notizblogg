@@ -153,11 +153,16 @@ class get {
 					'public' => '0',
 					'detail' => '',
 					'notes' => array(
-						'id' => '0'
+						array(
+							'id' => '0',
+							'ac' => '0'
+						)
 					),
 					'insource' => array()
 				),
 			);
+
+
 		} else {
 			$mysqli = condb('open');
 			// 2 get the data from db

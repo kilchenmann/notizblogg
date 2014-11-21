@@ -41,13 +41,13 @@
 							.css({'float': 'right'})
 							.addClass('button medium edit')
 							.on('click', function() {
+								var sourceID = selected_ele.attr('id');
 								if($(this).hasClass('close')) {
 									$(this).toggleClass('edit close');
 									$(this).val('EDIT');
 									note_ele.empty();
-									form4note(note_ele, data2);
+									form4note(note_ele, sourceID);
 								} else {
-									var sourceID = selected_ele.attr('id');
 									if(sourceID !== '0') {
 										$(this).toggleClass('edit close');
 										$(this).val('CANCEL');
@@ -59,7 +59,7 @@
 								}
 							})
 						);
-						form4note(note_ele, data2);
+						form4note(note_ele, data.notes[0].split('::')[0]);
 					});
 				} else {
 					selected_ele.attr({'id': 0});
@@ -230,264 +230,286 @@
 	var form4newnote = function(ele) {
 		url = NB.api + '/get.php?source=0';
 		$.getJSON(url, function (data) {
-			form4note(ele, data);
+			form4note(ele, 0);
 		});
 	};
 
-	var form4note = function (ele, data) {
+	var form4note = function (ele, source) {
 		var form = {};
-		$.each(data.source.notes, function (i, note) {
-				url = NB.api + '/get.php?note=' + note.id;
-				$.getJSON(url, function (data2) {
-//					if(data2.note.checkID === null) data2.note.checkID = check_id();
-					form.labels = getLabel(data2.note.label, ' / ');
-					for (var key in data2) {
-						form.pages = getPages(data2.note.page.start, data2.note.page.end);
-						if(form.pages === '0') form.pages = '';
+		var url = NB.api + '/get.php?source=' + source;
+		$.getJSON(url, function (data) {
+			$.each(data.source.notes, function (i, note) {
+					url = NB.api + '/get.php?note=' + note.id;
+					$.getJSON(url, function (data2) {
+	//					if(data2.note.checkID === null) data2.note.checkID = check_id();
+						form.labels = getLabel(data2.note.label, ' / ');
+						for (var key in data2) {
+							form.pages = getPages(data2.note.page.start, data2.note.page.end);
+							if(form.pages === '0') form.pages = '';
 
-						if(data2.note.subtitle !== null && data2.note.subtitle !== '') {
-							form.title = htmlDecode(data2.note.title) + '//' + htmlDecode(data2.note.subtitle);
-						} else {
-							form.title = htmlDecode(data2.note.title);
-						}
-						ele.append($('<form>').attr({'method': 'post', 'action': '', 'id': 'form_' + note.id}).addClass('')
-							.append(form.table = $('<table>').attr({'id': note.id})
-								.append($('<tr>').addClass('invisible')
-									.append($('<td>').attr({'colspan': '3'})
-										.append($('<input>')
-											.attr({'type': 'hidden', 'placeholder': 'noteID', 'title': 'noteID', 'name': 'noteID'})
-											.val(data2.note.id)
-											.addClass('invisible noteID')
-										)
-										.append($('<input>')
-											.attr({'type': 'hidden', 'placeholder': 'checkID', 'title': 'checkID', 'name': 'checkID'})
-											.val(data2.note.checkID)
-											.addClass('invisible checkID')
-										)
-										.append($('<input>')
-											.attr({'type': 'hidden', 'placeholder': 'bibID', 'title': 'bibID', 'name': 'bibID'})
-											.val(data2.note.source.id)
-											.addClass('invisible bibID')
-										)
-									)
-								)
-								/*
-								.append(
-									$('<tr>').addClass('invisible')
-									.append(
-										$('<td>').attr({'colspan': '2'})
-										.append('<span>')
-											.addClass('error_' + note.id)
-											//.text('You haven\'t completed all required fields!')
-									)
-								)
-								*/
-								.append($('<tr>')
-									.append($('<td>').addClass('medium')
-										.append($('<input>')
-											.addClass('field_obj large text noteTitle')
-											.attr({'type': 'text', 'placeholder': 'Title', 'title': 'Title', 'name': 'noteTitle'})
-											.val(data2.note.title))
-									)
-									.append($('<td>').addClass('medium')
-										.append($('<input>')
-											.addClass('field_obj small text notePages')
-											.attr({'type': 'text', 'title': 'Pages', 'placeholder': 'Pages', 'name': 'notePages'})
-											.val(form.pages))
-									)
-									.append($('<td>').addClass('small')
-
-									)
-								)
-								.append($('<tr>')
-									.append($('<td>').addClass('large')
-										.append($('<input>')
-											.addClass('field_obj large text noteSubtitle')
-											.attr({'type': 'text', 'placeholder': 'Subtitle', 'title': 'Subtitle', 'name': 'noteSubtitle'})
-											.val(data2.note.subtitle))
-									)
-									.append($('<td>').addClass('medium')
-										.append(form.file = $('<input>')
-											.addClass('field_obj small text noteMedia')
-											.attr({'type': 'text', 'title': 'media/file', 'placeholder': 'media/file', 'name': 'noteMedia'})
-											.val(data2.note.media.path)
-										)
-									)
-									.append($('<td>').addClass('small')
-
-									)
-								)
-								.append($('<tr>')
-									.append($('<td>').addClass('large')
-										.append($('<textarea>')
-											.addClass('field_obj large tiny text noteComment')
-											.text(htmlDecode(data2.note.comment))
-											.attr({'placeholder': 'Comment', 'name': 'noteComment'}))
-									)
-									.append($('<td>').addClass('medium')
-										.append(form.upload = $('<div>')
-											.addClass('upload media')
-											.append($('<span>').addClass('place4media').html(data2.note.media.html))
-											.append($('<span>').addClass('button4media center'))
-										)
-									)
-									.append($('<td>').addClass('small')
-
-									)
-								)
-								.append($('<tr>')
-									.append($('<td>').addClass('large')
-										.append(form.label = $('<input>')
-											.addClass('field_obj large text noteLabel')
-											.val(form.labels)
-											.attr({'type': 'text', 'placeholder': 'Label 1 / Label 2', 'name': 'noteLabel', 'title': 'Label 1 / Label 2 / etc.'}))
-									)
-									.append($('<td>').addClass('medium right')
-										.append(form.reset_btn = $('<button>').addClass('btn grp_none view invisible').attr({'type': 'button'}))
-										.append(form.reset_box = $('<input>').addClass('invisible notePublic').attr({'type': 'checkbox', 'name': 'notePublic'}).val('1'))
-										.append(form.delete_btn = $('<button>').addClass('btn grp_none trash invisible').attr({'type': 'button'}))
-										.append(form.delete_box = $('<input>').addClass('invisible deleteNote').attr({'type': 'checkbox', 'name': 'deleteNote'}).val('1'))
-									)
-									.append($('<td>').addClass('small')
-
-									)
-								)
-								.append($('<tr>')
-									.append($('<td>').addClass('large')
-										.append($('<input>')
-											.addClass('field_obj large text noteLink')
-											.val(form.url)
-											.attr({'type': 'text', 'placeholder': 'URL', 'name': 'noteLink', 'title': 'Hypertext Reference (URL)'}))
-									)
-									.append($('<td>').addClass('medium right')
-										.append(form.edit_btn = $('<button>').addClass('btn grp_none edit').attr({'id': note.id, 'type': 'button'}))
-										.append(form.reset_btn = $('<button>').addClass('btn grp_none close invisible').attr({'id': note.id, 'type': 'button'}))
-										.append(form.save_btn = $('<button>').addClass('btn grp_none done invisible').attr({'id': note.id, 'type': 'submit'}))
-									)
-									.append($('<td>').addClass('small')
-
-									)
-								)
-							)
-						);
-						if(data2.note.public === '1') {
-							$('table#' + note.id).find('input.notePublic').click();
-							$('table#' + note.id).find('button.view').toggleClass('active invisible');
-						}
-						$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
-						$('table#' + note.id).find('input.notePublic').attr({'disabled': true});
-					}
-				$('button#' + note.id + '.edit').on('click', function() {
-					var checkID = $('table#' + note.id).find('input.checkID');
-					if(checkID.val() === '') checkID.val(check_id()); //alert(check_id());
-
-
-					var values = {};
-					$.each($('#form_' + note.id).serializeArray(), function(i, field) {
-						values[field.name] = field.value;
-					});
-
-					completeMultipleValues('label', $('table#' + note.id).find('input.noteLabel'));
-
-					if($('table#' + note.id).find('input.notePublic').is(':checked') === true) values.notePublic = 1;
-					values.mediaHTML = $('#form_' + note.id).find('span.place4media').html();
-
-					$('table#' + note.id).find('button.edit').addClass('invisible');
-					$('table#' + note.id).find('button.close').removeClass('invisible');
-					$('table#' + note.id).find('button.done').removeClass('invisible');
-
-					$('table#' + note.id).find('input, textarea, select').attr('readonly', false);
-					$('table#' + note.id).find('input.notePublic').attr({'disabled': false});
-
-					$('table#' + note.id).find('button.view').removeClass('invisible').on('click', function(){
-						$('table#' + note.id).find('input.notePublic').click();
-						$(this).toggleClass('active');
-					});
-					$('table#' + note.id).find('button.trash').removeClass('invisible').on('click', function(){
-						$('table#' + note.id).find('input.deleteNote').click();
-						$(this).toggleClass('active');
-					});
-
-					var upload_ele = $('table#' + note.id).find('div.upload');
-					var file_ele = $('table#' + note.id).find('input.noteMedia');
-					upload_ele.upload({'file': file_ele, 'media': values.mediaHTML, 'note': note.id});
-
-					//
-					// if you cancel the edit action
-					//
-					$('button#' + note.id + '.close').on('click', function() {
-						upload_ele.upload('cancel');
-						var table = $('table#' + note.id);
-						table.find('button.view').removeClass('active').addClass('invisible');
-						$.each(values, function(i, v) {
-							if(i === 'noteComment') {
-								table.find('textarea.' + i).val(v);
-							} else if (i === 'notePublic') {
-								if(table.find('input.notePublic').is(':checked') === false) {
-									table.find('input.notePublic').click();
-									table.find('button.view').addClass('active').removeClass('invisible');
-								}
+							if(data2.note.subtitle !== null && data2.note.subtitle !== '') {
+								form.title = htmlDecode(data2.note.title) + '//' + htmlDecode(data2.note.subtitle);
 							} else {
-								table.find('input.' + i).val(v);
+								form.title = htmlDecode(data2.note.title);
+							}
+							if(data2.note.id === '0') {
+								data2.note.source.id = $('.bottom').find('button.addnote.close').attr('id');
+							}
+							ele.append($('<form>').attr({'method': 'post', 'action': '', 'id': 'form_' + note.id}).addClass('')
+								.append(form.table = $('<table>').attr({'id': note.id})
+									.append($('<tr>').addClass('invisible')
+										.append($('<td>').attr({'colspan': '3'})
+											.append($('<input>')
+												.attr({'type': 'hidden', 'placeholder': 'noteID', 'title': 'noteID', 'name': 'noteID'})
+												.val(data2.note.id)
+												.addClass('invisible noteID')
+											)
+											.append($('<input>')
+												.attr({'type': 'hidden', 'placeholder': 'checkID', 'title': 'checkID', 'name': 'checkID'})
+												.val(data2.note.checkID)
+												.addClass('invisible checkID')
+											)
+											.append($('<input>')
+												.attr({'type': 'hidden', 'placeholder': 'bibID', 'title': 'bibID', 'name': 'bibID'})
+												.val(data2.note.source.id)
+												.addClass('invisible bibID')
+											)
+										)
+									)
+									/*
+									.append(
+										$('<tr>').addClass('invisible')
+										.append(
+											$('<td>').attr({'colspan': '2'})
+											.append('<span>')
+												.addClass('error_' + note.id)
+												//.text('You haven\'t completed all required fields!')
+										)
+									)
+									*/
+									.append($('<tr>')
+										.append($('<td>').addClass('medium')
+											.append($('<input>')
+												.addClass('field_obj large text noteTitle')
+												.attr({'type': 'text', 'placeholder': 'Title', 'title': 'Title', 'name': 'noteTitle'})
+												.val(data2.note.title))
+										)
+										.append($('<td>').addClass('medium')
+											.append($('<input>')
+												.addClass('field_obj small text notePages')
+												.attr({'type': 'text', 'title': 'Pages', 'placeholder': 'Pages', 'name': 'notePages'})
+												.val(form.pages))
+										)
+										.append($('<td>').addClass('small')
+
+										)
+									)
+									.append($('<tr>')
+										.append($('<td>').addClass('large')
+											.append($('<input>')
+												.addClass('field_obj large text noteSubtitle')
+												.attr({'type': 'text', 'placeholder': 'Subtitle', 'title': 'Subtitle', 'name': 'noteSubtitle'})
+												.val(data2.note.subtitle))
+										)
+										.append($('<td>').addClass('medium')
+											.append(form.file = $('<input>')
+												.addClass('field_obj small text noteMedia')
+												.attr({'type': 'text', 'title': 'media/file', 'placeholder': 'media/file', 'name': 'noteMedia'})
+												.val(data2.note.media.path)
+											)
+										)
+										.append($('<td>').addClass('small')
+
+										)
+									)
+									.append($('<tr>')
+										.append($('<td>').addClass('large')
+											.append($('<textarea>')
+												.addClass('field_obj large tiny text noteComment')
+												.text(htmlDecode(data2.note.comment))
+												.attr({'placeholder': 'Comment', 'name': 'noteComment'}))
+										)
+										.append($('<td>').addClass('medium')
+											.append(form.upload = $('<div>')
+												.addClass('upload media')
+												.append($('<span>').addClass('place4media').html(data2.note.media.html))
+												.append($('<span>').addClass('button4media center'))
+											)
+										)
+										.append($('<td>').addClass('small')
+
+										)
+									)
+									.append($('<tr>')
+										.append($('<td>').addClass('large')
+											.append(form.label = $('<input>')
+												.addClass('field_obj large text noteLabel')
+												.val(form.labels)
+												.attr({'type': 'text', 'placeholder': 'Label 1 / Label 2', 'name': 'noteLabel', 'title': 'Label 1 / Label 2 / etc.'}))
+										)
+										.append($('<td>').addClass('medium right')
+											.append(form.reset_btn = $('<button>').addClass('btn grp_none view invisible').attr({'type': 'button'}))
+											.append(form.reset_box = $('<input>').addClass('invisible notePublic').attr({'type': 'checkbox', 'name': 'notePublic'}).val('1'))
+											.append(form.delete_btn = $('<button>').addClass('btn grp_none trash invisible').attr({'type': 'button'}))
+											.append(form.delete_box = $('<input>').addClass('invisible deleteNote').attr({'type': 'checkbox', 'name': 'deleteNote'}).val('1'))
+										)
+										.append($('<td>').addClass('small')
+
+										)
+									)
+									.append($('<tr>')
+										.append($('<td>').addClass('large')
+											.append($('<input>')
+												.addClass('field_obj large text noteLink')
+												.val(form.url)
+												.attr({'type': 'text', 'placeholder': 'URL', 'name': 'noteLink', 'title': 'Hypertext Reference (URL)'}))
+										)
+										.append($('<td>').addClass('medium right')
+											.append(form.edit_btn = $('<button>').addClass('btn grp_none edit').attr({'id': note.id, 'type': 'button'}))
+											.append(form.reset_btn = $('<button>').addClass('btn grp_none close invisible').attr({'id': note.id, 'type': 'button'}))
+											.append(form.save_btn = $('<button>').addClass('btn grp_none done invisible').attr({'id': note.id, 'type': 'submit'}))
+										)
+										.append($('<td>').addClass('small')
+
+										)
+									)
+								)
+							);
+							if(data2.note.public === '1') {
+								$('table#' + note.id).find('input.notePublic').click();
+								$('table#' + note.id).find('button.view').toggleClass('active invisible');
+							}
+							$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
+							$('table#' + note.id).find('input.notePublic').attr({'disabled': true});
+							if(data2.note.id === '0') {
+								setTimeout(function(){
+									$('button#0.edit').click();
+								}, 200);
+								//alert('klick jetzt');
+
+							//	$('button#0.edit').trigger('click');
+							}
+						}
+					$('button#' + note.id + '.edit').on('click', function() {
+						var checkID = $('table#' + note.id).find('input.checkID');
+						if(checkID.val() === '') checkID.val(check_id()); //alert(check_id());
+
+
+						var values = {};
+						$.each($('#form_' + note.id).serializeArray(), function(i, field) {
+							values[field.name] = field.value;
+						});
+
+						completeMultipleValues('label', $('table#' + note.id).find('input.noteLabel'));
+
+						if($('table#' + note.id).find('input.notePublic').is(':checked') === true) values.notePublic = 1;
+						values.mediaHTML = $('#form_' + note.id).find('span.place4media').html();
+
+						$('table#' + note.id).find('button.edit').addClass('invisible');
+						$('table#' + note.id).find('button.close').removeClass('invisible');
+						$('table#' + note.id).find('button.done').removeClass('invisible');
+
+						$('table#' + note.id).find('input, textarea, select').attr('readonly', false);
+						$('table#' + note.id).find('input.notePublic').attr({'disabled': false});
+
+						$('table#' + note.id).find('button.view').removeClass('invisible').on('click', function(){
+							$('table#' + note.id).find('input.notePublic').click();
+							$(this).toggleClass('active');
+						});
+						$('table#' + note.id).find('button.trash').removeClass('invisible').on('click', function(){
+							$('table#' + note.id).find('input.deleteNote').click();
+							$(this).toggleClass('active');
+							$('table#' + note.id).toggleClass('delete');
+						});
+
+						var upload_ele = $('table#' + note.id).find('div.upload');
+						var file_ele = $('table#' + note.id).find('input.noteMedia');
+						upload_ele.upload({'file': file_ele, 'media': values.mediaHTML, 'note': note.id});
+
+						//
+						// if you cancel the edit action
+						//
+						$('button#' + note.id + '.close').on('click', function() {
+							upload_ele.upload('cancel');
+							var table = $('table#' + note.id);
+							table.find('button.view').removeClass('active').addClass('invisible');
+							$.each(values, function(i, v) {
+								if(i === 'noteComment') {
+									table.find('textarea.' + i).val(v);
+								} else if (i === 'notePublic') {
+									if(table.find('input.notePublic').is(':checked') === false) {
+										table.find('input.notePublic').click();
+										table.find('button.view').addClass('active').removeClass('invisible');
+									}
+								} else {
+									table.find('input.' + i).val(v);
+								}
+							});
+							if(values.hasOwnProperty('noteMedia')) table.find('span.place4media').html(values.mediaHTML);
+
+							$('table#' + note.id).find('input.deleteNote').removeAttr('checked');
+							$('table#' + note.id).find('button.trash').addClass('invisible').removeClass('active');
+							$('table#' + note.id).find('button.close').addClass('invisible');
+							$('table#' + note.id).find('button.done').addClass('invisible');
+							$('table#' + note.id).find('button.edit').removeClass('invisible');
+							$('table#' + note.id).find('textarea.noteComment').removeClass('error');
+							$('table#' + note.id).removeClass('delete');
+							//$('table#' + note.id).find('button').toggleClass('invisible');
+							$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
+							$('table#' + note.id).find('input.notePublic').attr({'disabled': true});
+						});
+					});
+
+					$('#form_' + note.id).submit(function(){
+						$.ajax({
+							url:NB.api + '/post.php?note=' + note.id,
+							type : 'POST',
+							dataType: 'json',
+							data: $(this).serialize(),
+							success: function(data){
+								if(data.error){
+									$('table#' + note.id).find('textarea.noteComment').addClass('error');
+								}else {
+									$('table#' + note.id).removeClass('delete');
+									ele.empty();
+									form4note(ele, source);
+									/*
+									var filename = $('table#' + note.id).find('input.noteMedia').val();
+									var media = '';
+									if(filename !== '') media = $('table#' + note.id).find('span.place4media').html();
+									var upload_ele = $('table#' + note.id).find('div.upload');
+									upload_ele.upload('save');
+
+									$('table#' + note.id).find('span.place4media').removeClass('drop').html(media);
+									$('table#' + note.id).find('span.button4media').empty();
+
+									if($('table#' + note.id).find('input.notePublic').is(':checked') === true) {
+										$('table#' + note.id).find('button.view').addClass('active').removeClass('invisible');
+									} else {
+										$('table#' + note.id).find('button.view').removeClass('active').addClass('invisible');
+									}
+
+									$('table#' + note.id).find('button.trash').addClass('invisible');
+									$('table#' + note.id).find('button.close').addClass('invisible');
+									$('table#' + note.id).find('button.done').addClass('invisible');
+									$('table#' + note.id).find('button.edit').removeClass('invisible');
+									$('table#' + note.id).find('textarea.noteComment').removeClass('error');
+									$('table#' + note.id).removeClass('delete');
+									$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
+									$('table#' + note.id).find('input.notePublic').attr({'disabled': true});
+									*/
+								}
 							}
 						});
-						if(values.hasOwnProperty('noteMedia')) table.find('span.place4media').html(values.mediaHTML);
-
-						$('table#' + note.id).find('input.deleteNote').removeAttr('checked');
-						$('table#' + note.id).find('button.trash').addClass('invisible').removeClass('active');
-						$('table#' + note.id).find('button.close').addClass('invisible');
-						$('table#' + note.id).find('button.done').addClass('invisible');
-						$('table#' + note.id).find('button.edit').removeClass('invisible');
-
-						//$('table#' + note.id).find('button').toggleClass('invisible');
-						$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
-						$('table#' + note.id).find('input.notePublic').attr({'disabled': true});
+						return false;
 					});
-				});
 
-				$('#form_' + note.id).submit(function(){
-					$.ajax({
-						url:NB.api + '/post.php?note=' + note.id,
-						type : 'POST',
-						dataType: 'json',
-						data: $(this).serialize(),
-						success: function(data){
-							if(data.error){
-								$('table#' + note.id).find('textarea.noteComment').addClass('error');
-							}else {
-								var filename = $('table#' + note.id).find('input.noteMedia').val();
-								var media = '';
-								if(filename !== '') media = $('table#' + note.id).find('span.place4media').html();
-								var upload_ele = $('table#' + note.id).find('div.upload');
-								upload_ele.upload('save');
-
-								$('table#' + note.id).find('span.place4media').removeClass('drop').html(media);
-								$('table#' + note.id).find('span.button4media').empty();
-
-								if($('table#' + note.id).find('input.notePublic').is(':checked') === true) {
-									$('table#' + note.id).find('button.view').addClass('active').removeClass('invisible');
-								} else {
-									$('table#' + note.id).find('button.view').removeClass('active').addClass('invisible');
-								}
-
-								$('table#' + note.id).find('button.trash').addClass('invisible');
-								$('table#' + note.id).find('button.close').addClass('invisible');
-								$('table#' + note.id).find('button.done').addClass('invisible');
-								$('table#' + note.id).find('button.edit').removeClass('invisible');
-								$('table#' + note.id).find('textarea.noteComment').removeClass('error');
-								$('table#' + note.id).find('input, textarea, select').attr('readonly', true);
-								$('table#' + note.id).find('input.notePublic').attr({'disabled': true});
-							}
+						if(i !== data.source.notes.length) {
+							ele.append($('<hr>'));
 						}
+
 					});
-					return false;
-				});
-
-					if(i !== data.source.notes.length) {
-						ele.append($('<hr>'));
-					}
-
-				});
+			});
 		});
 	};
 
@@ -500,6 +522,7 @@
 			form.author = getAuthors(data.source.author, ' / ');
 			form.location = getLocations(data.source.location, ' / ');
 			form.pages = getPages(data.source.page.start, data.source.page.end);
+			form.labels = getLabel(data.source.label, ' / ');
 			if(form.pages === '0') form.pages = '';
 			ele.append($('<form>').attr({'method': 'post', 'action': '', 'id': 'form_' + noteID}).addClass('')
 				.append(form.table = $('<table>').attr({'id': noteID})
@@ -671,6 +694,7 @@
 			$('table#' + noteID).find('button.trash').on('click', function(){
 				$('table#' + noteID).find('input.deleteNote').click();
 				$(this).toggleClass('active');
+				$('table#' + noteID).toggleClass('delete');
 			});
 
 			$('table#' + noteID).find('select.bibEditor').val(data.source.editor);
@@ -706,6 +730,14 @@
 						if(data.error){
 			//				$('table#' + noteID).find('textarea.noteComment').addClass('error');
 						} else {
+							var esb = $('table.source_form').find('input.close');		// edit source button
+							if(esb.hasClass('close')) {
+								esb.toggleClass('edit close');
+								esb.val('EDIT');
+							}
+							$('table#' + noteID).removeClass('delete');
+							ele.empty();
+							form4note(ele, id);
 //							$('td.' + data.source.bibID).empty();
 						//	var filename = $('table#' + noteID).find('input.noteMedia').val();
 						//	var media = '';
@@ -958,13 +990,13 @@
 												.addClass('button medium edit')
 
 												.on('click', function() {
+													var sourceID = form.source.selected.attr('id');
 													if($(this).hasClass('close')) {
 														$(this).toggleClass('edit close');
 														$(this).val('EDIT');
 														form.note.container.empty();
-														form4note(form.note.container, data);
+														form4note(form.note.container, sourceID);
 													} else {
-														var sourceID = form.source.selected.attr('id');
 														if(sourceID !== '0') {
 															$(this).toggleClass('edit close');
 															$(this).val('CANCEL');
@@ -976,7 +1008,7 @@
 													}
 												})
 											);
-											form4note(form.note.container, data);
+											form4note(form.note.container, form.source.bib.val());
 										});
 									}))
 								)
@@ -997,14 +1029,18 @@
 							.addClass('btn grp_none plus addnote')
 							.attr({'type': 'button', 'title': 'ADD new note to this source'})
 							.on('click', function() {
+								var sourceID = form.source.selected.attr('id');
 								if($(this).hasClass('close')) {
 									$(this).toggleClass('plus close');
+									$(this).removeAttr('id');
+									$('table.source_form').find('input, textarea, select').attr('disabled', false);
 									form.note.container.empty();
-									form4note(form.note.container, data);
+									form4note(form.note.container, sourceID);
 								} else {
-									var sourceID = form.source.selected.attr('id');
 									if(sourceID !== '0') {
 										$(this).toggleClass('plus close');
+										$(this).attr({'id': sourceID});
+										$('table.source_form').find('input, textarea, select').attr('disabled', true);
 										form.note.container.empty();
 										form4newnote(form.note.container);
 									} else {

@@ -31,24 +31,51 @@ class post {
 	}
 
 	function updateNote() {
+		if(array_key_exists('deleteNote', $this->data)) {
+			deleteMN('label', 'note', $this->data['noteLabel'], $this->data['noteID']);
+			$mysqli = condb('open');
+			$mysqli->query('DELETE FROM note WHERE noteID = ' . $this->data['noteID'] .';');
+			$mysqli = condb('close');
+			return json_encode(array(
+				'delete' => true,
+			));
+			exit;
+		}
 		if(!array_key_exists('notePublic', $this->data)) $this->data['notePublic'] = 0;
 //		if(empty($this->data['dateYear'])) $this->data['dateYear'] = 0;
 
 		$this->data['pageStart'] = '0';
 		$this->data['pageEnd'] = '0';
-		$tmp_pages = explode('-', $this->data['pages']);
-		if(strpos($this->data['pages'], '-') !== false) {
+		$tmp_pages = explode('-', $this->data['notePages']);
+		if(strpos($this->data['notePages'], '-') !== false) {
 			$this->data['pageStart'] = $tmp_pages[0];
 			$this->data['pageEnd'] = $tmp_pages[1];
 			if($this->data['pageEnd'] != '') {
 				if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
 			}
 		} else {
-			$page_start = $this->data['pages'];
+			$page_start = $this->data['notePages'];
 		}
 
 		if(!empty($this->data['noteComment']) && !empty($this->data['bibID']))
 		{
+			if($this->data['noteID'] == 0) {
+				//new source: insert
+				$mysqli = condb('open');
+				$notesql = $mysqli->query('INSERT INTO note ' .
+									'(`noteTitle`, `userID`, `checkID`, `noteComment`) ' .
+									'VALUES' .
+									'(\'' . $this->data['noteTitle'] .
+									'\', \'' . $this->user .
+									'\', \'' . $this->data['checkID'] .
+									'\', \'' . html2tex($this->data['noteComment']) . '\');');
+				$this->data['noteID'] = $mysqli->insert_id;
+				$mysqli = condb('close');
+			}
+
+
+
+
 			// some checks and request first
 			$mysqli = condb('open');
 			//$bibsql = $mysqli->query('SELECT bibID ')
@@ -90,6 +117,20 @@ class post {
 
 
 	function updateSource() {
+		if(array_key_exists('deleteNote', $this->data)) {
+			deleteMN('label', 'note', $this->data['noteLabel'], $this->data['noteID']);
+			deleteMN('label', 'bib', $this->data['noteAuthor'], $this->data['bibID']);
+			deleteMN('label', 'bib', $this->data['noteLocation'], $this->data['bibID']);
+			$mysqli = condb('open');
+			$mysqli->query('DELETE FROM note WHERE noteID = ' . $this->data['noteID'] .';');
+			$mysqli->query('DELETE FROM bib WHERE bibID = ' . $this->data['bibID'] .';');
+			$mysqli->query('DELETE FROM bibDetail WHERE bibID = ' . $this->data['bibID'] .';');
+			$mysqli = condb('close');
+			return json_encode(array(
+				'delete' => true,
+			));
+			exit;
+		}
 		if(!array_key_exists('notePublic', $this->data)) $this->data['notePublic'] = 0;
 		if(!array_key_exists('bibEditor', $this->data)) $this->data['bibEditor'] = 0;
 
@@ -139,8 +180,9 @@ class post {
 			if($this->data['checkID'] == '') {
 
 			}
-			updateMN('author', 'bib', $this->data['noteAuthor'], $this->data['bibID']);
+
 			updateMN('label', 'note', $this->data['noteLabel'], $this->data['noteID']);
+			updateMN('author', 'bib', $this->data['noteAuthor'], $this->data['bibID']);
 			$detail = array();
 			switch($this->data['bibTypName']) {
 				case 'article';

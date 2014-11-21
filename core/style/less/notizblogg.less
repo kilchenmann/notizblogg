@@ -32,7 +32,8 @@ h4 {
   //  background-color: fade(@bg, 88%);
   //  .quick-gradient(top, 0.1);
 
-  background-image: url("../img/seamless_paper_texture.png");
+  //background-image: url("../img/seamless_paper_texture.png");
+  background-color: @bg;
   /*
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -100,8 +101,6 @@ column-count:auto; column-gap:12px; column-fill: balance;
     -moz-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
     transition: all 0.2s ease;
-
-
   }
 }
 
@@ -163,8 +162,8 @@ column-count:auto; column-gap:12px; column-fill: balance;
       display: block;
     }
     .timeline {
-      margin: -5px auto;
-      background-color: fade(@bg, 33%);
+      margin: -2px auto;
+      background-color: fade(@line, 11%);
       display: block;
       float: left;
       height: 100%;
@@ -173,7 +172,7 @@ column-count:auto; column-gap:12px; column-fill: balance;
       width: 4px;
     }
     .timeline:hover {
-      margin: 0 auto;
+
     }
     .timeline div.plus {
       width: 14px;
@@ -206,6 +205,9 @@ column-count:auto; column-gap:12px; column-fill: balance;
   .text,
   .latex {
     .border-radius-custom(@rad, @rad, 0, 0);
+    h3, a {
+        color: darken(@ink, 30%);
+    }
   }
   .media {
     img,
@@ -304,6 +306,7 @@ column-count:auto; column-gap:12px; column-fill: balance;
 
   }
   &:hover, &.active {
+      .box-shadow();
     .media,
     .text,
     .latex {
@@ -355,7 +358,7 @@ column-count:auto; column-gap:12px; column-fill: balance;
  .latex,
  .label,
  .tools {
-     background-color: fade(@bg, 66%);
+     background-color: fade(@line, 11%);
  }
  &:hover, &.active {
    .media,
