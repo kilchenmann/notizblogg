@@ -38,7 +38,7 @@
 		$.ajax({
 			'async': false,
 			'global': false,
-			'url': 'app/config.json',
+			'url': 'config.json',
 			'dataType': 'json',
 			'success': function (data) {
 				settings = data;
