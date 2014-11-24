@@ -338,7 +338,7 @@ class get {
 							array_push($notes, $row->noteID. '::' . $row->noteSubtitle);
 							array_push($notes, $row->noteID. '::' . $row->noteComment);
 						}
-					break;
+						break;
 
 					case 'source';
 						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
@@ -346,7 +346,7 @@ class get {
 						while($row = mysqli_fetch_object($sql)) {
 							array_push($notes, $row->bibID. '::' . $row->bib);
 						}
-					break;
+						break;
 
 					case 'bibtyp';
 						$sql = $mysqli->query('SELECT bibTypID, bibTyp FROM bibTyp ORDER BY bibTyp;');
@@ -354,8 +354,20 @@ class get {
 						while($row = mysqli_fetch_object($sql)) {
 							array_push($notes, $row->bibTypID. '::' . $row->bibTyp);
 						}
-					break;
+						break;
 
+					case 'biblatex';
+						for($i = 0; $i <= 15; $i++){
+							$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib WHERE bibTyp = ' . $i . ' ORDER BY bib;');
+							while($row = mysqli_fetch_object($sql)) {
+								array_push($notes, $row->bibID. '::' . $row->bib);
+							}
+						}
+//						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
+						$typeName = 'all';
+
+
+						break;
 					case 'label';
 						$sql = $mysqli->query('SELECT labelID, label FROM label ORDER BY label;');
 						$typeName = 'all';
