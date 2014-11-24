@@ -1,3 +1,4 @@
+test/
 data/
 app/config.json
 api/controller/.conf/db.php
