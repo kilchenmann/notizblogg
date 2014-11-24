@@ -323,7 +323,7 @@ class get {
 				$notes = array();
 				$typeName = 'modified';
 				while($row = mysqli_fetch_object($sql)) {
-					array_push($notes, $row->bibID. '::' . $row->bib);
+					array_push($notes, $row->bibID. '::' . html_entity_decode($row->bib));
 				}
 				break;
 
@@ -334,9 +334,9 @@ class get {
 						$sql = $mysqli->query('SELECT noteID, noteTitle, noteSubtitle, noteComment FROM note ORDER BY noteTitle, noteSubtitle;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->noteID. '::' . $row->noteTitle);
-							array_push($notes, $row->noteID. '::' . $row->noteSubtitle);
-							array_push($notes, $row->noteID. '::' . $row->noteComment);
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteTitle));
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteSubtitle));
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteComment));
 						}
 						break;
 
@@ -344,7 +344,7 @@ class get {
 						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->bibID. '::' . $row->bib);
+							array_push($notes, $row->bibID. '::' . html_entity_decode($row->bib));
 						}
 						break;
 
@@ -352,7 +352,7 @@ class get {
 						$sql = $mysqli->query('SELECT bibTypID, bibTyp FROM bibTyp ORDER BY bibTyp;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->bibTypID. '::' . $row->bibTyp);
+							array_push($notes, $row->bibTypID. '::' . html_entity_decode($row->bibTyp));
 						}
 						break;
 
@@ -360,7 +360,7 @@ class get {
 						for($i = 0; $i <= 15; $i++){
 							$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib WHERE bibTyp = ' . $i . ' ORDER BY bib;');
 							while($row = mysqli_fetch_object($sql)) {
-								array_push($notes, $row->bibID. '::' . $row->bib);
+								array_push($notes, $row->bibID. '::' . html_entity_decode($row->bib));
 							}
 						}
 //						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
@@ -372,45 +372,45 @@ class get {
 						$sql = $mysqli->query('SELECT labelID, label FROM label ORDER BY label;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->labelID. '::' . $row->label);
+							array_push($notes, $row->labelID. '::' . html_entity_decode($row->label));
 						}
 						break;
 					case 'author';
 						$sql = $mysqli->query('SELECT authorID, author FROM author ORDER BY author;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->authorID. '::' . $row->author);
+							array_push($notes, $row->authorID. '::' . html_entity_decode($row->author));
 						}
 						break;
 					case 'location';
 						$sql = $mysqli->query('SELECT locationID, location FROM location ORDER BY location;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->locationID. '::' . $row->location);
+							array_push($notes, $row->locationID. '::' . html_entity_decode($row->location));
 						}
 						break;
 					case 'all';
 						$sql = $mysqli->query('SELECT labelID, label FROM label ORDER BY label;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->labelID. '::' . $row->label);
+							array_push($notes, $row->labelID. '::' . html_entity_decode($row->label));
 						}
 						$sql = $mysqli->query('SELECT authorID, author FROM author ORDER BY author;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->authorID. '::' . $row->author);
+							array_push($notes, $row->authorID. '::' . html_entity_decode($row->author));
 						}
 						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->bibID. '::' . $row->bib);
+							array_push($notes, $row->bibID. '::' . html_entity_decode($row->bib));
 						}
 						$sql = $mysqli->query('SELECT noteID, noteTitle, noteSubtitle, noteComment FROM note ORDER BY noteTitle, noteSubtitle;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->noteID. '::' . $row->noteTitle);
-							array_push($notes, $row->noteID. '::' . $row->noteSubtitle);
-							array_push($notes, $row->noteID. '::' . $row->noteComment);
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteTitle));
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteSubtitle));
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteComment));
 						}
 						break;
 
