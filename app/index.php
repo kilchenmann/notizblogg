@@ -21,7 +21,7 @@
 	<!-- jQUERY LIBrary -->
 	<script type="text/javascript" src="core/lib/jquery.min.js"></script>
 	<script type="text/javascript" src="core/lib/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="core/app/functions.js"></script>
+	<script type="text/javascript" src="core/js/functions.js"></script>
 
 	<?php session_start (); ?>
 
@@ -92,31 +92,31 @@
 	</script>
 
 	<!-- some VENDOR stuff -->
-	<script type="text/javascript" src="core/app/vendor/md5.js"></script>
-	<script type="text/javascript" src="core/app/vendor/jquery.masonry.min.js"></script>
-	<script type="text/javascript" src="core/app/vendor/jquery.vague.js"></script>
-	<script type="text/javascript" src="core/app/vendor/jquery.knob.js"></script>
-	<script type="text/javascript" src="core/app/vendor/jquery.ui.widget.js"></script>
-	<script type="text/javascript" src="core/app/vendor/jquery.iframe-transport.js"></script>
-	<script type="text/javascript" src="core/app/vendor/jquery.fileupload.js"></script>
+	<script type="text/javascript" src="core/js/vendor/md5.js"></script>
+	<script type="text/javascript" src="core/js/vendor/jquery.masonry.min.js"></script>
+	<script type="text/javascript" src="core/js/vendor/jquery.vague.js"></script>
+	<script type="text/javascript" src="core/js/vendor/jquery.knob.js"></script>
+	<script type="text/javascript" src="core/js/vendor/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="core/js/vendor/jquery.iframe-transport.js"></script>
+	<script type="text/javascript" src="core/js/vendor/jquery.fileupload.js"></script>
 
 	<!-- notizblogg specific tools -->
 	<!-- some functional and styling stuff -->
-	<script type="text/javascript" src="core/app/jquery.center.js"></script>
-	<script type="text/javascript" src="core/app/jquery.warning.js"></script>
-	<script type="text/javascript" src="core/app/jquery.upload.js"></script>
+	<script type="text/javascript" src="core/js/jquery.center.js"></script>
+	<script type="text/javascript" src="core/js/jquery.warning.js"></script>
+	<script type="text/javascript" src="core/js/jquery.upload.js"></script>
 	<!-- project, searchbar and login module for the PANEL -->
-	<script type="text/javascript" src="core/app/jquery.panel.js"></script>
+	<script type="text/javascript" src="core/js/jquery.panel.js"></script>
 	<!-- show, add, edit and expand NOTE -->
-	<script type="text/javascript" src="core/app/jquery.note.js"></script>
-	<script type="text/javascript" src="core/app/jquery.form.js"></script>
+	<script type="text/javascript" src="core/js/jquery.note.js"></script>
+	<script type="text/javascript" src="core/js/jquery.form.js"></script>
 
 	<!-- test test test test test -->
 	<!-- add the expand function to the note plugin as a new method!! -->
-	<script type="text/javascript" src="core/app/jquery.expand.js"></script>
+	<script type="text/javascript" src="core/js/jquery.expand.js"></script>
 	<!--
-	<script type="text/javascript" src="core/app/jquery.finder.js"></script>
-	<script type="text/javascript" src="core/app/jquery.login.js"></script>
+	<script type="text/javascript" src="core/js/jquery.finder.js"></script>
+	<script type="text/javascript" src="core/js/jquery.login.js"></script>
 -->
 
 	<!-- style / design / responsive specs. -->
