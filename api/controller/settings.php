@@ -6,7 +6,7 @@ $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERV
 */
 require_once ('.conf/db.php');
 
-$settings = file_get_contents($GLOBALS['nb']['app'] . 'config.json');
+$settings = file_get_contents($GLOBALS['nb']['indexpath'] . '/' . 'config.json');
 
 $array = json_decode($settings, true);
 

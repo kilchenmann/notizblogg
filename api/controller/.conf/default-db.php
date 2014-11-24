@@ -1,7 +1,7 @@
 <?php
 
 $GLOBALS['nb'] = array(
-	'app' => 'http://localhost/nb/',
+	'indexpath' => '/var/www/html/notizblogg',
 	'host' => 'localhost',
 	'user' => 'db_user',
 	'pass' => 'db_pass',
