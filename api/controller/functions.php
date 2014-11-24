@@ -1,5 +1,5 @@
 <?php
-error_reporting(-1);
+
 /* **************************************************************
  * Change umlauts like ä to ae: It's important for the author-links & latex
  * **************************************************************
@@ -68,7 +68,7 @@ function html2tex($text, $cite){
 
 function getLastChar($string){
 	$lastChar = substr($string, -1);
-	if(($lastChar != '?') && ($lastChar != '!')) {
+	if(($lastChar != '?') && ($lastChar != '!') && ($lastChar != ':')) {
 		$string .=  '.';
 	}
 	return $string;
@@ -99,7 +99,7 @@ function makeurl($text)
 	$text = preg_replace
 		("!&amp;lt;(wiki:)([^ >\n\t]+)&amp;gt;!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
-		("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "<a href='".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2' title='Search here <\\2>'>\\2</a>", $text);
+		("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "<a href='?q=\\2' title='Search here <\\2>'>\\2</a>", $text);
 
 	$text = preg_replace
 		("!&lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&gt;!i", "<a href='http://\\2' target='_blank'>\\4</a>", $text);
@@ -108,7 +108,7 @@ function makeurl($text)
 	$text = preg_replace
 		("!&lt;(wiki:)([^ >\n\t]+)&gt;!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
-		("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "<a href='".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2' title='Search here <\\2>'>\\2</a>", $text);
+		("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "<a href='?q=\\2' title='Search here <\\2>'>\\2</a>", $text);
 
 	$text = preg_replace
 		("!<(link:)([^ >\n\t]+)(:)([^ >\n\t]+)>!i", "<a href='http://\\2' target='_blank'>\\4</a>", $text);
@@ -117,10 +117,9 @@ function makeurl($text)
 	$text = preg_replace
 		("!<(wiki:)([^ >\n\t]+)>!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
-		("!<(nb:)([^ >\n\t]+)>!i", "<a href='".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2' title='Search here <\\2>'>\\2</a>", $text);
+		("!<(nb:)([^ >\n\t]+)>!i", "<a href='?q=\\2' title='Search here <\\2>'>\\2</a>", $text);
 	return $text;
 }
-
 
 
 function getNoteID($id) {

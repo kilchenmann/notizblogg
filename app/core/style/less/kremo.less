@@ -195,7 +195,7 @@ button.download {
   background-position: -760px -640px;
 }
 // -- 6
-button.more {
+button.more, button.all {
   background-position: -120px -760px;
 }
 button.photo {
@@ -249,7 +249,7 @@ button.memory {
 button.list {
   background-position: -120px -1120px;
 }
-button.user {
+button.user, button.author {
   background-position: -280px -1120px;
 }
 button.music {
@@ -271,7 +271,7 @@ button.label {
 button.flag {
   background-position: -280px -1240px;
 }
-button.notebook {
+button.notebook, button.source {
   background-position: -440px -1240px;
 }
 button.add2basket {
@@ -492,23 +492,26 @@ span.search {
     left: 50%;
     position: absolute;
     display: table-cell;
-    width: 520px;
-    margin-left: -260px;
+    width: 600px;
+    margin-left: -300px;
     margin-top: 4px;
 
-    input[type=search], button.search {
+    input[type=search], button.search, button.filter {
 //        height: 31px;
         background-color: @card;
         margin: 0;
         padding: 0;
     }
     input[type=search] {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
       .border-radius-custom (@rad, 0, 0, @rad);
       width: 470px;
       text-align: center;
       height: 30px;
     }
-    button.search {
+    button.search, button.filter {
         height: 32px;
     }
 }

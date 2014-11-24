@@ -3,7 +3,7 @@
   margin: 0;
 }
 
-body, header, footer, nav, section, span, p, input, select, textarea {
+body, header, footer, nav, section, span, p, input, select, textarea, ul, li {
     text-decoration: none;
     list-style-type: none;
     letter-spacing: 2px;
@@ -277,7 +277,16 @@ table {
   background-color: @bg;
   .border-radius(@rad);
   .box-shadow();
-
+    &.tiny{
+        height: auto;
+        width: 60px;
+        &.drawer{
+            background-color: @header;
+            input[type=radio] {
+                display: none;
+            }
+        }
+    }
     &.small{
         height: 80px;
         width: 128px;

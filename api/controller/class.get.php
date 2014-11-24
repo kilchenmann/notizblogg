@@ -283,7 +283,7 @@ class get {
 	}
 
 	function getData() {
-		// one time, we can merge the getSource and the getNote function into this one here getData
+		// one day, we can merge the getSource and the getNote function into this one here getData
 	}
 
 	function listData() {
@@ -307,13 +307,13 @@ class get {
 				break;
 			case 'new';
 				if($this->access > 0) {		// = public access: show sources only, if they are public!
-					$sql = $mysqli->query('SELECT note.noteID, note.bibID FROM note, bib WHERE note.noteID = bib.noteID AND note.notePublic >= '.$this->access.' ORDER BY note.dateCreated DESC  LIMIT 0, ' . $this->id . ';');
+					$sql = $mysqli->query('SELECT note.noteID, note.bibID FROM note, bib WHERE note.noteID = bib.noteID AND note.notePublic >= '.$this->access.' ORDER BY note.dateModified DESC  LIMIT 0, ' . $this->id . ';');
 				} else {
-					$sql = $mysqli->query('SELECT noteID FROM note ORDER BY dateCreated DESC LIMIT 0, ' . $this->id . ';');
+					$sql = $mysqli->query('SELECT noteID FROM note ORDER BY dateModified DESC LIMIT 0, ' . $this->id . ';');
 				}
 
 				$notes = array();
-				$typeName = 'created';
+				$typeName = 'modified';
 				while($row = mysqli_fetch_object($sql)) {
 					array_push($notes, $row->noteID);
 				}
@@ -331,7 +331,13 @@ class get {
 			$notes = array();
 				switch ($this->id) {
 					case 'note';
-
+						$sql = $mysqli->query('SELECT noteID, noteTitle, noteSubtitle, noteComment FROM note ORDER BY noteTitle, noteSubtitle;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->noteID. '::' . $row->noteTitle);
+							array_push($notes, $row->noteID. '::' . $row->noteSubtitle);
+							array_push($notes, $row->noteID. '::' . $row->noteComment);
+						}
 					break;
 
 					case 'source';
@@ -369,6 +375,30 @@ class get {
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
 							array_push($notes, $row->locationID. '::' . $row->location);
+						}
+						break;
+					case 'all';
+						$sql = $mysqli->query('SELECT labelID, label FROM label ORDER BY label;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->labelID. '::' . $row->label);
+						}
+						$sql = $mysqli->query('SELECT authorID, author FROM author ORDER BY author;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->authorID. '::' . $row->author);
+						}
+						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->bibID. '::' . $row->bib);
+						}
+						$sql = $mysqli->query('SELECT noteID, noteTitle, noteSubtitle, noteComment FROM note ORDER BY noteTitle, noteSubtitle;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->noteID. '::' . $row->noteTitle);
+							array_push($notes, $row->noteID. '::' . $row->noteSubtitle);
+							array_push($notes, $row->noteID. '::' . $row->noteComment);
 						}
 						break;
 
@@ -443,7 +473,6 @@ class get {
 		$typeName = 'note';
 		$results = array();
 
-
 		$mysqli = condb('open');
 		switch($f){
 			case 'note';
@@ -454,7 +483,7 @@ class get {
 				break;
 
 			case 'source';
-				$sql = $mysqli->query('SELECT * FROM note, bib WHERE notePublic >= ' . $this->access . ' AND note.noteID = bib.noteID AND MATCH(noteTitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
+				$sql = $mysqli->query('SELECT * FROM note, bib WHERE notePublic >= ' . $this->access . ' AND note.noteID = bib.noteID AND MATCH(noteTitle, noteSubtitle, noteComment, bib) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
 				while($row = mysqli_fetch_object($sql)) {
 					$results[] = $row->noteID;
 				}
@@ -493,6 +522,7 @@ class get {
 			'type' => $f,
 			//'id' => $this->id,
 			'query' => $q,
+			'filter' => $this->part,
 			'notes' => $results
 		);
 		//print_r($list);

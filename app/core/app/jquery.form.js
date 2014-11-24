@@ -709,7 +709,9 @@
 				var plus_ele = $('#form_' + noteID).find('tr.field_plus');
 				var plus_val = $('#form_' + noteID).find('select.bibTyp').find(':selected').text();
 				addFields(plus_ele, plus_val, data.source);
-				completeMultipleValues('location', $('table#' + noteID).find('input.noteLocation'));
+				setTimeout(function(){
+					completeMultipleValues('location', $('table#' + noteID).find('input.noteLocation'));
+				}, 200);
 			}, 300);
 
 
@@ -843,53 +845,9 @@
 
 
 
-	var split = function(val) {
-		return val.split( / \/ \s*/ );
-	};
 
-	var extractLast = function(term) {
-		return split( term ).pop();
-	};
 
-	var completeMultipleValues = function(list, field) {
-		var availableTags = [];
-		var url = NB.api + '/get.php?list=' + list;
-		$.getJSON(url, function (data) {
-			for (var k in data.notes) {
-				availableTags.push(data.notes[k].split('::')[1]);
-			}
-		});
-		// don't navigate away from the field on tab when selecting an item
-		field
-			.bind( "keydown", function( event ) {
-				if ( event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
-					event.preventDefault();
-				}
-			})
-			.autocomplete({
-				minLength: 2,
-				source: function( request, response ) {
-					// delegate back to autocomplete, but extract the last term
-					response( $.ui.autocomplete.filter(
-						availableTags, extractLast( request.term ) ) );
-				},
-				focus: function() {
-					// prevent value inserted on focus
-					return false;
-				},
-				select: function( event, ui ) {
-					var terms = split( this.value );
-					// remove the current input
-					terms.pop();
-					// add the selected item
-					terms.push( ui.item.value );
-					// add placeholder to get the comma-and-space at the end
-					terms.push( "" );
-					this.value = terms.join( " / " );
-					return false;
-				}
-			});
-	};
+
 	// -------------------------------------------------------------------------
 	// define the methods here
 	// -------------------------------------------------------------------------
@@ -1017,7 +975,7 @@
 							.append($('<tr>')
 								.append(form.source.selected = $('<td>')
 									.attr({'colspan': '2'})
-									.addClass('selected source center')
+									.addClass('selected center')
 								)
 							)
 						)

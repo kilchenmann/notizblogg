@@ -1,3 +1,52 @@
+function split(val) {
+	return val.split( / \/ \s*/ );
+}
+
+function extractLast(term) {
+	return split( term ).pop();
+}
+
+function completeMultipleValues(list, field, sep) {
+	if(sep === undefined) sep = ' / ';
+	var availableTags = [];
+	var url = NB.api + '/get.php?list=' + list;
+	$.getJSON(url, function (data) {
+		for (var k in data.notes) {
+			availableTags.push(data.notes[k].split('::')[1]);
+		}
+	});
+	// don't navigate away from the field on tab when selecting an item
+	field
+	.bind( "keydown", function( event ) {
+		if ( event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
+			event.preventDefault();
+		}
+	})
+	.autocomplete({
+		minLength: 2,
+		source: function( request, response ) {
+			// delegate back to autocomplete, but extract the last term
+			response( $.ui.autocomplete.filter(
+				availableTags, extractLast( request.term ) ) );
+			},
+			focus: function() {
+				// prevent value inserted on focus
+				return false;
+			},
+			select: function( event, ui ) {
+				var terms = split( this.value );
+				// remove the current input
+				terms.pop();
+				// add the selected item
+				terms.push( ui.item.value );
+				// add placeholder to get the comma-and-space at the end
+				terms.push( "" );
+				this.value = terms.join( sep );
+				return false;
+			}
+		});
+	}
+
 
 function tex2html(string){
 	if(string !== undefined) {
@@ -69,7 +118,12 @@ function getPages(start, end) {
 	} else {
 		pages = start + '-' + end;
 	}
-	return pages;
+	if(start !== '0') {
+		return pages;
+	} else {
+		return '';
+	}
+
 }
 
 function getLabel(label, sep) {
@@ -203,7 +257,7 @@ function getSource(data) {
 
 		if (insource.source && insource.pages) biblio += insource.source + insource.pages;
 		if (crossref === undefined) {
-			if (locations !== undefined) {
+			if (locations !== '') {
 				bibtex += 'location = {' + locations + '},<br>';
 				biblio += locations + ', ';
 			}

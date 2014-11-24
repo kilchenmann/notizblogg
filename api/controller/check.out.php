@@ -1,5 +1,5 @@
 <?php
-// Wird ausgeführt um mit der Ausgabe des Headers zu warten. 
+// Wird ausgeführt um mit der Ausgabe des Headers zu warten.
 ob_start ();
 
 session_start ();

@@ -133,6 +133,10 @@ foreach ($_GET as $key => $value){
 			}
 			break;
 
+		case 'user';
+			echo json_encode($user);
+			break;
+
 		default;
 			$note->id = $_GET['note'];
 			$note->type = 'note';

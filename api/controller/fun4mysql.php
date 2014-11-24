@@ -1,11 +1,9 @@
 <?php
-error_reporting(-1);
 //
 // some connection stuff
 //
 function condb($conart) {
     $mysqli = new mysqli($GLOBALS['nb']['host'], $GLOBALS['nb']['user'], $GLOBALS['nb']['pass'], $GLOBALS['nb']['db']);
-
     if ($mysqli->connect_errno) {
         die('Connect Error: ' . $mysqli->connect_errno);
     }

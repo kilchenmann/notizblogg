@@ -20,19 +20,93 @@
 	// define some functions first
 	// -----------------------------------------------------------------------
 	var blur = function(btn, action) {
-		var vague = $('.wrapper').Vague({
-			intensity:      3,		// Blur Intensity
-			forceSVGUrl:    false,	// Force absolute path to the SVG filter,
-			// default animation options
-		});
-		if(action === 'remove' && btn.hasClass('active')) {
-			vague.destroy();
-		} else {
-			// open the form
-			vague.blur();
-		}
-		btn.toggleClass('active');
-	},
+			var vague = $('.wrapper').Vague({
+				intensity:      3,		// Blur Intensity
+				forceSVGUrl:    false,	// Force absolute path to the SVG filter,
+				// default animation options
+			});
+			if(action === 'remove' && btn.hasClass('active')) {
+				vague.destroy();
+			} else {
+				// open the form
+				vague.blur();
+			}
+			btn.toggleClass('active');
+		},
+
+		radiobutton = function(ele, value, title, btn) {
+			var radio;
+			var search_field = $('span.search').find('input.search_field');
+			var drawer = $('span.search').find('div.drawer');
+			ele
+			.append(radio = $('<input>')
+				.attr({
+					'type': 'radio',
+					'name': 'filter',
+					'value': value
+				})
+			)
+			.append($('<button>')
+				.attr({
+					'type': 'button',
+					'title': title
+				})
+				.addClass('btn grp_none ' + value)
+				.on('click', function() {
+					radio.click();
+					drawer.slideUp();
+					btn.removeClass('fake_btn more label author source all');
+					btn.addClass(value);
+					search_field.focus();
+				})
+			);
+
+			radio.change(function() {
+				completeMultipleValues(value, search_field, '');
+			});
+		},
+
+		searchfilter = function(btn) {
+		var drawer, filter = {};
+
+		btn.toggleClass('fake_btn more')
+			.on('mouseover', function() {
+				drawer.css({
+					position: 'absolute',
+					top: $('header').position().top + $('header').height() +'px',
+					left: $(this).position().left
+				});
+			})
+			.on('click', function() {
+				if(drawer.is(':visible')) {
+					drawer.slideUp();
+				} else {
+					checkframe();
+					drawer.slideDown();
+				}
+			})
+			.after(drawer = $('<div>')
+				.addClass('float_obj tiny drawer')
+				.append($('<ul>')
+					.append(filter.all = $('<li>'))
+					.append(filter.label = $('<li>'))
+					.append(filter.source = $('<li>'))
+					.append(filter.author = $('<li>'))
+				)
+			);
+
+			radiobutton(filter.all, 'all', 'no filter', btn);
+			radiobutton(filter.label, 'label', 'filter label', btn);
+			radiobutton(filter.source, 'source', 'filter source', btn);
+			radiobutton(filter.author, 'author', 'filter author' , btn);
+			$(document).keyup(function(event) {
+				if (event.keyCode == 27) {
+					if(drawer.is(':visible')) {
+						drawer.slideUp();
+					}
+				}
+			});
+		},
 
 		checkframe = function() {
 			if($('header .btn').hasClass('active')) {
@@ -41,7 +115,7 @@
 				}
 				$('.btn').removeClass('active');
 			}
-	};
+		};
 
 	// -------------------------------------------------------------------------
 	// -------------------------------------------------------------------------
@@ -57,7 +131,9 @@
 				localdata.settings = {
 					project: 'Notizblogg',	// default: Notizblogg
 					logo: 'nb-logo.png',	// default: nb-logo.png
-					user: undefined,		// undefined = guest
+					user: {
+
+					},		// undefined = guest
 					action: undefined
 				};
 				$.extend(localdata.settings, options);
@@ -98,51 +174,57 @@
 				var $this = $(this);
 				var localdata = $this.data('localdata');
 				var search = {};
-				$this
-					.append(search.simple = $('<form>')
+				$this.append(search.form = $('<form>')
+					.attr({
+						'accept-charset': 'utf-8',
+						'name': 'simpleSearch',
+						'action': action,
+						'method': 'get'
+					})
+					.append(search.filter = $('<button>')
 						.attr({
-							'accept-charset': 'utf-8',
-							'name': 'simpleSearch',
-							'action': action,
-							'method': 'get'
+							'type': 'button',
 						})
-						.append(search.field = $('<input>')
-							.attr({
-								'type': 'search',
-								'title': 'SEARCH',
-								'placeholder': 'search',
-								'name': 'q',
-								'accept-charset': 'utf-8'
-							})
-							.addClass('input grp_middle search_field')
-							.focus(function () {
-								search.field
-									.attr({
-										'placeholder': ''
-									})
-									.css({
-										'background-color': '#ffffe0'
-									});
-									$(this).select();
-							})
-							.focusout(function () {
-								search.field
-									.attr({
-										'placeholder': 'search'
-									})
-									.css({
-										'background-color': '#ffffff'
-									});
-							})
-						)
-						.append(search.button = $('<button>')
-							.attr({
-								'type': 'submit',
-								'title': 'GO!'
-							})
-							.addClass('btn grp_right search')
-						)
-					);
+						.addClass('btn grp_left fake_btn filter')
+					)
+					.append(search.field = $('<input>')
+						.attr({
+							'type': 'search',
+							'title': 'SEARCH',
+							'placeholder': 'search',
+							'name': 'q',
+							'accept-charset': 'utf-8'
+						})
+						.addClass('input grp_middle search_field')
+						.focus(function () {
+							search.field
+								.attr({
+									'placeholder': ''
+								})
+								.css({
+									'background-color': '#ffffe0'
+								});
+								$(this).select();
+						})
+						.focusout(function () {
+							search.field
+								.attr({
+									'placeholder': 'search'
+								})
+								.css({
+									'background-color': '#ffffff'
+								});
+						})
+					)
+					.append(search.button = $('<button>')
+						.attr({
+							'type': 'submit',
+							'title': 'GO!'
+						})
+						.addClass('btn grp_right search')
+					)
+				);
+				searchfilter(search.filter);
 			});
 		},
 
@@ -216,7 +298,7 @@
 					.on('mouseover', function() {
 						login.frame.css({
 							position: 'absolute',
-							top: $('header').position().top + 44 +'px',
+							top: $('header').position().top + $('header').height() +'px',
 							left: $(this).position().left - login.frame.width() + 'px'
 						});
 					})
@@ -378,6 +460,7 @@
 							})
 							.html('Notizblogg')
 						)
+						.append(' (v14.11)')
 					)
 					.append(
 						$('<span>').addClass('definition').html(' | ')

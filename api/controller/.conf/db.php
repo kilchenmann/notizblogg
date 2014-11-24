@@ -1,12 +1,7 @@
 <?php
-/*
-if(!defined('IN_PHP')){
-	die("hackerssss");
-}
-*/
 
 $GLOBALS['nb'] = array(
-	'path' => '/nb',				// domain + path = url
+	'app' => '/Library/WebServer/Documents/notizblogg/app/',				// domain + path = url
 	'host' => 'localhost',
 	'user' => 'luhmann',
 	'pass' => 'zettelkasten',
