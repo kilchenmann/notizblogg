@@ -49,35 +49,12 @@ h4 {
   //  -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/bg-empty.jpg', sizingMethod='scale')";
 
 }
-.viewer {
+.viewer, .paper {
   margin: 44px -15px 44px -15px;
   overflow-x: hidden;
   overflow-y: scroll;
 }
 .wall {
-    /*
-  -moz-column-count: 2;
-  -moz-column-gap: 12px;
-
-
-  -webkit-column-count: 2;
-  -webkit-column-gap: 12px;
-
-
-  column-count: 2;
-  column-gap: 12px;
-
-
-  -webkit-columns: 490px 2;
-     -moz-columns: 490px 2;
-          columns: 490px 2;
-*/
-/*
--webkit-column-count: auto; -webkit-column-gap:12px; -webkit-column-fill: balance;
--moz-column-count:auto; -moz-column-gap:12px; -moz-column-fill: balance;
--o-column-count:auto; -o-column-gap:12px; -o-column-fill: balance;
-column-count:auto; column-gap:12px; column-fill: balance;
-*/
   -webkit-column-count: 1;
   -webkit-column-gap: 12px;
   -moz-column-count: 1;
@@ -88,9 +65,7 @@ column-count:auto; column-gap:12px; column-fill: balance;
   display: block;
   margin: 16px auto 4px auto;
 
-
 //  border-bottom: 1px solid fade(@bg, 25%);
-
   .note {
     display: inline-block;
     -webkit-column-break-inside: avoid;
@@ -382,4 +357,23 @@ column-count:auto; column-gap:12px; column-fill: balance;
      }
    }
  }
+}
+
+.paper {
+    width: 700px;
+    .box-shadow();
+    .note {
+        background-color: @bg;
+        border: none;
+
+        .media, .text, .latex {
+            background-color: @bg;
+        }
+        .label, .tools {
+            display: none;
+        }
+        &:hover {
+            .box-shadow(0, 0, 0, 0);
+        }
+    }
 }

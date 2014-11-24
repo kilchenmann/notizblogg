@@ -324,6 +324,12 @@ console.log(localdata.settings.access);
 
 				note.media
 					.html(data.source.media.html);
+/*
+				note.content
+					.append($('<p>').html(bibtex));
+				note.content4tex
+					.append($('<p>').html(biblio));
+*/
 				if (data.source.bibTyp.id === '0' && data.source.bibTyp.name === '') {
 					note.content
 						.append($('<p>').html(bibtex));
@@ -633,8 +639,46 @@ console.log(localdata.settings.access);
 			});
 		},
 
+		biblatex: function(options) {
+			return this.each(function() {
+				var $this = $(this),
+				localdata = {};
+				localdata.settings = {
+					access: 1,
+					uri: undefined,
+					user: {
+						id: undefined,
+						name: undefined
+					},
+					query: {}
+				};
+				$.extend(localdata.settings, options);
+				// initialize a local data object which is attached to the DOM object
+				$this.data('localdata', localdata);
 
+				var source, showsource;
 
+				url = NB.api + '/get.php?list=biblatex';
+				$.getJSON(url, function(data) {
+					$.each(data.notes, function(i, sourceid) {
+						url2 = NB.api + '/get.php?source=' + sourceid;
+						$.getJSON(url2, function(sourcedata) {
+							$('.paper').append(
+								source = $('<div>').addClass('note')
+							);
+
+							showsource = getSource(sourcedata);
+							if (sourcedata.source.bibTyp.id !== '0' && sourcedata.source.bibTyp.name !== '') {
+								source.append($('<div>').addClass('text')
+									.append($('<p>').html(showsource.bibtex + ',')
+									)
+								);
+							}
+						});
+					});
+				});
+			});
+		},
 
 		setNote2Wall: function() {
 			return this.each(function() {

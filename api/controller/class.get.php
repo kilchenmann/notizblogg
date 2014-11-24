@@ -357,10 +357,10 @@ class get {
 						break;
 
 					case 'biblatex';
-						for($i = 0; $i <= 15; $i++){
+						for($i = 15; $i > 0; $i--){
 							$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib WHERE bibTyp = ' . $i . ' ORDER BY bib;');
 							while($row = mysqli_fetch_object($sql)) {
-								array_push($notes, $row->bibID. '::' . html_entity_decode($row->bib));
+								array_push($notes, $row->bibID);
 							}
 						}
 //						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
