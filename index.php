@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Notizblogg</title>
-	<link rel="shortcut icon" href="core/style/img/favicon.ico">
+	<link rel="shortcut icon" href="app/style/img/favicon.ico">
 
 	<meta name="author" content="André Kilchenmann" />
 	<meta name="description" content="Notizblogg ist der digitale Zettelkasten von André Kilchenmann. Nebst textuellem Inhalt kann der digitale MeMex, auch Bilder, Video- oder Ton-Dokumente aufnehmen." />
@@ -19,9 +19,9 @@
 	<meta name="viewport" content="width=480, user-scalable=yes">
 	<meta name="viewport" content="initial-scale=0.6, maximum-scale=0.8">
 	<!-- jQUERY LIBrary -->
-	<script type="text/javascript" src="core/lib/jquery.min.js"></script>
-	<script type="text/javascript" src="core/lib/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="core/js/functions.js"></script>
+	<script type="text/javascript" src="app/lib/jquery.min.js"></script>
+	<script type="text/javascript" src="app/lib/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="app/js/functions.js"></script>
 
 	<?php session_start (); ?>
 
@@ -92,37 +92,37 @@
 	</script>
 
 	<!-- some VENDOR stuff -->
-	<script type="text/javascript" src="core/js/vendor/md5.js"></script>
-	<script type="text/javascript" src="core/js/vendor/jquery.masonry.min.js"></script>
-	<script type="text/javascript" src="core/js/vendor/jquery.vague.js"></script>
-	<script type="text/javascript" src="core/js/vendor/jquery.knob.js"></script>
-	<script type="text/javascript" src="core/js/vendor/jquery.ui.widget.js"></script>
-	<script type="text/javascript" src="core/js/vendor/jquery.iframe-transport.js"></script>
-	<script type="text/javascript" src="core/js/vendor/jquery.fileupload.js"></script>
+	<script type="text/javascript" src="app/js/vendor/md5.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.masonry.min.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.vague.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.knob.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.iframe-transport.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.fileupload.js"></script>
 
 	<!-- notizblogg specific tools -->
 	<!-- some functional and styling stuff -->
-	<script type="text/javascript" src="core/js/jquery.center.js"></script>
-	<script type="text/javascript" src="core/js/jquery.warning.js"></script>
-	<script type="text/javascript" src="core/js/jquery.upload.js"></script>
+	<script type="text/javascript" src="app/js/jquery.center.js"></script>
+	<script type="text/javascript" src="app/js/jquery.warning.js"></script>
+	<script type="text/javascript" src="app/js/jquery.upload.js"></script>
 	<!-- project, searchbar and login module for the PANEL -->
-	<script type="text/javascript" src="core/js/jquery.panel.js"></script>
+	<script type="text/javascript" src="app/js/jquery.panel.js"></script>
 	<!-- show, add, edit and expand NOTE -->
-	<script type="text/javascript" src="core/js/jquery.note.js"></script>
-	<script type="text/javascript" src="core/js/jquery.form.js"></script>
+	<script type="text/javascript" src="app/js/jquery.note.js"></script>
+	<script type="text/javascript" src="app/js/jquery.form.js"></script>
 
 	<!-- test test test test test -->
 	<!-- add the expand function to the note plugin as a new method!! -->
-	<script type="text/javascript" src="core/js/jquery.expand.js"></script>
+	<script type="text/javascript" src="app/js/jquery.expand.js"></script>
 	<!--
-	<script type="text/javascript" src="core/js/jquery.finder.js"></script>
-	<script type="text/javascript" src="core/js/jquery.login.js"></script>
+	<script type="text/javascript" src="app/js/jquery.finder.js"></script>
+	<script type="text/javascript" src="app/js/jquery.login.js"></script>
 -->
 
 	<!-- style / design / responsive specs. -->
-	<link rel="stylesheet" type="text/css" href="core/style/css/jquery-ui.min.css">
-	<link rel="stylesheet" type="text/css" href="core/style/css/nb.css">
-	<link rel="stylesheet" type="text/css" href="core/style/css/responsive.css">
+	<link rel="stylesheet" type="text/css" href="app/style/css/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="app/style/css/nb.css">
+	<link rel="stylesheet" type="text/css" href="app/style/css/responsive.css">
 
 </head>
 

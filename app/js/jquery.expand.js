@@ -73,7 +73,7 @@
 				}
 
 				ele
-					.append($('<form>').attr({'action': 'core/bin/php/save.data.php', 'method': 'post', 'accept-charset': 'utf-8' })
+					.append($('<form>').attr({'action': 'api/controller/save.data.php', 'method': 'post', 'accept-charset': 'utf-8' })
 						.append($('<div>').addClass('form col_medium left')
 							.append($('<input>').attr({'type': 'text', 'name': 'title', 'placeholder': 'Title', 'value': data.title}).addClass('field_obj large'))
 							.append($('<textarea>').attr({'type': 'text', 'name': 'content', 'placeholder': 'Content', 'required': 'required'}).addClass('field_obj large').html(data.content))
@@ -164,7 +164,7 @@
 					i += 1;
 				}
 				ele
-					.append($('<form>').attr({'action': 'core/bin/php/save.data.php', 'method': 'post', 'accept-charset': 'utf-8' })
+					.append($('<form>').attr({'action': 'api/controller/save.data.php', 'method': 'post', 'accept-charset': 'utf-8' })
 						.append($('<div>').addClass('form col_medium left')
 							.append($('<p>').text('You have to choose a source or add a new one'))
 							.append(localdata.form.select_source = $('<select>').attr({'name': 'select_source'}).addClass('field_obj large select').append(selectSource))

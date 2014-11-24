@@ -37,17 +37,17 @@
 			return this.each(function() {
 				var $this = $(this),
 					localdata = {};
-					
+
 					localdata.settings = {
 						plugins: []
 					};
-					
+
 				$.extend(localdata.settings, options);
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
 
 				$.each(localdata.settings.plugins, function ( i, val) {
-					$.getScript('core/bin/js/jquery.' + val + '.js');
+					$.getScript('app/js/jquery.' + val + '.js');
 	//				console.log('index: ' + i + ' = ' + val);
 				});
 

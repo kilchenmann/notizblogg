@@ -491,7 +491,7 @@
 							})
 							.append(
 								$('<img>').attr({
-									'src': 'core/style/img/akM-logo-small.png',
+									'src': 'app/style/img/akM-logo-small.png',
 									'alt': 'milchkannen | kilchenmann',
 									'title': 'milchkannen | andré kilchenmann'
 								})
