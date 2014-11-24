@@ -167,24 +167,6 @@
 	<!-- and my SETTINGS and FUNCTIONS library -->
 	<script type="text/javascript">
 
-
-/*
-
-	NB.access = '<?php echo $user['access']; ?>';
-	NB.user = {
-		id: '<?php echo  $user['id']; ?>',
-		name: '<?php echo  $user['name']; ?>',
-		avatar: '<?php echo  $user['avatar']; ?>'
-	};
-*/
-
-
-/*
-
-	NB.api = '<?php echo __SITE_API__; ?>';
-	NB.media = '<?php echo __MEDIA_URL__; ?>';
-
-*/
 	//
 	// when window is LOADing
 	//
