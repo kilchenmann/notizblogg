@@ -38,7 +38,7 @@
 		$.ajax({
 			'async': false,
 			'global': false,
-			'url': 'settings.json',
+			'url': 'config.json',
 			'dataType': 'json',
 			'success': function (data) {
 				settings = data;
@@ -69,7 +69,7 @@
 	if(NB.user.token !== undefined) {
 		NB.access = NB.user.access;
 	}
-	
+
 	if (NB.uri === NB.url + '?access=denied') {
 		$('.wrapper').warning({
 			type: 'access',
