@@ -230,7 +230,8 @@ function insertMN($name, $rel, $data, $id) {
             } else {
                 // new data
                 if($n != '') {
-                    $newsql = $mysqli->query('INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');');
+                    $value = htmlentities($n, ENT_NOQUOTES, 'UTF-8');
+                    $newsql = $mysqli->query('INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $value . '\');');
                     $relIDs[] = $mysqli->insert_id;
                 }
             }

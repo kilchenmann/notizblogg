@@ -1,7 +1,7 @@
 <?php
 
 $GLOBALS['nb'] = array(
-	'app' => '/Library/WebServer/Documents/notizblogg/app/',				// domain + path = url
+	'indexpath' => '/Library/WebServer/Documents/nb',
 	'host' => 'localhost',
 	'user' => 'luhmann',
 	'pass' => 'zettelkasten',

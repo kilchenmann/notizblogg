@@ -59,6 +59,7 @@ function html2tex($text, $cite){
 	return (str_replace($umlaut, $replace, $string));
   }
   */
+  $text = htmlentities($text, ENT_NOQUOTES, 'UTF-8');
   if($cite == false) {
       return strtr($text, $upas);
   } else {
