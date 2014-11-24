@@ -711,7 +711,7 @@
 				addFields(plus_ele, plus_val, data.source);
 				setTimeout(function(){
 					completeMultipleValues('location', $('table#' + noteID).find('input.noteLocation'));
-				}, 200);
+				}, 300);
 			}, 300);
 
 
