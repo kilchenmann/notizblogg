@@ -324,10 +324,17 @@ console.log(localdata.settings.access);
 
 				note.media
 					.html(data.source.media.html);
-				note.content
-					.append($('<p>').html(biblio));
-				note.content4tex
-					.append($('<p>').html(bibtex));
+				if (data.source.bibTyp.id === '0' && data.source.bibTyp.name === '') {
+					note.content
+						.append($('<p>').html(bibtex));
+					note.content4tex
+						.append($('<p>').html(biblio));
+				} else {
+					note.content
+						.append($('<p>').html(biblio));
+					note.content4tex
+						.append($('<p>').html(bibtex));
+				}
 
 				// label ele
 				createLabel(data.source.label, note.label);
