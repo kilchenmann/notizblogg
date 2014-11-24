@@ -54,12 +54,11 @@ function html2tex($text, $cite){
 	("!<(nb:)([^ >\n\t]+)>!i", "\\2", $text);
 
 
-	$upas = array(" &quot;"=>" ``", "&quot; "=>"'' ", "&quot;, "=>"'', ", "&quot;. "=>"''. ", " &#039;"=>" `", "&#039; "=>"' ", "&#039;, "=>"', ", "&#039;. "=>"'. ", " - "=>" -- ", " — "=>" -- ", "_"=>"\_", "§"=>"\§", "$"=>"\$", "& "=>"\& ", "#"=>"\#", "{"=>"\{", "}"=>"\}", "%"=>"\%", "~"=>"\textasciitilde", "€"=>"\texteuro");
+	$upas = array(' &quot;'=>' ``', '&quot; '=>'\'\' ', '&quot;, '=>'\'\', ', '&quot;. '=>'\'\'. ', ' &#039;'=>' `', '&#039; '=>'\' ', '&#039;, '=>'\', ', '&#039;. '=>'\'. ', ' - '=>' -- ', ' — '=>' -- ', ' &ndash; '=>' -- ', ' &mdash; '=>' -- ', '_'=>'\\_', '§'=>'\\§', '$'=>'\\$', '& '=>'\\& ', '#'=>'\\#', '{'=>'\\{', '}'=>'\\}', '%'=>'\\%', '~'=>'\\textasciitilde', '€'=>'\\texteuro');
   /*foreach($upas as $umlaut=>$replace){
 	return (str_replace($umlaut, $replace, $string));
   }
   */
-  $text = htmlentities($text, ENT_NOQUOTES, 'UTF-8');
   if($cite == false) {
       return strtr($text, $upas);
   } else {

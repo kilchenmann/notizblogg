@@ -65,7 +65,7 @@ class post {
 				$notesql = $mysqli->query('INSERT INTO note ' .
 									'(`noteTitle`, `userID`, `checkID`, `noteComment`) ' .
 									'VALUES' .
-									'(\'' . $this->data['noteTitle'] .
+									'(\'' . $value = htmlentities($this->data['noteTitle'], ENT_NOQUOTES, 'UTF-8') .
 									'\', \'' . $this->user .
 									'\', \'' . $this->data['checkID'] .
 									'\', \'' . html2tex($this->data['noteComment']) . '\');');
@@ -86,9 +86,9 @@ class post {
 
 			// update the data
 			$sql = $mysqli->query('UPDATE note SET ' .
-									'noteTitle=\'' . $this->data['noteTitle'] . '\', ' .
-									'noteSubtitle=\'' . $this->data['noteSubtitle'] . '\', ' .
-									'noteComment=\'' . $this->data['noteComment'] . '\', ' .
+									'noteTitle=\'' . htmlentities($this->data['noteTitle'], ENT_NOQUOTES, 'UTF-8') . '\', ' .
+									'noteSubtitle=\'' . htmlentities($this->data['noteSubtitle'], ENT_NOQUOTES, 'UTF-8') . '\', ' .
+									'noteComment=\'' . htmlentities($this->data['noteComment'], ENT_NOQUOTES, 'UTF-8') . '\', ' .
 									'noteLink=\'' . $this->data['noteLink'] . '\', ' .
 									'bibID=\'' . $this->data['bibID'] . '\', ' .
 									'pageStart=\'' . $this->data['pageStart']. '\', ' .
