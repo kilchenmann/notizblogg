@@ -90,7 +90,7 @@ function html2tex(string){
 		string = string.replace(/}/g, '\\}');
 		string = string.replace(/~/g, '\\textasciitilde');
 		string = string.replace(/€/g, '\\texteuro');
-		return getLastChar(string);
+		return string;
 	}
 }
 
@@ -191,7 +191,7 @@ function getSource(data, list) {
 			biblio += authors + ': ';
 		}
 		// title
-		bibtex += 'title = {' + html2tex(source.title) + '},<br>';
+		bibtex += 'title = {' + html2tex(getLastChar(source.title)) + '},<br>';
 		if (source.title !== '') {
 			if ((source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book')  && jQuery.isEmptyObject(source.insource) === false) {
 				biblio += '<a href=\'?collection=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
@@ -200,14 +200,14 @@ function getSource(data, list) {
 			}
 			footnote = biblio;
 			if (source.subtitle !== '') {
-				bibtex += 'subtitle = {' + html2tex(source.subtitle) + '},<br>';
-				biblio += getLastChar(source.subtitle) + ' ';
+				bibtex += 'subtitle = {' + html2tex(getLastChar(source.subtitle)) + '},<br>';
+				biblio += getLastChar(source.subtitle);
 			}
 		}
 		if ('detail' in data.source) {
 			switch (source.bibTyp.name) {
 				case 'article':
-					bibtex += 'journaltitle = {' + html2tex(source.detail.journaltitle) + '},<br>';
+					bibtex += 'journaltitle = {' + html2tex(getLastChar(source.detail.journaltitle)) + '},<br>';
 					bibtex += 'number = {' + source.detail.number + '},<br>';
 					bibtex += 'year = {' + source.detail.year + '},<br>';
 					bibtex += 'pages = {' + source.detail.pages + '},<br>';
@@ -221,11 +221,11 @@ function getSource(data, list) {
 					break;
 
 				case 'proceedings':
-					bibtex += 'eventtitle = {' + html2tex(source.detail.eventtitle) + '},<br>';
-					bibtex += 'venue = {' + html2tex(source.detail.venue) + '},<br>';
+					bibtex += 'eventtitle = {' + html2tex(getLastChar(source.detail.eventtitle)) + '},<br>';
+					bibtex += 'venue = {' + html2tex(getLastChar(source.detail.venue)) + '},<br>';
 				//	bibtex += 'location = {' + html2tex(locations) + '},<br>';
-					biblio += getLastChar(source.detail.eventtitle) + ' ';
-					biblio += getLastChar(source.detail.venue) + ' ';
+					biblio += getLastChar(source.detail.eventtitle);
+					biblio += getLastChar(source.detail.venue);
 					//biblio += locations + ', ' + source.date.year + '.';
 					break;
 
@@ -233,7 +233,7 @@ function getSource(data, list) {
 				case 'thesis':
 					bibtex += 'type = {' + html2tex(source.detail.type) + '},<br>';
 					bibtex += 'institution = {' + html2tex(source.detail.institution) + '},<br>';
-					biblio += '(' + source.detail.type + ')' + getLastChar(source.detail.institution)  + ' ';
+					biblio += '(' + source.detail.type + ')' + getLastChar(source.detail.institution);
 					break;
 
 				case 'inbook':
@@ -243,8 +243,10 @@ function getSource(data, list) {
 					var crossTitle = '', crossAuthors, crossLocations;
 					bibtex += 'crossref = {' + crossref.name + '},<br>';
 					//console.log(crossref.author);
+					crossAuthors = getAuthors(crossref.author, ' and ');
+					bibtex += 'editor = {' + html2tex(crossAuthors) + '},<br>';
+
 					crossAuthors = getAuthors(crossref.author);
-					bibtex += 'editor = {' + crossAuthors + '},<br>';
 					// authors
 					if (source.detail.crossref.source.editor === '1') {
 						crossAuthors += ' (Hg.): ';
@@ -254,15 +256,15 @@ function getSource(data, list) {
 					crossLocations = getLocations(crossref.location);
 					if (crossref.bibTyp.name === 'collection' || crossref.bibTyp.name === 'proceedings' || crossref.bibTyp.name === 'book') {
 						crossTitle = '<a href=\'?collection=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
-						bibtex += 'booktitle = {<a href=\'?collection=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> },<br>';
+						bibtex += 'booktitle = {<a href=\'?collection=' + crossref.id + '\' >' + html2tex(getLastChar(crossref.title)) + '</a>},<br>';
 					} else {
 						crossTitle += '<a href=\'?source=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
-						bibtex += 'booktitle = {<a href=\'?source=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> },<br>';
+						bibtex += 'booktitle = {<a href=\'?source=' + crossref.id + '\' >' + html2tex(getLastChar(crossref.title)) + '</a>},<br>';
 
 					}
 					if (crossref.subtitle !== '') {
-						crossTitle += getLastChar(crossref.subtitle)  + ' ';
-						bibtex += 'boosubktitle = {' + crossref.subtitle + '},<br>';
+						crossTitle += getLastChar(crossref.subtitle);
+						bibtex += 'boosubktitle = {' + html2tex(getLastChar(crossref.subtitle)) + '},<br>';
 					}
 					insource.source = 'In: ' + crossAuthors + crossTitle + ' ' + crossLocations + ', ' + crossref.date.year;
 					// pages
@@ -377,9 +379,9 @@ function getLastChar(string)
         if ((lastChar !== '?') && (lastChar !== '!') && (lastChar !== ':')  && (lastChar !== '.')  && (lastChar !== '"')) {
             string += '.';
         }
-        return(string);
+        return(string + ' ');
     } else {
-        return('');
+        return(' ');
     }
 }
 
