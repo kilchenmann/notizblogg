@@ -305,7 +305,7 @@
 						).masonry({
 							itemSelector: '.note'
 						});
-                        Arrow_Points();
+						Arrow_Points();
 					}, 300);
 
 
