@@ -469,7 +469,7 @@ console.log(localdata.settings.access);
 									url = NB.api + '/get.php?note=' + note.id;
 									$.getJSON(url, function(data) {
 										for (var key in data) {
-											localdata.view.note = $('div#' + note.id);
+											localdata.view.note = $('div#' + note.id + '.note');
 											if (key === 'source') {
 												//localdata.view.container.addClass('desk');
 												dispBib(localdata.view.note, data, localdata);
@@ -512,7 +512,7 @@ console.log(localdata.settings.access);
 								url = NB.api + '/get.php?source=' + bibID;
 								$.getJSON(url, function(data) {
 									for (var key in data) {
-										localdata.view.note = $('div#' + bibID);
+										localdata.view.note = $('div#' + bibID + '.note');
 										if (key === 'source') {
 											//localdata.view.container.addClass('desk');
 											dispBib(localdata.view.note, data, localdata);
