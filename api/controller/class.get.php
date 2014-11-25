@@ -471,7 +471,7 @@ class get {
 
 	function searchData()
 	{
-		$q = $this->query;
+		$q = htmlentities($this->query, ENT_NOQUOTES, 'UTF-8');
 		$f = $this->part;		// filter
 
 		$qs = array();
