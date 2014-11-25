@@ -223,7 +223,7 @@ function getSource(data) {
 				case 'proceedings':
 					bibtex += 'eventtitle = {' + html2tex(source.detail.eventtitle) + '},<br>';
 					bibtex += 'venue = {' + html2tex(source.detail.venue) + '},<br>';
-					bibtex += 'location = {' + html2tex(locations) + '},<br>';
+				//	bibtex += 'location = {' + html2tex(locations) + '},<br>';
 					biblio += getLastChar(source.detail.eventtitle);
 					biblio += getLastChar(source.detail.venue);
 					//biblio += locations + ', ' + source.date.year + '.';
@@ -250,14 +250,19 @@ function getSource(data) {
 					} else {
 						crossAuthors += ': ';
 					}
+					bibtex += 'editor = {' + crossAuthors + '},<br>';
 					crossLocations = getLocations(crossref.location);
 					if (crossref.bibTyp.name === 'collection' || crossref.bibTyp.name === 'proceedings' || crossref.bibTyp.name === 'book') {
 						crossTitle = '<a href=\'?collection=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
+						bibtex += 'booktitle = {<a href=\'?collection=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> },<br>';
 					} else {
 						crossTitle += '<a href=\'?source=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
+						bibtex += 'booktitle = {<a href=\'?source=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> },<br>';
+
 					}
 					if (crossref.subtitle !== '') {
 						crossTitle += getLastChar(crossref.subtitle);
+						bibtex += 'booktitle = {' + crossref.subtitle + '},<br>';
 					}
 					insource.source = 'In: ' + crossAuthors + crossTitle + ' ' + crossLocations + ', ' + crossref.date.year;
 					// pages
@@ -280,7 +285,7 @@ function getSource(data) {
 		}
 
 		if (insource.source && insource.pages) biblio += insource.source + insource.pages;
-		if (crossref === undefined) {
+		//if (crossref === undefined) {
 			if (locations !== '') {
 				bibtex += 'location = {' + html2tex(locations) + '},<br>';
 				biblio += locations + ', ';
@@ -289,7 +294,7 @@ function getSource(data) {
 				bibtex += 'year = {' + source.date.year + '},<br>';
 				biblio += source.date.year;
 			}
-		}
+		//}
 
 		bibtex += 'note = {' + html2tex(source.comment) + '}}';
 		//biblio += '';
