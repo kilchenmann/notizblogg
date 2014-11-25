@@ -319,7 +319,7 @@ console.log(localdata.settings.access);
 				}
 
 				var showsource = getSource(data);
-				biblio = showsource.biblio + '.';
+				biblio = showsource.biblio;
 				bibtex = showsource.bibtex;
 
 				note.media
