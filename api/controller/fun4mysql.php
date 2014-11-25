@@ -218,6 +218,7 @@ function insertMN($name, $rel, $data, $id) {
         $d = explode('/', $data);
         foreach($d as $n) {
             $n = trim($n);
+            $n = htmlentities($n, ENT_NOQUOTES, 'UTF-8');
 //            echo 'INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');';
             $mysqli = condb('open');
 
@@ -284,6 +285,8 @@ function insertDetail($prop, $val, $id) {
     while($row = mysqli_fetch_object($sql)) {
         $bibFieldID = $row->bibFieldID;
     }
+    $val = trim($val);
+    $val = htmlentities($val, ENT_NOQUOTES, 'UTF-8');
     $newsql = $mysqli->query('INSERT INTO bibDetail ( bibID, bibFieldID, bibDetail ) VALUES (\'' . $id . '\', \'' . $bibFieldID . '\', \'' . $val . '\');');
     $mysqli = condb('close');
 }
