@@ -667,12 +667,17 @@ console.log(localdata.settings.access);
 								source = $('<div>').addClass('note')
 							);
 
-							showsource = getSource(sourcedata);
+							showsource = getSource(sourcedata, 'bibtex');
 							if (sourcedata.source.bibTyp.id !== '0' && sourcedata.source.bibTyp.name !== '') {
-								source.append($('<div>').addClass('text')
-									.append($('<p>').html(showsource.bibtex + ',')
-									)
-								);
+								if(i < (data.notes.length - 1)) {
+									source.append($('<div>').addClass('text')
+										.append($('<p>').html(showsource.bibtex + ','))
+									);
+								} else {
+									source.append($('<div>').addClass('text')
+										.append($('<p>').html(showsource.bibtex))
+									);
+								}
 							}
 						});
 					});

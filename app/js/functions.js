@@ -90,7 +90,7 @@ function html2tex(string){
 		string = string.replace(/}/g, '\\}');
 		string = string.replace(/~/g, '\\textasciitilde');
 		string = string.replace(/€/g, '\\texteuro');
-		return string;
+		return getLastChar(string);
 	}
 }
 
@@ -166,7 +166,7 @@ function getLabel(label, sep) {
 	return htmlDecode(labels);
 }
 
-function getSource(data) {
+function getSource(data, list) {
 	var i, authors, locations, biblio, bibtex, footnote, source, bib, crossref, insource = {};
 	// return source.biblio, source.bibtex;
 	source = data.source;
@@ -201,7 +201,7 @@ function getSource(data) {
 			footnote = biblio;
 			if (source.subtitle !== '') {
 				bibtex += 'subtitle = {' + html2tex(source.subtitle) + '},<br>';
-				biblio += getLastChar(source.subtitle);
+				biblio += getLastChar(source.subtitle) + ' ';
 			}
 		}
 		if ('detail' in data.source) {
@@ -224,8 +224,8 @@ function getSource(data) {
 					bibtex += 'eventtitle = {' + html2tex(source.detail.eventtitle) + '},<br>';
 					bibtex += 'venue = {' + html2tex(source.detail.venue) + '},<br>';
 				//	bibtex += 'location = {' + html2tex(locations) + '},<br>';
-					biblio += getLastChar(source.detail.eventtitle);
-					biblio += getLastChar(source.detail.venue);
+					biblio += getLastChar(source.detail.eventtitle) + ' ';
+					biblio += getLastChar(source.detail.venue) + ' ';
 					//biblio += locations + ', ' + source.date.year + '.';
 					break;
 
@@ -233,7 +233,7 @@ function getSource(data) {
 				case 'thesis':
 					bibtex += 'type = {' + html2tex(source.detail.type) + '},<br>';
 					bibtex += 'institution = {' + html2tex(source.detail.institution) + '},<br>';
-					biblio += '(' + source.detail.type + ')' + getLastChar(source.detail.institution);
+					biblio += '(' + source.detail.type + ')' + getLastChar(source.detail.institution)  + ' ';
 					break;
 
 				case 'inbook':
@@ -244,13 +244,13 @@ function getSource(data) {
 					bibtex += 'crossref = {' + crossref.name + '},<br>';
 					//console.log(crossref.author);
 					crossAuthors = getAuthors(crossref.author);
+					bibtex += 'editor = {' + crossAuthors + '},<br>';
 					// authors
 					if (source.detail.crossref.source.editor === '1') {
 						crossAuthors += ' (Hg.): ';
 					} else {
 						crossAuthors += ': ';
 					}
-					bibtex += 'editor = {' + crossAuthors + '},<br>';
 					crossLocations = getLocations(crossref.location);
 					if (crossref.bibTyp.name === 'collection' || crossref.bibTyp.name === 'proceedings' || crossref.bibTyp.name === 'book') {
 						crossTitle = '<a href=\'?collection=' + crossref.id + '\' >' + getLastChar(crossref.title) + '</a> ';
@@ -261,8 +261,8 @@ function getSource(data) {
 
 					}
 					if (crossref.subtitle !== '') {
-						crossTitle += getLastChar(crossref.subtitle);
-						bibtex += 'booktitle = {' + crossref.subtitle + '},<br>';
+						crossTitle += getLastChar(crossref.subtitle)  + ' ';
+						bibtex += 'boosubktitle = {' + crossref.subtitle + '},<br>';
 					}
 					insource.source = 'In: ' + crossAuthors + crossTitle + ' ' + crossLocations + ', ' + crossref.date.year;
 					// pages
@@ -285,7 +285,7 @@ function getSource(data) {
 		}
 
 		if (insource.source && insource.pages) biblio += insource.source + insource.pages;
-		//if (crossref === undefined) {
+		if (crossref === undefined) {
 			if (locations !== '') {
 				bibtex += 'location = {' + html2tex(locations) + '},<br>';
 				biblio += locations + ', ';
@@ -294,9 +294,12 @@ function getSource(data) {
 				bibtex += 'year = {' + source.date.year + '},<br>';
 				biblio += source.date.year;
 			}
-		//}
-
-		bibtex += 'note = {' + html2tex(source.comment) + '}}';
+		}
+		if(!list) {
+			bibtex += 'note = {' + html2tex(source.comment) + '}}';
+		} else {
+			bibtex += 'note = {}}';
+		}
 		//biblio += '';
 		bib = {
 			biblio: tex2html(biblio),
@@ -368,14 +371,15 @@ function isTouchDevice()
 function getLastChar(string)
 {
     if(string !== null) {
+		string = $.trim(string);
         string = string.charAt(0).toUpperCase() + string.slice(1);
         var lastChar = string.substr(string.length - 1);
         if ((lastChar !== '?') && (lastChar !== '!') && (lastChar !== ':')  && (lastChar !== '.')  && (lastChar !== '"')) {
             string += '.';
         }
-        return(string + ' ');
+        return(string);
     } else {
-        return(' ');
+        return('');
     }
 }
 

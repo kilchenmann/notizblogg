@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Notizblogg</title>
+    <title>Export biblatex from Notizblogg</title>
     <link rel="shortcut icon" href="app/style/img/favicon.ico">
 
     <meta name="author" content="André Kilchenmann" />
@@ -127,7 +127,11 @@
 <body>
 
     <header>
-
+        <p>
+            % <br>
+            % This bib-file was created by Notizblogg.ch <br>
+            % <br>
+        </p>
     </header>
     <div class="float_obj medium warning"></div>
     <!-- <div class="float_obj large pamphlet"></div> -->
