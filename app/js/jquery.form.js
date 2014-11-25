@@ -30,7 +30,7 @@
 				if(data.notes[0] !== undefined) {
 					url2 = NB.api + '/get.php?source=' + data.notes[0].split('::')[0];
 					$.getJSON(url2, function (data2) {
-						selected_ele.html(getSource(data2).biblio + '.')
+						selected_ele.html(getSource(data2).biblio)
 									.attr({'id': data.notes[0].split('::')[0]});
 						selected_ele.append(
 							$('<input>').attr({
@@ -944,7 +944,7 @@
 										form.note.container.empty();
 										url = NB.api + '/get.php?source=' + form.source.bib.val();
 										$.getJSON(url, function (data) {
-											form.source.selected.html(getSource(data).biblio + '.').attr({'id': form.source.bib.val()});
+											form.source.selected.html(getSource(data).biblio).attr({'id': form.source.bib.val()});
 											form.source.selected
 											.append(form.source.edit =
 												$('<input>').attr({

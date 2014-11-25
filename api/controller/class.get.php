@@ -524,7 +524,7 @@ class get {
 				break;
 
 			default;		// search everywhere
-				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteSubtitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');
+				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteSubtitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
 				while($row = mysqli_fetch_object($sql)) {
 					$results[] = $row->noteID;
 				}
