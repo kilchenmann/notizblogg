@@ -54,7 +54,7 @@ class post {
 				if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
 			}
 		} else {
-			$page_start = $this->data['notePages'];
+			$this->data['pageStart'] = $this->data['notePages'];
 		}
 
 		if(!empty($this->data['noteComment']) && !empty($this->data['bibID']))
@@ -144,7 +144,7 @@ class post {
 				if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
 			}
 		} else {
-			$page_start = $this->data['pages'];
+			$this->data['pageStart'] = $this->data['pages'];
 		}
 
 

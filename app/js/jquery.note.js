@@ -164,8 +164,7 @@ console.log(localdata.settings.access);
 			var source = {};
 			var note_id = data.note.id;
 			var source_id;
-			var foot = {},
-				fn, fc;
+			var foot = {};
 
 			if (note_id !== 0) {
 				var note_ele = ele.addClass('item').attr({
@@ -196,48 +195,68 @@ console.log(localdata.settings.access);
 				// (1) do we need a footnote and (2) have we done already a request for the right footnote?
 				source_id = data.note.source.id;
 				if (source_id > 0) {
-					var pageHere, page;
+					var pageHere, page, fc, fn, url;
+					fc = data.note.source.name; // footcite in latex
+					fn = fc;
+					/*
+					url = NB.api + '/get.php?source=' + source_id;
+
 					if (!(source_id in localdata.footnote)) {
 						localdata.footnote[source_id] = {};
-						var url = NB.api + '/get.php?source=' + source_id;
-						fc = data.note.source.name; // footcite in latex
-						fn = fc; // footnote in text
-
-						$.getJSON(url, function(sourcedata) {
-							foot = getSource(sourcedata);
-							if (foot.footnote !== undefined) {
+						$.ajax({
+							'async': false,
+							'global': false,
+							'url': url,
+							'dataType': 'json',
+							'success': function (sourcedata) {
+								foot = getSource(sourcedata);
 								fn = foot.footnote;
 							}
 						});
 						localdata.footnote[source_id].fn = fn;
 						localdata.footnote[source_id].fc = fc;
-
 					} else {
-						foot = localdata.footnote[source_id];
-						fn = foot.fn;
-						fc = foot.fc;
+						setTimeout(function(){
+							fn = localdata.footnote[source_id].fn;
+							fc = localdata.footnote[source_id].fc;
+						}, 300);
 					}
+					*/
+
 					if (data.note.page.start !== '0') {
-						page = data.note.page.start;
+						page = '[' + data.note.page.start + ']';
 						var dif = Math.round(data.note.page.end - data.note.page.start);
 						if (dif > 0) {
-							page = data.note.page.start + '-' + data.note.page.end;
+							page = '[' + data.note.page.start + '-' + data.note.page.end + ']';
 						}
-						pageHere = ' S. ' + page + '.';
+						//fn = fn + ' S. ' + page;
 					}
-					if (foot.footnote !== undefined && pageHere !== undefined) {
-						if (foot.footnote !== undefined) {
-							fn = fn + pageHere;
-							//	.html(foot.footnote + pageHere));
-						} else {
-							fn = fn + ',' + pageHere;
-						}
-					}
+
 					if (page === undefined) page = '';
-					note.content4tex.append($('<p>').addClass('footnote bibtex').html('\\footcite[' + page + ']{<a href=\'?source=' + data.note.source.id + '\'>' + fc + '</a>}'));
-					note.content.append($('<p>').addClass('footnote biblio').append($('<a>').attr({
-						href: '?source=' + data.note.source.id
-					}).html(fn)));
+
+					note.content4tex
+						.append($('<p>')
+						.addClass('footnote bibtex')
+						.html('\\footcite[' + page + ']')
+							.append($('<a>')
+								.attr({
+									href: '?source=' + data.note.source.id
+								})
+								.html('{' + fc + '}')
+							)
+						);
+//						.html('\\footcite[' + page + ']{<a href=\'?source=' + data.note.source.id + '\'>' + fc + '</a>}'));
+
+					note.content
+						.append($('<p>')
+						.addClass('footnote biblio')
+							.append($('<a>')
+								.attr({
+									href: '?source=' + data.note.source.id
+								})
+								.html(fn + ' ' + page)
+							)
+						);
 				}
 				var latex, tex_ele, classNote;
 				if (data.note.biblio !== null) {

@@ -70,6 +70,7 @@
 	var addFields = function (ele, val, data) {
 		var plus = {};
 		var detail = {};
+		var loc_ele;
 		detail.location = getLocations(data.location, ' / ');
 		ele.empty();
 		switch(val) {
@@ -106,11 +107,12 @@
 			case 'collection':
 			case 'project':
 				plus.field = $('<span>')
-					.append($('<input>')
+					.append(loc_ele = $('<input>')
 						.addClass('field_obj large text noteLocation')
 						.attr({'type': 'text', 'placeholder': 'Location 1 / Location 2', 'title': 'Location 1 / Location 2 / etc.', 'name': 'noteLocation'})
 						.val(detail.location)
 					);
+					completeMultipleValues('location', loc_ele);
 				break;
 
 			case 'online':
@@ -144,11 +146,12 @@
 						.attr({'type': 'date', 'placeholder': 'Event Venue', 'title': 'Venue of Event', 'name': 'venue'})
 						.val(data.detail.venue)
 					)
-					.append($('<input>')
+					.append(loc_ele = $('<input>')
 						.addClass('field_obj large text noteLocation')
 						.attr({'type': 'text', 'placeholder': 'Location 1 / Location 2', 'title': 'Location 1 / Location 2 / etc.', 'name': 'noteLocation'})
 						.val(detail.location)
 					);
+					completeMultipleValues('location', loc_ele);
 				break;
 
 			case 'report':
@@ -201,11 +204,12 @@
 			case 'periodical':
 			case 'unpublished':
 				plus.field = $('<span>')
-					.append($('<input>')
+					.append(loc_ele = $('<input>')
 						.addClass('field_obj large text noteLocation')
 						.attr({'type': 'text', 'placeholder': 'Location 1 / Location 2', 'title': 'Location 1 / Location 2 / etc.', 'name': 'noteLocation'})
 						.val(detail.location)
 					);
+					completeMultipleValues('location', loc_ele);
 				break;
 		}
 
@@ -709,9 +713,6 @@
 				var plus_ele = $('#form_' + noteID).find('tr.field_plus');
 				var plus_val = $('#form_' + noteID).find('select.bibTyp').find(':selected').text();
 				addFields(plus_ele, plus_val, data.source);
-				setTimeout(function(){
-					completeMultipleValues('location', $('table#' + noteID).find('input.noteLocation'));
-				}, 300);
 			}, 300);
 
 

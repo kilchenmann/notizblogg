@@ -10,11 +10,24 @@ function completeMultipleValues(list, field, sep) {
 	if(sep === undefined) sep = ' / ';
 	var availableTags = [];
 	var url = NB.api + '/get.php?list=' + list;
+	$.ajax({
+		'async': false,
+		'global': false,
+		'url': url,
+		'dataType': 'json',
+		'success': function (data) {
+			for (var k in data.notes) {
+				availableTags.push(data.notes[k].split('::')[1]);
+			}
+		}
+	});
+/*
 	$.getJSON(url, function (data) {
 		for (var k in data.notes) {
 			availableTags.push(data.notes[k].split('::')[1]);
 		}
 	});
+*/
 	// don't navigate away from the field on tab when selecting an item
 	field
 	.bind( "keydown", function( event ) {
@@ -295,6 +308,7 @@ function getSource(data, list) {
 			if (source.date.year !== '0000' && source.date.year !== '0' && source.date.year !== null) {
 				bibtex += 'year = {' + source.date.year + '},<br>';
 				biblio += source.date.year + '.';
+				footnote += source.date.year;
 			}
 		}
 		if(!list) {
