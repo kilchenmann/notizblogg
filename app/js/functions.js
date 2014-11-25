@@ -137,7 +137,7 @@ function getLocations(location, sep) {
 }
 function getPages(start, end) {
 	var pages;
-	if(start <= end || end === '0') {
+	if(start >= end || end === '0') {
 		pages = start;
 	} else {
 		pages = start + '-' + end;
