@@ -918,7 +918,15 @@
 										form.source.bib.empty();
 										form.note.container.empty();
 										if(form.source.typ.val() === '0') {
-											selOption(form.source.bib, 'recent=3', form.source.selected, form.note.container);
+											$.ajax({
+												'async': false,
+												'global': false,
+												'url': NB.api + 'get.php?recent=3',
+												'dataType': 'json',
+												'success': function (data) {
+													selOption(form.source.bib, 'recent=3', form.source.selected, form.note.container);
+												}
+											});
 											selOption(form.source.bib, 'list=source');
 										} else {
 											selOption(form.source.bib, 'bibtyp=' + form.source.typ.val(), form.source.selected, form.note.container);
