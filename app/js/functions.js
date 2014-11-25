@@ -363,9 +363,9 @@ function isTouchDevice()
 function getLastChar(string)
 {
     if(string !== null) {
-        string = string.charAt(0).toUpperCase() + string.slice(1)
+        string = string.charAt(0).toUpperCase() + string.slice(1);
         var lastChar = string.substr(string.length - 1);
-        if ((lastChar !== '?') && (lastChar !== '!')) {
+        if ((lastChar !== '?') && (lastChar !== '!') && (lastChar !== ':')  && (lastChar !== '.')  && (lastChar !== '"')) {
             string += '.';
         }
         return(string + ' ');
