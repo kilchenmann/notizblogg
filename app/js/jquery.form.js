@@ -365,7 +365,7 @@
 										.append($('<td>').addClass('large')
 											.append($('<input>')
 												.addClass('field_obj large text noteLink')
-												.val(form.url)
+												.val(data2.note.source.link)
 												.attr({'type': 'text', 'placeholder': 'URL', 'name': 'noteLink', 'title': 'Hypertext Reference (URL)'}))
 										)
 										.append($('<td>').addClass('medium right')

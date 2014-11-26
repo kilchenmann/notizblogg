@@ -236,8 +236,8 @@ console.log(localdata.settings.access);
 
 					note.content4tex
 						.append($('<p>')
-						.addClass('footnote bibtex')
-						.html('\\footcite[' + page + ']')
+							.addClass('footnote bibtex')
+							.html('\\footcite[' + page + ']')
 							.append($('<a>')
 								.attr({
 									href: '?source=' + data.note.source.id
@@ -245,11 +245,11 @@ console.log(localdata.settings.access);
 								.html('{' + fc + '}')
 							)
 						);
-//						.html('\\footcite[' + page + ']{<a href=\'?source=' + data.note.source.id + '\'>' + fc + '</a>}'));
+					//						.html('\\footcite[' + page + ']{<a href=\'?source=' + data.note.source.id + '\'>' + fc + '</a>}'));
 
 					note.content
 						.append($('<p>')
-						.addClass('footnote biblio')
+							.addClass('footnote biblio')
 							.append($('<a>')
 								.attr({
 									href: '?source=' + data.note.source.id
@@ -258,6 +258,24 @@ console.log(localdata.settings.access);
 							)
 						);
 				}
+				if (data.note.source.link !== '' && data.note.source.link !== null) {
+					var prot = '';
+					var ref = data.note.source.link;
+					var start = ref.charAt(0) + ref.charAt(1) + ref.charAt(2) + ref.charAt(3);
+					if(start !== 'http') prot = 'http://';
+					note.content
+						.append($('<p>')
+							.addClass('footnote link')
+							.append($('<a>')
+								.attr({
+									href: prot + data.note.source.link,
+									target: '_blank'
+								})
+								.html(data.note.source.link)
+							)
+						);
+				}
+
 				var latex, tex_ele, classNote;
 				if (data.note.biblio !== null) {
 					latex = data.note.comment4tex;
@@ -343,12 +361,12 @@ console.log(localdata.settings.access);
 
 				note.media
 					.html(data.source.media.html);
-/*
-				note.content
-					.append($('<p>').html(bibtex));
-				note.content4tex
-					.append($('<p>').html(biblio));
-*/
+				/*
+								note.content
+									.append($('<p>').html(bibtex));
+								note.content4tex
+									.append($('<p>').html(biblio));
+				*/
 				if (data.source.bibTyp.id === '0' && data.source.bibTyp.name === '') {
 					note.content
 						.append($('<p>').html(bibtex));
@@ -661,7 +679,7 @@ console.log(localdata.settings.access);
 		biblatex: function(options) {
 			return this.each(function() {
 				var $this = $(this),
-				localdata = {};
+					localdata = {};
 				localdata.settings = {
 					access: 1,
 					uri: undefined,
@@ -688,7 +706,7 @@ console.log(localdata.settings.access);
 
 							showsource = getSource(sourcedata, 'bibtex');
 							if (sourcedata.source.bibTyp.id !== '0' && sourcedata.source.bibTyp.name !== '') {
-								if(i < (data.notes.length - 1)) {
+								if (i < (data.notes.length - 1)) {
 									source.append($('<div>').addClass('text')
 										.append($('<p>').html(showsource.bibtex + ','))
 									);
