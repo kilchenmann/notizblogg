@@ -9,7 +9,7 @@ body, header, footer, nav, section, span, p, input, select, textarea, ul, li {
     letter-spacing: 2px;
     line-height: 1.2em;
     color: @ink;
-    font-family: raleway, awesome, stylus, Verdana, sans-serif;
+    font-family: ubuntu, raleway, awesome, stylus, Verdana, sans-serif;
 }
 
 html, body, input {
@@ -306,14 +306,15 @@ table {
     .top {
 //        border-bottom: 1px solid fade(@ink, 50%);
         height: 250px;
-        background-color: @bg;
+        background-color: lighten(@bg, 8%);
         .box-shadow-bottom();
     }
 
     .bottom {
         overflow: scroll;
-        height: 450px;
-        background-color: fade(@bg, 81%);
+        height: auto;
+        max-height: 640px;
+        background-color: fade(@bg, 95%);
     }
 
     .top, .bottom {
@@ -322,7 +323,7 @@ table {
     }
 
     .top.active, .bottom.active {
-        background-color: @bg;
+    //    background-color: @bg;
     }
 }
 

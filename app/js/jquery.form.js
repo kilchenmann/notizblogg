@@ -891,20 +891,20 @@
 									.attr({'colspan': '2'})
 									.addClass('left')
 									.append($('<p>').text('Select a source / theme or ')
-										.append(
-											form.source.new = $('<input>').attr({
-											'name': 'newsource',
-											'type': 'button',
-											'value': 'ADD NEW'
-										})
-										.css({'float': 'right'})
-										.addClass('button medium new')
+										.append(form.source.new = $('<input>')
+											.attr({
+												'name': 'newsource',
+												'type': 'button',
+												'value': 'ADD NEW'
+											})
+											.css({'float': 'right'})
+											.addClass('button medium new')
+											.on('click', function() {
+												form.source.selected.empty();
+												form.note.container.empty();
+												form4source(form.note.container, '0');
+											})
 										)
-										.on('click', function() {
-											form.source.selected.empty();
-											form.note.container.empty();
-											form4source(form.note.container, '0');
-										})
 									)
 								)
 							)
