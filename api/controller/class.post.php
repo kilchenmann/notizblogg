@@ -160,7 +160,7 @@ class post {
 										'(\'' . $this->data['noteTitle'] .
 										 '\', \'' . $this->user .
 										 '\', \'' . $this->data['checkID'] .
-										 '\', \'' . html2tex($this->data['noteComment']) . '\');');
+										 '\', "' . html2tex($this->data['noteComment']) . '");');
 				$this->data['noteID'] = $mysqli->insert_id;
 				$sql = $mysqli->query('INSERT INTO bib ' .
 										'(`bib`, `bibEditor`, `bibTyp`, `noteID`) ' .
@@ -247,7 +247,7 @@ class post {
 			$sql = $mysqli->query('UPDATE note SET ' .
 									'noteTitle=\'' . html2tex($this->data['noteTitle']) . '\', ' .
 									'noteSubtitle=\'' . html2tex($this->data['noteSubtitle']) . '\', ' .
-									'noteComment=\'' . html2tex($this->data['noteComment']) . '\', ' .
+									'noteComment="' . html2tex($this->data['noteComment']) . '", ' .
 									'noteLink=\'' . html2tex($this->data['noteLink']) . '\', ' .
 									'pageStart=\'' . $this->data['pageStart']. '\', ' .
 									'pageEnd=\'' . $this->data['pageEnd']. '\', ' .
