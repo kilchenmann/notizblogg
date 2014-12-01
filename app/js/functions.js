@@ -68,7 +68,7 @@ function tex2html(string){
 		string = string.replace(/\'\'\, /g, '", ');
 		string = string.replace(/\'\'\. /g, '". ');
 		string = string.replace(/ `/g, ' \'');
-		string = string.replace(/ -- /g, ' &ndash; ');
+		string = string.replace(/ -- /g, ' &mdash; ');
 		string = string.replace(/\_/g, '_');
 		string = string.replace(/\§/g, '§');
 		string = string.replace(/\%/g, '%');
@@ -81,14 +81,19 @@ function tex2html(string){
 		return string;
 	}
 }
-
+// ' &quot;'=>' ``', '&quot; '=>'\'\' ', '&quot;, '=>'\'\', ', '&quot;. '=>'\'\'. ', ' &#039;'=>' `', '&#039; '=>'\' ', '&#039;, '=>'\', ', '&#039;. '=>'\'. '
 function html2tex(string){
 	if(string !== undefined) {
 		string = string.replace(/ "/g, ' ``');
+		string = string.replace(/ &quot;/g, ' ``');
 		string = string.replace(/" /g, '\'\' ');
+		string = string.replace(/&quot; /g, '\'\' ');
 		string = string.replace(/", /g, '\'\', ');
+		string = string.replace(/&quot;, /g, '\'\', ');
 		string = string.replace(/". /g, '\'\'. ');
+		string = string.replace(/&quot;. /g, '\'\'. ');
 		string = string.replace(/  '/g, ' `');
+		string = string.replace(/  &#039;/g, ' `');
 		string = string.replace(/ — /g, ' -- ');
 		string = string.replace(/ &ndash; /g, ' -- ');
 		string = string.replace(/ &mdash; /g, ' -- ');

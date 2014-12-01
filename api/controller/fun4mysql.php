@@ -218,7 +218,7 @@ function insertMN($name, $rel, $data, $id) {
         $d = explode('/', $data);
         foreach($d as $n) {
             $n = trim($n);
-            $n = htmlentities($n, ENT_NOQUOTES, 'UTF-8');
+            $n = htmlentities($n, ENT_QUOTES, 'UTF-8');
 //            echo 'INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');';
             $mysqli = condb('open');
 
@@ -231,7 +231,7 @@ function insertMN($name, $rel, $data, $id) {
             } else {
                 // new data
                 if($n != '') {
-                    $value = htmlentities($n, ENT_NOQUOTES, 'UTF-8');
+                    $value = htmlentities($n, ENT_QUOTES, 'UTF-8');
                     $newsql = $mysqli->query('INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $value . '\');');
                     $relIDs[] = $mysqli->insert_id;
                 }
@@ -286,7 +286,7 @@ function insertDetail($prop, $val, $id) {
         $bibFieldID = $row->bibFieldID;
     }
     $val = trim($val);
-    $val = htmlentities($val, ENT_NOQUOTES, 'UTF-8');
+    $val = htmlentities($val, ENT_QUOTES, 'UTF-8');
     $newsql = $mysqli->query('INSERT INTO bibDetail ( bibID, bibFieldID, bibDetail ) VALUES (\'' . $id . '\', \'' . $bibFieldID . '\', \'' . $val . '\');');
     $mysqli = condb('close');
 }

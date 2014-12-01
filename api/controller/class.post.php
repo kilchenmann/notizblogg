@@ -65,10 +65,10 @@ class post {
 				$notesql = $mysqli->query('INSERT INTO note ' .
 									'(`noteTitle`, `userID`, `checkID`, `noteComment`) ' .
 									'VALUES' .
-									'(\'' . $value = htmlentities($this->data['noteTitle'], ENT_NOQUOTES, 'UTF-8') .
+									'(\'' . htmlentities($this->data['noteTitle'], ENT_QUOTES, 'UTF-8') .
 									'\', \'' . $this->user .
 									'\', \'' . $this->data['checkID'] .
-									'\', \'' . html2tex($this->data['noteComment']) . '\');');
+									'\', \'' . html2tex(htmlentities($this->data['noteComment'], ENT_QUOTES, 'UTF-8')) . '\');');
 				$this->data['noteID'] = $mysqli->insert_id;
 				$mysqli = condb('close');
 			}
@@ -86,9 +86,9 @@ class post {
 
 			// update the data
 			$sql = $mysqli->query('UPDATE note SET ' .
-									'noteTitle=\'' . htmlentities($this->data['noteTitle'], ENT_NOQUOTES, 'UTF-8') . '\', ' .
-									'noteSubtitle=\'' . htmlentities($this->data['noteSubtitle'], ENT_NOQUOTES, 'UTF-8') . '\', ' .
-									'noteComment=\'' . htmlentities($this->data['noteComment'], ENT_NOQUOTES, 'UTF-8') . '\', ' .
+									'noteTitle=\'' . html2tex(htmlentities($this->data['noteTitle'], ENT_QUOTES, 'UTF-8')) . '\', ' .
+									'noteSubtitle=\'' . html2tex(htmlentities($this->data['noteSubtitle'], ENT_QUOTES, 'UTF-8')) . '\', ' .
+									'noteComment=\'' . html2tex(htmlentities($this->data['noteComment'], ENT_QUOTES, 'UTF-8')) . '\', ' .
 									'noteLink=\'' . $this->data['noteLink'] . '\', ' .
 									'bibID=\'' . $this->data['bibID'] . '\', ' .
 									'pageStart=\'' . $this->data['pageStart']. '\', ' .
@@ -244,10 +244,11 @@ class post {
 									'bibTyp=\'' . $this->data['bibTyp'] . '\' ' .
 									'WHERE bibID = ' . $this->data['bibID'] . ';');
 			// update the data
+			// htmlentities($this->data['noteComment'], ENT_QUOTES, 'UTF-8')
 			$sql = $mysqli->query('UPDATE note SET ' .
-									'noteTitle=\'' . html2tex($this->data['noteTitle']) . '\', ' .
-									'noteSubtitle=\'' . html2tex($this->data['noteSubtitle']) . '\', ' .
-									'noteComment="' . html2tex($this->data['noteComment']) . '", ' .
+									'noteTitle=\'' . html2tex(htmlentities($this->data['noteTitle'], ENT_QUOTES, 'UTF-8')) . '\', ' .
+									'noteSubtitle=\'' . html2tex(htmlentities($this->data['noteSubtitle'], ENT_QUOTES, 'UTF-8')) . '\', ' .
+									'noteComment="' . html2tex(htmlentities($this->data['noteComment'], ENT_QUOTES, 'UTF-8')) . '", ' .
 									'noteLink=\'' . html2tex($this->data['noteLink']) . '\', ' .
 									'pageStart=\'' . $this->data['pageStart']. '\', ' .
 									'pageEnd=\'' . $this->data['pageEnd']. '\', ' .
