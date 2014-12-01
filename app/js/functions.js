@@ -92,8 +92,8 @@ function html2tex(string){
 		string = string.replace(/&quot;, /g, '\'\', ');
 		string = string.replace(/". /g, '\'\'. ');
 		string = string.replace(/&quot;. /g, '\'\'. ');
-		string = string.replace(/  '/g, ' `');
-		string = string.replace(/  &#039;/g, ' `');
+		string = string.replace(/ '/g, ' `');
+		string = string.replace(/ &#039;/g, ' `');
 		string = string.replace(/ — /g, ' -- ');
 		string = string.replace(/ &ndash; /g, ' -- ');
 		string = string.replace(/ &mdash; /g, ' -- ');
