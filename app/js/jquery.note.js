@@ -190,7 +190,7 @@ console.log(localdata.settings.access);
 					.append($('<h4>').html(data.note.subtitle))
 					.append($('<p>').html(data.note.comment));
 				note.content4tex
-					.append($('<p>').html(data.note.comment4tex));
+					.append($('<p>').html(html2tex(data.note.comment4tex)));
 
 				// (1) do we need a footnote and (2) have we done already a request for the right footnote?
 				source_id = data.note.source.id;
@@ -278,7 +278,7 @@ console.log(localdata.settings.access);
 
 				var latex, tex_ele, classNote;
 				if (data.note.biblio !== null) {
-					latex = data.note.comment4tex;
+					latex = html2tex(data.note.comment4tex);
 					tex_ele = $('<button>').addClass('btn grp_none comment').click(function() {
 						$(this).toggleClass('calendar');
 						$note.children('.text').toggle();
