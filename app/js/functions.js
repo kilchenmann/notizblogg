@@ -129,7 +129,7 @@ function getAuthors(author, sep) {
 			i += 1;
 		}
 	}
-	if(sep !== ', ') {
+	if(sep !== ', ' && sep !== ' and ') {
 		return htmlDecode(authors);
 	} else {
 		return authors;
@@ -185,7 +185,7 @@ function getLabel(label, sep) {
 }
 
 function getSource(data, list) {
-	var i, authors, locations, biblio, bibtex, footnote, source, bib, crossref, insource = {};
+	var i, authors, authors4tex, locations, biblio, bibtex, footnote, source, bib, crossref, insource = {};
 	// return source.biblio, source.bibtex;
 	source = data.source;
 	if(source.id !== 0) {
@@ -197,15 +197,16 @@ function getSource(data, list) {
 			bibtex += '<a href=\'?source=' + source.id + '\' >' + source.name + ',</a><br>';
 		}
 		biblio = '';
-		authors = getAuthors(source.author, ' and ');
 		locations = getLocations(source.location);
 
+		authors4tex = getAuthors(source.author, ' and ');
+		authors = getAuthors(source.author);
 		// authors
 		if (source.editor === '1') {
-			bibtex += 'editor = {' + html2tex(authors) + '},<br>';
+			bibtex += 'editor = {' + html2tex(authors4tex) + '},<br>';
 			biblio += authors + ' (Hg.): ';
 		} else {
-			bibtex += 'author = {' + html2tex(authors) + '},<br>';
+			bibtex += 'author = {' + html2tex(authors4tex) + '},<br>';
 			biblio += authors + ': ';
 		}
 		// title
