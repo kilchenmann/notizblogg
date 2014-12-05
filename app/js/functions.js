@@ -197,7 +197,7 @@ function getSource(data, list) {
 			bibtex += '<a href=\'?source=' + source.id + '\' >' + source.name + ',</a><br>';
 		}
 		biblio = '';
-		authors = getAuthors(source.author);
+		authors = getAuthors(source.author, ' and ');
 		locations = getLocations(source.location);
 
 		// authors
