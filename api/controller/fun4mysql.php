@@ -218,7 +218,7 @@ function insertMN($name, $rel, $data, $id) {
         $d = explode('/', $data);
         foreach($d as $n) {
             $n = trim($n);
-            $n = htmlentities($n, ENT_QUOTES, 'UTF-8');
+//            $n = htmlentities($n, ENT_QUOTES, 'UTF-8');
 //            echo 'INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');';
             $mysqli = condb('open');
 

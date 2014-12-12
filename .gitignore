@@ -1,4 +1,5 @@
 test/
 data/
+core/
 config.json
-api/controller/conf/db.php
+api/controller/.conf/db.php
