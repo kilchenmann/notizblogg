@@ -232,12 +232,12 @@ console.log(localdata.settings.access);
 						//fn = fn + ' S. ' + page;
 					}
 
-					if (page === undefined) page = '';
+					if (page === undefined) page = '[]';
 
 					note.content4tex
 						.append($('<p>')
 							.addClass('footnote bibtex')
-							.html('\\footcite[' + page + ']')
+							.html('\\cite' + page)
 							.append($('<a>')
 								.attr({
 									href: '?source=' + data.note.source.id
