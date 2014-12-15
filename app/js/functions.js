@@ -110,6 +110,8 @@ function html2tex(string){
 		string = string.replace(/€/g, '\\texteuro');
 		string = string.replace(/\r/g, '<br>');
 		string = string.replace(/\n/g, '<br>');
+		string = string.replace(/([^>\r\n]?)(\r\n|\n\r|\r‌​|\n)/g, '<br>');
+
 
 	//	.replace(/([^>\r\n]?)(\r\n|\n\r|\r‌​|\n)/g, "<br />"
 		return string;
