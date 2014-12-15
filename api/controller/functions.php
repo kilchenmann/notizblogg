@@ -118,7 +118,7 @@ function makeurl($text)
 		("!<(wiki:)([^ >\n\t]+)>!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
 		("!<(nb:)([^ >\n\t]+)>!i", "<a href='?q=\\2' title='Search here <\\2>'>\\2</a>", $text);
-	return $text;
+	return nl2br($text);
 }
 
 
