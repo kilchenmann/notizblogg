@@ -108,6 +108,10 @@ function html2tex(string){
 		string = string.replace(/}/g, '\\}');
 		string = string.replace(/~/g, '\\textasciitilde');
 		string = string.replace(/€/g, '\\texteuro');
+		string = string.replace(/\r/g, '<br>');
+		string = string.replace(/\n/g, '<br>');
+
+	//	.replace(/([^>\r\n]?)(\r\n|\n\r|\r‌​|\n)/g, "<br />"
 		return string;
 	}
 }
