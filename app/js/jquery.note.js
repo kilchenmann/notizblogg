@@ -188,7 +188,7 @@ console.log(localdata.settings.access);
 				note.content
 					.append($('<h3>').html(data.note.title))
 					.append($('<h4>').html(data.note.subtitle))
-					.append($('<p>').html(data.note.comment).replace((/(?:\r\n|\r|\n)/g, '<br>')));
+					.append($('<p>').html(data.note.comment.replace((/(?:\r\n|\r|\n)/g, '<br>'))));
 				note.content4tex
 					.append($('<p>').html(html2tex(data.note.comment4tex)));
 
