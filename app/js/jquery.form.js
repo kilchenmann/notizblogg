@@ -922,10 +922,10 @@
 											$.ajax({
 												'async': false,
 												'global': false,
-												'url': NB.api + 'get.php?recent=3',
+												'url': NB.api + '/get.php?recent=8',
 												'dataType': 'json',
 												'success': function (data) {
-													selOption(form.source.bib, 'recent=3', form.source.selected, form.note.container);
+													selOption(form.source.bib, 'recent=8', form.source.selected, form.note.container);
 												}
 											});
 											selOption(form.source.bib, 'list=source');
@@ -1043,7 +1043,7 @@
 					.attr({'value': '0'})
 				);
 				selOption(form.source.typ, 'list=bibtyp');
-				selOption(form.source.bib, 'recent=3', form.source.selected, form.note.container);
+				selOption(form.source.bib, 'recent=8', form.source.selected, form.note.container);
 				selOption(form.source.bib, 'list=source');
 
 				form.source.new.on('click', function() {
