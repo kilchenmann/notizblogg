@@ -217,11 +217,12 @@ function insertMN($name, $rel, $data, $id) {
     if($data != '') {
         $d = explode('/', $data);
         foreach($d as $n) {
+            // set the name value (n)
             $n = trim($n);
             $n = htmlentities($n, ENT_QUOTES, 'UTF-8');
 //            echo 'INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');';
             $mysqli = condb('open');
-
+            // set the query string (qs)
             $sql = $mysqli->query('SELECT ' . $tableID . ' FROM ' . $name . ' WHERE ' . $name . ' = \'' . $n . '\';');
             $num_results = mysqli_num_rows($sql);
             if($num_results == 1) {
@@ -231,8 +232,8 @@ function insertMN($name, $rel, $data, $id) {
             } else {
                 // new data
                 if($n != '') {
-                    $value = htmlentities($n, ENT_QUOTES, 'UTF-8');
-                    $newsql = $mysqli->query('INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $value . '\');');
+//                    $value = htmlentities($n, ENT_QUOTES, 'UTF-8');
+                    $newsql = $mysqli->query('INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');');
                     $relIDs[] = $mysqli->insert_id;
                 }
             }

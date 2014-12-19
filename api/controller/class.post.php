@@ -88,7 +88,7 @@ class post {
 			$sql = $mysqli->query('UPDATE note SET ' .
 									'noteTitle=\'' . html2tex(htmlentities($this->data['noteTitle'], ENT_QUOTES, 'UTF-8')) . '\', ' .
 									'noteSubtitle=\'' . html2tex(htmlentities($this->data['noteSubtitle'], ENT_QUOTES, 'UTF-8')) . '\', ' .
-									'noteComment=\'' . html2tex(htmlentities($this->data['noteComment'], ENT_QUOTES, 'UTF-8')) . '\', ' .
+									'noteComment=\'' . htmlentities($this->data['noteComment'], ENT_QUOTES, 'UTF-8') . '\', ' .
 									'noteLink=\'' . $this->data['noteLink'] . '\', ' .
 									'bibID=\'' . $this->data['bibID'] . '\', ' .
 									'pageStart=\'' . $this->data['pageStart']. '\', ' .
