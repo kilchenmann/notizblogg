@@ -119,8 +119,8 @@ class post {
 	function updateSource() {
 		if(array_key_exists('deleteNote', $this->data)) {
 			deleteMN('label', 'note', $this->data['noteLabel'], $this->data['noteID']);
-			deleteMN('label', 'bib', $this->data['noteAuthor'], $this->data['bibID']);
-			deleteMN('label', 'bib', $this->data['noteLocation'], $this->data['bibID']);
+			deleteMN('author', 'bib', $this->data['noteAuthor'], $this->data['bibID']);
+			deleteMN('location', 'bib', $this->data['noteLocation'], $this->data['bibID']);
 			$mysqli = condb('open');
 			$mysqli->query('DELETE FROM note WHERE noteID = ' . $this->data['noteID'] .';');
 			$mysqli->query('DELETE FROM bib WHERE bibID = ' . $this->data['bibID'] .';');
@@ -136,21 +136,24 @@ class post {
 
 		$this->data['pageStart'] = '0';
 		$this->data['pageEnd'] = '0';
-		$tmp_pages = explode('-', $this->data['pages']);
-		if(strpos($this->data['pages'], '-') !== false) {
-			$this->data['pageStart'] = $tmp_pages[0];
-			$this->data['pageEnd'] = $tmp_pages[1];
-			if($this->data['pageEnd'] != '') {
-				if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
+		if(isset($this->data['pages'])) {
+			$tmp_pages = explode('-', $this->data['pages']);
+			if(strpos($this->data['pages'], '-') !== false) {
+				$this->data['pageStart'] = $tmp_pages[0];
+				$this->data['pageEnd'] = $tmp_pages[1];
+				if($this->data['pageEnd'] != '') {
+					if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
+				}
+			} else {
+				$this->data['pageStart'] = $this->data['pages'];
 			}
-		} else {
-			$this->data['pageStart'] = $this->data['pages'];
 		}
+
 
 
 		if(!empty($this->data['bibName']) && !empty($this->data['bibTyp']))
 		{
-			if($this->data['noteID'] == 0) {
+			if($this->data['noteID'] == '0') {
 				//new source: insert
 				if($this->data['noteComment'] == '') $this->data['noteComment'] = $this->data['noteTitle'];
 				$mysqli = condb('open');
@@ -186,6 +189,7 @@ class post {
 			$detail = array();
 			switch($this->data['bibTypName']) {
 				case 'article';
+				case 'periodical';
 					$detail[] = 'journaltitle';
 					$detail[] = 'number';
 					$detail[] = 'year';
@@ -225,17 +229,22 @@ class post {
 
 				case 'manual';
 				case 'misc';
-				case 'periodical';
 				case 'unpublished';
 
 					break;
 			}
-
+			updateDetail($this->data['bibID']);
 			if( !empty($detail) ) {
-				updateDetail($v, $this->data[$v], $this->data['bibID']);
 				foreach($detail as $v) {
 					insertDetail($v, $this->data[$v], $this->data['bibID']);
 				}
+			}
+
+			if($this->data['detval_1'] != ''){
+				insertDetail($this->data['detail_1'], $this->data['detval_1'], $this->data['bibID']);
+			}
+			if($this->data['detval_2'] != ''){
+				insertDetail($this->data['detail_2'], $this->data['detval_2'], $this->data['bibID']);
 			}
 
 			$bibsql = $mysqli->query('UPDATE bib SET ' .

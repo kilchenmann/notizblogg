@@ -152,6 +152,9 @@ class get {
 					'user' => '',
 					'public' => '0',
 					'detail' => '',
+					'detailPlus' => array(
+
+					),
 					'notes' => array(
 						array(
 							'id' => '0',
@@ -183,6 +186,7 @@ class get {
 					$detail_sql = $mysqli->query('SELECT bibFieldID, bibDetail FROM bibDetail WHERE bibID = ' . $this->id . ';');
 					$source_sql = $mysqli->query('SELECT * FROM note WHERE noteID = ' . $row->noteID . ';');
 					$bibInfo = array();
+					$bibInfoPlus = array();
 					// 4 get the details from table bibDetail
 					$num_details = mysqli_num_rows($detail_sql);
 					if($num_details > 0) {
@@ -199,9 +203,11 @@ class get {
 									$bibDetail = json_decode($bib->getSource());
 									$bibInfo['crossref'] = $bibDetail;
 								}
-
-								$bibInfo[$field->bibField] = $bibDetail;
-								//print_r($bibInfo);
+								if($field->bibField != 'edition' && $field->bibField != 'organization' && $field->bibField != 'publisher' && $field->bibField != 'series' && $field->bibField != 'version' && $field->bibField != 'volume' && $field->bibField != 'volumes') {
+									$bibInfo[$field->bibField] = $bibDetail;
+								} else {
+									$bibInfoPlus[$field->bibField] = $bibDetail;
+								}
 							}
 						}
 					}
@@ -241,6 +247,7 @@ class get {
 								'user' => $user,
 								'public' => $note->notePublic,
 								'detail' => $bibInfo,
+								'detailPlus' => $bibInfoPlus,
 								'notes' => array(),
 								'insource' => array()
 							),
@@ -353,6 +360,14 @@ class get {
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
 							array_push($notes, $row->bibTypID. '::' . html_entity_decode($row->bibTyp));
+						}
+						break;
+
+					case 'bibfield';
+						$sql = $mysqli->query('SELECT bibFieldID, bibField FROM bibField WHERE bibField LIKE "edition" OR bibField LIKE "organization" OR bibField LIKE "publisher" OR bibField LIKE "series" OR bibField LIKE "version" OR bibField LIKE "volume%" ORDER BY bibField;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->bibFieldID. '::' . html_entity_decode($row->bibField));
 						}
 						break;
 

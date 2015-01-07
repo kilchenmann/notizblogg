@@ -296,12 +296,24 @@ function getSource(data, list) {
 					i = 0;
 					while (i < countDetail) {
 						detailKey = Object.keys(source.detail)[i];
-						if(source.detail.detailKey !== undefined){
-							bibtex += detailKey + ' = {' + html2tex(source.detail.detailKey) + '},<br>';
-							biblio += source.detail.detailKey;
+						if(source.detail[detailKey] !== undefined){
+							bibtex += detailKey + ' = {' + html2tex(source.detail[detailKey]) + '},<br>';
+							//biblio += source.detail[detailKey];
 						}
 						i += 1;
 					}
+			}
+		}
+
+		if('detailPlus' in data.source) {
+			var detailPlusKey, countDetailPlus = Object.keys(source.detailPlus).length;
+			i = 0;
+			while (i < countDetailPlus) {
+				detailPlusKey = Object.keys(source.detailPlus)[i];
+				if(source.detailPlus[detailPlusKey] !== undefined){
+					bibtex += detailPlusKey + ' = {' + html2tex(source.detailPlus[detailPlusKey]) + '},<br>';
+				}
+				i += 1;
 			}
 		}
 

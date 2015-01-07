@@ -67,6 +67,51 @@
 			}
 		});
 	};
+	var addDetail = function (ele, data) {
+		ele.empty();
+		var plus = {};
+		var sel_det_1, sel_det_2;
+		var detail_1 = Object.keys(data.detailPlus)[0];
+		var detail_2 = Object.keys(data.detailPlus)[1];
+		plus.field = $('<span>')
+		.append(sel_det_1 =
+			$('<select>')
+			.attr({'name': 'detail_1'})
+			.addClass('field_obj small select detail_1')
+		)
+		.append(
+			$('<input>')
+			.addClass('field_obj medium text detail')
+			.attr({'type': 'text', 'placeholder': 'value', 'title': 'value for detail', 'name': 'detval_1'})
+			.val(data.detailPlus[detail_1])
+		)
+		.append($('<br>'))
+		.append(sel_det_2 =
+			$('<select>')
+			.attr({'name': 'detail_2'})
+			.addClass('field_obj small select detail_2')
+		)
+		.append(
+			$('<input>')
+			.addClass('field_obj medium text detail')
+			.attr({'type': 'text', 'placeholder': 'value', 'title': 'value for detail', 'name': 'detval_2'})
+			.val(data.detailPlus[detail_2])
+		);
+		selOption(sel_det_1, 'list=bibfield');
+		selOption(sel_det_2, 'list=bibfield');
+
+		ele.append($('<td>').addClass('medium'))
+		.append($('<td>').addClass('large')
+			.append(plus.field)
+		)
+		.append($('<td>').addClass('small'));
+
+		return {
+			det_1: detail_1,
+			det_2: detail_2
+		};
+
+	};
 	var addFields = function (ele, val, data) {
 		var plus = {};
 		var detail = {};
@@ -75,6 +120,7 @@
 		ele.empty();
 		switch(val) {
 			case 'article':
+			case 'periodical':
 				detail.num = '3';
 				plus.field = $('<span>')
 					.append(
@@ -201,7 +247,6 @@
 
 			case 'manual':
 			case 'misc':
-			case 'periodical':
 			case 'unpublished':
 				plus.field = $('<span>')
 					.append(loc_ele = $('<input>')
@@ -625,6 +670,9 @@
 					.append(form.res = $('<tr>').addClass('field_plus')
 
 					)
+					.append(form.detail = $('<tr>').addClass('field_detail')
+
+					)
 					.append($('<tr>')
 						.append($('<td>').addClass('medium')
 							.append(form.upload = $('<div>')
@@ -706,20 +754,38 @@
 					var plus_ele = $('#form_' + noteID).find('tr.field_plus');
 					var plus_val = $(this).find(':selected').text();
 					addFields(plus_ele, plus_val, data.source);
-
 				});
+
+			var detail_ele = $('#form_' + noteID).find('tr.field_detail');
+			var details = {}; var i;
+			details = addDetail(detail_ele, data.source);
+
 			setTimeout(function(){
 				$('#form_' + noteID).find('select.bibTyp').val(data.source.bibTyp.id);
 				var plus_ele = $('#form_' + noteID).find('tr.field_plus');
 				var plus_val = $('#form_' + noteID).find('select.bibTyp').find(':selected').text();
 				addFields(plus_ele, plus_val, data.source);
-			}, 300);
 
+				var d1 = $('#form_' + noteID).find('select.detail_1').get(0); //.val(data.source.detailPlus[0]);
+				for (i = 0; i < d1.options.length; i++) {
+					if (d1.options[i].text === details.det_1) {
+						d1.selectedIndex = i;
+						break;
+					}
+				}
+				var d2 = $('#form_' + noteID).find('select.detail_2').get(0); //.val(data.source.detailPlus[0]);
+				for (i = 0; i < d2.options.length; i++) {
+					if (d2.options[i].text === details.det_2) {
+						d2.selectedIndex = i;
+						break;
+					}
+				}
+
+			}, 300);
 
 			completeMultipleValues('author', $('table#' + noteID).find('input.noteAuthor'));
 			completeMultipleValues('location', $('table#' + noteID).find('input.noteLocation'));
 			completeMultipleValues('label', $('table#' + noteID).find('input.noteLabel'));
-
 
 //			$('table#' + id).find('input, textarea, select').attr('readonly', true);
 //			$('table#' + id).find('input.notePublic').attr({'disabled': true});

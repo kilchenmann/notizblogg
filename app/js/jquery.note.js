@@ -335,8 +335,6 @@ console.log(localdata.settings.access);
 					});
 				}
 			}
-
-
 			//		return (media, text, latex, label, tools);
 		},
 

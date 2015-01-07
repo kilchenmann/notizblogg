@@ -25,7 +25,7 @@ function changeUmlaut4Tex($string){
   return strtr($string, $upas);
 }
 
-function html2tex($text, $cite){
+function html2tex($text, $cite = ''){
 	$text = preg_replace
 	("!&amp;lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&amp;gt;!i", "\\4", $text);
 	$text = preg_replace
@@ -59,7 +59,7 @@ function html2tex($text, $cite){
 	return (str_replace($umlaut, $replace, $string));
   }
   */
-  if($cite == false) {
+  if($cite != 'cite') {
       return $text;
   } else {
       return '``' . $text . '\'\'';
