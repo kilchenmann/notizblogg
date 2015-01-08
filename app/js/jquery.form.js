@@ -786,6 +786,7 @@
 			completeMultipleValues('author', $('table#' + noteID).find('input.noteAuthor'));
 			completeMultipleValues('location', $('table#' + noteID).find('input.noteLocation'));
 			completeMultipleValues('label', $('table#' + noteID).find('input.noteLabel'));
+			completeMultipleValues('source', $('table#' + noteID).find('input.bibName'));
 
 //			$('table#' + id).find('input, textarea, select').attr('readonly', true);
 //			$('table#' + id).find('input.notePublic').attr({'disabled': true});
