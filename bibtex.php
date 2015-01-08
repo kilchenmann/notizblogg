@@ -127,9 +127,9 @@
 <body>
 
     <header>
-        <p>
+        <p class='bibtex_header'>
             % <br>
-            % This bib-file was created by Notizblogg.ch <br>
+            % This bib-file was created by <a href='index.php'>Notizblogg.ch</a> <br>
             % <br>
         </p>
     </header>

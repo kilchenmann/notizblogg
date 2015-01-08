@@ -344,6 +344,23 @@
 				$this.append(
 					log.frame = $('<div>')
 						.addClass('float_obj medium logout_frame')
+						.append($('<h3>').text('Export').css({'text-align': 'center'}))
+						.append($('<p>')
+							.append($('<a>')
+								.attr({
+									'href': 'bibtex.php'
+								})
+								.append($('<input>')
+									.attr({
+										'type': 'submit',
+										'title': 'bibTex',
+										'value': 'bibTex'
+									}).text('bibTex')
+									.addClass('button small submit')
+								)
+							)
+						)
+						.append($('<hr>'))
 						.append(
 							log.form = $('<form>')
 							.attr({
