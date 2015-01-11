@@ -32,7 +32,7 @@ function conuser($token) {
         while ($row = mysqli_fetch_object($sql)) {
             $avatar = __MEDIA_URL__ . '/user/' . $row->userID;
             if (@fopen($avatar, "r") == false) {
-                $avatar = 'http://www.gravatar.com/avatar/' . md5($row->email);
+                $avatar = 'https://www.gravatar.com/avatar/' . md5($row->email);
                 if (@fopen($avatar, "r") == false) {
                     $avatar = __MEDIA_URL__ . '/user/' . $row->userID;
                 }
