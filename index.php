@@ -32,7 +32,20 @@
 	<script type="text/javascript" src="app/lib/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="app/js/functions.js"></script>
 
-	<?php session_start (); ?>
+	<!-- some VENDOR stuff -->
+	<script type="text/javascript" src="app/js/vendor/md5.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.masonry.min.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.vague.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.knob.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.iframe-transport.js"></script>
+	<script type="text/javascript" src="app/js/vendor/jquery.fileupload.js"></script>
+
+	<!-- notizblogg specific tools -->
+	<!-- some functional and styling stuff -->
+	<script type="text/javascript" src="app/js/jquery.center.js"></script>
+	<script type="text/javascript" src="app/js/jquery.warning.js"></script>
+	<script type="text/javascript" src="app/js/jquery.upload.js"></script>
 
 	<script type="text/javascript">
 	NB = {
@@ -65,7 +78,6 @@
 								id: usr.id,
 								name: usr.name,
 								avatar: usr.avatar,
-								token: '<?php echo $_SESSION['token']; ?>',
 								access: usr.access
 							}
 						}
@@ -75,7 +87,7 @@
 		});
 	})();
 
-	if(NB.user.token !== undefined) {
+	if(NB.user.id !== undefined && NB.user.name != 'guest') {
 		NB.access = NB.user.access;
 	}
 
@@ -100,20 +112,6 @@
 	}
 	</script>
 
-	<!-- some VENDOR stuff -->
-	<script type="text/javascript" src="app/js/vendor/md5.js"></script>
-	<script type="text/javascript" src="app/js/vendor/jquery.masonry.min.js"></script>
-	<script type="text/javascript" src="app/js/vendor/jquery.vague.js"></script>
-	<script type="text/javascript" src="app/js/vendor/jquery.knob.js"></script>
-	<script type="text/javascript" src="app/js/vendor/jquery.ui.widget.js"></script>
-	<script type="text/javascript" src="app/js/vendor/jquery.iframe-transport.js"></script>
-	<script type="text/javascript" src="app/js/vendor/jquery.fileupload.js"></script>
-
-	<!-- notizblogg specific tools -->
-	<!-- some functional and styling stuff -->
-	<script type="text/javascript" src="app/js/jquery.center.js"></script>
-	<script type="text/javascript" src="app/js/jquery.warning.js"></script>
-	<script type="text/javascript" src="app/js/jquery.upload.js"></script>
 	<!-- project, searchbar and login module for the PANEL -->
 	<script type="text/javascript" src="app/js/jquery.panel.js"></script>
 	<!-- show, add, edit and expand NOTE -->
@@ -185,7 +183,7 @@
 
 		$('header .project').panel('project', 'Notizblogg', 'notizblogg.png');
 		$('header .search').panel('search', NB.api + '/controller/search.data.php');
-		if (NB.user.token !== '' && NB.access !== '1') {
+		if (NB.user.id !== '' && NB.access !== '1') {
 			$('header .user').panel('log', NB.api + '/controller/check.out.php');
 			$('header .add').panel('add');
 		} else {
