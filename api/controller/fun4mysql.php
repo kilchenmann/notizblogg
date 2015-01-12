@@ -17,29 +17,28 @@ function condb($conart) {
 
 function conuser($token) {
     // check if the access is true and correct
-        $token = (explode('/', $token . '/'));
-        $mysqli = condb('open');
-        $sql = $mysqli->query("SELECT user, userID, email FROM user WHERE userID = " . $token[1] . " AND token = '" . $token[0] . "';");
-        condb('close');
-        $num_results = mysqli_num_rows($sql);
-        if ($num_results > 0) {
-            while ($row = mysqli_fetch_object($sql)) {
-                $avatar = __MEDIA_URL__ . '/user/' . $row->userID;
+    $token = (explode('/', $token . '/'));
+    $mysqli = condb('open');
+    $sql = $mysqli->query("SELECT user, userID, email FROM user WHERE userID = " . $token[1] . " AND token = '" . $token[0] . "';");
+    condb('close');
+    $num_results = mysqli_num_rows($sql);
+    if ($num_results > 0) {
+        while ($row = mysqli_fetch_object($sql)) {
+            $avatar = __MEDIA_URL__ . '/user/' . $row->userID;
+            if (@fopen($avatar, "r") == false) {
+                $avatar = 'https://www.gravatar.com/avatar/' . md5($row->email);
                 if (@fopen($avatar, "r") == false) {
-                    $avatar = 'http://www.gravatar.com/avatar/' . md5($row->email);
-                    if (@fopen($avatar, "r") == false) {
-                        $avatar = __MEDIA_URL__ . '/user/' . $row->userID;
-                    }
+                    $avatar = __MEDIA_URL__ . '/user/' . $row->userID;
                 }
-                $user = array(
-                    'access' => 0,
-                    'name' => $row->user,
-                    'id' => $_SESSION["token"],
-                    'avatar' => $avatar
-                );
             }
+            $user = array(
+                'access' => 0,
+                'name' => $row->user,
+                'id' => $_SESSION["token"],
+                'avatar' => $avatar
+            );
         }
-
+    }
     return ($user);
 }
 
