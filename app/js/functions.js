@@ -69,6 +69,7 @@ function tex2html(string){
 		string = string.replace(/\'\'\. /g, '". ');
 		string = string.replace(/ `/g, ' \'');
 		string = string.replace(/ -- /g, ' &mdash; ');
+		string = string.replace(/ß/g, 'ss');
 		string = string.replace(/\_/g, '_');
 		string = string.replace(/\§/g, '§');
 		string = string.replace(/\%/g, '%');
@@ -97,6 +98,7 @@ function html2tex(string){
 		string = string.replace(/ — /g, ' -- ');
 		string = string.replace(/ &ndash; /g, ' -- ');
 		string = string.replace(/ &mdash; /g, ' -- ');
+		string = string.replace(/ß/g, 'ss');
 		string = string.replace(/_/g, '\\_');
 		string = string.replace(/§/g, '\\§');
 		string = string.replace(/%/g, '\\%');
@@ -117,10 +119,24 @@ function getAuthors(author, sep) {
 	// authors
 	var i = 0, authors;
 	if(sep === undefined) sep = ', ';
+
+	while (i < author.length) {
+//		alert(author[i].name);
+//		if(author[i].name.charAt(0) === '{') author[i].name = '{' + author[i].name.substring(1, author[i].name.length) + '}';
+		if (authors === undefined) {
+			authors = '<a href=\'' + NB.url + '?author=' + author[i].id + '\'>' + author[i].name + '</a>';
+		} else {
+			authors += sep + '<a href=\'' + NB.url + '?author=' + author[i].id + '\'>' + author[i].name + '</a>';
+		}
+		i += 1;
+	}
+
+/*
 	if (author.length > 4) {
 		authors = '<a href=\'?author=' + author[i].id + '\'>' + author[i].name + '</a> et al.';
 	} else {
 		while (i < author.length) {
+
 			if (authors === undefined) {
 				authors = '<a href=\'' + NB.url + '?author=' + author[i].id + '\'>' + author[i].name + '</a>';
 			} else {
@@ -129,6 +145,7 @@ function getAuthors(author, sep) {
 			i += 1;
 		}
 	}
+	*/
 	if(sep !== ', ' && sep !== ' and ') {
 		return htmlDecode(authors);
 	} else {
@@ -203,10 +220,10 @@ function getSource(data, list) {
 		authors = getAuthors(source.author);
 		// authors
 		if (source.editor === '1') {
-			bibtex += 'editor = {' + html2tex(authors4tex) + '},<br>';
+			bibtex += 'editor = {' + authors4tex + '},<br>';
 			biblio += authors + ' (Hg.): ';
 		} else {
-			bibtex += 'author = {' + html2tex(authors4tex) + '},<br>';
+			bibtex += 'author = {' + authors4tex + '},<br>';
 			biblio += authors + ': ';
 		}
 		// title
@@ -236,7 +253,8 @@ function getSource(data, list) {
 				case 'online':
 					bibtex += 'url = {<a target=\'_blank\' href=\'' + source.detail.url + '\' >' + html2tex(source.detail.url) + '</a>},<br>';
 					bibtex += 'urldate = {' + source.detail.urldate + '},<br>';
-					biblio += ', URL: <a target=\'_blank\' href=\'' + source.detail.url + '\'>' + source.detail.url + '</a> (Stand: ' + source.detail.urldate + ')';
+					biblio += 'URL: <a target=\'_blank\' href=\'' + source.detail.url + '\'>' + source.detail.url + '</a> (Stand: ' + source.detail.urldate + ').';
+//					bibtex += 'year = {' + source.date.year + '},<br>';
 					break;
 
 				case 'proceedings':
@@ -318,7 +336,7 @@ function getSource(data, list) {
 		}
 
 		if (insource.source && insource.pages) biblio += insource.source + insource.pages;
-		if (crossref === undefined) {
+		if (crossref === undefined && source.bibTyp.name !== 'online') {
 			if (locations !== '') {
 				bibtex += 'location = {' + html2tex(locations) + '},<br>';
 				biblio += locations + ', ';

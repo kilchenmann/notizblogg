@@ -189,7 +189,7 @@
 		} else {
 			$('header .user').panel('login', NB.api + '/controller/check.in.php');
 		}
-		$('footer').panel('foot');
+		$('footer').panel('foot', 'v15.01');
 
 		/* show some content */
 		$('.viewer').note(NB);

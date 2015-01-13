@@ -461,7 +461,7 @@
 				});
 			},
 
-		foot:function () {
+		foot:function (version) {
 			return this.each(function () {
 				var $this = $(this);
 				var localdata = $this.data('localdata');
@@ -477,7 +477,7 @@
 							})
 							.html('Notizblogg')
 						)
-						.append(' (v14.11)')
+						.append(' (' + version + ')')
 					)
 					.append(
 						$('<span>').addClass('definition').html(' | ')

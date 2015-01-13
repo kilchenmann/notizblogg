@@ -258,7 +258,7 @@ class post {
 									'noteTitle=\'' . html2tex(htmlentities($this->data['noteTitle'], ENT_QUOTES, 'UTF-8')) . '\', ' .
 									'noteSubtitle=\'' . html2tex(htmlentities($this->data['noteSubtitle'], ENT_QUOTES, 'UTF-8')) . '\', ' .
 									'noteComment="' . html2tex(htmlentities($this->data['noteComment'], ENT_QUOTES, 'UTF-8')) . '", ' .
-									'noteLink=\'' . html2tex($this->data['noteLink']) . '\', ' .
+//									'noteLink=\'' . html2tex($this->data['noteLink']) . '\', ' .
 									'pageStart=\'' . $this->data['pageStart']. '\', ' .
 									'pageEnd=\'' . $this->data['pageEnd']. '\', ' .
 									'noteMedia=\'' . $this->data['noteMedia'] . '\', ' .
@@ -274,7 +274,7 @@ echo 'UPDATE note SET ' .
 'noteTitle=\'' . $this->data['noteTitle'] . '\', ' .
 'noteSubtitle=\'' . $this->data['noteSubtitle'] . '\', ' .
 'noteComment=\'' . $this->data['noteComment'] . '\', ' .
-'noteLink=\'' . $this->data['noteLink'] . '\', ' .
+//'noteLink=\'' . $this->data['noteLink'] . '\', ' .
 'bibID=\'' . $this->data['bibID'] . '\', ' .
 'pageStart=\'' . $this->data['pageStart']. '\', ' .
 'pageEnd=\'' . $this->data['pageEnd']. '\', ' .

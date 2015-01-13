@@ -35,7 +35,7 @@ if((!empty($_POST) || !empty($_FILES)) && $user['access'] == 0) {
 
 	$note = NEW post();
 	$note->access = $user['access'];
-	$note->user = $user['id'];
+	$note->user = explode('/', $user['id'])[1];
 
 	foreach ($_GET as $key => $value) {
 

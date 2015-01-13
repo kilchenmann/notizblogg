@@ -484,6 +484,10 @@ console.log(localdata.settings.access);
 							);
 						url = NB.api + '/get.php?source=' + localdata.settings.query[localdata.settings.query[i]];
 						$.getJSON(url, function(data) {
+							var name = htmlDecode(decodeURI(data.source.name));
+							$('input.search_field').attr({
+								value: name
+							}).html(name);
 							localdata.view.left.append(
 								localdata.view.source = $('<div>').addClass('note')
 							);
@@ -527,6 +531,10 @@ console.log(localdata.settings.access);
 							);
 						url = NB.api + '/get.php?source=' + localdata.settings.query[localdata.settings.query[i]];
 						$.getJSON(url, function(data) {
+							var name = htmlDecode(decodeURI(data.source.name));
+							$('input.search_field').attr({
+								value: name
+							}).html(name);
 							localdata.view.left.append(
 								localdata.view.collection = $('<div>').addClass('note')
 							);
@@ -657,11 +665,9 @@ console.log(localdata.settings.access);
 								.append((showBib(data).bibtex))
 							);
 					});
-
 				} else {
 
 				}
-
 			}); // end "return this.each"
 		}, // end "init"
 
