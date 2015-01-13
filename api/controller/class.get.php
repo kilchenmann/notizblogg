@@ -194,7 +194,7 @@ class get {
 							// get the bibField value
 							$bibfield_sql = $mysqli->query('SELECT bibField FROM bibField WHERE bibFieldID = ' . $detail->bibFieldID . ';');
 							while ($field = mysqli_fetch_object($bibfield_sql)) {
-								$bibDetail = $detail->bibDetail;
+								$bibDetail = html2tex(html_entity_decode($detail->bibDetail));
 								if($field->bibField == 'crossref') {
 									$bib = NEW get();
 									$bib->id = $detail->bibDetail;
