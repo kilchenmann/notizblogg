@@ -486,7 +486,8 @@ class get {
 
 	function searchData()
 	{
-		$q = htmlentities($this->query, ENT_QUOTES, 'UTF-8');
+		//$q = htmlentities($this->query, ENT_QUOTES, 'UTF-8');
+		$q = $this->query;
 		$f = $this->part;		// filter
 
 		$qs = array();
@@ -499,7 +500,7 @@ class get {
 
 		$typeName = 'note';
 		$results = array();
-
+//echo 'SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteSubtitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);';
 		$mysqli = condb('open');
 		switch($f){
 			case 'note';
