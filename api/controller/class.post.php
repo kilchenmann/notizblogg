@@ -54,7 +54,12 @@ class post {
 				if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
 			}
 		} else {
-			$this->data['pageStart'] = $this->data['notePages'];
+			if($this->data['pageStart'] != '') {
+				$this->data['pageStart'] = '0';
+			} else {
+				$this->data['pageStart'] = $this->data['notePages'];
+			}
+
 		}
 
 		if(!empty($this->data['noteComment']) && !empty($this->data['bibID']))
@@ -68,7 +73,7 @@ class post {
 									'(\'' . $this->data['noteTitle'] .
 									'\', \'' . $this->user .
 									'\', \'' . $this->data['checkID'] .
-									'\', \'' . html2tex($this->data['noteComment']) . '\');');
+									'\', \'' . $this->data['noteComment']) . '\');';		//
 				$this->data['noteID'] = $mysqli->insert_id;
 				$mysqli = condb('close');
 			}

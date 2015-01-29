@@ -68,7 +68,7 @@ function tex2html(string){
 		string = string.replace(/\'\'\, /g, '", ');
 		string = string.replace(/\'\'\. /g, '". ');
 		string = string.replace(/ `/g, ' \'');
-		string = string.replace(/ -- /g, ' &mdash; ');
+		string = string.replace(/ -- /g, ' — ');
 		string = string.replace(/ß/g, 'ss');
 		string = string.replace(/\_/g, '_');
 		string = string.replace(/\§/g, '§');
