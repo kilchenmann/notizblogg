@@ -7,6 +7,8 @@ function condb($conart) {
     if ($mysqli->connect_errno) {
         die('Connect Error: ' . $mysqli->connect_errno);
     }
+    $mysqli->query("SET NAMES 'utf8'");
+    $mysqli->set_charset("utf8");
 //    mysqli_set_charset($mysqli->connect,'utf8');
     if($conart == 'close') {
         mysqli_close($mysqli);
