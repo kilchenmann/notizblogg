@@ -126,7 +126,9 @@ if (NB.uri === NB.url + '?access=denied') {
     <header>
         <p class='bibtex_header'>
             % <br>
-            % This bib-file was created by <a href='index.php'>Notizblogg.ch</a> <br>
+            % This bib-file was created with <a href='index.php'>Notizblogg</a> (notizblogg.ch): <br>
+            % the digital Zettelkasten (filing cabinet system) <br>
+            % by <a href='http://milchkannen.ch' target='_blank'>André Kilchenmann</a><br>
             % <br>
         </p>
     </header>
