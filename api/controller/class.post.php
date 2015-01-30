@@ -66,14 +66,17 @@ class post {
 		{
 			if($this->data['noteID'] == 0) {
 				//new source: insert
+				$createDate = date_format(date_create(), 'Y-m-d H:i:s');
 				$mysqli = condb('open');
-				$notesql = $mysqli->query('INSERT INTO note ' .
-									'(`noteTitle`, `userID`, `checkID`, `noteComment`) ' .
-									'VALUES' .
-									'(\'' . $this->data['noteTitle'] .
-									'\', \'' . $this->user .
-									'\', \'' . $this->data['checkID'] .
-									'\', \'' . $this->data['noteComment']) . '\');';		//
+				$notesql = $mysqli->query('INSERT INTO note' .
+									' (`noteTitle`, `userID`, `checkID`, `dateCreated`, `noteComment`) ' .
+									' VALUES (' .
+										'\'' . $this->data['noteTitle'] . '\',' .
+										'\'' . $this->user . '\',' .
+										'\'' . $this->data['checkID'] . '\',' .
+										'\'' . $createDate . '\',' .
+										'\'' . $this->data['noteComment'] . '\'' .
+									');' );
 				$this->data['noteID'] = $mysqli->insert_id;
 				$mysqli = condb('close');
 			}
@@ -160,15 +163,18 @@ class post {
 		{
 			if($this->data['noteID'] == '0') {
 				//new source: insert
+				$createDate = date_format(date_create(), 'Y-m-d H:i:s');
 				if($this->data['noteComment'] == '') $this->data['noteComment'] = $this->data['noteTitle'];
 				$mysqli = condb('open');
-				$notesql = $mysqli->query('INSERT INTO note ' .
-										'(`noteTitle`, `userID`, `checkID`, `noteComment`) ' .
-										'VALUES' .
-										'(\'' . $this->data['noteTitle'] .
-										 '\', \'' . $this->user .
-										 '\', \'' . $this->data['checkID'] .
-										 '\', "' . html2tex($this->data['noteComment']) . '");');
+				$notesql = $mysqli->query('INSERT INTO note' .
+									' (`noteTitle`, `userID`, `checkID`, `dateCreated`, `noteComment`) ' .
+									' VALUES (' .
+										'\'' . $this->data['noteTitle'] . '\',' .
+										'\'' . $this->user . '\',' .
+										'\'' . $this->data['checkID'] . '\',' .
+										'\'' . $createDate . '\',' .
+										'\'' . $this->data['noteComment'] . '\'' .
+									');' );
 				$this->data['noteID'] = $mysqli->insert_id;
 				$sql = $mysqli->query('INSERT INTO bib ' .
 										'(`bib`, `bibEditor`, `bibTyp`, `noteID`) ' .
