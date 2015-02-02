@@ -1,5 +1,5 @@
 <?php
-error_reporting(-1);
+
 /* **************************************************************
  * Change umlauts like ä to ae: It's important for the author-links & latex
  * **************************************************************
@@ -25,7 +25,7 @@ function changeUmlaut4Tex($string){
   return strtr($string, $upas);
 }
 
-function html2tex($text, $cite){
+function html2tex($text, $cite = ''){
 	$text = preg_replace
 	("!&amp;lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&amp;gt;!i", "\\4", $text);
 	$text = preg_replace
@@ -54,21 +54,21 @@ function html2tex($text, $cite){
 	("!<(nb:)([^ >\n\t]+)>!i", "\\2", $text);
 
 
-	$upas = array(" &quot;"=>" ``", "&quot; "=>"'' ", "&quot;, "=>"'', ", "&quot;. "=>"''. ", " &#039;"=>" `", "&#039; "=>"' ", "&#039;, "=>"', ", "&#039;. "=>"'. ", " - "=>" -- ", " — "=>" -- ", "_"=>"\_", "§"=>"\§", "$"=>"\$", "& "=>"\& ", "#"=>"\#", "{"=>"\{", "}"=>"\}", "%"=>"\%", "~"=>"\textasciitilde", "€"=>"\texteuro");
+	//$upas = array(' &quot;'=>' ``', '&quot; '=>'\'\' ', '&quot;, '=>'\'\', ', '&quot;. '=>'\'\'. ', ' &#039;'=>' `', '&#039; '=>'\' ', '&#039;, '=>'\', ', '&#039;. '=>'\'. ', ' - '=>' -- ', ' — '=>' -- ', ' &ndash; '=>' -- ', ' &mdash; '=>' -- ', '_'=>'\\_', '§'=>'\\§', '$'=>'\\$', '& '=>'\\& ', ' #'=>' \\#', '{'=>'\\{', '}'=>'\\}', '%'=>'\\%', '~'=>'\\textasciitilde', '€'=>'\\texteuro');
   /*foreach($upas as $umlaut=>$replace){
 	return (str_replace($umlaut, $replace, $string));
   }
   */
-  if($cite == false) {
-      return strtr($text, $upas);
+  if($cite != 'cite') {
+      return $text;
   } else {
-      return '``' . strtr($text, $upas) . '\'\'';
+      return '``' . $text . '\'\'';
   }
 }
 
 function getLastChar($string){
 	$lastChar = substr($string, -1);
-	if(($lastChar != '?') && ($lastChar != '!')) {
+	if(($lastChar != '?') && ($lastChar != '!') && ($lastChar != ':')) {
 		$string .=  '.';
 	}
 	return $string;
@@ -99,7 +99,7 @@ function makeurl($text)
 	$text = preg_replace
 		("!&amp;lt;(wiki:)([^ >\n\t]+)&amp;gt;!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
-		("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "<a href='".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2' title='Search here <\\2>'>\\2</a>", $text);
+		("!&amp;lt;(nb:)([^ >\n\t]+)&amp;gt;!i", "<a href='?q=\\2' title='Search here <\\2>'>\\2</a>", $text);
 
 	$text = preg_replace
 		("!&lt;(link:)([^ >\n\t]+)(:)([^ >\n\t]+)&gt;!i", "<a href='http://\\2' target='_blank'>\\4</a>", $text);
@@ -108,7 +108,7 @@ function makeurl($text)
 	$text = preg_replace
 		("!&lt;(wiki:)([^ >\n\t]+)&gt;!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
-		("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "<a href='".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2' title='Search here <\\2>'>\\2</a>", $text);
+		("!&lt;(nb:)([^ >\n\t]+)&gt;!i", "<a href='?q=\\2' title='Search here <\\2>'>\\2</a>", $text);
 
 	$text = preg_replace
 		("!<(link:)([^ >\n\t]+)(:)([^ >\n\t]+)>!i", "<a href='http://\\2' target='_blank'>\\4</a>", $text);
@@ -117,10 +117,9 @@ function makeurl($text)
 	$text = preg_replace
 		("!<(wiki:)([^ >\n\t]+)>!i", "<a href='http://de.wikipedia.org/wiki/\\2' target='_blank' title='Look for <\\2> in wikipedia'>\\2</a>", $text);
 	$text = preg_replace
-		("!<(nb:)([^ >\n\t]+)>!i", "<a href='".__MAIN_FILE__."?type=note&amp;part=search&amp;id=\\2' title='Search here <\\2>'>\\2</a>", $text);
+		("!<(nb:)([^ >\n\t]+)>!i", "<a href='?q=\\2' title='Search here <\\2>'>\\2</a>", $text);
 	return $text;
 }
-
 
 
 function getNoteID($id) {
@@ -153,79 +152,6 @@ function insertMN_old($table,$relTable,$data,$linkID,$linkTable){
 
 
 
-
-
-
-
-
-/*
-			$media_path = __MEDIA_URL__ . '/' . $media;
-			if (@fopen($media_path,'r')==true){
-//				exec('convert '.__MEDIA_PATH__.'/documents/'.$media.' -colorspace RGB -geometry 200 '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg');
-				if(!file_exists(__MEDIA_PATH__ . $name.'-0.jpg')) {
-//					$imagick = new Imagick();
-//					$imagick->readImage($media);
-//					$imagick->writeImages('converted.jpg', false);
-//					//echo '/usr/local/bin/convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'.jpg;';
-//					shell_exec ('/usr/local/bin/convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'.jpg');
-				}
-
-
-				//echo 'mkdir ' . __MEDIA_PATH__ . '/documents/'.$name.'; chmod -R u+w ' . __MEDIA_PATH__ . '/documents/'.$name.'; /usr/local/bin/convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg;';
-//				$media_tag = 'exec(convert '.__MEDIA_PATH__.'/documents/'.$media.' '.__MEDIA_PATH__.'/documents/'.$name.'/%d.jpg);';
-
-				//echo 'convert "'.__MEDIA_PATH__.'/documents/'.$media.'[0]" -colorspace RGB -geometry 200 "'.__MEDIA_PATH__.'/documents/'.$name.'.png"';
-				// (".$size."kb)
-				$media_tag = "<a href='".$media_path."' title='Download ".$media."' ><img class='staticMedia' src='".__MEDIA_URL__."/documents/".$name."' title='".$media."' alt='".$media."'/></a>";
-			}
-*/
-
-
-
-
-
-
-
-/*
-
-	die();
-
-
-
-//	$arrayMN = array();
-
-	$mnSql = mysql_query("SELECT " . $partVal . " FROM " . $part . ", " . $relTable . " WHERE " . $part . "." . $partID . " = " . $relTable . "." . $partID . " AND " . $relTable . "." . $type . "ID = '" . $id . "' ORDER BY " . $partVal);
-	//echo ("mnSql (" . $type . " " . $part . "): SELECT " . $partVal . " FROM " . $part . ", " . $relTable . " WHERE " . $part . "." . $partID . " = " . $relTable . "." . $partID . " AND " . $relTable . "." . $type . "ID = '" . $id . "' ORDER BY " . $partVal . "<br>");
-
-	$countMN = mysql_num_rows($mnSql);
-	if ($countMN > 0) {
-		while ($row = mysql_fetch_object($mnSql)) {
-			$relIDs[] = $row[$partVal];
-		}
-		asort($relIDs);
-		$relData = "";
-		foreach ($relIDs as $relName) {
-			$getRelID = mysql_query("SELECT " . $partID . " FROM " . $part . " WHERE " . $partVal . " = '" . $relName . "'");
-			while ($row = mysql_fetch_object($getRelID)) {
-				$relID = $row->$partID;
-				$countSql = mysql_query("SELECT " . $type . "." . $type . "ID FROM " . $type . ", " . $relTable . " WHERE " . $part . "ID = " . $relID . " AND " . $relTable . "." . $type . "ID = " . $type . "." . $type . "ID");
-
-				//echo "countSql (" . $type . " " . $part . "): SELECT " . $type . "." . $type . "ID FROM " . $type . ", " . $relTable . " WHERE " . $part . "ID = " . $relID . " AND " . $relTable . "." . $type . "ID = " . $type . "." . $type . "ID ORDER BY " . $type . ".dateCreated DESC<br>";
-
-				$countResult = mysql_num_rows($countSql);
-
-				array_push($arrayMN, array('id' => $relID, 'name' => $relName, 'number' => $countResult));
-			}
-
-
-		}
-	}
-	return $arrayMN;
-
-};
-
-*/
-
 function linkIndex($type, $part, $id) {
 	return $type . ' + ' . $part . ' + ' . $id;
 //	return "<a href='?type=".$type."&amp;part=".$part."&amp;id=".$id."' title='".$part."'>".$row->$tableName."</a>";
@@ -246,70 +172,6 @@ function linkIndex($type, $part, $id) {
 }
 
 
-
-		/*
-						if(empty ($arrayMN)) {
-							$arrayMN = array(
-								0 => array(
-									'id' => $relID,
-									'name' => $relName
-								)
-							);
-						} else {
-
-						}
-
-		*/
-				/*
-				$i = 0;
-
-				while($i < $countResult){
-
-					$arrayMN = array(
-						$i => array(
-							'id' => $relID,
-							'name' => $relName
-						)
-					);
-//					$arrayMN[$i]['id'] = $relID;
-//					$arrayMN[$i]['name'] = $relName;
-//					$arrayMN = array("id" => $relID, "name" => $relName);
-					$i++;
-				}
-
-				/*
-				for($i = 0; $countResult > $i; i++) {
-
-					$arrayMN[$i] = $relID;
-					$arrayMN[$i] = $relName;
-				}
-				*/
-
-
-
-//				array_push($arrayMN, $relID, $relName);
-/*
-
-				if($link == 'link'){
-					if($relData == ""){
-						$relData="<a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
-					} else {
-						$relData.= $delimiter . " <a href='".__MAIN_FILE__."?".$part."=".$relID."' title='#".$type."s: ".$countResult."'>".$relName."</a>";
-					}
-
-				} else {
-					if($relData == ""){
-						$relData= $relName;
-					} else {
-						$relData.= $delimiter . "" . $relName . "</a>";
-					}
-
-				}
-				*/
-//			}
-//	}
-//print_r($arrayMN);
-//}
 
 function oldgetIndexMN($type, $part, $id){
 	$relTable = "rel_".$type."_".$part;

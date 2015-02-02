@@ -10,21 +10,24 @@ $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERV
 require 'controller/settings.php';
 require 'controller/class.get.php';
 
-$user = array(
-	'access' => 1,
-	'name' => 'guest',
-	'id' => '',
-	'avatar' => ''
-);
-
+/*
 if (isset($_GET['token']) && ($_GET['token'] == $_SESSION['token'])) {
 	// with the token in the url compared with the session, we don't have to check the user connection
 	$user = array(
 		'access' => 0
 	);
-} else if (isset($_SESSION["token"])) {
+} else
+*/
+if (isset($_SESSION["token"])) {
 	// without the token, check the user with the session parameters
 	$user = conuser($_SESSION['token']);
+} else {
+	$user = array(
+		'access' => 1,
+		'name' => 'guest',
+		'id' => '',
+		'avatar' => ''
+	);
 }
 
 $note = NEW get();
@@ -131,6 +134,10 @@ foreach ($_GET as $key => $value){
 			} else {
 				echo $note->getNote();
 			}
+			break;
+
+		case 'user';
+			echo json_encode($user);
 			break;
 
 		default;

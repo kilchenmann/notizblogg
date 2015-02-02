@@ -54,21 +54,24 @@ class post {
 				if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
 			}
 		} else {
-			$page_start = $this->data['notePages'];
+			$this->data['pageStart'] = $this->data['notePages'];
 		}
 
 		if(!empty($this->data['noteComment']) && !empty($this->data['bibID']))
 		{
 			if($this->data['noteID'] == 0) {
 				//new source: insert
+				$createDate = date_format(date_create(), 'Y-m-d H:i:s');
 				$mysqli = condb('open');
-				$notesql = $mysqli->query('INSERT INTO note ' .
-									'(`noteTitle`, `userID`, `checkID`, `noteComment`) ' .
-									'VALUES' .
-									'(\'' . $this->data['noteTitle'] .
-									'\', \'' . $this->user .
-									'\', \'' . $this->data['checkID'] .
-									'\', \'' . html2tex($this->data['noteComment']) . '\');');
+				$notesql = $mysqli->query('INSERT INTO note' .
+									' (`noteTitle`, `userID`, `checkID`, `dateCreated`, `noteComment`) ' .
+									' VALUES (' .
+										'\'' . $this->data['noteTitle'] . '\',' .
+										'\'' . $this->user . '\',' .
+										'\'' . $this->data['checkID'] . '\',' .
+										'\'' . $createDate . '\',' .
+										'\'' . $this->data['noteComment'] . '\'' .
+									');' );
 				$this->data['noteID'] = $mysqli->insert_id;
 				$mysqli = condb('close');
 			}
@@ -86,8 +89,8 @@ class post {
 
 			// update the data
 			$sql = $mysqli->query('UPDATE note SET ' .
-									'noteTitle=\'' . $this->data['noteTitle'] . '\', ' .
-									'noteSubtitle=\'' . $this->data['noteSubtitle'] . '\', ' .
+									'noteTitle=\'' . html2tex($this->data['noteTitle']) . '\', ' .
+									'noteSubtitle=\'' . html2tex($this->data['noteSubtitle']) . '\', ' .
 									'noteComment=\'' . $this->data['noteComment'] . '\', ' .
 									'noteLink=\'' . $this->data['noteLink'] . '\', ' .
 									'bibID=\'' . $this->data['bibID'] . '\', ' .
@@ -119,8 +122,8 @@ class post {
 	function updateSource() {
 		if(array_key_exists('deleteNote', $this->data)) {
 			deleteMN('label', 'note', $this->data['noteLabel'], $this->data['noteID']);
-			deleteMN('label', 'bib', $this->data['noteAuthor'], $this->data['bibID']);
-			deleteMN('label', 'bib', $this->data['noteLocation'], $this->data['bibID']);
+			deleteMN('author', 'bib', $this->data['noteAuthor'], $this->data['bibID']);
+			deleteMN('location', 'bib', $this->data['noteLocation'], $this->data['bibID']);
 			$mysqli = condb('open');
 			$mysqli->query('DELETE FROM note WHERE noteID = ' . $this->data['noteID'] .';');
 			$mysqli->query('DELETE FROM bib WHERE bibID = ' . $this->data['bibID'] .';');
@@ -136,31 +139,37 @@ class post {
 
 		$this->data['pageStart'] = '0';
 		$this->data['pageEnd'] = '0';
-		$tmp_pages = explode('-', $this->data['pages']);
-		if(strpos($this->data['pages'], '-') !== false) {
-			$this->data['pageStart'] = $tmp_pages[0];
-			$this->data['pageEnd'] = $tmp_pages[1];
-			if($this->data['pageEnd'] != '') {
-				if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
+		if(isset($this->data['pages'])) {
+			$tmp_pages = explode('-', $this->data['pages']);
+			if(strpos($this->data['pages'], '-') !== false) {
+				$this->data['pageStart'] = $tmp_pages[0];
+				$this->data['pageEnd'] = $tmp_pages[1];
+				if($this->data['pageEnd'] != '') {
+					if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
+				}
+			} else {
+				$this->data['pageStart'] = $this->data['pages'];
 			}
-		} else {
-			$page_start = $this->data['pages'];
 		}
+
 
 
 		if(!empty($this->data['bibName']) && !empty($this->data['bibTyp']))
 		{
-			if($this->data['noteID'] == 0) {
+			if($this->data['noteID'] == '0') {
 				//new source: insert
+				$createDate = date_format(date_create(), 'Y-m-d H:i:s');
 				if($this->data['noteComment'] == '') $this->data['noteComment'] = $this->data['noteTitle'];
 				$mysqli = condb('open');
-				$notesql = $mysqli->query('INSERT INTO note ' .
-										'(`noteTitle`, `userID`, `checkID`, `noteComment`) ' .
-										'VALUES' .
-										'(\'' . $this->data['noteTitle'] .
-										 '\', \'' . $this->user .
-										 '\', \'' . $this->data['checkID'] .
-										 '\', \'' . html2tex($this->data['noteComment']) . '\');');
+				$notesql = $mysqli->query('INSERT INTO note' .
+									' (`noteTitle`, `userID`, `checkID`, `dateCreated`, `noteComment`) ' .
+									' VALUES (' .
+										'\'' . $this->data['noteTitle'] . '\',' .
+										'\'' . $this->user . '\',' .
+										'\'' . $this->data['checkID'] . '\',' .
+										'\'' . $createDate . '\',' .
+										'\'' . $this->data['noteComment'] . '\'' .
+									');' );
 				$this->data['noteID'] = $mysqli->insert_id;
 				$sql = $mysqli->query('INSERT INTO bib ' .
 										'(`bib`, `bibEditor`, `bibTyp`, `noteID`) ' .
@@ -186,6 +195,7 @@ class post {
 			$detail = array();
 			switch($this->data['bibTypName']) {
 				case 'article';
+				case 'periodical';
 					$detail[] = 'journaltitle';
 					$detail[] = 'number';
 					$detail[] = 'year';
@@ -225,17 +235,22 @@ class post {
 
 				case 'manual';
 				case 'misc';
-				case 'periodical';
 				case 'unpublished';
 
 					break;
 			}
-
+			updateDetail($this->data['bibID']);
 			if( !empty($detail) ) {
-				updateDetail($v, $this->data[$v], $this->data['bibID']);
 				foreach($detail as $v) {
 					insertDetail($v, $this->data[$v], $this->data['bibID']);
 				}
+			}
+
+			if($this->data['detval_1'] != ''){
+				insertDetail($this->data['detail_1'], $this->data['detval_1'], $this->data['bibID']);
+			}
+			if($this->data['detval_2'] != ''){
+				insertDetail($this->data['detail_2'], $this->data['detval_2'], $this->data['bibID']);
 			}
 
 			$bibsql = $mysqli->query('UPDATE bib SET ' .
@@ -244,11 +259,12 @@ class post {
 									'bibTyp=\'' . $this->data['bibTyp'] . '\' ' .
 									'WHERE bibID = ' . $this->data['bibID'] . ';');
 			// update the data
+			// htmlentities($this->data['noteComment'], ENT_QUOTES, 'UTF-8')
 			$sql = $mysqli->query('UPDATE note SET ' .
-									'noteTitle=\'' . html2tex($this->data['noteTitle']) . '\', ' .
-									'noteSubtitle=\'' . html2tex($this->data['noteSubtitle']) . '\', ' .
-									'noteComment=\'' . html2tex($this->data['noteComment']) . '\', ' .
-									'noteLink=\'' . html2tex($this->data['noteLink']) . '\', ' .
+									'noteTitle=\'' . html2tex($this->data['noteTitle'], ENT_QUOTES, 'UTF-8') . '\', ' .
+									'noteSubtitle=\'' . html2tex($this->data['noteSubtitle'], ENT_QUOTES, 'UTF-8') . '\', ' .
+									'noteComment="' . html2tex($this->data['noteComment'], ENT_QUOTES, 'UTF-8') . '", ' .
+//									'noteLink=\'' . html2tex($this->data['noteLink']) . '\', ' .
 									'pageStart=\'' . $this->data['pageStart']. '\', ' .
 									'pageEnd=\'' . $this->data['pageEnd']. '\', ' .
 									'noteMedia=\'' . $this->data['noteMedia'] . '\', ' .
@@ -264,7 +280,7 @@ echo 'UPDATE note SET ' .
 'noteTitle=\'' . $this->data['noteTitle'] . '\', ' .
 'noteSubtitle=\'' . $this->data['noteSubtitle'] . '\', ' .
 'noteComment=\'' . $this->data['noteComment'] . '\', ' .
-'noteLink=\'' . $this->data['noteLink'] . '\', ' .
+//'noteLink=\'' . $this->data['noteLink'] . '\', ' .
 'bibID=\'' . $this->data['bibID'] . '\', ' .
 'pageStart=\'' . $this->data['pageStart']. '\', ' .
 'pageEnd=\'' . $this->data['pageEnd']. '\', ' .

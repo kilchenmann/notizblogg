@@ -1,0 +1,11 @@
+{
+    "url": {
+        "main": "http://notizblogg.ch",
+        "api": "http://notizblogg.ch/api",
+        "media": "http://data.notizblogg.ch"
+    },
+    "path": {
+        "media": "/var/www/html/notizblogg/data"
+    }
+
+}

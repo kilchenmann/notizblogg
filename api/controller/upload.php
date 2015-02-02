@@ -1,6 +1,6 @@
 <?php
 
-require_once('settings.php');
+//require_once('settings.php');
 // A list of permitted file extensions
 $allowed = array('png', 'jpg', 'gif', 'zip', 'pdf');
 

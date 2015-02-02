@@ -14,10 +14,9 @@ if (mysqli_num_rows($sql) > 0)
 	$data = mysqli_fetch_array($sql);
 	session_start ();
 	// ...and register the session
-	$_SESSION["token"] = $data["token"] . '-' . $data["userID"];
+	$_SESSION["token"] = $data["token"] . '/' . $data["userID"];
 	$_SESSION["user"] = $data["user"];
 //  $pathLogin = $_POST['path'];
-
 }
 else
 {
@@ -25,4 +24,3 @@ else
 	$_SESSION["user"] = '';
 	header ('Location: ' . __SITE_URL__ . '/?access=denied');
 }
-

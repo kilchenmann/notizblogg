@@ -38,6 +38,7 @@ class get {
 					'subtitle' => '',
 					'comment' => '',
 					'comment4tex' => '',
+					'comment2edit' => '',
 					'label' => '',
 					'media' => '',
 					'source' => array(
@@ -86,10 +87,11 @@ class get {
 						$this->type => array(
 							'id' => $row->noteID,
 							'checkID' => $row->checkID,
-							'title' => $row->noteTitle,
+							'title' => html_entity_decode($row->noteTitle),
 							'subtitle' => $row->noteSubtitle,
-							'comment' => makeurl($row->noteComment),
-							'comment4tex' => html2tex($row->noteComment, 'cite'),
+							'comment' => makeurl(html_entity_decode($row->noteComment)),
+							'comment4tex' => html2tex(html_entity_decode($row->noteComment), 'cite'),
+							'comment2edit' => html_entity_decode($row->noteComment),
 							'label' => $label,
 							'media' => $media,
 							'source' => $source,
@@ -137,6 +139,7 @@ class get {
 					'author' => '',
 					'location' => '',
 					'comment' => '',
+					'comment2edit' => '',
 					'href' => '',
 					'label' => '',
 					'media' => '',
@@ -152,6 +155,9 @@ class get {
 					'user' => '',
 					'public' => '0',
 					'detail' => '',
+					'detailPlus' => array(
+
+					),
 					'notes' => array(
 						array(
 							'id' => '0',
@@ -183,6 +189,7 @@ class get {
 					$detail_sql = $mysqli->query('SELECT bibFieldID, bibDetail FROM bibDetail WHERE bibID = ' . $this->id . ';');
 					$source_sql = $mysqli->query('SELECT * FROM note WHERE noteID = ' . $row->noteID . ';');
 					$bibInfo = array();
+					$bibInfoPlus = array();
 					// 4 get the details from table bibDetail
 					$num_details = mysqli_num_rows($detail_sql);
 					if($num_details > 0) {
@@ -190,7 +197,7 @@ class get {
 							// get the bibField value
 							$bibfield_sql = $mysqli->query('SELECT bibField FROM bibField WHERE bibFieldID = ' . $detail->bibFieldID . ';');
 							while ($field = mysqli_fetch_object($bibfield_sql)) {
-								$bibDetail = $detail->bibDetail;
+								$bibDetail = html2tex(html_entity_decode($detail->bibDetail));
 								if($field->bibField == 'crossref') {
 									$bib = NEW get();
 									$bib->id = $detail->bibDetail;
@@ -199,9 +206,11 @@ class get {
 									$bibDetail = json_decode($bib->getSource());
 									$bibInfo['crossref'] = $bibDetail;
 								}
-
-								$bibInfo[$field->bibField] = $bibDetail;
-								//print_r($bibInfo);
+								if($field->bibField != 'edition' && $field->bibField != 'organization' && $field->bibField != 'publisher' && $field->bibField != 'series' && $field->bibField != 'version' && $field->bibField != 'volume' && $field->bibField != 'volumes') {
+									$bibInfo[$field->bibField] = $bibDetail;
+								} else {
+									$bibInfoPlus[$field->bibField] = $bibDetail;
+								}
 							}
 						}
 					}
@@ -220,12 +229,13 @@ class get {
 								'noteID' => $row->noteID,
 								'bibTyp' => $bibTyp,
 								'name' => $bibName['name'],
-								'title' => $note->noteTitle,
-								'subtitle' => $note->noteSubtitle,
+								'title' => html2tex(html_entity_decode($note->noteTitle)),
+								'subtitle' => html2tex(html_entity_decode($note->noteSubtitle)),
 								'editor' => $row->bibEditor,
 								'author' => $author,
 								'location' => $location,
-								'comment' => makeurl($note->noteComment),
+								'comment' => html2tex($note->noteComment),
+								'comment2edit' => html_entity_decode($note->noteComment),
 								'href' => $note->noteLink,
 								'label' => $label,
 								'media' => $media,
@@ -241,6 +251,7 @@ class get {
 								'user' => $user,
 								'public' => $note->notePublic,
 								'detail' => $bibInfo,
+								'detailPlus' => $bibInfoPlus,
 								'notes' => array(),
 								'insource' => array()
 							),
@@ -283,7 +294,7 @@ class get {
 	}
 
 	function getData() {
-		// one time, we can merge the getSource and the getNote function into this one here getData
+		// one day, we can merge the getSource and the getNote function into this one here getData
 	}
 
 	function listData() {
@@ -307,13 +318,13 @@ class get {
 				break;
 			case 'new';
 				if($this->access > 0) {		// = public access: show sources only, if they are public!
-					$sql = $mysqli->query('SELECT note.noteID, note.bibID FROM note, bib WHERE note.noteID = bib.noteID AND note.notePublic >= '.$this->access.' ORDER BY note.dateCreated DESC  LIMIT 0, ' . $this->id . ';');
+					$sql = $mysqli->query('SELECT note.noteID, note.bibID FROM note, bib WHERE note.noteID = bib.noteID AND note.notePublic >= '.$this->access.' ORDER BY note.dateModified DESC  LIMIT 0, ' . $this->id . ';');
 				} else {
-					$sql = $mysqli->query('SELECT noteID FROM note ORDER BY dateCreated DESC LIMIT 0, ' . $this->id . ';');
+					$sql = $mysqli->query('SELECT noteID FROM note ORDER BY dateModified DESC LIMIT 0, ' . $this->id . ';');
 				}
 
 				$notes = array();
-				$typeName = 'created';
+				$typeName = 'modified';
 				while($row = mysqli_fetch_object($sql)) {
 					array_push($notes, $row->noteID);
 				}
@@ -323,7 +334,7 @@ class get {
 				$notes = array();
 				$typeName = 'modified';
 				while($row = mysqli_fetch_object($sql)) {
-					array_push($notes, $row->bibID. '::' . $row->bib);
+					array_push($notes, $row->bibID. '::' . html_entity_decode($row->bib));
 				}
 				break;
 
@@ -331,44 +342,94 @@ class get {
 			$notes = array();
 				switch ($this->id) {
 					case 'note';
-
-					break;
+						$sql = $mysqli->query('SELECT noteID, noteTitle, noteSubtitle, noteComment FROM note ORDER BY noteTitle, noteSubtitle;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteTitle));
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteSubtitle));
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteComment));
+						}
+						break;
 
 					case 'source';
 						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->bibID. '::' . $row->bib);
+							array_push($notes, $row->bibID. '::' . html_entity_decode($row->bib));
 						}
-					break;
+						break;
 
 					case 'bibtyp';
 						$sql = $mysqli->query('SELECT bibTypID, bibTyp FROM bibTyp ORDER BY bibTyp;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->bibTypID. '::' . $row->bibTyp);
+							array_push($notes, $row->bibTypID. '::' . html_entity_decode($row->bibTyp));
 						}
-					break;
+						break;
 
+					case 'bibfield';
+						$sql = $mysqli->query('SELECT bibFieldID, bibField FROM bibField WHERE bibField LIKE "edition" OR bibField LIKE "organization" OR bibField LIKE "publisher" OR bibField LIKE "series" OR bibField LIKE "version" OR bibField LIKE "volume%" ORDER BY bibField;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->bibFieldID. '::' . html_entity_decode($row->bibField));
+						}
+						break;
+
+					case 'biblatex';
+						for($i = 15; $i > 0; $i--){
+							$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib WHERE bibTyp = ' . $i . ' ORDER BY bib;');
+							while($row = mysqli_fetch_object($sql)) {
+								array_push($notes, $row->bibID);
+							}
+						}
+//						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
+						$typeName = 'all';
+
+
+						break;
 					case 'label';
 						$sql = $mysqli->query('SELECT labelID, label FROM label ORDER BY label;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->labelID. '::' . $row->label);
+							array_push($notes, $row->labelID. '::' . html_entity_decode($row->label));
 						}
 						break;
 					case 'author';
 						$sql = $mysqli->query('SELECT authorID, author FROM author ORDER BY author;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->authorID. '::' . $row->author);
+							array_push($notes, $row->authorID. '::' . html_entity_decode($row->author));
 						}
 						break;
 					case 'location';
 						$sql = $mysqli->query('SELECT locationID, location FROM location ORDER BY location;');
 						$typeName = 'all';
 						while($row = mysqli_fetch_object($sql)) {
-							array_push($notes, $row->locationID. '::' . $row->location);
+							array_push($notes, $row->locationID. '::' . html_entity_decode($row->location));
+						}
+						break;
+					case 'all';
+						$sql = $mysqli->query('SELECT labelID, label FROM label ORDER BY label;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->labelID. '::' . html_entity_decode($row->label));
+						}
+						$sql = $mysqli->query('SELECT authorID, author FROM author ORDER BY author;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->authorID. '::' . html_entity_decode($row->author));
+						}
+						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->bibID. '::' . html_entity_decode($row->bib));
+						}
+						$sql = $mysqli->query('SELECT noteID, noteTitle, noteSubtitle, noteComment FROM note ORDER BY noteTitle, noteSubtitle;');
+						$typeName = 'all';
+						while($row = mysqli_fetch_object($sql)) {
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteTitle));
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteSubtitle));
+							array_push($notes, $row->noteID. '::' . html_entity_decode($row->noteComment));
 						}
 						break;
 
@@ -429,6 +490,7 @@ class get {
 
 	function searchData()
 	{
+		//$q = htmlentities($this->query, ENT_QUOTES, 'UTF-8');
 		$q = $this->query;
 		$f = $this->part;		// filter
 
@@ -442,8 +504,7 @@ class get {
 
 		$typeName = 'note';
 		$results = array();
-
-
+//echo 'SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteSubtitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);';
 		$mysqli = condb('open');
 		switch($f){
 			case 'note';
@@ -454,7 +515,7 @@ class get {
 				break;
 
 			case 'source';
-				$sql = $mysqli->query('SELECT * FROM note, bib WHERE notePublic >= ' . $this->access . ' AND note.noteID = bib.noteID AND MATCH(noteTitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
+				$sql = $mysqli->query('SELECT * FROM note, bib WHERE notePublic >= ' . $this->access . ' AND note.noteID = bib.noteID AND MATCH(noteTitle, noteSubtitle, noteComment, bib) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
 				while($row = mysqli_fetch_object($sql)) {
 					$results[] = $row->noteID;
 				}
@@ -483,7 +544,7 @@ class get {
 				break;
 
 			default;		// search everywhere
-				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteSubtitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');
+				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteSubtitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
 				while($row = mysqli_fetch_object($sql)) {
 					$results[] = $row->noteID;
 				}
@@ -493,6 +554,7 @@ class get {
 			'type' => $f,
 			//'id' => $this->id,
 			'query' => $q,
+			'filter' => $this->part,
 			'notes' => $results
 		);
 		//print_r($list);

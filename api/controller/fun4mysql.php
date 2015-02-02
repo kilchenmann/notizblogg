@@ -1,14 +1,14 @@
 <?php
-error_reporting(-1);
 //
 // some connection stuff
 //
 function condb($conart) {
     $mysqli = new mysqli($GLOBALS['nb']['host'], $GLOBALS['nb']['user'], $GLOBALS['nb']['pass'], $GLOBALS['nb']['db']);
-
     if ($mysqli->connect_errno) {
         die('Connect Error: ' . $mysqli->connect_errno);
     }
+    $mysqli->query("SET NAMES 'utf8'");
+    $mysqli->set_charset("utf8");
 //    mysqli_set_charset($mysqli->connect,'utf8');
     if($conart == 'close') {
         mysqli_close($mysqli);
@@ -18,23 +18,17 @@ function condb($conart) {
 }
 
 function conuser($token) {
-    $user = array(
-        'access' => 1,
-        'name' => 'guest',
-        'id' => '',
-        'avatar' => ''
-    );
     // check if the access is true and correct
-    $token = (explode('-', $token . '-'));
+    $token = (explode('/', $token . '/'));
     $mysqli = condb('open');
     $sql = $mysqli->query("SELECT user, userID, email FROM user WHERE userID = " . $token[1] . " AND token = '" . $token[0] . "';");
     condb('close');
     $num_results = mysqli_num_rows($sql);
     if ($num_results > 0) {
         while ($row = mysqli_fetch_object($sql)) {
-            $avatar = __SITE_URL__ . '/data/user/' . $row->userID;
+            $avatar = __MEDIA_URL__ . '/user/' . $row->userID;
             if (@fopen($avatar, "r") == false) {
-                $avatar = 'http://www.gravatar.com/avatar/' . md5($row->email);
+                $avatar = 'https://www.gravatar.com/avatar/' . md5($row->email);
                 if (@fopen($avatar, "r") == false) {
                     $avatar = __MEDIA_URL__ . '/user/' . $row->userID;
                 }
@@ -42,7 +36,7 @@ function conuser($token) {
             $user = array(
                 'access' => 0,
                 'name' => $row->user,
-                'id' => $row->userID,
+                'id' => $_SESSION["token"],
                 'avatar' => $avatar
             );
         }
@@ -85,8 +79,11 @@ function getIndexMN($type, $part, $id)
     $relTable = "rel_" . $type . "_" . $part;
     $partID = $part . "ID";
     $mysqli = condb('open');
-    $sql = $mysqli->query('SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $part);
-    //echo '<br>getIndexMN: SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $part . '<br>';
+    if($part == 'label') {
+        $sql = $mysqli->query('SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $part . '.' . $part);
+    } else {
+        $sql = $mysqli->query('SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $relTable . '.pos, ' . $part . '.' . $part);
+    }
 
     $num_labels = mysqli_num_rows($sql);
     if ($num_labels > 0) {
@@ -218,11 +215,17 @@ function insertMN($name, $rel, $data, $id) {
     $relID = $rel . 'ID';
     if($data != '') {
         $d = explode('/', $data);
+
+        count($d);
+        $i = 0;
+
         foreach($d as $n) {
+            // set the name value (n)
             $n = trim($n);
+            $n = htmlentities($n, ENT_QUOTES, 'UTF-8');
 //            echo 'INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');';
             $mysqli = condb('open');
-
+            // set the query string (qs)
             $sql = $mysqli->query('SELECT ' . $tableID . ' FROM ' . $name . ' WHERE ' . $name . ' = \'' . $n . '\';');
             $num_results = mysqli_num_rows($sql);
             if($num_results == 1) {
@@ -232,13 +235,20 @@ function insertMN($name, $rel, $data, $id) {
             } else {
                 // new data
                 if($n != '') {
+//                    $value = htmlentities($n, ENT_QUOTES, 'UTF-8');
                     $newsql = $mysqli->query('INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');');
                     $relIDs[] = $mysqli->insert_id;
                 }
             }
             foreach($relIDs as $rid) {
-                $mysqli->query('INSERT INTO ' . $rel_table . ' (' . $tableID . ', ' . $relID . ') VALUES (\'' . $rid . '\', \'' . $id . '\');');
+                if($name == 'label') {
+                    $mysqli->query('INSERT INTO ' . $rel_table . ' (' . $tableID . ', ' . $relID . ') VALUES (\'' . $rid . '\', \'' . $id . '\' );');
+
+                } else {
+                    $mysqli->query('INSERT INTO ' . $rel_table . ' (' . $tableID . ', ' . $relID . ', pos) VALUES (\'' . $rid . '\', \'' . $id . '\', ' . $i . ');');
+                }
             }
+            $i++;
             $mysqli = condb('close');
         }
     }
@@ -281,15 +291,21 @@ function deleteMN($name, $rel, $data, $id) {
 
 function insertDetail($prop, $val, $id) {
     $mysqli = condb('open');
-    $sql = $mysqli->query('SELECT bibFieldID FROM bibField WHERE bibField = \'' . $prop . '\';');
-    while($row = mysqli_fetch_object($sql)) {
-        $bibFieldID = $row->bibFieldID;
+    if(is_numeric($prop)) {
+        $bibFieldID = $prop;
+    } else {
+        $sql = $mysqli->query('SELECT bibFieldID FROM bibField WHERE bibField = \'' . $prop . '\';');
+        while($row = mysqli_fetch_object($sql)) {
+            $bibFieldID = $row->bibFieldID;
+        }
     }
-    $newsql = $mysqli->query('INSERT INTO bibDetail ( bibID, bibFieldID, bibDetail ) VALUES (\'' . $id . '\', \'' . $bibFieldID . '\', \'' . html2tex($val) . '\');');
+    $val = trim($val);
+    $val = htmlentities($val, ENT_QUOTES, 'UTF-8');
+    $newsql = $mysqli->query('INSERT INTO bibDetail ( bibID, bibFieldID, bibDetail ) VALUES (\'' . $id . '\', \'' . $bibFieldID . '\', \'' . $val . '\');');
     $mysqli = condb('close');
 }
 
-function updateDetail($prop, $val, $id) {
+function updateDetail($id) {
     $mysqli = condb('open');
     $mysqli->query('DELETE FROM bibDetail WHERE bibID = ' . $id . ';');
     $mysqli = condb('close');

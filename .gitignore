@@ -1,2 +1,5 @@
+test/
 data/
-core/bin/php/.conf/db.php
+core/
+config.json
+api/controller/.conf/db.php

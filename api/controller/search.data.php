@@ -6,14 +6,16 @@
  * Time: 01:28
  */
 
+
 require_once 'settings.php';
+$query = '';
 if(isset($_GET['q']) && $_GET['q'] !== ''){
-
-	header ('Location: ' . __SITE_URL__ . '/?q='.$_GET['q']);
-} else {
-	header ('Location: ' . __SITE_URL__ . '/');
+	$query = 'q=' . $_GET['q'];
+	if(isset($_GET['filter']) && $_GET['filter'] !== '') {
+		$query = $query . '&filter=' . $_GET['filter'];
+	}
 }
-
+header ('Location: ' . __SITE_URL__ . '/?' . $query);
 
 
 //$query=$_POST('swq');
