@@ -1,5 +1,5 @@
 # Notizblogg
-"Zitate | Gedanken | Ideen miteinander verknüpfen", das ist die Idee des <a href="notizblogg.ch">Notizbloggs</a>. Dieser ist nichts anderes als die digitale Verwirklichung eines Zettelkastens, wie er beispielsweise von Niklas Luhmann genutzt wurde.
+"Zitate | Gedanken | Ideen miteinander verknüpfen", das ist die Idee des <a href="https://notizblogg.ch">Notizbloggs</a>. Dieser ist nichts anderes als die digitale Verwirklichung eines Zettelkastens, wie er beispielsweise von Niklas Luhmann genutzt wurde.
 
 Die Hauptaufgabe des Notizbloggs ist daher die Sammlung von Notizen und Zitaten bearbeiteter Literatur. Dabei werden die Zitate mit der entsprechenden Quelle verknüpft und für die Weiterarbeit mit LaTeX vorbereitet.
 
