@@ -54,9 +54,8 @@ class post {
 				if($this->data['pageEnd'] <= $this->data['pageStart']) $this->data['pageEnd'] = '0';
 			}
 		} else {
-			$this->data['pageStart'] = $this->data['notePages'];
+			if($this->data['notePages'] != '') $this->data['pageStart'] = $this->data['notePages'];
 		}
-
 		if(!empty($this->data['noteComment']) && !empty($this->data['bibID']))
 		{
 			if($this->data['noteID'] == 0) {
@@ -66,18 +65,15 @@ class post {
 				$notesql = $mysqli->query('INSERT INTO note' .
 									' (`noteTitle`, `userID`, `checkID`, `dateCreated`, `noteComment`) ' .
 									' VALUES (' .
-										'\'' . $this->data['noteTitle'] . '\',' .
+										'\'' . write2db($this->data['noteTitle']) . '\',' .
 										'\'' . $this->user . '\',' .
 										'\'' . $this->data['checkID'] . '\',' .
 										'\'' . $createDate . '\',' .
-										'\'' . $this->data['noteComment'] . '\'' .
+										'\'' . write2db($this->data['noteComment']) . '\'' .
 									');' );
 				$this->data['noteID'] = $mysqli->insert_id;
 				$mysqli = condb('close');
 			}
-
-
-
 
 			// some checks and request first
 			$mysqli = condb('open');
@@ -89,9 +85,9 @@ class post {
 
 			// update the data
 			$sql = $mysqli->query('UPDATE note SET ' .
-									'noteTitle=\'' . html2tex($this->data['noteTitle']) . '\', ' .
-									'noteSubtitle=\'' . html2tex($this->data['noteSubtitle']) . '\', ' .
-									'noteComment=\'' . $this->data['noteComment'] . '\', ' .
+									'noteTitle=\'' . write2db($this->data['noteTitle']) . '\', ' .
+									'noteSubtitle=\'' . write2db($this->data['noteSubtitle']) . '\', ' .
+									'noteComment=\'' . write2db($this->data['noteComment']) . '\', ' .
 									'noteLink=\'' . $this->data['noteLink'] . '\', ' .
 									'bibID=\'' . $this->data['bibID'] . '\', ' .
 									'pageStart=\'' . $this->data['pageStart']. '\', ' .
@@ -101,7 +97,6 @@ class post {
 									'userID=\'' . $this->user. '\', ' .
 									'checkID=\'' . $this->data['checkID'] . '\' ' .
 									'WHERE noteID = ' . $this->data['noteID'] . ';');
-
 			condb('close');
 
 			return json_encode(array(
@@ -164,11 +159,11 @@ class post {
 				$notesql = $mysqli->query('INSERT INTO note' .
 									' (`noteTitle`, `userID`, `checkID`, `dateCreated`, `noteComment`) ' .
 									' VALUES (' .
-										'\'' . $this->data['noteTitle'] . '\',' .
+										'\'' . write2db($this->data['noteTitle']) . '\',' .
 										'\'' . $this->user . '\',' .
 										'\'' . $this->data['checkID'] . '\',' .
 										'\'' . $createDate . '\',' .
-										'\'' . $this->data['noteComment'] . '\'' .
+										'\'' . write2db($this->data['noteComment']) . '\'' .
 									');' );
 				$this->data['noteID'] = $mysqli->insert_id;
 				$sql = $mysqli->query('INSERT INTO bib ' .
@@ -191,7 +186,7 @@ class post {
 			}
 
 			updateMN('label', 'note', $this->data['noteLabel'], $this->data['noteID']);
-			updateMN('author', 'bib', $this->data['noteAuthor'], $this->data['bibID']);
+			updateMN('author', 'bib', write2db($this->data['noteAuthor']), $this->data['bibID']);
 			$detail = array();
 			switch($this->data['bibTypName']) {
 				case 'article';
@@ -261,9 +256,9 @@ class post {
 			// update the data
 			// htmlentities($this->data['noteComment'], ENT_QUOTES, 'UTF-8')
 			$sql = $mysqli->query('UPDATE note SET ' .
-									'noteTitle=\'' . html2tex($this->data['noteTitle'], ENT_QUOTES, 'UTF-8') . '\', ' .
-									'noteSubtitle=\'' . html2tex($this->data['noteSubtitle'], ENT_QUOTES, 'UTF-8') . '\', ' .
-									'noteComment="' . html2tex($this->data['noteComment'], ENT_QUOTES, 'UTF-8') . '", ' .
+									'noteTitle=\'' . write2db($this->data['noteTitle']) . '\', ' .
+									'noteSubtitle=\'' . write2db($this->data['noteSubtitle']) . '\', ' .
+									'noteComment="' . write2db($this->data['noteComment']) . '", ' .
 //									'noteLink=\'' . html2tex($this->data['noteLink']) . '\', ' .
 									'pageStart=\'' . $this->data['pageStart']. '\', ' .
 									'pageEnd=\'' . $this->data['pageEnd']. '\', ' .
