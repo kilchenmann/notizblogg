@@ -47,7 +47,6 @@ function conuser($token) {
 //
 // some get functions
 //
-
 function getIndex($part, $id)
 {
     $array = array(
@@ -84,7 +83,6 @@ function getIndexMN($type, $part, $id)
     } else {
         $sql = $mysqli->query('SELECT ' . $part . '.' . $partID . ', ' . $part . ' FROM ' . $part . ', ' . $relTable . ' WHERE ' . $part . '.' . $partID . ' = ' . $relTable . '.' . $partID . ' AND ' . $relTable . '.' . $type . 'ID = \'' . $id . '\' ORDER BY ' . $relTable . '.pos, ' . $part . '.' . $part);
     }
-
     $num_labels = mysqli_num_rows($sql);
     if ($num_labels > 0) {
         while ($row = mysqli_fetch_object($sql)) {
@@ -106,9 +104,6 @@ function getNote2Author($id) {
     $notes = array();
     if($num_results > 0) {
         $i=0;
-
-
-
         while($row = mysqli_fetch_object($sql)) {
 //			$mysqli = condb('open');
 //			$sql = $mysqli->query('SELECT noteID FROM bib WHERE bibID = ' . $brow->bibID . ';');
@@ -124,7 +119,6 @@ function getNote2Author($id) {
     }
     return $notes;
 }
-
 
 function getNote2Label($id) {
     $mysqli = condb('open');
@@ -142,7 +136,6 @@ function getNote2Label($id) {
     }
     return $notes;
 }
-
 
 function getMedia($media) {
     $tmp_media = explode('/', $media . '/');
@@ -311,7 +304,14 @@ function updateDetail($id) {
     $mysqli = condb('close');
 }
 
-
+// correct inserts
+function write2db($string) {
+    $quot = array("'"=>"\'");
+    foreach($quot as $a=>$b){
+        return (str_replace($a, $b, $string));
+    }
+    return strtr($string, $quot);
+}
 
 //
 // delete functions
