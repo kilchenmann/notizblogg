@@ -164,7 +164,7 @@ function getMedia($media) {
                 $media_tag = '<img class=\'staticMedia\' src=\'' . $mediaURL . '\' alt=\'' . $mediaFile . '\' title=\'' . $mediaType . ': ' .$mediaFile . '\'>';
                 break;
             case 'document';
-        //		$media_tag = '<a href=\'' . $mediaURL . '\' title=\'Download ' . $media . '\'><img class=\'staticMedia\' src=\'' . __MEDIA_URL__ . "/documents/".$name."' title='".$media."' alt='".$media."'/></a>";
+                $media_tag = '<a href=\'' . $mediaURL . '\' title=\'Download ' . $media . '\'><img class=\'staticMedia\' src=\'' . __SITE_URL__ . "/app/style/img/icons/pdf.png' title='Download/Open ".$media."' alt='".$media."'/></a>";
                 break;
             case 'movie';
                 $media_tag = '<video class=\'motionPicture\'>Motion Picture is not yet supported in Notizblogg</video>';
