@@ -235,7 +235,7 @@ console.log(localdata.settings.access);
 					if (page === undefined) page = '[]';
 
 					note.content4tex
-						.append($('<p>')
+						.append($('<span>')
 							.addClass('footnote bibtex')
 							.html('\\cite' + page)
 							.append($('<a>')
