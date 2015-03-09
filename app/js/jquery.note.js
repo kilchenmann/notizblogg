@@ -190,7 +190,7 @@ console.log(localdata.settings.access);
 					.append($('<h4>').html(data.note.subtitle))
 					.append($('<p>').html(data.note.comment.replace(/\r\n/g, '<br>')));
 				note.content4tex
-					.append($('<p>').html(html2tex(data.note.comment4tex)));
+					.append(note.p4tex = $('<p>').html(html2tex(data.note.comment4tex)));
 
 				// (1) do we need a footnote and (2) have we done already a request for the right footnote?
 				source_id = data.note.source.id;
@@ -234,7 +234,7 @@ console.log(localdata.settings.access);
 
 					if (page === undefined) page = '[]';
 
-					note.content4tex
+					note.p4tex
 						.append($('<span>')
 							.addClass('footnote bibtex')
 							.html('\\cite' + page)
