@@ -215,7 +215,7 @@ function insertMN($name, $rel, $data, $id) {
         foreach($d as $n) {
             // set the name value (n)
             $n = trim($n);
-            $n = htmlentities($n, ENT_QUOTES, 'UTF-8');
+//            $n = htmlentities($n, ENT_QUOTES, 'UTF-8');
 //            echo 'INSERT INTO ' . $name . ' (' . $name . ') VALUES (\'' . $n . '\');';
             $mysqli = condb('open');
             // set the query string (qs)
@@ -293,7 +293,7 @@ function insertDetail($prop, $val, $id) {
         }
     }
     $val = trim($val);
-    $val = htmlentities($val, ENT_QUOTES, 'UTF-8');
+//    $val = htmlentities($val, ENT_QUOTES, 'UTF-8');
     $newsql = $mysqli->query('INSERT INTO bibDetail ( bibID, bibFieldID, bibDetail ) VALUES (\'' . $id . '\', \'' . $bibFieldID . '\', \'' . $val . '\');');
     $mysqli = condb('close');
 }

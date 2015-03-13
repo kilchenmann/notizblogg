@@ -3,3 +3,4 @@ data/
 core/
 config.json
 api/controller/.conf/db.php
+media/
