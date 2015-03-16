@@ -508,7 +508,7 @@ class get {
 		$mysqli = condb('open');
 		switch($f){
 			case 'note';
-				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteSubtitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
+				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(note.noteTitle, note.noteSubtitle, note.noteComment, note.noteMedia) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
 				while($row = mysqli_fetch_object($sql)) {
 					$results[] = $row->noteID;
 				}
@@ -544,9 +544,25 @@ class get {
 				break;
 
 			default;		// search everywhere
-				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteSubtitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
+				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(note.noteTitle, note.noteSubtitle, note.noteComment, note.noteMedia) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
 				while($row = mysqli_fetch_object($sql)) {
 					$results[] = $row->noteID;
+				}
+				// label
+				$lasql = $mysqli->query('SELECT label.labelID, rel_note_label.noteID FROM label, rel_note_label WHERE label.label LIKE \'%'.$q.'%\' AND label.labelID = rel_note_label.labelID');
+				while($arow = mysqli_fetch_object($lasql)) {
+					$sql = $mysqli->query('SELECT note.noteID FROM note WHERE note.noteID = ' . $arow->noteID . ' AND note.notePublic >= ' . $this->access . ';');
+					while($row = mysqli_fetch_object($sql)) {
+						$results[] = $row->noteID;
+					}
+				}
+				// author
+				$asql = $mysqli->query('SELECT author.authorID, rel_bib_author.bibID FROM author, rel_bib_author WHERE author.author LIKE \'%'.$q.'%\' AND author.authorID = rel_bib_author.authorID');
+				while($arow = mysqli_fetch_object($asql)) {
+					$sql = $mysqli->query('SELECT note.noteID FROM bib, note WHERE bib.bibID = ' . $arow->bibID . ' AND bib.noteID = note.noteID AND note.notePublic >= ' . $this->access . ';' );
+					while($row = mysqli_fetch_object($sql)) {
+						$results[] = $row->noteID;
+					}
 				}
 				$f = 'note';
 		}
