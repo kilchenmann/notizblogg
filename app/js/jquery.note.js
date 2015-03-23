@@ -198,6 +198,8 @@ console.log(localdata.settings.access);
 					var pageHere, page, fc, fn, url;
 					fc = data.note.source.name; // footcite in latex
 					fn = fc;
+
+
 					/*
 					url = NB.api + '/get.php?source=' + source_id;
 
@@ -240,7 +242,8 @@ console.log(localdata.settings.access);
 							.html('\\cite' + page)
 							.append($('<a>')
 								.attr({
-									href: '?source=' + data.note.source.id
+									href: '?source=' + data.note.source.id,
+									title: data.note.source.value
 								})
 								.html('{' + fc + '}')
 							)
@@ -252,7 +255,8 @@ console.log(localdata.settings.access);
 							.addClass('footnote biblio')
 							.append($('<a>')
 								.attr({
-									href: '?source=' + data.note.source.id
+									href: '?source=' + data.note.source.id,
+									title: data.note.source.value
 								})
 								.html(fn + ' ' + page)
 							)

@@ -95,6 +95,24 @@ function getIndexMN($type, $part, $id)
     return $array;
 };
 
+function getComment($id)
+{
+    $value = '';
+    if ($id > 0) {
+        $mysqli = condb('open');
+        $bibsql = $mysqli->query('SELECT noteID FROM bib WHERE bibID = ' . $id . ';');
+        if (mysqli_num_rows($bibsql) > 0) {
+            while ($row = mysqli_fetch_object($bibsql)) {
+                $sql = $mysqli->query('SELECT noteComment FROM note WHERE noteID = ' . $row->noteID . ';');
+                while ($val = mysqli_fetch_object($sql)) {
+                    $value = $val->noteComment;
+                }
+            }
+        }
+        condb('close');
+    }
+    return $value;
+};
 
 function getNote2Author($id) {
     $mysqli = condb('open');
