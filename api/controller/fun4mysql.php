@@ -103,9 +103,12 @@ function getComment($id)
         $bibsql = $mysqli->query('SELECT noteID FROM bib WHERE bibID = ' . $id . ';');
         if (mysqli_num_rows($bibsql) > 0) {
             while ($row = mysqli_fetch_object($bibsql)) {
-                $sql = $mysqli->query('SELECT noteComment FROM note WHERE noteID = ' . $row->noteID . ';');
+                $sql = $mysqli->query('SELECT noteTitle, noteSubtitle FROM note WHERE noteID = ' . $row->noteID . ';');
                 while ($val = mysqli_fetch_object($sql)) {
-                    $value = $val->noteComment;
+                    $value = getLastChar($val->noteTitle);
+                    if ($val->noteSubtitle != '') {
+                        $value .=  ' ' . getLastChar($val->noteSubtitle);
+                    }
                 }
             }
         }

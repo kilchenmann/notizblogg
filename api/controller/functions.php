@@ -68,7 +68,7 @@ function html2tex($text, $cite = ''){
 
 function getLastChar($string){
 	$lastChar = substr($string, -1);
-	if(($lastChar != '?') && ($lastChar != '!') && ($lastChar != ':')) {
+	if(($lastChar != '?') && ($lastChar != '!') && ($lastChar != ':') && ($lastChar != '.')) {
 		$string .=  '.';
 	}
 	return $string;
