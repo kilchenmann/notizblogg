@@ -74,7 +74,7 @@ function getLastChar($string){
 	return $string;
 }
 function writeTex($string) {
-	$upas = array(' "'=>' ``', '" '=>'\'\' ', ' \''=>' `', ' - '=>' -- ', ' — '=>' -- ', '$'=>'\$' );
+	$upas = array(' "'=>' ``', '" '=>'\'\' ', ' \''=>' `', ' - '=>' -- ', ' — '=>' -- ', ' —, '=>' --, ', '$'=>'\$' );
 	foreach($upas as $umlaut=>$replace){
 		return (str_replace($umlaut, $replace, $string));
 	}
