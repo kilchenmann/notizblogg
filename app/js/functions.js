@@ -254,7 +254,7 @@ function getSource(data, list) {
 					break;
 
 				case 'online':
-					bibtex += 'url = {<a target=\'_blank\' href=\'' + source.detail.url + '\' >' + html2tex(source.detail.url) + '</a>},<br>';
+					bibtex += 'url = {<a target=\'_blank\' href=\'' + source.detail.url + '\' >' + source.detail.url + '</a>},<br>';
 					bibtex += 'urldate = {' + source.detail.urldate + '},<br>';
 					biblio += 'URL: <a target=\'_blank\' href=\'' + source.detail.url + '\'>' + source.detail.url + '</a> (Stand: ' + source.detail.urldate + ').';
 //					bibtex += 'year = {' + source.date.year + '},<br>';
