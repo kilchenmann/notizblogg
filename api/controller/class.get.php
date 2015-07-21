@@ -235,7 +235,7 @@ class get {
 								'name' => $bibName['name'],
 								'title' => html2tex(html_entity_decode($note->noteTitle)),
 								'subtitle' => html2tex(html_entity_decode($note->noteSubtitle)),
-								'editor' => $row->bibEditor,
+								'editor' => $row->bibEditor,		// true or false
 								'author' => $author,
 								'location' => $location,
 								'comment' => html2tex($note->noteComment),
