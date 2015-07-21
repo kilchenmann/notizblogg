@@ -111,7 +111,7 @@ function html2tex(string, author){
 		string = string.replace(/ #/g, ' \\#');
 		string = string.replace(/~/g, '\\textasciitilde');
 		string = string.replace(/€/g, '\\texteuro');
-		if(author !== undefined) {
+		if(author !== 'author') {
 			string = string.replace(/{/g, '\\{');
 			string = string.replace(/}/g, '\\}');
 		}
