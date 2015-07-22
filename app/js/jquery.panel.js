@@ -196,25 +196,6 @@
 							'accept-charset': 'utf-8'
 						})
 						.addClass('input grp_middle search_field')
-						.focus(function () {
-							search.field
-								.attr({
-									'placeholder': ''
-								})
-								.css({
-									'background-color': '#ffffe0'
-								});
-								$(this).select();
-						})
-						.focusout(function () {
-							search.field
-								.attr({
-									'placeholder': 'search'
-								})
-								.css({
-									'background-color': '#ffffff'
-								});
-						})
 					)
 					.append(search.button = $('<button>')
 						.attr({
@@ -225,6 +206,37 @@
 					)
 				);
 				searchfilter(search.filter);
+				search.field.focus(function () {
+					search.field
+						.attr({
+							'placeholder': ''
+						})
+						.css({
+							'background-color': '#ffffe0'
+						});
+						$(this).select();
+					search.filter.css({
+						'background-color': '#ffffe0'
+					});
+					search.button.css({
+						'background-color': '#ffffe0'
+					});
+				});
+				search.field.focusout(function () {
+					search.field
+						.attr({
+							'placeholder': 'search'
+						})
+						.css({
+							'background-color': '#ffffff'
+						});
+					search.filter.css({
+						'background-color': '#ffffff'
+					});
+					search.button.css({
+						'background-color': '#ffffff'
+					});
+				});
 			});
 		},
 

@@ -376,6 +376,38 @@
 		// alert($('div.note').length);
 	});
 
+	$(document).keydown(function(e) {
+
+		if (e.keyCode == 69 && (e.ctrlKey || e.metaKey)) {
+			// ctrl + e = search everywhere
+			$('button.all').click();
+		}
+		if (e.keyCode == 76 && (e.ctrlKey || e.metaKey)) {
+			// ctrl + l = search label
+			$('button.label').click();
+		}
+		if (e.keyCode == 83 && (e.ctrlKey || e.metaKey)) {
+			// ctrl + s = search source
+			$('button.source').click();
+		}
+		if (e.keyCode == 65 && (e.ctrlKey || e.metaKey)) {
+			// ctrl + a = search author
+			$('button.author').click();
+		}
+		if (e.keyCode == 114) {
+			e.preventDefault();
+			$('input.search_field').focus();
+			return false;
+		}
+		if (e.keyCode == 112) {
+			e.preventDefault();
+			$('button.user').click();
+			return false;
+		}
+
+	});
+
+
 </script>
 
 
