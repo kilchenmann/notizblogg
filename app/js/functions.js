@@ -252,7 +252,7 @@ function getSource(data, list) {
 					bibtex += 'volume = {' + source.detail.number + '},<br>';
 					bibtex += 'date = {' + source.detail.date + '},<br>';
 					bibtex += 'pages = {' + source.detail.pages + '},<br>';
-					biblio += ' In: ' + source.detail.journaltitle + ' Nr. ' + source.detail.volume + ': ' + source.detail.date + ', ' + source.detail.pages + '.';
+					biblio += ' In: ' + source.detail.journaltitle + ' Nr. ' + source.detail.number + ': ' + source.detail.date + ', ' + source.detail.pages + '.';
 					break;
 
 				case 'online':
