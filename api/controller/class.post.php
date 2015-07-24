@@ -192,7 +192,7 @@ class post {
 				case 'article';
 				case 'periodical';
 					$detail[] = 'journaltitle';
-					$detail[] = 'volume';
+					$detail[] = 'number';
 					$detail[] = 'date';
 					$detail[] = 'pages';
 					break;

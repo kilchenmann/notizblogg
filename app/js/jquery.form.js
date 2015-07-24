@@ -132,9 +132,9 @@
 					.append($('<br>'))
 					.append(
 						$('<input>')
-						.addClass('field_obj small volume')
-						.attr({'type': 'number', 'min': '0', 'placeholder': 'Number', 'title': 'Journal Number', 'name': 'volume'})
-						.val(data.detail.volume)
+						.addClass('field_obj small number')
+						.attr({'type': 'number', 'min': '0', 'placeholder': 'Number', 'title': 'Journal Number', 'name': 'number'})
+						.val(data.detail.number)
 					).append(
 						$('<input>')
 						.addClass('field_obj small date')

@@ -249,7 +249,7 @@ function getSource(data, list) {
 			switch (source.bibTyp.name) {
 				case 'article':
 					bibtex += 'journal = {' + html2tex(getLastChar(source.detail.journaltitle)) + '},<br>';
-					bibtex += 'volume = {' + source.detail.volume + '},<br>';
+					bibtex += 'volume = {' + source.detail.number + '},<br>';
 					bibtex += 'date = {' + source.detail.date + '},<br>';
 					bibtex += 'pages = {' + source.detail.pages + '},<br>';
 					biblio += ' In: ' + source.detail.journaltitle + ' Nr. ' + source.detail.volume + ': ' + source.detail.date + ', ' + source.detail.pages + '.';
