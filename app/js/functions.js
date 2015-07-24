@@ -346,7 +346,7 @@ function getSource(data, list) {
 				bibtex += 'location = {' + html2tex(locations) + '},<br>';
 				biblio += locations + ', ';
 			}
-			if ((source.date.year !== '0000' && source.date.year !== '0' && source.date.year !== null) || !source.detail.date) {
+			if (source.date.year !== '0000' && source.date.year !== '0' && source.date.year !== null && source.bibTyp.name !== 'article') {
 				bibtex += 'year = {' + source.date.year + '},<br>';
 				biblio += source.date.year + '.';
 				footnote += source.date.year;
