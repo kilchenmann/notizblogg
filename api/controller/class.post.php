@@ -191,7 +191,7 @@ class post {
 			switch($this->data['bibTypName']) {
 				case 'article';
 				case 'periodical';
-					$detail[] = 'journal';
+					$detail[] = 'journaltitle';
 					$detail[] = 'volume';
 					$detail[] = 'date';
 					$detail[] = 'pages';

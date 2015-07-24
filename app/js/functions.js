@@ -248,17 +248,17 @@ function getSource(data, list) {
 		if ('detail' in data.source) {
 			switch (source.bibTyp.name) {
 				case 'article':
-					bibtex += 'journaltitle = {' + html2tex(getLastChar(source.detail.journaltitle)) + '},<br>';
-					bibtex += 'number = {' + source.detail.number + '},<br>';
-					bibtex += 'year = {' + source.detail.year + '},<br>';
+					bibtex += 'journal = {' + html2tex(getLastChar(source.detail.journaltitle)) + '},<br>';
+					bibtex += 'volume = {' + source.detail.volume + '},<br>';
+					bibtex += 'date = {' + source.detail.date + '},<br>';
 					bibtex += 'pages = {' + source.detail.pages + '},<br>';
-					biblio += ' In: ' + source.detail.journaltitle + ' ' + source.detail.number + '/' + source.detail.year + ', ' + source.detail.pages + '.';
+					biblio += ' In: ' + source.detail.journaltitle + ' Nr. ' + source.detail.volume + ': ' + source.detail.date + ', ' + source.detail.pages + '.';
 					break;
 
 				case 'online':
 					bibtex += 'url = {<a target=\'_blank\' href=\'' + source.detail.url + '\' >' + source.detail.url + '</a>},<br>';
 					bibtex += 'urldate = {' + source.detail.urldate + '},<br>';
-					biblio += 'URL: <a target=\'_blank\' href=\'' + source.detail.url + '\'>' + source.detail.url + '</a> (Stand: ' + source.detail.urldate + ').';
+					biblio += 'URL: <a target=\'_blank\' href=\'' + source.detail.url + '\'>' + source.detail.url + '</a> (Besucht am: ' + source.detail.urldate + ').';
 //					bibtex += 'year = {' + source.date.year + '},<br>';
 					break;
 

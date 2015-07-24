@@ -125,8 +125,8 @@
 				plus.field = $('<span>')
 					.append(
 						$('<input>')
-						.addClass('field_obj large text journal')
-						.attr({'type': 'text', 'placeholder': 'Journal Title', 'title': 'Journal Title', 'name': 'journal'})
+						.addClass('field_obj large text journaltitle')
+						.attr({'type': 'text', 'placeholder': 'Journal Title', 'title': 'Journal Title', 'name': 'journaltitle'})
 						.val(data.detail.journaltitle)
 					)
 					.append($('<br>'))
