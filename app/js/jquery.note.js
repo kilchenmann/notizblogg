@@ -549,6 +549,31 @@ console.log(localdata.settings.access);
 							localdata.view.right.center('horizontal').css({
 								'position': 'relative'
 							});
+							// find "notes" with the reference to this collection
+
+							$.each(data.source.notes, function(i, note) {
+								if (note.ac >= localdata.settings.access) {
+									localdata.view.container.append(
+										$('<div>').addClass('note').attr({
+											'id': note.id
+										})
+									);
+									url4note = NB.api + '/get.php?note=' + note.id;
+									$.getJSON(url4note, function(data) {
+										for (var key in data) {
+											localdata.view.note = $('div#' + note.id + '.note');
+											if (key === 'source') {
+												//localdata.view.container.addClass('desk');
+												dispBib(localdata.view.note, data, localdata);
+											} else {
+												//localdata.view.container.addClass('booklet');
+												dispNote(localdata.view.note, data, localdata);
+											}
+										}
+									});
+								}
+							});
+
 							// find "insources" with the reference to this collection
 							$.each(data.source.insource, function(i, bibID) {
 								localdata.view.container.append(
