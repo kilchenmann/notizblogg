@@ -134,12 +134,12 @@
 						$('<input>')
 						.addClass('field_obj small volume')
 						.attr({'type': 'number', 'min': '0', 'placeholder': 'Number', 'title': 'Journal Number', 'name': 'volume'})
-						.val(data.detail.number)
+						.val(data.detail.volume)
 					).append(
 						$('<input>')
 						.addClass('field_obj small date')
 						.attr({'type': 'date', 'placeholder': 'YYYY-MM-DD', 'title': 'Year', 'name': 'date'})
-						.val(data.detail.year)
+						.val(data.detail.date)
 					).append(
 						$('<input>')
 						.addClass('field_obj small pages')
