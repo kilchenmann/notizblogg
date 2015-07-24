@@ -125,20 +125,20 @@
 				plus.field = $('<span>')
 					.append(
 						$('<input>')
-						.addClass('field_obj large text journaltitle')
-						.attr({'type': 'text', 'placeholder': 'Journal Title', 'title': 'Journal Title', 'name': 'journaltitle'})
+						.addClass('field_obj large text journal')
+						.attr({'type': 'text', 'placeholder': 'Journal Title', 'title': 'Journal Title', 'name': 'journal'})
 						.val(data.detail.journaltitle)
 					)
 					.append($('<br>'))
 					.append(
 						$('<input>')
-						.addClass('field_obj small number')
-						.attr({'type': 'number', 'placeholder': 'Number', 'title': 'Journal Number', 'name': 'number'})
+						.addClass('field_obj small volume')
+						.attr({'type': 'number', 'min': '0', 'placeholder': 'Number', 'title': 'Journal Number', 'name': 'volume'})
 						.val(data.detail.number)
 					).append(
 						$('<input>')
-						.addClass('field_obj small year')
-						.attr({'type': 'number', 'placeholder': 'Year', 'title': 'Year', 'name': 'year'})
+						.addClass('field_obj small date')
+						.attr({'type': 'date', 'placeholder': 'YYYY-MM-DD', 'title': 'Year', 'name': 'date'})
 						.val(data.detail.year)
 					).append(
 						$('<input>')
