@@ -508,6 +508,9 @@ class get {
 
 		$typeName = 'note';
 		$results = array();
+		$resultsInNote = array();
+		$resultsInLabel = array();
+		$resultsInAuthor = array();
 //echo 'SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(noteTitle, noteSubtitle, noteComment) AGAINST (\''.$q.'\' IN BOOLEAN MODE);';
 		$mysqli = condb('open');
 		switch($f){
@@ -550,14 +553,16 @@ class get {
 			default;		// search everywhere
 				$sql = $mysqli->query('SELECT * FROM note WHERE notePublic >= ' . $this->access . ' AND MATCH(note.noteTitle, note.noteSubtitle, note.noteComment, note.noteMedia) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
 				while($row = mysqli_fetch_object($sql)) {
-					$results[] = $row->noteID;
+//					$results[] = $row->noteID;
+					$resultsInNote[] = $row->noteID;
 				}
 				// label
 				$lasql = $mysqli->query('SELECT label.labelID, rel_note_label.noteID FROM label, rel_note_label WHERE label.label LIKE \'%'.$q.'%\' AND label.labelID = rel_note_label.labelID');
 				while($arow = mysqli_fetch_object($lasql)) {
 					$sql = $mysqli->query('SELECT note.noteID FROM note WHERE note.noteID = ' . $arow->noteID . ' AND note.notePublic >= ' . $this->access . ';');
 					while($row = mysqli_fetch_object($sql)) {
-						$results[] = $row->noteID;
+//						$results[] = $row->noteID;
+						$resultsInLabel[] = $row->noteID;
 					}
 				}
 				// author
@@ -565,10 +570,12 @@ class get {
 				while($arow = mysqli_fetch_object($asql)) {
 					$sql = $mysqli->query('SELECT note.noteID FROM bib, note WHERE bib.bibID = ' . $arow->bibID . ' AND bib.noteID = note.noteID AND note.notePublic >= ' . $this->access . ';' );
 					while($row = mysqli_fetch_object($sql)) {
-						$results[] = $row->noteID;
+//						$results[] = $row->noteID;
+						$resultsInAuthor[] = $row->noteID;
 					}
 				}
 				$f = 'note';
+				$results = array_unique(array_merge($resultsInNote,$resultsInLabel,$resultsInAuthor));
 		}
 		$list = array(
 			'type' => $f,
