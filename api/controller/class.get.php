@@ -522,7 +522,7 @@ class get {
 				break;
 
 			case 'source';
-				$sql = $mysqli->query('SELECT * FROM note, bib WHERE notePublic >= ' . $this->access . ' AND note.noteID = bib.noteID AND MATCH(noteTitle, noteSubtitle, noteComment, bib) AGAINST (\''.$q.'\' IN BOOLEAN MODE);');	//AND
+				$sql = $mysqli->query('SELECT * FROM note, bib WHERE notePublic >= ' . $this->access . ' AND note.noteID = bib.noteID AND MATCH(noteTitle, noteSubtitle, noteComment, bib) AGAINST (\'"'.$q.'"\' IN BOOLEAN MODE);');	//AND
 				while($row = mysqli_fetch_object($sql)) {
 					$results[] = $row->noteID;
 				}
