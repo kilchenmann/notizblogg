@@ -52,7 +52,11 @@
 		url: window.location.protocol + '//' + window.location.hostname + window.location.pathname,
 		uri: window.location.href,
 		query: getUrlVars(),
-		access: '1'
+		access: '1',
+		user: {
+			id: 0,
+			name: 'guest'
+		}
 	};
 
 	var settings = (function () {

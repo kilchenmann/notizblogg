@@ -1,13 +1,13 @@
 function split(val) {
-	return val.split( / \/ \s*/ );
+	return val.split(/ \/ \s*/);
 }
 
 function extractLast(term) {
-	return split( term ).pop();
+	return split(term).pop();
 }
 
 function completeMultipleValues(list, field, sep) {
-	if(sep === undefined) sep = ' / ';
+	if (sep === undefined) sep = ' / ';
 	var availableTags = [];
 	var url = NB.api + '/get.php?list=' + list;
 	$.ajax({
@@ -15,54 +15,54 @@ function completeMultipleValues(list, field, sep) {
 		'global': false,
 		'url': url,
 		'dataType': 'json',
-		'success': function (data) {
+		'success': function(data) {
 			for (var k in data.notes) {
 				availableTags.push(data.notes[k].split('::')[1]);
 			}
 		}
 	});
-/*
-	$.getJSON(url, function (data) {
-		for (var k in data.notes) {
-			availableTags.push(data.notes[k].split('::')[1]);
-		}
-	});
-*/
+	/*
+		$.getJSON(url, function (data) {
+			for (var k in data.notes) {
+				availableTags.push(data.notes[k].split('::')[1]);
+			}
+		});
+	*/
 	// don't navigate away from the field on tab when selecting an item
 	field
-	.bind( "keydown", function( event ) {
-		if ( event.keyCode === $.ui.keyCode.TAB && $( this ).autocomplete( "instance" ).menu.active ) {
-			event.preventDefault();
-		}
-	})
-	.autocomplete({
-		minLength: 2,
-		source: function( request, response ) {
-			// delegate back to autocomplete, but extract the last term
-			response( $.ui.autocomplete.filter(
-				availableTags, extractLast( request.term ) ) );
+		.bind("keydown", function(event) {
+			if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+				event.preventDefault();
+			}
+		})
+		.autocomplete({
+			minLength: 2,
+			source: function(request, response) {
+				// delegate back to autocomplete, but extract the last term
+				response($.ui.autocomplete.filter(
+					availableTags, extractLast(request.term)));
 			},
 			focus: function() {
 				// prevent value inserted on focus
 				return false;
 			},
-			select: function( event, ui ) {
-				var terms = split( this.value );
+			select: function(event, ui) {
+				var terms = split(this.value);
 				// remove the current input
 				terms.pop();
 				// add the selected item
-				terms.push( ui.item.value );
+				terms.push(ui.item.value);
 				// add placeholder to get the comma-and-space at the end
-				terms.push( "" );
-				this.value = terms.join( sep );
+				terms.push("");
+				this.value = terms.join(sep);
 				return false;
 			}
 		});
-	}
+}
 
 
-function tex2html(string){
-	if(string !== undefined) {
+function tex2html(string) {
+	if (string !== undefined) {
 		string = string.replace(/ ``/g, ' "');
 		string = string.replace(/\'\' /g, '" ');
 		string = string.replace(/\'\'\, /g, '", ');
@@ -83,8 +83,8 @@ function tex2html(string){
 	}
 }
 // ' &quot;'=>' ``', '&quot; '=>'\'\' ', '&quot;, '=>'\'\', ', '&quot;. '=>'\'\'. ', ' &#039;'=>' `', '&#039; '=>'\' ', '&#039;, '=>'\', ', '&#039;. '=>'\'. '
-function html2tex(string, author){
-	if(string !== undefined) {
+function html2tex(string, author) {
+	if (string !== undefined) {
 		string = string.replace(/ "/g, ' ``');
 		string = string.replace(/ &quot;/g, ' ``');
 		string = string.replace(/" /g, '\'\' ');
@@ -111,10 +111,22 @@ function html2tex(string, author){
 		string = string.replace(/ #/g, ' \\#');
 		string = string.replace(/~/g, '\\textasciitilde');
 		string = string.replace(/€/g, '\\texteuro');
-		if(author !== 'author') {
+		if (author !== 'author') {
 			string = string.replace(/{/g, '\\{');
 			string = string.replace(/}/g, '\\}');
 		}
+		string = string.replace(/ä/g, '\\"{a}');
+		string = string.replace(/ö/g, '\\"{o}');
+		string = string.replace(/ü/g, '\\"{u}');
+		string = string.replace(/Ä/g, '\\"{A}');
+		string = string.replace(/Ö/g, '\\"{O}');
+		string = string.replace(/Ü/g, '\\"{U}');
+		string = string.replace(/é/g, '\\´{e}');
+		string = string.replace(/è/g, '\\`{e}');
+		string = string.replace(/à/g, '\\`{a}');
+		string = string.replace(/ù/g, '\\`{u}');
+		string = string.replace(/ô/g, '\\^{o}');
+
 		return string;
 	}
 }
@@ -122,12 +134,13 @@ function html2tex(string, author){
 
 function getAuthors(author, sep) {
 	// authors
-	var i = 0, authors;
-	if(sep === undefined) sep = ', ';
+	var i = 0,
+		authors;
+	if (sep === undefined) sep = ', ';
 
 	while (i < author.length) {
-//		alert(author[i].name);
-//		if(author[i].name.charAt(0) === '{') author[i].name = '{' + author[i].name.substring(1, author[i].name.length) + '}';
+		//		alert(author[i].name);
+		//		if(author[i].name.charAt(0) === '{') author[i].name = '{' + author[i].name.substring(1, author[i].name.length) + '}';
 		if (authors === undefined) {
 			authors = '<a href=\'' + NB.url + '?author=' + author[i].id + '\'>' + author[i].name + '</a>';
 		} else {
@@ -136,31 +149,33 @@ function getAuthors(author, sep) {
 		i += 1;
 	}
 
-/*
-	if (author.length > 4) {
-		authors = '<a href=\'?author=' + author[i].id + '\'>' + author[i].name + '</a> et al.';
-	} else {
-		while (i < author.length) {
+	/*
+		if (author.length > 4) {
+			authors = '<a href=\'?author=' + author[i].id + '\'>' + author[i].name + '</a> et al.';
+		} else {
+			while (i < author.length) {
 
-			if (authors === undefined) {
-				authors = '<a href=\'' + NB.url + '?author=' + author[i].id + '\'>' + author[i].name + '</a>';
-			} else {
-				authors += sep + '<a href=\'' + NB.url + '?author=' + author[i].id + '\'>' + author[i].name + '</a>';
+				if (authors === undefined) {
+					authors = '<a href=\'' + NB.url + '?author=' + author[i].id + '\'>' + author[i].name + '</a>';
+				} else {
+					authors += sep + '<a href=\'' + NB.url + '?author=' + author[i].id + '\'>' + author[i].name + '</a>';
+				}
+				i += 1;
 			}
-			i += 1;
 		}
-	}
-	*/
-	if(sep !== ', ' && sep !== ' and ') {
+		*/
+	if (sep !== ', ' && sep !== ' and ') {
 		return htmlDecode(authors);
 	} else {
 		return authors;
 	}
 }
+
 function getLocations(location, sep) {
 	// locations
-	var i = 0, locations;
-	if(sep === undefined) sep = ', ';
+	var i = 0,
+		locations;
+	if (sep === undefined) sep = ', ';
 	if (location.length > 4) {
 		locations = location[i].name + ' et al.';
 	} else {
@@ -175,14 +190,15 @@ function getLocations(location, sep) {
 	}
 	return htmlDecode(locations);
 }
+
 function getPages(start, end) {
 	var pages;
-	if(start >= end || end === '0') {
+	if (start >= end || end === '0') {
 		pages = start;
 	} else {
 		pages = start + '-' + end;
 	}
-	if(start !== '0') {
+	if (start !== '0') {
 		return pages;
 	} else {
 		return '';
@@ -191,9 +207,10 @@ function getPages(start, end) {
 }
 
 function getLabel(label, sep) {
-	var i = 0, labels;
-	if(sep === undefined) sep = ', ';
-	if(label.length !== 0) {
+	var i = 0,
+		labels;
+	if (sep === undefined) sep = ', ';
+	if (label.length !== 0) {
 		while (i < label.length) {
 			if (labels === undefined) {
 				labels = label[i].name;
@@ -210,7 +227,7 @@ function getSource(data, list) {
 	var i, authors, authors4tex, locations, biblio, bibtex, footnote, source, bib, crossref, insource = {};
 	// return source.biblio, source.bibtex;
 	source = data.source;
-	if(source.id !== 0) {
+	if (source.id !== 0) {
 		bibtex = '@' + source.bibTyp.name + '{';
 
 		if ((source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book') && jQuery.isEmptyObject(source.insource) === false) {
@@ -234,7 +251,7 @@ function getSource(data, list) {
 		// title
 		bibtex += 'title = {' + html2tex(getLastChar(source.title)) + '},<br>';
 		if (source.title !== '') {
-			if ((source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book')  && jQuery.isEmptyObject(source.insource) === false) {
+			if ((source.bibTyp.name === 'collection' || source.bibTyp.name === 'proceedings' || source.bibTyp.name === 'book') && jQuery.isEmptyObject(source.insource) === false) {
 				biblio += '<a href=\'?collection=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
 			} else {
 				biblio += '<a href=\'?source=' + source.id + '\' >' + getLastChar(source.title) + '</a> ';
@@ -259,13 +276,13 @@ function getSource(data, list) {
 					bibtex += 'url = {<a target=\'_blank\' href=\'' + source.detail.url + '\' >' + source.detail.url + '</a>},<br>';
 					bibtex += 'urldate = {' + source.detail.urldate + '},<br>';
 					biblio += 'URL: <a target=\'_blank\' href=\'' + source.detail.url + '\'>' + source.detail.url + '</a> (Besucht am: ' + source.detail.urldate + ').';
-//					bibtex += 'year = {' + source.date.year + '},<br>';
+					//					bibtex += 'year = {' + source.date.year + '},<br>';
 					break;
 
 				case 'proceedings':
 					bibtex += 'eventtitle = {' + html2tex(getLastChar(source.detail.eventtitle)) + '},<br>';
 					bibtex += 'venue = {' + html2tex(getLastChar(source.detail.venue)) + '},<br>';
-				//	bibtex += 'location = {' + html2tex(locations) + '},<br>';
+					//	bibtex += 'location = {' + html2tex(locations) + '},<br>';
 					biblio += getLastChar(source.detail.eventtitle);
 					biblio += getLastChar(source.detail.venue);
 					//biblio += locations + ', ' + source.date.year + '.';
@@ -282,7 +299,8 @@ function getSource(data, list) {
 				case 'incollection':
 				case 'inproceedings':
 					crossref = source.detail.crossref.source;
-					var crossTitle = '', crossAuthors, crossLocations;
+					var crossTitle = '',
+						crossAuthors, crossLocations;
 					bibtex += 'crossref = {' + crossref.name + '},<br>';
 					//console.log(crossref.author);
 					crossAuthors = getAuthors(crossref.author, ' and ');
@@ -319,7 +337,7 @@ function getSource(data, list) {
 					i = 0;
 					while (i < countDetail) {
 						detailKey = Object.keys(source.detail)[i];
-						if(source.detail[detailKey] !== undefined){
+						if (source.detail[detailKey] !== undefined) {
 							bibtex += detailKey + ' = {' + html2tex(source.detail[detailKey]) + '},<br>';
 							//biblio += source.detail[detailKey];
 						}
@@ -328,12 +346,12 @@ function getSource(data, list) {
 			}
 		}
 
-		if('detailPlus' in data.source) {
+		if ('detailPlus' in data.source) {
 			var detailPlusKey, countDetailPlus = Object.keys(source.detailPlus).length;
 			i = 0;
 			while (i < countDetailPlus) {
 				detailPlusKey = Object.keys(source.detailPlus)[i];
-				if(source.detailPlus[detailPlusKey] !== undefined){
+				if (source.detailPlus[detailPlusKey] !== undefined) {
 					bibtex += detailPlusKey + ' = {' + html2tex(source.detailPlus[detailPlusKey]) + '},<br>';
 				}
 				i += 1;
@@ -352,7 +370,7 @@ function getSource(data, list) {
 				footnote += source.date.year;
 			}
 		}
-		if(!list) {
+		if (!list) {
 			bibtex += 'note = {' + html2tex(source.comment) + '}}';
 		} else {
 			bibtex += 'note = {}}';
@@ -374,7 +392,7 @@ function getSource(data, list) {
 }
 
 function getStorage(type) {
-    /*
+	/*
   var storage = window[type + 'Storage'],
     delta = 0,
     li = document.createElement('li');
@@ -394,12 +412,11 @@ function getStorage(type) {
 }
 
 // Read a page's GET URL variables and return them as an associative array.
-function getUrlVars()
-{
-	var vars = [], hash;
+function getUrlVars() {
+	var vars = [],
+		hash;
 	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-	for(var i = 0; i < hashes.length; i++)
-	{
+	for (var i = 0; i < hashes.length; i++) {
 		hash = hashes[i].split('=');
 		vars.push(hash[0]);
 		vars[hash[0]] = hash[1];
@@ -407,8 +424,7 @@ function getUrlVars()
 	return vars;
 }
 
-function fileExists(media)
-{
+function fileExists(media) {
 	var response = jQuery.ajax({
 		url: media,
 		type: 'HEAD',
@@ -418,26 +434,24 @@ function fileExists(media)
 	return (response == "200");
 }
 
-function isTouchDevice()
-{
+function isTouchDevice() {
 	var el = document.createElement('div');
 	el.setAttribute('ongesturestart', 'return;');
 	return typeof el.ongesturestart == "function"; // true or false
 }
 
-function getLastChar(string)
-{
-    if(string !== null) {
+function getLastChar(string) {
+	if (string !== null) {
 		string = $.trim(string);
-        string = string.charAt(0).toUpperCase() + string.slice(1);
-        var lastChar = string.substr(string.length - 1);
-        if ((lastChar !== '?') && (lastChar !== '!') && (lastChar !== ':')  && (lastChar !== '.')  && (lastChar !== '"')) {
-            string += '.';
-        }
-        return(string + ' ');
-    } else {
-        return(' ');
-    }
+		string = string.charAt(0).toUpperCase() + string.slice(1);
+		var lastChar = string.substr(string.length - 1);
+		if ((lastChar !== '?') && (lastChar !== '!') && (lastChar !== ':') && (lastChar !== '.') && (lastChar !== '"')) {
+			string += '.';
+		}
+		return (string + ' ');
+	} else {
+		return (' ');
+	}
 }
 
 function formatFileSize(bytes) {
