@@ -121,10 +121,14 @@ function html2tex(string, author) {
 		string = string.replace(/Ä/g, '{\\"A}');
 		string = string.replace(/Ö/g, '{\\"O}');
 		string = string.replace(/Ü/g, '{\\"U}');
-		string = string.replace(/é/g, '{\\´e}');
+		string = string.replace(/é/g, '{\\\'e}');
 		string = string.replace(/è/g, '{\\`e}');
 		string = string.replace(/à/g, '{\\`a}');
+		string = string.replace(/á/g, '{\\\'a}');
 		string = string.replace(/ù/g, '{\\`u}');
+		string = string.replace(/ú/g, '{\\\'u}');
+		string = string.replace(/ò/g, '{\\`o}');
+		string = string.replace(/ó/g, '{\\\'o}');
 		string = string.replace(/ô/g, '{\\^o}');
 
 		return string;
