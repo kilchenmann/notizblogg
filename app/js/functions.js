@@ -115,17 +115,17 @@ function html2tex(string, author) {
 			string = string.replace(/{/g, '\\{');
 			string = string.replace(/}/g, '\\}');
 		}
-		string = string.replace(/ä/g, '\\"{a}');
-		string = string.replace(/ö/g, '\\"{o}');
-		string = string.replace(/ü/g, '\\"{u}');
-		string = string.replace(/Ä/g, '\\"{A}');
-		string = string.replace(/Ö/g, '\\"{O}');
-		string = string.replace(/Ü/g, '\\"{U}');
-		string = string.replace(/é/g, '\\´{e}');
-		string = string.replace(/è/g, '\\`{e}');
-		string = string.replace(/à/g, '\\`{a}');
-		string = string.replace(/ù/g, '\\`{u}');
-		string = string.replace(/ô/g, '\\^{o}');
+		string = string.replace(/ä/g, '{\\"a}');
+		string = string.replace(/ö/g, '{\\"o}');
+		string = string.replace(/ü/g, '{\\"u}');
+		string = string.replace(/Ä/g, '{\\"A}');
+		string = string.replace(/Ö/g, '{\\"O}');
+		string = string.replace(/Ü/g, '{\\"U}');
+		string = string.replace(/é/g, '{\\´e}');
+		string = string.replace(/è/g, '{\\`e}');
+		string = string.replace(/à/g, '{\\`a}');
+		string = string.replace(/ù/g, '{\\`u}');
+		string = string.replace(/ô/g, '{\\^o}');
 
 		return string;
 	}
