@@ -210,7 +210,7 @@ class get {
 									$bibDetail = json_decode($bib->getSource());
 									$bibInfo['crossref'] = $bibDetail;
 								}
-								if($field->bibField != 'edition' && $field->bibField != 'number' && $field->bibField != 'organization' && $field->bibField != 'publisher' && $field->bibField != 'series' && $field->bibField != 'version' && $field->bibField != 'volume' && $field->bibField != 'volumes') {
+								if($field->bibField != 'edition' && $field->bibField != 'organization' && $field->bibField != 'publisher' && $field->bibField != 'series' && $field->bibField != 'version' && $field->bibField != 'volume' && $field->bibField != 'volumes') {
 									$bibInfo[$field->bibField] = $bibDetail;
 								} else {
 									$bibInfoPlus[$field->bibField] = $bibDetail;
