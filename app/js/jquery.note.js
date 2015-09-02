@@ -726,15 +726,47 @@ console.log(localdata.settings.access);
 				// initialize a local data object which is attached to the DOM object
 				$this.data('localdata', localdata);
 
-				var source, showsource;
+				var source, showsource, label;
 
 				url = NB.api + '/get.php?list=biblatex';
 				$.getJSON(url, function(data) {
+					$.each(data.notes, function(i, label) {
+						console.log(i);
+						if(i !== 'nichtDiss') {
+							$.each(data.notes[i], function(i, sourceid) {
+								url2 = NB.api + '/get.php?source=' + sourceid;
+								$.getJSON(url2, function(sourcedata) {
+									$('.paper').append(
+										source = $('<div>').addClass('note ' + sourceid)
+									);
+
+									showsource = getSource(sourcedata, 'bibtex');
+									if (sourcedata.source.bibTyp.id !== '0' && sourcedata.source.bibTyp.name !== '') {
+										if (i < (data.notes.length - 1)) {
+											source.append($('<div>').addClass('text')
+												.append($('<p>').html(showsource.bibtex + ','))
+											);
+										} else {
+											source.append($('<div>').addClass('text')
+												.append($('<p>').html(showsource.bibtex))
+											);
+										}
+									}
+								});
+							});
+						}
+					});
+
+
+					/*
 					$.each(data.notes, function(i, sourceid) {
 						url2 = NB.api + '/get.php?source=' + sourceid;
 						$.getJSON(url2, function(sourcedata) {
 							$('.paper').append(
-								source = $('<div>').addClass('note')
+								label = $('<div>').html(i).append(
+									source = $('<div>').addClass('note')
+
+								)
 							);
 
 							showsource = getSource(sourcedata, 'bibtex');
@@ -751,6 +783,7 @@ console.log(localdata.settings.access);
 							}
 						});
 					});
+					*/
 				});
 			});
 		},

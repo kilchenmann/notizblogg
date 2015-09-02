@@ -380,10 +380,30 @@ class get {
 						break;
 
 					case 'biblatex';
+					$notes['nn'] = array();
+
 						for($i = 15; $i > 0; $i--){
 							$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib WHERE bibTyp = ' . $i . ' ORDER BY bib;');
 							while($row = mysqli_fetch_object($sql)) {
-								array_push($notes, $row->bibID);
+								// get also the labels here!?
+								$labelSource = getIndexMN('note', 'label', $row->noteID);
+//								print_r($label[0]['name']);
+//								array_push($sourceLabel, $label)
+//								array_push($source, $row->bibID)
+
+								if($labelSource) {
+									$label = $labelSource[0]['name'];
+									if(!array_key_exists($label, $notes)) {
+										$notes[$label] = array();
+									}
+//									array_push($notes[$label], $row->bibID);
+								}
+								else {
+									$label = 'nn';
+								}
+								array_push($notes[$label], $row->bibID);
+//									print_r($notes);
+
 							}
 						}
 //						$sql = $mysqli->query('SELECT bibID, bib, noteID FROM bib ORDER BY bib;');
