@@ -730,10 +730,9 @@ console.log(localdata.settings.access);
 
 				url = NB.api + '/get.php?list=biblatex';
 				$.getJSON(url, function(data) {
-					$.each(data.notes, function(i, label) {
-						console.log(i);
-						if(i !== 'nichtDiss') {
-							$.each(data.notes[i], function(i, sourceid) {
+					$.each(data.notes, function(cat, label) {
+						if(cat !== 'nichtDiss') {
+							$.each(data.notes[cat], function(i, sourceid) {
 								url2 = NB.api + '/get.php?source=' + sourceid;
 								$.getJSON(url2, function(sourcedata) {
 									$('.paper').append(
@@ -742,7 +741,7 @@ console.log(localdata.settings.access);
 
 									showsource = getSource(sourcedata, 'bibtex');
 									if (sourcedata.source.bibTyp.id !== '0' && sourcedata.source.bibTyp.name !== '') {
-										if (i < (data.notes.length - 1)) {
+										if (i < (data.notes[cat].length - 1)) {
 											source.append($('<div>').addClass('text')
 												.append($('<p>').html(showsource.bibtex + ','))
 											);
