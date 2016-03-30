@@ -17,13 +17,15 @@ Zuletzt werden die Quellen nach den Regeln von bibLaTex erstellt. Dadurch wird e
 
 ### Datenbank
 Neue MySQL-Datenbank mit dem Namen 'notizblogg' anlegen und Tabellenstruktur importieren:
-    mysql -u root -p -h localhost notizblogg < db-structure.sql
+    
+    `mysql -u root -p -h localhost notizblogg < db-structure.sql
 
 Dabei wird bereits ein Standard-Benutzer kreiert. Die Benutzerkennung ist 'admin' und 'password'. Hier die entsprechenden Daten gleich anpassen. Passwort mittels md5 verschlüsseln.
 
 ### Konfiguration
 Zwei Konfigurations-Dateien müssen nun noch angepasst werden:
-    cp ./example-config.json ./config.json
-    cp ./api/controller/.conf/default-db.php ./api/controller/.conf/db.php
+    
+    `cp ./example-config.json ./config.json`
+    `cp ./api/controller/.conf/default-db.php ./api/controller/.conf/db.php`
     
 In der ersten Datei die URL und den Pfad des Notizbloggs anpassen. Die zweite Datei beinhaltet die Angaben zur Datenbankanbindung.
