@@ -1,6 +1,6 @@
 {
     "url": {
-        "main": "http://notizblogg.ch",
+        "main": "http://localhost/notizblogg",
         "api": "api",
         "media": "data"
     },
