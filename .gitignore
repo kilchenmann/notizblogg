@@ -5,3 +5,4 @@ config.json
 api/controller/.conf/db.php
 media/user/ak.jpg
 offline.php
+.htaccess

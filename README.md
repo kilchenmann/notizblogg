@@ -19,7 +19,7 @@ Zuletzt werden die Quellen nach den Regeln von bibLaTex erstellt. Dadurch wird e
 Neue MySQL-Datenbank mit dem Namen 'notizblogg' anlegen und Tabellenstruktur importieren:
 
 ```
-mysql -u root -p -h localhost notizblogg < db-structure.sql
+mysql -u root -p -h localhost notizblogg < notizblogg.sql
 ```
 
 Dabei wird bereits ein Standard-Benutzer kreiert. Die Benutzerkennung ist 'luhmann' und 'zettelkasten'. Hier die entsprechenden Daten sofort ändern. Passwort mittels md5 verschlüsseln.
