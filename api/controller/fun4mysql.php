@@ -26,12 +26,9 @@ function conuser($token) {
     $num_results = mysqli_num_rows($sql);
     if ($num_results > 0) {
         while ($row = mysqli_fetch_object($sql)) {
-            $avatar = __MEDIA_URL__ . '/user/' . $row->userID;
-            if (@fopen($avatar, "r") == false) {
+            $avatar = __MEDIA_URL__.'/user/'.$row->userID.'.jpg';
+            if (@fopen($avatar, "r") == true) {
                 $avatar = 'https://www.gravatar.com/avatar/' . md5($row->email);
-                if (@fopen($avatar, "r") == false) {
-                    $avatar = __MEDIA_URL__ . '/user/' . $row->userID;
-                }
             }
             $user = array(
                 'access' => 0,

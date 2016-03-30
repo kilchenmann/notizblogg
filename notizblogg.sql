@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 17, 2015 at 08:10 AM
+-- Generation Time: Mar 30, 2016 at 11:23 PM
 -- Server version: 5.6.26
--- PHP Version: 5.6.15
+-- PHP Version: 5.6.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,7 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `notizblogg`
 --
-
+CREATE DATABASE IF NOT EXISTS `notizblogg` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `notizblogg`;
 -- --------------------------------------------------------
 
 --
@@ -67,7 +68,38 @@ CREATE TABLE IF NOT EXISTS `bibDetail` (
 CREATE TABLE IF NOT EXISTS `bibField` (
   `bibFieldID` int(11) NOT NULL,
   `bibField` varchar(20) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `bibField`
+--
+
+INSERT INTO `bibField` (`bibFieldID`, `bibField`) VALUES
+(1, 'date'),
+(2, 'day'),
+(3, 'doi'),
+(4, 'edition'),
+(5, 'eventtitle'),
+(6, 'institution'),
+(7, 'journalsubtitle'),
+(8, 'journaltitle'),
+(9, 'month'),
+(10, 'number'),
+(11, 'organization'),
+(12, 'pages'),
+(13, 'publisher'),
+(14, 'series'),
+(15, 'url'),
+(16, 'urldate'),
+(17, 'venue'),
+(18, 'version'),
+(19, 'volume'),
+(20, 'volumes'),
+(21, 'maintitle'),
+(22, 'mainsubtitle'),
+(23, 'type'),
+(24, 'crossref'),
+(25, 'year');
 
 -- --------------------------------------------------------
 
@@ -78,7 +110,29 @@ CREATE TABLE IF NOT EXISTS `bibField` (
 CREATE TABLE IF NOT EXISTS `bibTyp` (
   `bibTypID` int(11) NOT NULL,
   `bibTyp` varchar(20) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `bibTyp`
+--
+
+INSERT INTO `bibTyp` (`bibTypID`, `bibTyp`) VALUES
+(1, 'article'),
+(2, 'book'),
+(3, 'inbook'),
+(4, 'booklet'),
+(5, 'collection'),
+(6, 'incollection'),
+(7, 'manual'),
+(8, 'misc'),
+(9, 'online'),
+(10, 'periodical'),
+(11, 'proceedings'),
+(12, 'inproceedings'),
+(13, 'report'),
+(14, 'thesis'),
+(15, 'unpublished'),
+(16, 'project');
 
 -- --------------------------------------------------------
 
@@ -164,6 +218,28 @@ CREATE TABLE IF NOT EXISTS `rel_note_label` (
   `noteID` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE IF NOT EXISTS `user` (
+  `userID` int(2) NOT NULL,
+  `name` varchar(30) DEFAULT NULL,
+  `user` varchar(80) NOT NULL,
+  `pass` char(32) DEFAULT NULL,
+  `email` varchar(100) NOT NULL,
+  `token` varchar(33) DEFAULT NULL
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`userID`, `name`, `user`, `pass`, `email`, `token`) VALUES
+(1, 'Niklas Luhmann', 'luhmann', 'd4eb347b663f58289b3a7e2bab53d116', '', '79DBD2E711C27E7B');
+
 --
 -- Indexes for dumped tables
 --
@@ -244,6 +320,15 @@ ALTER TABLE `rel_note_label`
   ADD PRIMARY KEY (`labelID`,`noteID`);
 
 --
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`userID`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `username` (`user`),
+  ADD UNIQUE KEY `token` (`token`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -266,12 +351,12 @@ ALTER TABLE `bibDetail`
 -- AUTO_INCREMENT for table `bibField`
 --
 ALTER TABLE `bibField`
-  MODIFY `bibFieldID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `bibFieldID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `bibTyp`
 --
 ALTER TABLE `bibTyp`
-  MODIFY `bibTypID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `bibTypID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `label`
 --
@@ -287,6 +372,11 @@ ALTER TABLE `location`
 --
 ALTER TABLE `note`
   MODIFY `noteID` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `userID` int(2) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

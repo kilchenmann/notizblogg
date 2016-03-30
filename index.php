@@ -193,7 +193,7 @@
 		} else {
 			$('header .user').panel('login', NB.api + '/controller/check.in.php');
 		}
-		$('footer').panel('foot', 'v15.03');
+		$('footer').panel('foot', 'v15.09');
 
 		/* show some content */
 		$('.viewer').note(NB);
