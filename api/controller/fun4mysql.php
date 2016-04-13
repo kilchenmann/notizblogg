@@ -172,12 +172,13 @@ function getMedia($media) {
     if($media != '') {
 
     }
-    $media_tag = '<span class=\'warning invisible\'>[The ' . $mediaType . ' file is missing!]</span>';
+    $media_tag = '<span class=\'warning invisible\'>[The <a href="'.$mediaURL.'">' . $mediaType . '</a> file is missing!]</span>';
 
-    if (@fopen($mediaPath, 'r') == true) {
+//    if (@fopen($mediaPath, 'r') == true)
+    if (file_exists($mediaPath)) {
         switch($mediaType) {
             case 'picture';
-                $size = getimagesize($mediaURL);
+                $size = getimagesize($mediaPath);
                 // ergibt mit $infoSize[0] für breite und $infoSize[1] für höhe
                 $media_tag = '<img class=\'staticMedia\' src=\'' . $mediaURL . '\' alt=\'' . $mediaFile . '\' title=\'' . $mediaType . ': ' .$mediaFile . '\'>';
                 break;
